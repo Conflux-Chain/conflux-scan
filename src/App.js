@@ -4,8 +4,8 @@ import { addLocaleData, IntlProvider } from 'react-intl'; /* react-intl imports 
 import enLocaleData from 'react-intl/locale-data/en';
 import zhLocaleData from 'react-intl/locale-data/zh';
 import Router from './route/router';
-import Header from './components/header';
-import Footer from './components/footer';
+import Header from './components/Header';
+import Footer from './components/Footer';
 import GlobalStyle from './style';
 
 // import { hashHistory } from 'react-router';

@@ -1,13 +1,13 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import Home from '../pages/home';
-import Blog from '../pages/blog';
-import Media from '../pages/media';
-import Teams from '../pages/teams';
-import JoinUs from '../pages/joinus';
-import Privacy from '../pages/privacy';
-import Policy from '../pages/policy';
-import Faqs from '../pages/faqs';
+import Home from '../pages/Home';
+import Blog from '../pages/Blog';
+import Media from '../pages/Media';
+import Teams from '../pages/Teams';
+import JoinUs from '../pages/JoinUs';
+import Privacy from '../pages/Privacy';
+import Policy from '../pages/Policy';
+import Faqs from '../pages/Faqs';
 
 function Router() {
   return (
