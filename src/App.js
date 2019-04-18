@@ -6,7 +6,7 @@ import zhLocaleData from 'react-intl/locale-data/zh';
 import Router from './route/router';
 import Header from './components/header';
 import Footer from './components/footer';
-import { GlobalStyle } from './style';
+import GlobalStyle from './style';
 
 // import { hashHistory } from 'react-router';
 const zhTranslationMessages = require('./lang/zh.json');

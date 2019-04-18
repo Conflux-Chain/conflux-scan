@@ -25,7 +25,6 @@
 
   "rules": {
     "max-len": [1, 200],
-    "comma-dangle": [1, "never"],
     "dot-notation": [0, {
       "allowKeywords": false
     }],
