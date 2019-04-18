@@ -1,16 +1,18 @@
 import React, { Component } from 'react';
+import { BrowserRouter } from 'react-router-dom';
+import { addLocaleData, IntlProvider } from 'react-intl'; /* react-intl imports */
+import enLocaleData from 'react-intl/locale-data/en';
+import zhLocaleData from 'react-intl/locale-data/zh';
 import Router from './route/router';
-import Header from './components/header';
-import Footer from './components/footer';
-import { GlobalStyle } from './style';
-import { addLocaleData, IntlProvider, injectIntl } from 'react-intl'; /* react-intl imports */
-import en from 'react-intl/locale-data/en';
-import zh from 'react-intl/locale-data/zh';
-import { BrowserRouter as Routers } from 'react-router-dom';
+import Header from './components/Header';
+import Footer from './components/Footer';
+import GlobalStyle from './style';
+
 // import { hashHistory } from 'react-router';
-const zh_CN = require('./lang/zh.json');
-const en_US = require('./lang/en.json');
-addLocaleData([...en, ...zh]);
+const zhTranslationMessages = require('./lang/zh.json');
+const enTranslationMessages = require('./lang/en.json');
+
+addLocaleData([...enLocaleData, ...zhLocaleData]);
 
 class App extends Component {
   constructor(props) {
@@ -25,22 +27,23 @@ class App extends Component {
     this.setState({
       lang: lang
     });
-    console.log(this.state.lang);
   }
+
   render() {
     let messages = {};
-    messages['en'] = en_US;
-    messages['zh'] = zh_CN;
+    messages['en'] = enTranslationMessages;
+    messages['zh'] = zhTranslationMessages;
+    const { lang } = this.state;
     return (
-      <IntlProvider locale={'en'} messages={messages[this.state.lang]}>
-        <Routers>
+      <IntlProvider locale="en" messages={messages[lang]}>
+        <BrowserRouter>
           <div>
-            <Header changeLanguage={this.changeLanguage} intl={this.props.intl} />
+            <Header changeLanguage={this.changeLanguage} />
             <Router />
             <Footer />
             <GlobalStyle />
           </div>
-        </Routers>
+        </BrowserRouter>
       </IntlProvider>
     );
   }
