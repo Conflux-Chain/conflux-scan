@@ -18,14 +18,14 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      lang: 'zh'
+      lang: 'zh',
     };
     this.changeLanguage = this.changeLanguage.bind(this);
   }
 
   changeLanguage(lang) {
     this.setState({
-      lang: lang
+      lang: lang,
     });
   }
 

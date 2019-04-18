@@ -56,6 +56,6 @@ class Header extends Component {
   }
 }
 Header.propTypes = {
-  changeLanguage: PropTypes.func.isRequired
+  changeLanguage: PropTypes.func.isRequired,
 };
 export default injectIntl(Header);

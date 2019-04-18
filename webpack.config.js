@@ -11,7 +11,7 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
     publicPath: '/',
     chunkFilename: '[name].[chunkhash].js',
-    filename: '[name].[chunkhash].js'
+    filename: '[name].[chunkhash].js',
   },
   module: {
     // 模块加载
@@ -20,38 +20,38 @@ module.exports = {
         test: /\.css$/, // 匹配规则
         use: [
           {
-            loader: 'style-loader'
+            loader: 'style-loader',
           },
           {
-            loader: 'css-loader'
-          }
-        ]
+            loader: 'css-loader',
+          },
+        ],
       },
       {
         test: /\.less$/, // 匹配规则
         use: [
           {
-            loader: 'style-loader'
+            loader: 'style-loader',
           },
           {
-            loader: 'css-loader'
+            loader: 'css-loader',
           },
           {
-            loader: 'less-loader'
-          }
-        ]
+            loader: 'less-loader',
+          },
+        ],
       },
       {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         use: [
           {
-            loader: 'babel-loader'
+            loader: 'babel-loader',
           },
           {
-            loader: 'eslint-loader'
-          }
-        ]
+            loader: 'eslint-loader',
+          },
+        ],
       },
       {
         test: /\.(png|svg|jpg|gif)$/,
@@ -59,11 +59,11 @@ module.exports = {
           loader: 'url-loader',
           options: {
             limit: 8192, // 小于8192B的文件转为base64文件
-            name: 'static/images/[name].[hash:5].[ext]'
-          }
-        }
-      }
-    ]
+            name: 'static/images/[name].[hash:5].[ext]',
+          },
+        },
+      },
+    ],
   },
   plugins: [
     // 插件配置
@@ -71,13 +71,13 @@ module.exports = {
     new CopyWebpackPlugin([
       {
         from: path.resolve(__dirname + '/static'), // 打包的静态资源目录地址
-        to: 'static' // 打包到dist下面的static
-      }
+        to: 'static', // 打包到dist下面的static
+      },
     ]),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, 'src', 'index.html'), // 模板
-      filename: 'index.html'
-    }) // 生成Html5文件
+      filename: 'index.html',
+    }), // 生成Html5文件
   ],
   optimization: {
     splitChunks: {
@@ -85,9 +85,9 @@ module.exports = {
         commons: {
           name: 'commons',
           chunks: 'initial',
-          minChunks: 2
-        }
-      }
-    }
-  }
+          minChunks: 2,
+        },
+      },
+    },
+  },
 };
