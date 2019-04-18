@@ -4,9 +4,9 @@
 文件夹结构说明
 - src
   - assets 资源包，放些图片类的资源，需要webpack处理的
-  - component 公共组件库，比如头，尾部，还有一些基础组件
+  - components 公共组件库，比如头，尾部，还有一些基础组件
   - lang 语言包，目前仅支持en和ch
-  - page 官网页面组件
+  - pages 官网页面组件
   - route 路由配置
   - utils 工具包
     - constants 静态文件的数据结构
