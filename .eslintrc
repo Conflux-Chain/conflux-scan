@@ -1,0 +1,51 @@
+{
+  "env": {
+    "browser": true,
+    "node": true,
+    "commonjs": true,
+    "amd": true,
+    "es6": true,
+    "mocha": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "globalReturn": true,
+      "impliedStrict": true,
+      "jsx": true,
+      "modules": true
+    }
+  },
+  "plugins": [
+    "react"
+  ],
+  "extends": "airbnb",
+
+
+  "rules": {
+    "max-len": [1, 200],
+    "comma-dangle": [1, "never"],
+    "dot-notation": [0, {
+      "allowKeywords": false
+    }],
+    "arrow-body-style": [1, "always"],
+    "no-console": 0,
+    "no-extra-parens": 0,
+    "no-script-url": 0,
+    "no-path-concat": 0,
+    "global-require": 0,
+    "object-shorthand": 0,
+    "prefer-template": 0,
+    "prefer-const": 0,
+    "import/no-extraneous-dependencies": 0,
+    "react/jsx-filename-extension": 0,
+    "react/jsx-no-target-blank": 0,
+    "jsx-a11y/alt-text": 0,
+    "jsx-a11y/anchor-is-valid": 0,
+    "prefer-destructuring": 0,
+    "react/no-array-index-key": 0,
+    "react/jsx-closing-bracket-location": [1, "line-aligned"],
+    "react/jsx-one-expression-per-line": [1, { "allow": "single-child" }]
+  }
+}

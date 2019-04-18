@@ -1,8 +1,6 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-class Teams extends Component {
-  render() {
-    return <div>我是Teams</div>;
-  }
+function Teams() {
+  return <div>我是Teams</div>;
 }
 export default Teams;

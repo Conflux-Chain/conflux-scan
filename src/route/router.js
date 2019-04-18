@@ -9,7 +9,7 @@ import Privacy from '../pages/privacy';
 import Policy from '../pages/policy';
 import Faqs from '../pages/faqs';
 
-const Router = () => {
+function Router() {
   return (
     <Switch>
       <Route path="/home" component={Home} />
@@ -22,5 +22,5 @@ const Router = () => {
       <Route path="/faqs" component={Faqs} />
     </Switch>
   );
-};
+}
 export default Router;
