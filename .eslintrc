@@ -48,6 +48,6 @@
     "prefer-destructuring": 0,
     "react/no-array-index-key": 0,
     "react/jsx-closing-bracket-location": [1, "line-aligned"],
-    "react/jsx-one-expression-per-line": [1, { "allow": "single-child" }]
+    "react/jsx-one-expression-per-line": 0
   }
 }
