@@ -22,16 +22,17 @@
   ],
   "extends": [
     "airbnb",
-    "prettier"
+    "plugin:prettier/recommended",
+    "prettier/flowtype",
+    "prettier/react",
+    "prettier/standard"
   ],
 
 
   "rules": {
-    "max-len": [1, 200],
     "dot-notation": [0, {
       "allowKeywords": false
     }],
-    "arrow-body-style": [1, "always"],
     "no-console": 0,
     "no-extra-parens": 0,
     "no-script-url": 0,
@@ -46,8 +47,6 @@
     "jsx-a11y/alt-text": 0,
     "jsx-a11y/anchor-is-valid": 0,
     "prefer-destructuring": 0,
-    "react/no-array-index-key": 0,
-    "react/jsx-closing-bracket-location": [1, "line-aligned"],
-    "react/jsx-one-expression-per-line": 0
+    "react/no-array-index-key": 0
   }
 }
