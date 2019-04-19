@@ -11,7 +11,7 @@ function Home() {
           <img src={require('../../assets/images/homeImg/tps.png')} />
         </div>
         <div className="our-right">
-          <p className="our-title">我是标题</p>
+          <p className="our-title">我是标题2</p>
           <p className="our-con">我是副标题</p>
           <a href="" className="button">
             我是按钮
