@@ -4,14 +4,14 @@
 
 const variable = {
   breakpoint: {
-    xl: 1280,
-    lg: 1024,
+    xl: 1200,
+    lg: 992,
     md: 768,
     sm: 576,
 
     // alias
-    desktop: 1280,
-    pad: 1024,
+    desktop: 1200,
+    pad: 992,
     tablet: 768,
     mobile: 576,
   },
