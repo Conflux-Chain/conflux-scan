@@ -2,3 +2,4 @@
 *.json
 *.html
 *.md
+/src/globalStyles/grid.css
