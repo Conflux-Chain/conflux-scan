@@ -8,6 +8,7 @@
     "build": "webpack --config webpack.prod.config.js",
     "prettier": "pretty-quick --staged",
     "lint:staged": "lint-staged",
+    "lint:eslint": "eslint --ignore-path .eslintignore",
     "eslint-check": "eslint --print-config . | eslint-config-prettier-check"
   },
   "keywords": [],
@@ -18,7 +19,7 @@
       "prettier --write",
       "git add"
     ],
-    "**/*.js": "eslint --ignore-path .eslintignore"
+    "**/*.js": "npm run lint:eslint"
   },
   "husky": {
     "hooks": {
