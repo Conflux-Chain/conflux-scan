@@ -19,7 +19,7 @@
       "prettier --write",
       "git add"
     ],
-    "**/*.js": "eslint --ignore-path .eslintignore"
+    "**/*.js": "lint:eslint"
   },
   "husky": {
     "hooks": {
