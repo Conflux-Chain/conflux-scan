@@ -1,20 +1,30 @@
-import { css } from 'styled-components';
+/**
+ * Global Style Variables
+ */
 
-const sizes = {
-  desktop: 992,
-  tablet: 768,
-  phone: 576,
+const variable = {
+  breakpoint: {
+    xl: 1280,
+    lg: 1024,
+    md: 768,
+    sm: 576,
+
+    // alias
+    desktop: 1280,
+    pad: 1024,
+    tablet: 768,
+    mobile: 576,
+  },
+
+  color: {
+    white: '#fff',
+    black: '#333',
+    link: '#333',
+  },
+
+  font: {
+    defaultFamily: `"Brandon Text", sans-serif`,
+  },
 };
 
-// Iterate through the sizes and create a media template
-const media = Object.keys(sizes).reduce((acc, label) => {
-  acc[label] = (...args) => css`
-    @media (max-width: ${sizes[label] / 16}em) {
-      ${css(...args)}
-    }
-  `;
-
-  return acc;
-}, {});
-
-export default media;
+export default variable;
