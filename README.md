@@ -1,45 +1,45 @@
 # Conflux新官网项目
-主要技术栈：React，样式用Styled-Component引入，全部采用flex布局，搭建静态页面，以后可能考虑用CMS重构.
+    主要技术栈：React，样式用Styled-Component引入，全部采用flex布局，搭建静态页面，以后可能考虑用CMS重构.
 
 # 文件夹结构说明
-- src
-  - assets 资源包，放些图片类的资源，需要webpack处理的
-  - components 公共组件库，比如头，尾部，还有一些基础组件
-  - lang 语言包，目前仅支持en和ch
-  - pages 官网页面组件
-  - route 路由配置
-  - utils 工具包
-    - constants 静态文件的数据结构
-- static 静态资源，改动比较频繁的图片，不需要经过编译
+    -- src
+      -- assets 资源包，放些图片类的资源，需要webpack处理的
+      -- components 公共组件库，比如头，尾部，还有一些基础组件
+      -- lang 语言包，目前仅支持en和ch
+      -- pages 官网页面组件
+      -- route 路由配置
+      -- utils 工具包
+        -- constants 静态文件的数据结构
+    -- static 静态资源，改动比较频繁的图片，不需要经过编译
 
 # pre-commit
-prettier
-eslint
-提交不了的是时候看看输出结果，把error改了再次提交就可以了
+    prettier
+    eslint
+    提交不了的是时候看看输出结果，把error改了再次提交就可以了
 
 # 响应式布局
-采用media模版文件的配置方式
-const sizes = {
-  desktop: 992,
-  tablet: 768,
-  phone: 576,
-};
+    采用media模版文件的配置方式
+    const sizes = {
+      desktop: 992,
+      tablet: 768,
+      phone: 576,
+    };
 
-// Iterate through the sizes and create a media template
-const media = Object.keys(sizes).reduce((acc, label) => {
-  acc[label] = (...args) => css`
-    @media (max-width: ${sizes[label] / 16}em) {
-      ${css(...args)}
-    }
-  `;
+    // Iterate through the sizes and create a media template
+    const media = Object.keys(sizes).reduce((acc, label) => {
+      acc[label] = (...args) => css`
+        @media (max-width: ${sizes[label] / 16}em) {
+          ${css(...args)}
+        }
+      `;
 
-  return acc;
-}, {});
+      return acc;
+    }, {});
 
-页面import media以后采用下面的方式写响应式就可以了
-  ${media.desktop`background: dodgerblue;`}
-  ${media.tablet`background: mediumseagreen;`}
-  ${media.phone`background: palevioletred;`}
+    页面import media以后采用下面的方式写响应式就可以了
+    ${media.desktop`background: dodgerblue;`}
+    ${media.tablet`background: mediumseagreen;`}
+    ${media.phone`background: palevioletred;`}
 
 
 # 编码规范--Airbnb React/JSX 编码规范
