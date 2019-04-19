@@ -7,7 +7,7 @@
     "start": "webpack-dev-server --config webpack.dev.config.js",
     "build": "webpack --config webpack.prod.config.js",
     "prettier": "pretty-quick --staged",
-    "lint:eslint": "eslint --fix",
+    "lint:eslint": "eslint",
     "lint:staged": "lint-staged",
     "eslint-check": "eslint --print-config . | eslint-config-prettier-check"
   },
@@ -17,14 +17,15 @@
   "lint-staged": {
     "linters": {
       "**/*.{js,json,jsx,css,less}": [
-        "prettier",
+        "prettier --write",
         "git add"
-      ]
+      ],
+      "**/*.js": "lint:eslint"
     }
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run lint:staged --"
+      "pre-commit": "npm run lint:staged"
     }
   },
   "dependencies": {
