@@ -34,6 +34,7 @@
       "allowKeywords": false
     }],
     "no-console": 0,
+    "no-unused-vars": 1,
     "no-extra-parens": 0,
     "no-script-url": 0,
     "no-path-concat": 0,
