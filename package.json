@@ -7,7 +7,6 @@
     "start": "webpack-dev-server --config webpack.dev.config.js",
     "build": "webpack --config webpack.prod.config.js",
     "prettier": "pretty-quick --staged",
-    "lint:eslint": "eslint --ignore-path .eslintignore",
     "lint:staged": "lint-staged",
     "eslint-check": "eslint --print-config . | eslint-config-prettier-check"
   },
