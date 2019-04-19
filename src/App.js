@@ -8,6 +8,8 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import GlobalStyle from './globalStyles/base';
 
+require('./globalStyles/grid.css');
+
 // import { hashHistory } from 'react-router';
 const zhTranslationMessages = require('./lang/zh.json');
 const enTranslationMessages = require('./lang/en.json');
