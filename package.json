@@ -7,7 +7,7 @@
     "start": "webpack-dev-server --config webpack.dev.config.js",
     "build": "webpack --config webpack.prod.config.js",
     "prettier": "pretty-quick --staged",
-    "lint:eslint": "eslint",
+    "lint:eslint": "eslint --ignore-path .eslintignore",
     "lint:staged": "lint-staged",
     "eslint-check": "eslint --print-config . | eslint-config-prettier-check"
   },
@@ -15,13 +15,11 @@
   "author": "Angelia",
   "license": "ISC",
   "lint-staged": {
-    "linters": {
-      "**/*.{js,json,jsx,css,less}": [
-        "prettier --write",
-        "git add"
-      ],
-      "**/*.js": "lint:eslint"
-    }
+    "**/*.{js,json,jsx,css,less}": [
+      "prettier --write",
+      "git add"
+    ],
+    "**/*.js": "eslint --ignore-path .eslintignore"
   },
   "husky": {
     "hooks": {
