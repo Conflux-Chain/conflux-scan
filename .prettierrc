@@ -1,6 +1,5 @@
 {
   "printWidth": 140,
-  "parser": "flow",
   "tabWidth": 2,
   "singleQuote": true,
   "arrowParens": "always",
