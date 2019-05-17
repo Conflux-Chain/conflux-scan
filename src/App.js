@@ -6,7 +6,7 @@ import zhLocaleData from 'react-intl/locale-data/zh';
 import Router from './route/router';
 import Header from './components/Header';
 import Footer from './components/Footer';
-import GlobalStyle from './style';
+import GlobalStyle from './globalStyles';
 
 // import { hashHistory } from 'react-router';
 const zhTranslationMessages = require('./lang/zh.json');
@@ -18,14 +18,14 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      lang: 'zh'
+      lang: 'zh',
     };
     this.changeLanguage = this.changeLanguage.bind(this);
   }
 
   changeLanguage(lang) {
     this.setState({
-      lang: lang
+      lang: lang,
     });
   }
 

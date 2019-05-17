@@ -15,9 +15,9 @@ class Header extends Component {
 
   changeLanguage(value) {
     const { changeLanguage } = this.props;
-    if (value.key === 1) {
+    if (value.key === '1') {
       changeLanguage('zh');
-    } else {
+    } else if (value.key === '2') {
       changeLanguage('en');
     }
   }
@@ -56,6 +56,6 @@ class Header extends Component {
   }
 }
 Header.propTypes = {
-  changeLanguage: PropTypes.func.isRequired
+  changeLanguage: PropTypes.func.isRequired,
 };
 export default injectIntl(Header);

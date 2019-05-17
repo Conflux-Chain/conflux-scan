@@ -1,6 +1,6 @@
 import React from 'react';
 
 function Teams() {
-  return <div>我是Teams</div>;
+  return <div>Teams</div>;
 }
 export default Teams;

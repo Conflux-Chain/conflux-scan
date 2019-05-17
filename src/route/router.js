@@ -5,6 +5,7 @@ import Blog from '../pages/Blog';
 import Media from '../pages/Media';
 import Teams from '../pages/Teams';
 import JoinUs from '../pages/JoinUs';
+import Community from '../pages/Community';
 import Privacy from '../pages/Privacy';
 import Policy from '../pages/Policy';
 import Faqs from '../pages/Faqs';
@@ -14,6 +15,7 @@ function Router() {
     <Switch>
       <Route path="/home" component={Home} />
       <Route path="/teams" component={Teams} />
+      <Route path="/community" component={Community} />
       <Route path="/joinus" component={JoinUs} />
       <Route path="/media" component={Media} />
       <Route path="/blog" component={Blog} />

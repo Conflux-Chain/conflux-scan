@@ -14,16 +14,16 @@ module.exports = merge(commom, {
           warnings: false,
           parse: {},
           compress: {
-            drop_console: true
+            drop_console: true,
           },
           mangle: true,
           output: null,
           toplevel: false,
           nameCache: null,
           ie8: false,
-          keep_fnames: false
-        }
-      })
-    ]
-  }
+          keep_fnames: false,
+        },
+      }),
+    ],
+  },
 });
