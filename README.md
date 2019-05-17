@@ -1,5 +1,5 @@
-# Conflux新官网项目
-    主要技术栈：React，样式用Styled-Component引入，全部采用flex布局，搭建静态页面，以后可能考虑用CMS重构.
+# Conflux Scan V2.0项目
+    主要技术栈：React，样式用Styled-Component引入，全部采用flex布局
 
 # 文件夹结构说明
     -- src
