@@ -20,9 +20,9 @@
 
 ***
 
-#### block_list(Get)
+#### block_list
 
-Returns the block data
+Returns the block data - GET
 
 ##### Parameters
 1. `startTime` - Start Time, 13位时间戳
