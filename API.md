@@ -1,70 +1,94 @@
 # Conflux Scan V2.0 API
 
-- [Conflux Scan API Template](#conflux-scan-api-template)
-- [Conflux Scan API Reference](#conflux-scan-api-reference)
-  - [block_list](#block_list)
-    - [Parameters](#parameters)
-    - [Example Parameters](#example-parameters)
-    - [Returns](#returns)
-    - [Example](#example)
+- [Global Contract](#global-contract)
+- [API Reference](#api-reference)
+  - [Block list](#block_list)
 
-## Conflux Scan API Template
+## Global Contract
 
-#### return templater
+### Overview
 
-1. `code` - error code
-2. `message` - api message
-3. `result` - api return result
+- All data is sent and received as JSON
+- All timestamps return in 10 / 13 digit int: `1558329858`
 
-## Conflux Scan API Reference
+### Request
 
-***
+- `Content-Type`: `application/json; charset=utf-8`
 
-#### block_list
+### Response Format
 
-Returns the block data - GET
+| Name | Type | Description |
+| :--- | :--: | :--- |
+| `code` | `int` | Error code |
+| `message` | `string` | Error Message |
+| `result` | `object` | Return result data |
 
-##### Parameters
-1. `startTime` - Start Time, 13位时间戳
-2. `endTime` - End Time, 13位时间戳, 时间间隔不超过一周
-3. `pageNum` - pageNum, 从1开始
+### Authorization
 
-##### Example Parameters
+`NONE`
+
+## API Reference
+
+### Block list
+
+Returns the block data
+
+```
+GET /block_list
+```
+
+#### Parameters
+
+| Name | Type | Description |
+| :--- | :--: | :--- |
+| `startTime` | `timestamp` | - |
+| `endTime` | `timestamp` | 时间间隔不超过一周 |
+| `pageNum` | `int` | **Required** 从1开始 |
+
+Example:
+
 ```js
-params: {
+{
   startTime: 1558408468903,
   endTime: 1558412347639,
   pageNum: 1
 }
 ```
 
-##### Returns
+#### Response
 
-`data` - The block array.
-1. `deferredReceiptsRoot`
-2. `deferredStateRoot`
-3. `difficulty`
-4. `epochNumber`
-5. `gasLimit`
-6. `hash`
-7. `height`
-8. `isPivot`
-9. `miner`
-10. `nonce`
-11. `parentHash`
-12. `refereeHashes`
-13. `size`
-14. `timestamp`
-15. `transactionSize`
-16. `transactionsRoot`
+| Name | Type | Description |
+| :--- | :--: | :--- |
+| `data` | `array<object>` | The block array list |
+| `- deferredReceiptsRoot` | `string` | - |
+| `- deferredStateRoot` | `string` | - |
+| `- difficulty` | `string` | - |
+| `- epochNumber` | `int` | - |
+| `- gasLimit` | `int` | - |
+| `- hash` | `string` | - |
+| `- height` | `int` | - |
+| `- isPivot` | `boolean` | - |
+| `- miner` | `string` | - |
+| `- nonce` | `string` | - |
+| `- parentHash` | `string` | - |
+| `- refereeHashes` | `array<string>` | - |
+| `- size` | `int` | - |
+| `- timestamp` | `timestamp` | - |
+| `- transactionSize` | `int` | - |
+| `- transactionsRoot` | `string` | - |
+| `pageInfo` | `object` | Page info |
+| `- pageNum` | `int` | Current page |
+| `- total` | `int` | Total data count |
+
 
 `pageInfo` - The block array.
+
 1. `pageNum`
 2. `total`
 
 ##### Example
-```js
 
+```js
 // Result
 data: [
   {
@@ -80,8 +104,6 @@ data: [
     nonce: "0xefb97a0a12bce4c3"
     parentHash: "0xc0f8cf505f6dac69046e7da2b0ba30d87fac60d12273ef5ec4380d83d6e91e11"
     refereeHashes: ["0xd9588ff03628909e2d640750a0a3a5655227d403d7d1b1d90d6aa0c3db1e208d",…]
-    0: "0xd9588ff03628909e2d640750a0a3a5655227d403d7d1b1d90d6aa0c3db1e208d"
-    1: "0x55acf2d25b8bf625d661036055ede2af3ac2b4de79f05b0bbd1b39f91663e353"
     size: 450432
     timestamp: 1558329858
     transactionSize: 1173
@@ -111,4 +133,3 @@ pageInfo: {
 }
 ```
 
-***
