@@ -12,7 +12,7 @@
 
 #### return templater
 
-1. `code`, error code
+1. `code` - error code
 2. `message` - api message
 3. `result` - api return result
 
@@ -25,9 +25,9 @@
 Returns the block data
 
 ##### Parameters
-1. `startTime`, Start Time, 13位时间戳
-2. `endTime`, End Time, 13位时间戳, 时间间隔不超过一周
-3. `pageNum`, pageNum, 从1开始
+1. `startTime` - Start Time, 13位时间戳
+2. `endTime` - End Time, 13位时间戳, 时间间隔不超过一周
+3. `pageNum` - pageNum, 从1开始
 
 ##### Example Parameters
 ```js
