@@ -76,9 +76,7 @@ Example:
 | `- timestamp` | `timestamp` | - |
 | `- transactionSize` | `int` | - |
 | `- transactionsRoot` | `string` | - |
-| `pageInfo` | `object` | Page info |
-| `- pageNum` | `int` | Current page |
-| `- total` | `int` | Total data count |
+| `total` | `int` | Total data count |
 
 Example:
 
@@ -120,9 +118,6 @@ data: [
     transactionsRoot: "0x4dad36acdcd6cf50802b2426a0aee335c8cb933d9c0a8d18747fc7fb83ef1fde"
   }
 ],
-pageInfo: {
-  pageNum: 1,
-  total: 80408
-}
+total: 80408
 ```
 
