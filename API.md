@@ -2,7 +2,7 @@
 
 - [Global Contract](#global-contract)
 - [API Reference](#api-reference)
-  - [Block list](#block_list)
+  - [Block list](#block-list)
 
 ## Global Contract
 
@@ -86,10 +86,9 @@ Example:
 1. `pageNum`
 2. `total`
 
-##### Example
+Example:
 
 ```js
-// Result
 data: [
   {
     deferredReceiptsRoot: "0x0e316395da6ad46a5ce5034ac53347e916696f854c09eaf63f905bf1d4db4198"
