@@ -34,7 +34,7 @@
 Returns the block data
 
 ```
-GET /block_list
+GET /block/list
 ```
 
 #### Parameters
@@ -79,12 +79,6 @@ Example:
 | `pageInfo` | `object` | Page info |
 | `- pageNum` | `int` | Current page |
 | `- total` | `int` | Total data count |
-
-
-`pageInfo` - The block array.
-
-1. `pageNum`
-2. `total`
 
 Example:
 
