@@ -4,6 +4,7 @@
 - [Conflux Scan API Reference](#conflux-scan-api-reference)
   - [block_list](#block_list)
     - [Parameters](#parameters)
+    - [Example Parameters](#example-parameters)
     - [Returns](#returns)
     - [Example](#example)
 
