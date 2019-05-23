@@ -3,7 +3,8 @@
 - [Global Contract](#global-contract)
 - [API Reference](#api-reference)
   - [Block list](#block-list)
-
+  - [Txc List](#txc-list)
+  
 ## Global Contract
 
 ### Overview
