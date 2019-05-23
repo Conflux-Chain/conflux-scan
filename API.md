@@ -128,9 +128,9 @@ params: {
 result: {
   code: // 0 | 1
   msg:  // 
-  data: {
-    total: // num | 总数
-    list: { // [] | Block列表
+  result: {
+    total: num, // 总数
+    data: [{ 
       deferredReceiptsRoot: 'hash',
       deferredStateRoot: 'hash',
       difficulty: 'num',
@@ -147,7 +147,7 @@ result: {
       timestamp: num, // 10bit
       transactionSize: num,
       transactionsRoot: 'hash'
-    }
+    }, ...]
   }
 }
 ```
