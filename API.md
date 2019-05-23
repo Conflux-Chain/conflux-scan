@@ -41,16 +41,12 @@ GET /block/list
 
 | Name | Type | Description |
 | :--- | :--: | :--- |
-| `startTime` | `timestamp` | - |
-| `endTime` | `timestamp` | 时间间隔不超过一周 |
 | `pageNum` | `int` | **Required** 从1开始 |
 
 Example:
 
 ```js
 {
-  startTime: 1558408468903,
-  endTime: 1558412347639,
   pageNum: 1
 }
 ```
