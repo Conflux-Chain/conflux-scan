@@ -10,7 +10,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 
 // styles
-import 'semantic-ui/dist/semantic.css';
+import './assets/semantic-ui/semantic.css';
 import GlobalStyle from './globalStyles';
 
 // import { hashHistory } from 'react-router';
@@ -64,6 +64,6 @@ class App extends Component {
       </IntlProvider>
     );
   }
-}
+} /**/
 
 export default App;

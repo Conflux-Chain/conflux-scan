@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 
 import SearchBox from '../SearchBox';
@@ -48,24 +48,24 @@ class Header extends Component {
         <SearchBox />
         <Menu>
           <li>
-            <Link to="/">
+            <NavLink exact to="/" activeClassName="actived">
               <FormattedMessage id="app.head.menu.home" />
-            </Link>
+            </NavLink>
           </li>
           <li>
-            <Link to="/blocktxn">
+            <NavLink to="/blocktxn" activeClassName="actived">
               <FormattedMessage id="app.head.menu.blocksAndTxs" />
-            </Link>
+            </NavLink>
           </li>
           <li>
-            <Link to="/directory">
+            <NavLink to="/directory" activeClassName="actived">
               <FormattedMessage id="app.head.menu.directory" />
-            </Link>
+            </NavLink>
           </li>
           <li>
-            <Link to="/more">
+            <NavLink to="/more" activeClassName="actived">
               <FormattedMessage id="app.head.menu.more" />
-            </Link>
+            </NavLink>
           </li>
           <li>
             <select value={lang} onChange={this.changeLanguage}>

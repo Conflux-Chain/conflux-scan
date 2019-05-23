@@ -83,6 +83,12 @@ module.exports = {
           chunks: 'initial',
           minChunks: 2,
         },
+        styles: {
+          name: 'styles',
+          test: /\.css$/,
+          chunks: 'all',
+          enforce: true,
+        },
       },
     },
   },

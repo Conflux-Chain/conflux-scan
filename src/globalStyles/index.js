@@ -10,4 +10,5 @@ const GlobalStyle = createGlobalStyle`
   ${HelperStyle}
   ${BaseStyle}
 `;
+
 export default GlobalStyle;
