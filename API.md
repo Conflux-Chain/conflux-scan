@@ -66,11 +66,11 @@ result: {
 }
 ```
 
-#### Txc List
+#### Tx List
 
 
 ```js
-path: /block/list
+path: /transaction/list
 method: 'get'
 params: {
   pageNum: 1 // num | 页码
@@ -82,22 +82,22 @@ result: {
   result: {
     total: num, // 总数
     data: [{ 
-      deferredReceiptsRoot: 'hash',
-      deferredStateRoot: 'hash',
-      difficulty: 'num',
+      blockHash: 'hash',
+      contractCreated: ,
+      data: '',
       epochNumber: num,
-      gasLimit: num,
+      from: 'hash',
+      gas: num,
+      gasPrice: 'num',
       hash: 'hash',
-      height: num,
-      isPivot: bool,
-      miner: 'hash',
-      nonce: 'hash',
-      parentHash: 'hash',
-      refereeHashes: [],
-      size: num,
+      nonce: num,
+      r: 'hash',
+      s: 'hash',
       timestamp: num, // 10bit
-      transactionSize: num,
-      transactionsRoot: 'hash'
+      to: 'hash',
+      transactionIndex: num,
+      v: num,
+      value: '',
     }, ...]
   }
 }
