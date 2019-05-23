@@ -54,10 +54,11 @@ module.exports = {
           loader: 'url-loader',
           options: {
             limit: 8192, // 小于8192B的文件转为base64文件
-            name: 'static/images/[name].[hash:5].[ext]',
+            name: 'images/[name].[hash:5].[ext]',
           },
         },
       },
+      { test: /\.(woff|woff|woff2|eot|ttf)$/, loader: 'url-loader?limit=100000' },
     ],
   },
   plugins: [
@@ -66,7 +67,7 @@ module.exports = {
     new CopyWebpackPlugin([
       {
         from: path.resolve(__dirname + '/static'), // 打包的静态资源目录地址
-        to: 'static', // 打包到dist下面的static
+        to: '', // 打包到dist下面
       },
     ]),
     new HtmlWebpackPlugin({

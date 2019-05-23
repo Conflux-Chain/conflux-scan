@@ -1,7 +1,7 @@
 {
-  "name": "react_demo",
+  "name": "conflux-scan",
   "version": "1.0.0",
-  "description": "",
+  "description": "Conflux Blockchain Explorer",
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server --config webpack.dev.config.js",
@@ -27,8 +27,6 @@
     }
   },
   "dependencies": {
-    "@ant-design/icons": "~1.1.0",
-    "antd": "^3.15.2",
     "history": "^4.9.0",
     "moment": "^2.24.0",
     "prop-types": "^15.7.2",

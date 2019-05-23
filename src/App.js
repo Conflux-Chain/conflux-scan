@@ -1,11 +1,16 @@
 import React, { Component } from 'react';
 import { BrowserRouter } from 'react-router-dom';
-import { addLocaleData, IntlProvider } from 'react-intl'; /* react-intl imports */
+import { addLocaleData, IntlProvider } from 'react-intl';
 import enLocaleData from 'react-intl/locale-data/en';
 import zhLocaleData from 'react-intl/locale-data/zh';
+import styled from 'styled-components';
+
 import Router from './route/router';
 import Header from './components/Header';
 import Footer from './components/Footer';
+
+// styles
+import 'semantic-ui/dist/semantic.css';
 import GlobalStyle from './globalStyles';
 
 // import { hashHistory } from 'react-router';
@@ -14,11 +19,24 @@ const enTranslationMessages = require('./lang/en.json');
 
 addLocaleData([...enLocaleData, ...zhLocaleData]);
 
+const messages = {
+  en: enTranslationMessages,
+  zh: zhTranslationMessages,
+};
+
+const Wrapper = styled.div`
+  width: 100%;
+`;
+const Container = styled.div`
+  padding: 10px 0;
+  background-color: #f9f9f9;
+`;
+
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      lang: 'zh',
+      lang: 'en',
     };
     this.changeLanguage = this.changeLanguage.bind(this);
   }
@@ -30,19 +48,18 @@ class App extends Component {
   }
 
   render() {
-    let messages = {};
-    messages['en'] = enTranslationMessages;
-    messages['zh'] = zhTranslationMessages;
     const { lang } = this.state;
     return (
-      <IntlProvider locale="en" messages={messages[lang]}>
+      <IntlProvider locale={lang} messages={messages[lang]}>
         <BrowserRouter>
-          <div>
-            <Header changeLanguage={this.changeLanguage} />
-            <Router />
+          <Wrapper>
+            <Header changeLanguage={this.changeLanguage} locale={lang} />
+            <Container>
+              <Router />
+            </Container>
             <Footer />
             <GlobalStyle />
-          </div>
+          </Wrapper>
         </BrowserRouter>
       </IntlProvider>
     );

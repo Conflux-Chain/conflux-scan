@@ -15,16 +15,6 @@ const variable = {
     tablet: 768,
     mobile: 576,
   },
-
-  color: {
-    white: '#fff',
-    black: '#333',
-    link: '#333',
-  },
-
-  font: {
-    defaultFamily: `"Brandon Text", sans-serif`,
-  },
 };
 
 export default variable;
