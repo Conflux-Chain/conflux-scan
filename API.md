@@ -64,3 +64,40 @@ result: {
   }
 }
 ```
+
+#### Txc List
+
+
+```js
+path: /block/list
+method: 'get'
+params: {
+  pageNum: 1 // num | 页码
+  pageSize: 10 // num | 每页展示数
+}
+result: {
+  code: // 0 | 1
+  msg:  // 
+  result: {
+    total: num, // 总数
+    data: [{ 
+      deferredReceiptsRoot: 'hash',
+      deferredStateRoot: 'hash',
+      difficulty: 'num',
+      epochNumber: num,
+      gasLimit: num,
+      hash: 'hash',
+      height: num,
+      isPivot: bool,
+      miner: 'hash',
+      nonce: 'hash',
+      parentHash: 'hash',
+      refereeHashes: [],
+      size: num,
+      timestamp: num, // 10bit
+      transactionSize: num,
+      transactionsRoot: 'hash'
+    }, ...]
+  }
+}
+```
