@@ -33,7 +33,7 @@ function Router() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <Switch>
-        <Route path="/home" exact component={Home} />
+        <Route path="/" exact component={Home} />
         <Route path="/dashboard" component={Home} />
         <Route path="/directory" component={Directory} />
         <Route path="/blocktxn" component={BlockAndTxn} />

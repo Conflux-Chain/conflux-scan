@@ -28,7 +28,7 @@
 
 /* Views */
 /*@import "components/ad.css";*/
-/*@import "components/card.css";*/
+@import 'components/card.css';
 /*@import "components/comment.css";*/
 /*@import "components/feed.css";*/
 /*@import "components/item.css";*/

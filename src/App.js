@@ -13,6 +13,8 @@ import Footer from './components/Footer';
 import './assets/semantic-ui/semantic.css';
 import GlobalStyle from './globalStyles';
 
+require('./assets/iconfont/iconfont.js');
+
 // import { hashHistory } from 'react-router';
 const zhTranslationMessages = require('./lang/zh.json');
 const enTranslationMessages = require('./lang/en.json');
