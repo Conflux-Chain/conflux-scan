@@ -31,7 +31,7 @@ const NotFound = lazy(() => import('../pages/404'));
 
 function Router() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<div className="ui active loader" />}>
       <Switch>
         <Route path="/home" exact component={Home} />
         <Route path="/dashboard" component={Home} />
