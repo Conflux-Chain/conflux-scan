@@ -2119,8 +2119,13 @@ create-hmac@^1.1.0, create-hmac@^1.1.2, create-hmac@^1.1.4:
 
 create-react-context@<=0.2.2:
   version "0.2.2"
+<<<<<<< HEAD
   resolved "https://registry.npm.taobao.org/create-react-context/download/create-react-context-0.2.2.tgz#9836542f9aaa22868cd7d4a6f82667df38019dca"
   integrity sha1-mDZUL5qqIoaM19Sm+CZn3zgBnco=
+=======
+  resolved "https://registry.yarnpkg.com/create-react-context/-/create-react-context-0.2.2.tgz#9836542f9aaa22868cd7d4a6f82667df38019dca"
+  integrity sha512-KkpaLARMhsTsgp0d2NA/R94F/eDLbhXERdIq3LvX2biCAXcDvHYoOqHfWCHf1+OLj+HKBotLG3KqaOOf+C1C+A==
+>>>>>>> origin/dev
   dependencies:
     fbjs "^0.8.0"
     gud "^1.0.0"
@@ -3065,7 +3070,11 @@ execa@^1.0.0:
 
 exenv@^1.2.2:
   version "1.2.2"
+<<<<<<< HEAD
   resolved "https://registry.npm.taobao.org/exenv/download/exenv-1.2.2.tgz#2ae78e85d9894158670b03d47bec1f03bd91bb9d"
+=======
+  resolved "https://registry.yarnpkg.com/exenv/-/exenv-1.2.2.tgz#2ae78e85d9894158670b03d47bec1f03bd91bb9d"
+>>>>>>> origin/dev
   integrity sha1-KueOhdmJQVhnCwPUe+wfA72Ru50=
 
 expand-brackets@^2.1.4:
@@ -4512,8 +4521,13 @@ jsx-ast-utils@^2.0.1:
 
 keyboard-key@^1.0.4:
   version "1.0.4"
+<<<<<<< HEAD
   resolved "https://registry.npm.taobao.org/keyboard-key/download/keyboard-key-1.0.4.tgz#52d8fa07b7e17757072aa22a67fb4ae85e4c46b0"
   integrity sha1-Utj6B7fhd1cHKqIqZ/tK6F5MRrA=
+=======
+  resolved "https://registry.yarnpkg.com/keyboard-key/-/keyboard-key-1.0.4.tgz#52d8fa07b7e17757072aa22a67fb4ae85e4c46b0"
+  integrity sha512-my04dE6BCwPpwoe4KYKfPxWiwgDYQOHrVmtzn1CfzmoEsGG/ef4oZGaXCzi1+iFhG7CN5JkOuxmei5OABY8/ag==
+>>>>>>> origin/dev
 
 killable@^1.0.0:
   version "1.0.1"
@@ -5769,8 +5783,13 @@ please-upgrade-node@^3.0.2, please-upgrade-node@^3.1.1:
 
 popper.js@^1.14.4:
   version "1.15.0"
+<<<<<<< HEAD
   resolved "https://registry.npm.taobao.org/popper.js/download/popper.js-1.15.0.tgz#5560b99bbad7647e9faa475c6b8056621f5a4ff2"
   integrity sha1-VWC5m7rXZH6fqkdca4BWYh9aT/I=
+=======
+  resolved "https://registry.yarnpkg.com/popper.js/-/popper.js-1.15.0.tgz#5560b99bbad7647e9faa475c6b8056621f5a4ff2"
+  integrity sha512-w010cY1oCUmI+9KwwlWki+r5jxKfTFDVoadl7MSrIujHU5MJ5OR6HTDj6Xo8aoR/QsA56x8jKjA59qGH4ELtrA==
+>>>>>>> origin/dev
 
 portfinder@^1.0.9:
   version "1.0.20"
@@ -6405,8 +6424,13 @@ react-is@^16.8.6:
 
 react-popper@^1.3.3:
   version "1.3.3"
+<<<<<<< HEAD
   resolved "https://registry.npm.taobao.org/react-popper/download/react-popper-1.3.3.tgz#2c6cef7515a991256b4f0536cd4bdcb58a7b6af6"
   integrity sha1-LGzvdRWpkSVrTwU2zUvctYp7avY=
+=======
+  resolved "https://registry.yarnpkg.com/react-popper/-/react-popper-1.3.3.tgz#2c6cef7515a991256b4f0536cd4bdcb58a7b6af6"
+  integrity sha512-ynMZBPkXONPc5K4P5yFWgZx5JGAUIP3pGGLNs58cfAPgK67olx7fmLp+AdpZ0+GoQ+ieFDa/z4cdV6u7sioH6w==
+>>>>>>> origin/dev
   dependencies:
     "@babel/runtime" "^7.1.2"
     create-react-context "<=0.2.2"
@@ -6852,8 +6876,13 @@ selfsigned@^1.9.1:
 
 semantic-ui-react@^0.87.1:
   version "0.87.1"
+<<<<<<< HEAD
   resolved "https://registry.npm.taobao.org/semantic-ui-react/download/semantic-ui-react-0.87.1.tgz#249cca258fe05ee0a7095d8be0b3a749f34a1837"
   integrity sha1-JJzKJY/gXuCnCV2L4LOnSfNKGDc=
+=======
+  resolved "https://registry.yarnpkg.com/semantic-ui-react/-/semantic-ui-react-0.87.1.tgz#249cca258fe05ee0a7095d8be0b3a749f34a1837"
+  integrity sha512-eHSuYEJWYz9EEiM4r0b/Q2t/RPvQC/xMU5ucrsdk1TZHqEzLkyMzSBdVnXhhqHwUaHA2kt9NRxDaRUmLlGx4wg==
+>>>>>>> origin/dev
   dependencies:
     "@babel/runtime" "^7.1.2"
     "@semantic-ui-react/event-stack" "^3.1.0"
@@ -6967,8 +6996,13 @@ sha.js@^2.4.0, sha.js@^2.4.8:
 
 shallowequal@^1.1.0:
   version "1.1.0"
+<<<<<<< HEAD
   resolved "https://registry.npm.taobao.org/shallowequal/download/shallowequal-1.1.0.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fshallowequal%2Fdownload%2Fshallowequal-1.1.0.tgz#188d521de95b9087404fd4dcb68b13df0ae4e7f8"
   integrity sha1-GI1SHelbkIdAT9TctosT3wrk5/g=
+=======
+  resolved "https://registry.yarnpkg.com/shallowequal/-/shallowequal-1.1.0.tgz#188d521de95b9087404fd4dcb68b13df0ae4e7f8"
+  integrity sha512-y0m1JoUZSlPAjXVtPPW70aZWfIL/dSP7AFkRnniLCrK/8MDKog3TySTBmckD+RObVxH0v4Tox67+F14PdED2oQ==
+>>>>>>> origin/dev
 
 shebang-command@^1.2.0:
   version "1.2.0"
@@ -7664,8 +7698,13 @@ type-is@~1.6.16:
 
 typed-styles@^0.0.7:
   version "0.0.7"
+<<<<<<< HEAD
   resolved "https://registry.npm.taobao.org/typed-styles/download/typed-styles-0.0.7.tgz#93392a008794c4595119ff62dde6809dbc40a3d9"
   integrity sha1-kzkqAIeUxFlRGf9i3eaAnbxAo9k=
+=======
+  resolved "https://registry.yarnpkg.com/typed-styles/-/typed-styles-0.0.7.tgz#93392a008794c4595119ff62dde6809dbc40a3d9"
+  integrity sha512-pzP0PWoZUhsECYjABgCGQlRGL1n7tOHsgwYv3oIiEpJwGhFTuty/YNeduxQYzXXa3Ge5BdT6sHYIQYpl4uJ+5Q==
+>>>>>>> origin/dev
 
 typedarray@^0.0.6:
   version "0.0.6"
