@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 
+const More = require('../../assets/images/icons/more.svg');
+
 const Container = styled.div`
   width: 100%;
   max-width: 1200px;
@@ -44,6 +46,7 @@ const Block = styled.div`
       color: #b00020;
     }
     .icon-arrow-top {
+      display: inline-block;
       transform: scaleX(-1) rotate(-90deg);
       color: #311b92;
       width: 11px;
@@ -51,11 +54,12 @@ const Block = styled.div`
       margin-left: 6px;
     }
     .icon-arrow-down {
+      display: inline-block;
       transform: scaleX(-1) rotate(90deg);
       width: 11px;
       height: 12px;
       margin-left: 6px;
-      color: #b00020;
+      color: #b00020 !important;
     }
   }
 `;
@@ -70,9 +74,7 @@ function Home() {
             <span className="block-value">774.26</span>
             <span className="block-diff-up">
               + 4.2 %
-              <svg className="icon-arrow-top" aria-hidden="true">
-                <use xlinkHref="#iconmore" />
-              </svg>
+              <img className="icon-arrow-top" src={More} />
             </span>
           </div>
         </Block>
@@ -82,9 +84,7 @@ function Home() {
             <span className="block-value">200,570,130</span>
             <span className="block-diff-down">
               - 13.88 %
-              <svg className="icon-arrow-down" aria-hidden="true">
-                <use xlinkHref="#iconmore" />
-              </svg>
+              <img className="icon-arrow-down" src={More} />
             </span>
           </div>
         </Block>
