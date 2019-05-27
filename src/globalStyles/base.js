@@ -31,6 +31,27 @@ const BaseStyle = css`
     src: url('../assets/fonts/ProximaNova-Regular.otf');
   }
 
+  @font-face {
+    font-family: 'Proxima Nova';
+    font-display: auto;
+    src: url('../assets/fonts/ProximaNova-Bold.otf');
+    font-weight: 700;
+  }
+
+  @font-face {
+    font-family: 'Proxima Nova';
+    font-display: auto;
+    src: url('../assets/fonts/ProximaNova-Light.otf');
+    font-weight: 300;
+  }
+
+  @font-face {
+    font-family: 'Proxima Nova';
+    font-display: auto;
+    src: url('../assets/fonts/ProximaNova-RegularItalic.otf');
+    font-style: italic;
+  }
+
   body {
     font-family: 'Proxima Nova', 'HelveticaNeue', Helvetica, Arial, sans-serif;
     font-size: 14px;
