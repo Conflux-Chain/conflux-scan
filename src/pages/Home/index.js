@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Card, Feed } from 'semantic-ui-react';
 
 const Container = styled.div`
   width: 100%;
@@ -115,85 +114,6 @@ function Home() {
         </Block>
       </BlockContainer>
     </Container>
-    // <div className="ui card">
-    //   <div className="content">
-    //     <div className="header">Recent Activity</div>
-    //   </div>
-    //   <div className="content">
-    //     <div className="ui feed">
-    //       <div className="event">
-    //         <div className="label">
-    //           <img src="/images/avatar/small/jenny.jpg" />
-    //         </div>
-    //         <div className="content">
-    //           <div className="date">1 day ago</div>
-    //           <div className="summary">
-    //             You added <a>Jenny Hess</a> to your <a>coworker</a> group.
-    //           </div>
-    //         </div>
-    //       </div>
-    //       <div className="event">
-    //         <div className="label">
-    //           <img src="/images/avatar/small/molly.png" />
-    //         </div>
-    //         <div className="content">
-    //           <div className="date">3 days ago</div>
-    //           <div className="summary">
-    //             You added <a>Molly Malone</a> as a friend.
-    //           </div>
-    //         </div>
-    //       </div>
-    //       <div className="event">
-    //         <div className="label">
-    //           <img src="/images/avatar/small/elliot.jpg" />
-    //         </div>
-    //         <div className="content">
-    //           <div className="date">4 days ago</div>
-    //           <div className="summary">
-    //             You added <a>Elliot Baker</a> to your <a>musicians</a> group.
-    //           </div>
-    //         </div>
-    //       </div>
-    //     </div>
-    //   </div>
-    // </div>
-    // <Card>
-    //   <Card.Content>
-    //     <Card.Header>Recent Activity</Card.Header>
-    //   </Card.Content>
-    //   <Card.Content>
-    //     <Feed>
-    //       <Feed.Event>
-    //         <Feed.Label image="/images/avatar/small/jenny.jpg" />
-    //         <Feed.Content>
-    //           <Feed.Date content="1 day ago" />
-    //           <Feed.Summary>
-    //             You added <a>Jenny Hess</a> to your <a>coworker</a> group.
-    //           </Feed.Summary>
-    //         </Feed.Content>
-    //       </Feed.Event>
-
-    //       <Feed.Event>
-    //         <Feed.Label image="/images/avatar/small/molly.png" />
-    //         <Feed.Content>
-    //           <Feed.Date content="3 days ago" />
-    //           <Feed.Summary>
-    //             You added <a>Molly Malone</a> as a friend.
-    //           </Feed.Summary>
-    //         </Feed.Content>
-    //       </Feed.Event>
-    //       <Feed.Event>
-    //         <Feed.Label image="/images/avatar/small/elliot.jpg" />
-    //         <Feed.Content>
-    //           <Feed.Date content="4 days ago" />
-    //           <Feed.Summary>
-    //             You added <a>Elliot Baker</a> to your <a>musicians</a> group.
-    //           </Feed.Summary>
-    //         </Feed.Content>
-    //       </Feed.Event>
-    //     </Feed>
-    //   </Card.Content>
-    // </Card>
   );
 }
 export default Home;
