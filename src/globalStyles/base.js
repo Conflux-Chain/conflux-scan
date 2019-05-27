@@ -4,6 +4,10 @@
 
 import { css } from 'styled-components';
 import media from './media';
+import ProximaNovaRegular from '../assets/fonts/ProximaNova-Regular.otf';
+import ProximaNovaBold from '../assets/fonts/ProximaNova-Bold.otf';
+import ProximaNovaLight from '../assets/fonts/ProximaNova-Light.otf';
+import ProximaNovaRegularItalic from '../assets/fonts/ProximaNova-RegularItalic.otf';
 
 const BaseStyle = css`
   html {
@@ -28,27 +32,27 @@ const BaseStyle = css`
   @font-face {
     font-family: 'Proxima Nova';
     font-display: auto;
-    src: url('../assets/fonts/ProximaNova-Regular.otf');
+    src: url(${ProximaNovaRegular});
   }
 
   @font-face {
     font-family: 'Proxima Nova';
     font-display: auto;
-    src: url('../assets/fonts/ProximaNova-Bold.otf');
+    src: url(${ProximaNovaBold});
     font-weight: 700;
   }
 
   @font-face {
     font-family: 'Proxima Nova';
     font-display: auto;
-    src: url('../assets/fonts/ProximaNova-Light.otf');
+    src: url(${ProximaNovaLight});
     font-weight: 300;
   }
 
   @font-face {
     font-family: 'Proxima Nova';
     font-display: auto;
-    src: url('../assets/fonts/ProximaNova-RegularItalic.otf');
+    src: url(${ProximaNovaRegularItalic});
     font-style: italic;
   }
 

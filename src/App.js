@@ -7,7 +7,8 @@ import styled from 'styled-components';
 
 import Router from './route/router';
 import Header from './components/Header';
-// import Footer from './components/Footer';
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 
 // styles
 import './assets/semantic-ui/semantic.css';
@@ -57,11 +58,12 @@ class App extends Component {
       <IntlProvider locale={lang} messages={messages[lang]}>
         <BrowserRouter>
           <Wrapper>
-            <Header changeLanguage={this.changeLanguage} locale={lang} />
+            <Header changeLanguage={this.changeLanguage} />
+            <Navbar />
             <Container>
               <Router />
+              <Footer />
             </Container>
-            {/* <Footer /> */}
             <GlobalStyle />
           </Wrapper>
         </BrowserRouter>
