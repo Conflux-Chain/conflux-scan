@@ -7,7 +7,7 @@ import styled from 'styled-components';
 
 import Router from './route/router';
 import Header from './components/Header';
-import Footer from './components/Footer';
+// import Footer from './components/Footer';
 
 // styles
 import './assets/semantic-ui/semantic.css';
@@ -61,7 +61,7 @@ class App extends Component {
             <Container>
               <Router />
             </Container>
-            <Footer />
+            {/* <Footer /> */}
             <GlobalStyle />
           </Wrapper>
         </BrowserRouter>
