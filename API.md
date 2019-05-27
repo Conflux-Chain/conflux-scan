@@ -86,7 +86,7 @@ result: {
     timestamp: num, // 10bit
     contractCreated: ,
     data: '',
-    isPivot: bool,
+    // isPivot: bool, // Tx 无 Pivot 
     epochNumber: num,
     gas: num,
     hash: 'hash',
@@ -162,7 +162,7 @@ result: {
       timestamp: num, // 10bit
       contractCreated: ,
       data: '',
-      isPivot: bool,
+      // isPivot: bool,
       epochNumber: num,
       gas: num,
       gasPrice: 'num',
@@ -198,7 +198,7 @@ result: {
       timestamp: num, // 10bit
       contractCreated: ,
       data: '',
-      isPivot: bool,
+      // isPivot: bool,
       epochNumber: num,
       gas: num,
       
@@ -220,6 +220,9 @@ result: {
 path: /account/:account_hash
 method: 'get'
 params: {
+  startTime: 'string', // 可选：精确到小时
+  endTime: 'string', // 可选：精确到小时
+  txnType: 'All', // 可选： 默认All  All | Outgoing | Incoming
   pageNum: 1 // num | 页码
   pageSize: 10 // num | 每页展示数
 }
@@ -228,7 +231,7 @@ result: {
   msg:  // 
   result: {
     data: { 
-      balance: "39998263999999999968857000" //39998264 CFX
+      balance: "39998263999999999968857000" //39998264 CFX(Max) 10^9  Gdrip  Drip(Min)
       firstSeen: 1557924851
       lastSeen: 1558495563
       minedBlocks: 0
@@ -255,7 +258,7 @@ result: {
     total: num, // 总数
     data: [{ 
       blockHash: 'hash',
-      isPivot: bool,
+      // isPivot: bool,
       from: 'hash',
       isIn: bool,
       to: 'hash',
@@ -282,7 +285,7 @@ result: {
 #### Account Block List
 
 ```js
-path: /account/:account_hash/block_list
+path: /account/:account_hash/mined_block_list
 method: 'get'
 params: {
   pageNum: 1 // num | 页码
@@ -303,6 +306,43 @@ result: {
       timestamp: num, // 10bit
       transactionSize: num, // Tx count
       // 
+      deferredReceiptsRoot: 'hash',
+      deferredStateRoot: 'hash',
+      height: num,
+      isPivot: bool,
+      nonce: 'hash',
+      parentHash: 'hash',
+      refereeHashes: [],
+      size: num,
+      transactionsRoot: 'hash'
+    }, ...]
+  }
+}
+```
+
+#### Account Referee Block List
+
+```js
+path: /account/:account_hash/referee_block_list
+method: 'get'
+params: {
+  pageNum: 1 // num | 页码
+  pageSize: 10 // num | 每页展示数
+}
+result: {
+  code: // 0 | 1
+  msg:  // 
+  result: {
+    total: num, // 总数
+    data: [{ 
+      epochNumber: num,
+      position: num,
+      hash: 'hash',
+      difficulty: 'num',
+      miner: 'hash',
+      gasLimit: num,
+      timestamp: num, // 10bit
+      transactionSize: num, // Tx count
       deferredReceiptsRoot: 'hash',
       deferredStateRoot: 'hash',
       height: num,
