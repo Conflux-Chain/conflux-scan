@@ -2,9 +2,15 @@
 
 - [Global Contract](#global-contract)
 - [API Reference](#api-reference)
+  - [Block Detail](#block-detail)
+  - [Block Detail Transaction List](#block-detail-tx-list)
   - [Block list](#block-list)
+  - [Tx Detail](#tx-detail)
   - [Tx List](#tx-list)
-
+  - [Account Detail](#account-detail)
+  - [Account Tx List (S/R Merge))](#account-tx-list)
+  - [Account Block List](#account-block-list)
+  
 ## Global Contract
 
 ### Overview
@@ -30,12 +36,76 @@
 
 ## API Reference
 
+#### Block Detail
+
+```js
+path: /block/:block_hash
+method: 'get'
+params: {}
+result: {
+  data: {
+    epochNumber: num,
+    position: num,
+    hash: 'hash',
+    difficulty: 'num',
+    miner: 'hash',
+    gasLimit: num,
+    timestamp: num, // 10bit
+    transactionSize: num, // Tx count
+    // 
+    deferredReceiptsRoot: 'hash',
+    deferredStateRoot: 'hash',
+    height: num,
+    isPivot: bool,
+    nonce: 'hash',
+    parentHash: 'hash',
+    refereeHashes: [],
+    size: num,
+    transactionsRoot: 'hash'
+  }
+}
+```
+
+#### Block Detail Transaction List
+
+```js
+path: /block/:block_hash/transaction_list
+method: 'get'
+params: {
+  pageNum: 1 // num | 页码
+  pageSize: 10 // num | 每页展示数
+}
+result: {
+  total: num, // 总数
+  data: [{ 
+    blockHash: 'hash',
+    from: 'hash',
+    to: 'hash',
+    value: '',
+    gasPrice: 'num',
+    timestamp: num, // 10bit
+    contractCreated: ,
+    data: '',
+    isPivot: bool,
+    epochNumber: num,
+    gas: num,
+    hash: 'hash',
+    nonce: num,
+    r: 'hash',
+    s: 'hash',
+    transactionIndex: num,
+    v: num,
+  }, ...]
+}
+```
+
 #### Block List
 
 ```js
 path: /block/list
 method: 'get'
 params: {
+  epochNum: num, // 可选
   pageNum: 1 // num | 页码
   pageSize: 10 // num | 每页展示数
 }
@@ -45,21 +115,23 @@ result: {
   result: {
     total: num, // 总数
     data: [{ 
+      epochNumber: num,
+      position: num,
+      hash: 'hash',
+      difficulty: 'num',
+      miner: 'hash',
+      gasLimit: num,
+      timestamp: num, // 10bit
+      transactionSize: num, // Tx count
+      // 
       deferredReceiptsRoot: 'hash',
       deferredStateRoot: 'hash',
-      difficulty: 'num',
-      epochNumber: num,
-      gasLimit: num,
-      hash: 'hash',
       height: num,
       isPivot: bool,
-      miner: 'hash',
       nonce: 'hash',
       parentHash: 'hash',
       refereeHashes: [],
       size: num,
-      timestamp: num, // 10bit
-      transactionSize: num,
       transactionsRoot: 'hash'
     }, ...]
   }
@@ -83,21 +155,163 @@ result: {
     total: num, // 总数
     data: [{ 
       blockHash: 'hash',
+      from: 'hash',
+      to: 'hash',
+      // value
+      // gas price
+      timestamp: num, // 10bit
       contractCreated: ,
       data: '',
+      isPivot: bool,
       epochNumber: num,
-      from: 'hash',
       gas: num,
       gasPrice: 'num',
       hash: 'hash',
       nonce: num,
       r: 'hash',
       s: 'hash',
-      timestamp: num, // 10bit
-      to: 'hash',
       transactionIndex: num,
       v: num,
       value: '',
+    }, ...]
+  }
+}
+```
+
+#### Tx Detail
+
+
+```js
+path: /transaction/:txn_hash
+method: 'get'
+params: {}
+result: {
+  code: // 0 | 1
+  msg:  // 
+  result: {
+    data: { 
+      blockHash: 'hash',
+      from: 'hash',
+      to: 'hash',
+      value: '',
+      gasPrice: 'num',
+      timestamp: num, // 10bit
+      contractCreated: ,
+      data: '',
+      isPivot: bool,
+      epochNumber: num,
+      gas: num,
+      
+      hash: 'hash',
+      nonce: num,
+      r: 'hash',
+      s: 'hash',
+      transactionIndex: num,
+      v: num,
+    }
+  }
+}
+```
+
+#### Account Detail
+
+
+```js
+path: /account/:account_hash
+method: 'get'
+params: {
+  pageNum: 1 // num | 页码
+  pageSize: 10 // num | 每页展示数
+}
+result: {
+  code: // 0 | 1
+  msg:  // 
+  result: {
+    data: { 
+      balance: "39998263999999999968857000" //39998264 CFX
+      firstSeen: 1557924851
+      lastSeen: 1558495563
+      minedBlocks: 0
+      receivedTransactions: 1
+      sentTransactions: 1483
+    }
+  }
+}
+```
+
+#### Account Tx List (S/R Merge)
+
+```js
+path: /account/:account_hash/transaction_list
+method: 'get'
+params: {
+  pageNum: 1 // num | 页码
+  pageSize: 10 // num | 每页展示数
+}
+result: {
+  code: // 0 | 1
+  msg:  // 
+  result: {
+    total: num, // 总数
+    data: [{ 
+      blockHash: 'hash',
+      isPivot: bool,
+      from: 'hash',
+      isIn: bool,
+      to: 'hash',
+      isOut: bool,
+      value: '',
+      gas: num,
+      gasPrice: 'num',
+      timestamp: num, // 10bit
+      contractCreated: ,
+      data: '',
+      epochNumber: num,
+      hash: 'hash',
+      nonce: num,
+      r: 'hash',
+      s: 'hash',
+      transactionIndex: num,
+      v: num,
+      
+    }, ...]
+  }
+}
+```
+
+#### Account Block List
+
+```js
+path: /account/:account_hash/block_list
+method: 'get'
+params: {
+  pageNum: 1 // num | 页码
+  pageSize: 10 // num | 每页展示数
+}
+result: {
+  code: // 0 | 1
+  msg:  // 
+  result: {
+    total: num, // 总数
+    data: [{ 
+      epochNumber: num,
+      position: num,
+      hash: 'hash',
+      difficulty: 'num',
+      miner: 'hash',
+      gasLimit: num,
+      timestamp: num, // 10bit
+      transactionSize: num, // Tx count
+      // 
+      deferredReceiptsRoot: 'hash',
+      deferredStateRoot: 'hash',
+      height: num,
+      isPivot: bool,
+      nonce: 'hash',
+      parentHash: 'hash',
+      refereeHashes: [],
+      size: num,
+      transactionsRoot: 'hash'
     }, ...]
   }
 }
