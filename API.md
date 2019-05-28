@@ -62,11 +62,11 @@ result: {
   data: {
     'name': { // tps/difficulty/blockTime/hashRate
       title: '', // TPS/Difficulty/Block Time/Hash Rate
-      value: num,
+      val: num,
       trend: num,
-      lineData: [{
+      list: [{
         time: num, // 10bit
-        value: num
+        data: num
       }, ...]
     }, ...}
 }
