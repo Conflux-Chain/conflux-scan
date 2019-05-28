@@ -1,86 +1,87 @@
+// Header Component
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { FormattedMessage, injectIntl } from 'react-intl';
 import { NavLink } from 'react-router-dom';
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 import styled from 'styled-components';
+import { Dropdown, Menu } from 'semantic-ui-react';
 
 import SearchBox from '../SearchBox';
+import LogoBlack from '../../assets/images/logo-b@2.png';
 
 const Wrapper = styled.header`
   width: 100%;
-  padding: 10px 0;
-  text-align: center;
+  padding: 0 25px;
+  text-align: left;
+  height: 72px;
+  display: flex;
+  justify-content: space-between;
   border-bottom: 1px solid #ccc;
 `;
 
-const Logo = styled.div``;
+const Logo = styled.div`
+  margin-top: 24px;
+  margin-right: 30px;
+  img {
+    width: 130px;
+    transition: 0.4s transform;
 
-const Menu = styled.ul`
-  display: flex;
-  margin: 10px auto;
-  justify-content: center;
-  align-content: center;
-
-  li {
-    list-style: none;
-    margin: 0 10px;
+    &:hover {
+      //transform: scale(1.05);
+    }
   }
+`;
+
+const SearchBoxContainer = styled.div`
+  width: 100%;
+  margin-top: 17px;
+`;
+
+const LangSelector = styled(Menu)`
+  margin-top: 15px !important;
+  width: 125px;
+  height: 40px;
+  border-radius: 40px !important;
 `;
 
 class Header extends Component {
   constructor(props) {
     super(props);
-    this.state = { lang: props.locale };
+    this.state = { lang: props.intl.locale };
     this.changeLanguage = this.changeLanguage.bind(this);
   }
 
-  changeLanguage(event) {
+  changeLanguage(event, data) {
     const { changeLanguage } = this.props;
-    this.setState({ lang: event.target.value });
-    changeLanguage(event.target.value);
+    this.setState({ lang: data.value });
+    changeLanguage(data.value);
   }
 
   render() {
     const { lang } = this.state;
+    const options = [{ key: 1, text: 'English', value: 'en' }, { key: 2, text: '中文', value: 'zh' }];
+
     return (
       <Wrapper>
-        <Logo />
-        <SearchBox />
-        <Menu>
-          <li>
-            <NavLink exact to="/" activeClassName="actived">
-              <FormattedMessage id="app.head.menu.home" />
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/blocktxn" activeClassName="actived">
-              <FormattedMessage id="app.head.menu.blocksAndTxs" />
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/directory" activeClassName="actived">
-              <FormattedMessage id="app.head.menu.directory" />
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/more" activeClassName="actived">
-              <FormattedMessage id="app.head.menu.more" />
-            </NavLink>
-          </li>
-          <li>
-            <select value={lang} onChange={this.changeLanguage}>
-              <option value="en">英文</option>
-              <option value="zh">中文</option>
-            </select>
-          </li>
-        </Menu>
+        <Logo>
+          <NavLink to="/">
+            <img src={LogoBlack} alt="Conflux Logo" />
+          </NavLink>
+        </Logo>
+        <SearchBoxContainer>
+          <SearchBox />
+        </SearchBoxContainer>
+        <LangSelector compact>
+          <Dropdown options={options} simple item defaultValue={lang} onChange={this.changeLanguage} />
+        </LangSelector>
       </Wrapper>
     );
   }
 }
 
 Header.propTypes = {
-  locale: PropTypes.string.isRequired,
+  intl: intlShape.isRequired,
   changeLanguage: PropTypes.func.isRequired,
 };
 export default injectIntl(Header);
