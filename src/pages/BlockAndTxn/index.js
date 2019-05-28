@@ -125,7 +125,7 @@ class BlockAndTxn extends Component {
                 </div>
               </div>
               <div className="content">
-                <DataList showHeader columns={columns} dataSource={dataSource} />
+                <DataList columns={columns} dataSource={dataSource} />
               </div>
               <div className="extra content">
                 <StyledButton className="ui fluid violet button ">View All Blocks</StyledButton>

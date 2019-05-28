@@ -1,7 +1,7 @@
 let errorId = null;
 let source = null;
 
-export const getXmlHttpRequest = function() {
+export const getXmlHttpRequest = () => {
   try {
     // 主流浏览器提供了XMLHttpRequest对象
     return new XMLHttpRequest();
@@ -12,12 +12,12 @@ export const getXmlHttpRequest = function() {
   }
 };
 
-export const initSse = function(tthis) {
+export const initSse = (tthis) => {
   source = null;
   source = new EventSource('http://localhost:3000/proxy/fetch_random_time');
 
-  const damon = function(id, that) {
-    const isValidUri = function(type = 'GET', uri = '/', callback = () => {}, tthat) {
+  const damon = (id, that) => {
+    const isValidUri = (type = 'GET', uri = '/', callback = () => {}, tthat) => {
       let xhr = getXmlHttpRequest();
       // readyState 0=>初始化 1=>载入 2=>载入完成 3=>解析 4=>完成
       // console.log(xhr.readyState);  0
@@ -25,7 +25,7 @@ export const initSse = function(tthis) {
       // console.log(xhr.readyState);  1
       xhr.send();
       // console.log(xhr.readyState);  1
-      xhr.onreadystatechange = function() {
+      xhr.onreadystatechange = () => {
         // console.log(xhr.status); //HTTP状态吗
         // console.log(xhr.readyState);  2 3 4
         if (xhr.readyState === 4 && xhr.status === 200) {
@@ -61,26 +61,26 @@ export const initSse = function(tthis) {
 
   source.addEventListener(
     'open',
-    function(info) {
+    (info) => {
       // console.log(errorIds, '=== open');
     },
     'false'
   );
-  source.addEventListener('message', function(data) {
+  source.addEventListener('message', (data) => {
     const result = JSON.parse(data.data);
     // console.log( result.timestamp);
     tthis.setState({ timestamp: result.timestamp });
     // console.log(data);
     // $('body').append(`<p>${data.data}</p>`);
   });
-  source.addEventListener('end', function(event) {
+  source.addEventListener('end', (event) => {
     console.log('should close');
     tthis.close();
   });
 
   source.addEventListener(
     'error',
-    function(err) {
+    (err) => {
       console.log('emit here ==== ');
       damon(errorId, tthis);
     },
@@ -89,6 +89,6 @@ export const initSse = function(tthis) {
   return source;
 };
 
-export const closeSource = function() {
+export const closeSource = () => {
   source.close();
 };
