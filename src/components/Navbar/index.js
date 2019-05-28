@@ -2,8 +2,9 @@
 
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { NavLink } from 'react-router-dom';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { NavLink, withRouter } from 'react-router-dom';
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
+import PropTypes from 'prop-types';
 
 const Wrapper = styled.div`
   position: fixed;
@@ -59,7 +60,12 @@ const Menu = styled.ul`
   }
 `;
 
-function Navbar() {
+function Navbar(props) {
+  const { location } = props;
+  const blocktxnPaths = ['blocktxn', 'blocks', 'blocksdetail', 'transactions', 'transactionsdetail', 'accountdetail', 'epochsdetail'];
+  const directoryPaths = ['directory', 'topholders'];
+  console.log(props);
+
   return (
     <Wrapper>
       <Menu>
@@ -72,7 +78,11 @@ function Navbar() {
           </NavLink>
         </li>
         <li>
-          <NavLink to="/blocktxn" activeClassName="actived">
+          <NavLink
+            to="/blocktxn"
+            activeClassName="actived"
+            isActive={() => !!blocktxnPaths.find((v) => location.pathname.indexOf('/' + v) === 0)}
+          >
             <svg className="icon" aria-hidden="true">
               <use xlinkHref="#iconqukuaigaoduxuanzhong" />
             </svg>
@@ -80,7 +90,11 @@ function Navbar() {
           </NavLink>
         </li>
         <li>
-          <NavLink to="/directory" activeClassName="actived">
+          <NavLink
+            to="/directory"
+            activeClassName="actived"
+            isActive={() => !!directoryPaths.find((v) => location.pathname.indexOf('/' + v) === 0)}
+          >
             <svg className="icon" aria-hidden="true">
               <use xlinkHref="#iconbaipishu" />
             </svg>
@@ -92,4 +106,16 @@ function Navbar() {
   );
 }
 
-export default injectIntl(Navbar);
+Navbar.propTypes = {
+  location: PropTypes.shape({
+    pathname: PropTypes.string.isRequired,
+  }),
+};
+
+Navbar.defaultProps = {
+  location: {
+    pathname: window.location.pathname,
+  },
+};
+
+export default withRouter(injectIntl(Navbar));
