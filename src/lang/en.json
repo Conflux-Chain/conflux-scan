@@ -2,6 +2,6 @@
   "app.head.menu.home": "Dashboard",
   "app.head.menu.dashboard": "Dashboard",
   "app.head.menu.blocksAndTxs": "Blocks & Transactions",
-  "app.head.menu.directory": "Directory",
+  "app.head.menu.directory": "Conflux Directory",
   "app.head.menu.more": "More"
 }

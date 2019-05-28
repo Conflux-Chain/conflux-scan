@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 import styled from 'styled-components';
-import { Dropdown, Menu } from 'semantic-ui-react';
+import classnames from 'classnames';
 
 import SearchBox from '../SearchBox';
 import LogoBlack from '../../assets/images/logo-b@2.png';
@@ -18,6 +18,7 @@ const Wrapper = styled.header`
   display: flex;
   justify-content: space-between;
   border-bottom: 1px solid #ccc;
+  background-color: #fff;
 `;
 
 const Logo = styled.div`
@@ -38,29 +39,53 @@ const SearchBoxContainer = styled.div`
   margin-top: 17px;
 `;
 
-const LangSelector = styled(Menu)`
+const LangSelector = styled.div.attrs({
+  className: 'ui menu compact',
+})`
   margin-top: 15px !important;
   width: 125px;
-  height: 40px;
-  border-radius: 40px !important;
+  padding-bottom: 16px;
+  border: none !important;
+  box-shadow: none !important;
+
+  .ui.dropdown {
+    width: 100%;
+    justify-content: space-around;
+    border: 1px solid #ccc;
+    border-radius: 40px !important;
+
+    .menu > .item {
+      outline: none;
+    }
+  }
+
+  .menu.visible {
+    display: none !important;
+    top: calc(100% + 8px);
+  }
+
+  &:hover {
+    .menu.visible {
+      display: block !important;
+    }
+  }
 `;
 
 class Header extends Component {
   constructor(props) {
     super(props);
     this.state = { lang: props.intl.locale };
-    this.changeLanguage = this.changeLanguage.bind(this);
   }
 
-  changeLanguage(event, data) {
+  changeLanguage(data) {
     const { changeLanguage } = this.props;
-    this.setState({ lang: data.value });
-    changeLanguage(data.value);
+    this.setState({ lang: data });
+    changeLanguage(data);
   }
 
   render() {
     const { lang } = this.state;
-    const options = [{ key: 1, text: 'English', value: 'en' }, { key: 2, text: '中文', value: 'zh' }];
+    const langs = [{ value: 'en', text: 'English' }, { value: 'zh', text: '中文' }];
 
     return (
       <Wrapper>
@@ -72,8 +97,27 @@ class Header extends Component {
         <SearchBoxContainer>
           <SearchBox />
         </SearchBoxContainer>
-        <LangSelector compact>
-          <Dropdown options={options} simple item defaultValue={lang} onChange={this.changeLanguage} />
+        <LangSelector>
+          <div className="ui dropdown link item">
+            <span className="text">{langs.find((v) => v.value === lang).text}</span>
+            <i className="dropdown icon" />
+            <div className="menu transition visible">
+              {langs
+                .filter((v) => v.value !== lang)
+                .map((l) => (
+                  <div
+                    className="item"
+                    onClick={() => this.changeLanguage(l.value)}
+                    onKeyPress={() => this.changeLanguage(l.value)}
+                    role="menuitem"
+                    tabIndex={0}
+                    key={l.value}
+                  >
+                    {l.text}
+                  </div>
+                ))}
+            </div>
+          </div>
         </LangSelector>
       </Wrapper>
     );
