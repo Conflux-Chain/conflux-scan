@@ -140,7 +140,7 @@ class Home extends Component {
       <Container>
         <BlockContainer>
           <Block>
-            <span className="block-title">Tps</span>
+            <span className="block-title">TPS</span>
             <div className="block-content">
               <span className="block-value">774.26</span>
               <span className="block-diff-up">
