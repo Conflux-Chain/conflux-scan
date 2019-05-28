@@ -3,6 +3,7 @@
 - [Global Contract](#global-contract)
 - [API Reference](#api-reference)
   - [Dashboard Statistics](#dashboard-statistics)
+  - [Dashboard Line Chart](#dashboard-line-chart)
   - [Block Detail](#block-detail)
   - [Block Detail Transaction List](#block-detail-tx-list)
   - [Block list](#block-list)
@@ -45,15 +46,30 @@ method: 'get'
 params: {}
 result: {
   data: {
-    'name': { // tps/difficulty/blockTime/hashRate
+    name: { // tps/difficulty/blockTime/hashRate
       title: '', // TPS/Difficulty/Block Time/Hash Rate
       val: num,
-      trend: num,
-      list: [{
-        time: num, // 10bit
-        data: num
-      }, ...]
-    }, ...}
+      trend: num
+  }, ...}
+}
+```
+
+#### Dashboard Line Chart
+
+```js
+path: /dashboard/statistics/:name // tps/difficulty/blockTime/hashRate
+method: 'get'
+params: {
+  duration: '' // hour/day/month/all
+}
+result: {
+  data: {
+    title: '', // TPS/Difficulty/Block Time/Hash Rate
+    list: [{
+      time: num, // 10bit
+      data: num
+    }, ...]
+  }
 }
 ```
 
