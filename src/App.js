@@ -14,6 +14,9 @@ import Footer from './components/Footer';
 import './assets/semantic-ui/semantic.css';
 import GlobalStyle from './globalStyles';
 
+import JnoodleEn from './lang/jnoodle.en';
+import JnoodleZh from './lang/jnoodle.zh';
+
 require('./assets/iconfont/iconfont.js');
 
 // import { hashHistory } from 'react-router';
@@ -23,18 +26,27 @@ const enTranslationMessages = require('./lang/en.json');
 addLocaleData([...enLocaleData, ...zhLocaleData]);
 
 const messages = {
-  en: enTranslationMessages,
-  zh: zhTranslationMessages,
+  en: Object.assign({}, enTranslationMessages, JnoodleEn),
+  zh: Object.assign({}, zhTranslationMessages, JnoodleZh),
 };
 
 const Wrapper = styled.div`
   width: 100%;
 `;
+
 const Container = styled.div`
   position: relative;
-  padding: 10px 0;
-  min-height: 100px;
-  background-color: #f9f9f9;
+  padding: 20px;
+  margin-left: 120px;
+  max-height: calc(100vh - 72px);
+  overflow-x: hidden;
+  overflow-y: auto;
+`;
+
+const Content = styled.div`
+  position: relative;
+  max-width: calc(100vw - 160px);
+  min-height: 200px;
 `;
 
 class App extends Component {
@@ -61,7 +73,9 @@ class App extends Component {
             <Header changeLanguage={this.changeLanguage} />
             <Navbar />
             <Container>
-              <Router />
+              <Content>
+                <Router />
+              </Content>
               <Footer />
             </Container>
             <GlobalStyle />

@@ -65,6 +65,8 @@ const BaseStyle = css`
     font-kerning: normal;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    background-color: #f9f9f9;
+    overflow: hidden;
   }
 
   .icon {
