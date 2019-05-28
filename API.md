@@ -2,6 +2,7 @@
 
 - [Global Contract](#global-contract)
 - [API Reference](#api-reference)
+  - [Dashboard Statistics](#dashboard-statistics)
   - [Block Detail](#block-detail)
   - [Block Detail Transaction List](#block-detail-tx-list)
   - [Block list](#block-list)
@@ -10,7 +11,7 @@
   - [Account Detail](#account-detail)
   - [Account Tx List (S/R Merge))](#account-tx-list)
   - [Account Block List](#account-block-list)
-  
+
 ## Global Contract
 
 ### Overview
@@ -36,6 +37,57 @@
 
 ## API Reference
 
+#### Dashboard Statistics
+
+```js
+path: /dashboard/statistics
+method: 'get'
+params: {}
+result: {
+  data: [{
+    title: '', // TPS/Difficulty/Block Time/Hash Rate
+    value: num,
+    trend: num
+  }, ...]
+}
+```
+
+#### Dashboard Statistics
+
+```js
+path: /dashboard/statistics
+method: 'get'
+params: {}
+result: {
+  data: {
+    'name': { // tps/difficulty/blockTime/hashRate
+      title: '', // TPS/Difficulty/Block Time/Hash Rate
+      value: num,
+      trend: num
+    }, ...}
+}
+```
+
+#### Dashboard LineChart
+
+```js
+path: /dashboard/lineData
+method: 'get'
+params: {
+  duration: '', // hour/day/month/all
+}
+result: {
+  data: {
+    'name': { // tps/difficulty/blockTime/hashRate
+      title: '', // TPS/Difficulty/Block Time/Hash Rate
+      lineData: [{
+        time: num, // 10bit
+        value: num
+      }, ...]
+    }, ...}
+}
+```
+
 #### Block Detail
 
 ```js
@@ -52,7 +104,7 @@ result: {
     gasLimit: num,
     timestamp: num, // 10bit
     transactionSize: num, // Tx count
-    // 
+    //
     deferredReceiptsRoot: 'hash',
     deferredStateRoot: 'hash',
     height: num,
@@ -77,7 +129,7 @@ params: {
 }
 result: {
   total: num, // 总数
-  data: [{ 
+  data: [{
     blockHash: 'hash',
     from: 'hash',
     to: 'hash',
@@ -111,10 +163,10 @@ params: {
 }
 result: {
   code: // 0 | 1
-  msg:  // 
+  msg:  //
   result: {
     total: num, // 总数
-    data: [{ 
+    data: [{
       epochNumber: num,
       position: num,
       hash: 'hash',
@@ -123,7 +175,7 @@ result: {
       gasLimit: num,
       timestamp: num, // 10bit
       transactionSize: num, // Tx count
-      // 
+      //
       deferredReceiptsRoot: 'hash',
       deferredStateRoot: 'hash',
       height: num,
@@ -150,10 +202,10 @@ params: {
 }
 result: {
   code: // 0 | 1
-  msg:  // 
+  msg:  //
   result: {
     total: num, // 总数
-    data: [{ 
+    data: [{
       blockHash: 'hash',
       from: 'hash',
       to: 'hash',
@@ -187,9 +239,9 @@ method: 'get'
 params: {}
 result: {
   code: // 0 | 1
-  msg:  // 
+  msg:  //
   result: {
-    data: { 
+    data: {
       blockHash: 'hash',
       from: 'hash',
       to: 'hash',
@@ -201,7 +253,7 @@ result: {
       isPivot: bool,
       epochNumber: num,
       gas: num,
-      
+
       hash: 'hash',
       nonce: num,
       r: 'hash',
@@ -225,9 +277,9 @@ params: {
 }
 result: {
   code: // 0 | 1
-  msg:  // 
+  msg:  //
   result: {
-    data: { 
+    data: {
       balance: "39998263999999999968857000" //39998264 CFX
       firstSeen: 1557924851
       lastSeen: 1558495563
@@ -250,10 +302,10 @@ params: {
 }
 result: {
   code: // 0 | 1
-  msg:  // 
+  msg:  //
   result: {
     total: num, // 总数
-    data: [{ 
+    data: [{
       blockHash: 'hash',
       isPivot: bool,
       from: 'hash',
@@ -273,7 +325,6 @@ result: {
       s: 'hash',
       transactionIndex: num,
       v: num,
-      
     }, ...]
   }
 }
@@ -290,10 +341,10 @@ params: {
 }
 result: {
   code: // 0 | 1
-  msg:  // 
+  msg:  //
   result: {
     total: num, // 总数
-    data: [{ 
+    data: [{
       epochNumber: num,
       position: num,
       hash: 'hash',
@@ -302,7 +353,7 @@ result: {
       gasLimit: num,
       timestamp: num, // 10bit
       transactionSize: num, // Tx count
-      // 
+      //
       deferredReceiptsRoot: 'hash',
       deferredStateRoot: 'hash',
       height: num,
