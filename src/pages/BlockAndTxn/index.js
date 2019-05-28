@@ -4,7 +4,7 @@ import DataList from '../../components/DataList';
 import Countdown from '../../components/Countdown';
 import EllipsisLine from '../../components/EllipsisLine';
 import '../../assets/semantic-ui/semantic.css';
-import { initSse } from './util';
+import { initSse } from '../../utils';
 
 const Wrapper = styled.div`
   max-width: 1200px;

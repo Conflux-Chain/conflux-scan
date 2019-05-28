@@ -8,7 +8,8 @@
     "build": "NODE_ENV=production webpack --config webpack.prod.config.js",
     "prettier": "pretty-quick --staged",
     "lint:staged": "lint-staged",
-    "lint:eslint": "eslint --ignore-path .eslintignore",
+    "lintfix": "eslint . --fix",
+    "lint:eslint": "eslint --ignore-path .eslintignore --fix",
     "eslint-check": "eslint --print-config . | eslint-config-prettier-check"
   },
   "keywords": [],
@@ -30,6 +31,8 @@
     "@babel/plugin-syntax-dynamic-import": "^7.2.0",
     "antd": "^3.19.1",
     "axios": "^0.18.0",
+    "classnames": "^2.2.6",
+    "echarts": "^4.2.1",
     "history": "^4.9.0",
     "moment": "^2.24.0",
     "prop-types": "^15.7.2",

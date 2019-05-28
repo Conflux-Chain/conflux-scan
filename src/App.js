@@ -7,7 +7,8 @@ import styled from 'styled-components';
 
 import Router from './route/router';
 import Header from './components/Header';
-// import Footer from './components/Footer';
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 
 // styles
 import './assets/semantic-ui/semantic.css';
@@ -29,11 +30,18 @@ const messages = {
 const Wrapper = styled.div`
   width: 100%;
 `;
+
 const Container = styled.div`
   position: relative;
   padding: 10px 0;
-  min-height: 100px;
-  background-color: #f9f9f9;
+  margin-left: 120px;
+  max-height: calc(100vh - 72px);
+  overflow: auto;
+`;
+
+const Content = styled.div`
+  position: relative;
+  min-height: 200px;
 `;
 
 class App extends Component {
@@ -57,11 +65,14 @@ class App extends Component {
       <IntlProvider locale={lang} messages={messages[lang]}>
         <BrowserRouter>
           <Wrapper>
-            <Header changeLanguage={this.changeLanguage} locale={lang} />
+            <Header changeLanguage={this.changeLanguage} />
+            <Navbar />
             <Container>
-              <Router />
+              <Content>
+                <Router />
+              </Content>
+              <Footer />
             </Container>
-            {/* <Footer /> */}
             <GlobalStyle />
           </Wrapper>
         </BrowserRouter>
