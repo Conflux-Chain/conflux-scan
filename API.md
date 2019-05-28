@@ -46,7 +46,7 @@ method: 'get'
 params: {}
 result: {
   data: {
-    name: { // tps/difficulty/blockTime/hashRate
+    'tps': { // tps/difficulty/blockTime/hashRate
       title: '', // TPS/Difficulty/Block Time/Hash Rate
       val: num,
       trend: num
