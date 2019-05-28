@@ -14,6 +14,9 @@ import Footer from './components/Footer';
 import './assets/semantic-ui/semantic.css';
 import GlobalStyle from './globalStyles';
 
+import JnoodleEn from './lang/jnoodle.en';
+import JnoodleZh from './lang/jnoodle.zh';
+
 require('./assets/iconfont/iconfont.js');
 
 // import { hashHistory } from 'react-router';
@@ -23,8 +26,8 @@ const enTranslationMessages = require('./lang/en.json');
 addLocaleData([...enLocaleData, ...zhLocaleData]);
 
 const messages = {
-  en: enTranslationMessages,
-  zh: zhTranslationMessages,
+  en: Object.assign({}, enTranslationMessages, JnoodleEn),
+  zh: Object.assign({}, zhTranslationMessages, JnoodleZh),
 };
 
 const Wrapper = styled.div`
@@ -33,14 +36,16 @@ const Wrapper = styled.div`
 
 const Container = styled.div`
   position: relative;
-  padding: 10px 0;
+  padding: 20px;
   margin-left: 120px;
   max-height: calc(100vh - 72px);
-  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
 `;
 
 const Content = styled.div`
   position: relative;
+  max-width: calc(100vw - 160px);
   min-height: 200px;
 `;
 

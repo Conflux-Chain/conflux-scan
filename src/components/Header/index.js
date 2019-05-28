@@ -85,7 +85,7 @@ class Header extends Component {
 
   render() {
     const { lang } = this.state;
-    const langs = [{ value: 'en', text: 'English' }, { value: 'zh', text: '中文' }];
+    const langs = ['en', 'zh'];
 
     return (
       <Wrapper>
@@ -99,21 +99,23 @@ class Header extends Component {
         </SearchBoxContainer>
         <LangSelector>
           <div className="ui dropdown link item">
-            <span className="text">{langs.find((v) => v.value === lang).text}</span>
+            <span className="text">
+              <FormattedMessage id={'app.header.lang.' + lang} />
+            </span>
             <i className="dropdown icon" />
             <div className="menu transition visible">
               {langs
-                .filter((v) => v.value !== lang)
+                .filter((v) => v !== lang)
                 .map((l) => (
                   <div
                     className="item"
-                    onClick={() => this.changeLanguage(l.value)}
-                    onKeyPress={() => this.changeLanguage(l.value)}
+                    onClick={() => this.changeLanguage(l)}
+                    onKeyPress={() => this.changeLanguage(l)}
                     role="menuitem"
                     tabIndex={0}
-                    key={l.value}
+                    key={l}
                   >
-                    {l.text}
+                    <FormattedMessage id={'app.header.lang.' + l} />
                   </div>
                 ))}
             </div>
