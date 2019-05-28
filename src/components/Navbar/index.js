@@ -68,7 +68,7 @@ function Navbar() {
             <svg className="icon" aria-hidden="true">
               <use xlinkHref="#icondashboard" />
             </svg>
-            <FormattedMessage id="app.head.menu.home" />
+            <FormattedMessage id="app.navbar.home" />
           </NavLink>
         </li>
         <li>
@@ -76,7 +76,7 @@ function Navbar() {
             <svg className="icon" aria-hidden="true">
               <use xlinkHref="#iconqukuaigaoduxuanzhong" />
             </svg>
-            <FormattedMessage id="app.head.menu.blocksAndTxs" />
+            <FormattedMessage id="app.navbar.blocksAndTxs" />
           </NavLink>
         </li>
         <li>
@@ -84,7 +84,7 @@ function Navbar() {
             <svg className="icon" aria-hidden="true">
               <use xlinkHref="#iconbaipishu" />
             </svg>
-            <FormattedMessage id="app.head.menu.directory" />
+            <FormattedMessage id="app.navbar.directory" />
           </NavLink>
         </li>
       </Menu>

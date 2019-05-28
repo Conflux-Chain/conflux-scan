@@ -1,9 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { FormattedMessage } from 'react-intl';
 
 const Wrapper = styled.footer`
-  width: calc(100% - 60px);
+  width: calc(100% - 20px);
   margin: 30px auto 0;
   padding: 28px 0;
   display: flex;
@@ -78,7 +79,9 @@ function Footer() {
   return (
     <Wrapper>
       <Content>
-        <Title>CONTACT US</Title>
+        <Title>
+          <FormattedMessage id="app.footer.title" />
+        </Title>
         <Info>
           <span>
             <svg className="icon" aria-hidden="true">
@@ -96,7 +99,7 @@ function Footer() {
             <svg className="icon" aria-hidden="true">
               <use xlinkHref="#iconiclocationonpx" />
             </svg>
-            Room 1002, Building B, Xueyandasha, No. 30, Shuangqing Road, Beijing, P.R. China.
+            <FormattedMessage id="app.footer.address" />
           </span>
         </Info>
         <Copyright>Copyright © 2019 Conflux. All Rights Reserved</Copyright>
