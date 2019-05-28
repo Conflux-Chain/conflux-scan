@@ -17,10 +17,10 @@ const SingleLine = styled.div`
 function EllipsisLine({ isPivot, text }) {
   return (
     <SingleLine>
-      <p className="wrap">
+      <div className="wrap">
         <div className="ellipsis">{text}</div>
         {isPivot && <div className="ui mini green label">Pivot</div>}
-      </p>
+      </div>
     </SingleLine>
   );
 }

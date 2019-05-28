@@ -9,8 +9,7 @@
     "prettier": "pretty-quick --staged",
     "lint:staged": "lint-staged",
     "lint:eslint": "eslint --ignore-path .eslintignore",
-    "eslint-check": "eslint --print-config . | eslint-config-prettier-check",
-    "serve": "SERVER_PORT=3000 SERVER_HOST=localhost SERVER_PREFIX=/proxy node ./service/index.js"
+    "eslint-check": "eslint --print-config . | eslint-config-prettier-check"
   },
   "keywords": [],
   "author": "Angelia",
@@ -29,7 +28,7 @@
   },
   "dependencies": {
     "@babel/plugin-syntax-dynamic-import": "^7.2.0",
-    "@hapi/hapi": "^18.3.1",
+    "antd": "^3.19.1",
     "axios": "^0.18.0",
     "history": "^4.9.0",
     "moment": "^2.24.0",
@@ -45,8 +44,7 @@
     "redux-saga": "^1.0.2",
     "redux-thunk": "^2.3.0",
     "semantic-ui-react": "^0.87.1",
-    "styled-components": "^4.2.0",
-    "susie": "^3.0.0"
+    "styled-components": "^4.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.2.2",

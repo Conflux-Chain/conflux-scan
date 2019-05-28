@@ -34,7 +34,7 @@ const IconFace = styled.div`
     height: 23px;
   }
 `;
-const PCell = styled.p`
+const PCell = styled.div`
   margin: 0 !important;
 `;
 
@@ -68,7 +68,7 @@ const columns = [
     render: (text, row) => (
       <div>
         <PCell>
-          <EllipsisLine isPivot="true" text={row.zwei} />
+          <EllipsisLine isPivot text={row.zwei} />
         </PCell>
         <PCell>{row.drei}</PCell>
       </div>
@@ -121,11 +121,11 @@ class BlockAndTxn extends Component {
               <div className="content">
                 <div className="header">
                   Blocks
-                  <Countdown timestamp={timestamp} />
+                  <Countdown timestamp={timestamp.toString()} />
                 </div>
               </div>
               <div className="content">
-                <DataList showHeader={false} columns={columns} dataSource={dataSource} />
+                <DataList showHeader columns={columns} dataSource={dataSource} />
               </div>
               <div className="extra content">
                 <StyledButton className="ui fluid violet button ">View All Blocks</StyledButton>

@@ -42,7 +42,7 @@ function Router() {
         <Route path="/blocksdetail/:blockhash" component={BlockDetail} />
         <Route path="/transactions" component={TransactionList} />
         <Route path="/transactionsdetail/:txnhash" component={TransactionDetail} />
-        <Route path="/accountdetail" component={AccountDetail} />
+        <Route path="/accountdetail/:accountid" component={AccountDetail} />
         <Route path="/epochsdetail/:epochid" component={EpochDetail} />
         <Route path="/topholders" component={TopHolder} />
         <Route path="/notfound" component={SearchNotFound} />
