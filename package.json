@@ -8,7 +8,8 @@
     "build": "NODE_ENV=production webpack --config webpack.prod.config.js",
     "prettier": "pretty-quick --staged",
     "lint:staged": "lint-staged",
-    "lint:eslint": "eslint --ignore-path .eslintignore",
+    "lintfix": "eslint . --fix",
+    "lint:eslint": "eslint --ignore-path .eslintignore --fix",
     "eslint-check": "eslint --print-config . | eslint-config-prettier-check",
     "serve": "SERVER_PORT=3000 SERVER_HOST=localhost SERVER_PREFIX=/proxy node ./service/index.js"
   },
@@ -31,6 +32,7 @@
     "@babel/plugin-syntax-dynamic-import": "^7.2.0",
     "axios": "^0.18.0",
     "classnames": "^2.2.6",
+    "echarts": "^4.2.1",
     "history": "^4.9.0",
     "moment": "^2.24.0",
     "prop-types": "^15.7.2",
