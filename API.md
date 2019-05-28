@@ -3,6 +3,7 @@
 - [Global Contract](#global-contract)
 - [API Reference](#api-reference)
   - [Dashboard Statistics](#dashboard-statistics)
+  - [Dashboard Line Chart](#dashboard-line-chart)
   - [Block Detail](#block-detail)
   - [Block Detail Transaction List](#block-detail-tx-list)
   - [Block list](#block-list)
@@ -68,7 +69,7 @@ result: {
 }
 ```
 
-#### Dashboard LineChart
+#### Dashboard Line Chart
 
 ```js
 path: /dashboard/lineData
