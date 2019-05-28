@@ -44,21 +44,6 @@ path: /dashboard/statistics
 method: 'get'
 params: {}
 result: {
-  data: [{
-    title: '', // TPS/Difficulty/Block Time/Hash Rate
-    value: num,
-    trend: num
-  }, ...]
-}
-```
-
-#### Dashboard Statistics
-
-```js
-path: /dashboard/statistics
-method: 'get'
-params: {}
-result: {
   data: {
     'name': { // tps/difficulty/blockTime/hashRate
       title: '', // TPS/Difficulty/Block Time/Hash Rate
