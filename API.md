@@ -67,7 +67,7 @@ result: {
     title: '', // TPS/Difficulty/Block Time/Hash Rate
     list: [{
       time: num, // 10bit
-      data: num
+      value: num
     }, ...]
   }
 }
