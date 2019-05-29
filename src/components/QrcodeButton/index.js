@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { Modal } from 'semantic-ui-react';
-import QRCode from 'qrcode';
 import styled from 'styled-components';
 import { injectIntl } from 'react-intl';
 import { IconFace } from '../CopyButton';
@@ -20,19 +19,23 @@ class QrcodeButton extends PureComponent {
     this.setRef = (c) => {
       this.canvasRef = c;
     };
+
     this.onMount = () => {
       const { qrTxt } = this.props;
-      QRCode.toCanvas(
-        this.canvasRef,
-        qrTxt,
-        {
-          width: canvasW,
-          height: canvasH,
-        },
-        (error) => {
-          if (error) console.error(error);
-        }
-      );
+
+      import('qrcode').then((QRCode) => {
+        QRCode.toCanvas(
+          this.canvasRef,
+          qrTxt,
+          {
+            width: canvasW,
+            height: canvasH,
+          },
+          (error) => {
+            if (error) console.error(error);
+          }
+        );
+      });
     };
   }
 
