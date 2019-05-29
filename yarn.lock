@@ -8749,6 +8749,11 @@ wbuf@^1.1.0, wbuf@^1.7.3:
   dependencies:
     minimalistic-assert "^1.0.0"
 
+webpack-cdn-plugin@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.npmjs.org/webpack-cdn-plugin/-/webpack-cdn-plugin-3.1.1.tgz#df8fecfe8d491d666d75dc8fa6116fd3c67e5d8b"
+  integrity sha512-9Nhme7Q6oGwIx5gUipB61Z1qw1bqs4bqIekR1tFBD5IUt7uxlRieMF55FVlKdLzq5eEzt5Z189kzZbtSYp4Peg==
+
 webpack-cli@^3.2.1:
   version "3.3.2"
   resolved "https://registry.npmjs.org/webpack-cli/-/webpack-cli-3.3.2.tgz#aed2437b0db0a7faa2ad28484e166a5360014a91"
