@@ -12,10 +12,13 @@ const Wrapper = styled.div`
   left: 0;
   bottom: 0;
   width: 120px;
+  max-height: calc(100vh - 72px);
   padding: 0;
   text-align: center;
   background-color: #1f204c;
   z-index: 999;
+  overflow-x: hidden;
+  overflow-y: auto;
 `;
 
 const Menu = styled.ul`
