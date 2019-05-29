@@ -47,7 +47,6 @@ params: {}
 result: {
   data: {
     'tps': { // tps/difficulty/blockTime/hashRate
-      title: '', // TPS/Difficulty/Block Time/Hash Rate
       val: num,
       trend: num
   }, ...}
@@ -63,13 +62,10 @@ params: {
   duration: '' // hour/day/month/all
 }
 result: {
-  data: {
-    title: '', // TPS/Difficulty/Block Time/Hash Rate
-    list: [{
-      time: num, // 10bit
-      value: num
-    }, ...]
-  }
+  data: [{
+    time: num, // 10bit
+    value: num
+  }, ...]
 }
 ```
 
