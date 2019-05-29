@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import moment from 'moment';
 import echarts from 'echarts';
+import { toFixed } from '../../utils';
 
 const Duration = styled.div`
   width: 56px;
@@ -81,7 +82,7 @@ class LineChart extends Component {
           },
         },
         formatter: (params) => {
-          return moment(params[0].data.time * 1000).format(formatString) + '<br />' + params[0].data.value;
+          return moment(params[0].data.time * 1000).format(formatString) + '<br />' + toFixed(params[0].data.value, 3);
         },
       },
       xAxis: {

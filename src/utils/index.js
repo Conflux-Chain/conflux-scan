@@ -97,10 +97,7 @@ export const toFixed = (num, decimal) => {
   if (isNaN(num)) {
     return 0;
   }
-  let p = 1;
-  for (let i = 0; i < decimal; i++) {
-    p *= 10;
-  }
+  const p = 10 ** decimal;
   return Math.round(num * p) / p;
 };
 
