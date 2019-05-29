@@ -67,7 +67,7 @@ result: {
     title: '', // TPS/Difficulty/Block Time/Hash Rate
     list: [{
       time: num, // 10bit
-      data: num
+      value: num
     }, ...]
   }
 }
@@ -267,13 +267,8 @@ result: {
   code: // 0 | 1
   msg:  //
   result: {
-<<<<<<< HEAD
     data: { 
       balance: "39998263999999999968857000" //39998264 CFX(Max) 10^9  Gdrip  Drip(Min)
-=======
-    data: {
-      balance: "39998263999999999968857000" //39998264 CFX
->>>>>>> 09e274db7143dd8a53d220f3d459c3794576b430
       firstSeen: 1557924851
       lastSeen: 1558495563
       minedBlocks: 0
