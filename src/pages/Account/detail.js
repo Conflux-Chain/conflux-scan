@@ -185,7 +185,7 @@ function Detail({ match }) {
               <use xlinkHref="#iconfuzhi" />
             </svg>
           </IconFace> */}
-          <CopyButton txtToCopy={accountid} toolTipId="app.pages.account.detail.tooltip" />
+          <CopyButton style={{ marginLeft: 10 }} txtToCopy={accountid} toolTipId="app.pages.account.detail.tooltip" />
           <QrcodeButton titleTxt={accountid} qrTxt={accountid} tooltipId="app.pages.account.detail.qr" />
           {/* <IconFace>
             <svg className="icon" aria-hidden="true">

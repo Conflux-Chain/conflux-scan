@@ -7,5 +7,6 @@
   "app.comp.nodeMap.scatter.name": "scatter名字",
   "app.comp.copyButton.copySuccess": "已复制",
   "app.pages.account.detail.qr": "点击查看二维码",
-  "app.pages.account.detail.tooltip": "复制到剪切板"
+  "app.pages.account.detail.tooltip": "复制到剪切板",
+  "app.pages.searchNotFound.tooltip": "复制到剪切板"
 }

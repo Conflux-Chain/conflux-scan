@@ -7,5 +7,6 @@
   "app.comp.nodeMap.scatter.name": "scatterName",
   "app.comp.copyButton.copySuccess": "Copied",
   "app.pages.account.detail.qr": "Click to View QR Code",
-  "app.pages.account.detail.tooltip": "Copy Address to clipboard"
+  "app.pages.account.detail.tooltip": "Copy Address to clipboard",
+  "app.pages.searchNotFound.tooltip": "Copy to clipboard"
 }

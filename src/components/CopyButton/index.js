@@ -3,6 +3,10 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { injectIntl } from 'react-intl';
 
+const Wrap = styled.div`
+  margin-left: 10px;
+  display: inline-block;
+`;
 const IconFace = styled.div`
   margin-left: 16px;
   width: 32px;
@@ -25,6 +29,46 @@ const IconFace = styled.div`
     svg {
       color: #fff;
     }
+  }
+`;
+
+const IconCopy = styled.span`
+  position: relative;
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  vertical-align: middle;
+  cursor: pointer;
+  .i1 {
+    width: 11px;
+    height: 11px;
+    border: 2px solid #1e3de4;
+    border-radius: 3px;
+    display: block;
+    position: absolute;
+    top: 1px;
+    left: 2px;
+    background: #fff;
+  }
+  .i2 {
+    width: 10px;
+    height: 11px;
+    display: block;
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    background: #fff;
+  }
+  .i3 {
+    width: 11px;
+    height: 11px;
+    border: 2px solid #1e3de4;
+    border-radius: 3px;
+    display: block;
+    position: absolute;
+    top: 7px;
+    left: 7px;
+    background: #fff;
   }
 `;
 
@@ -106,26 +150,23 @@ class CopyButton extends PureComponent {
   }
 
   render() {
-    const { toolTipId, intl, style } = this.props;
+    const { toolTipId, intl, style, renderIcon, btnType } = this.props;
     const { tempTip } = this.state;
     const tooltip = intl.formatMessage({
       id: tempTip || toolTipId,
     });
 
     return (
-      <IconFace
+      <Wrap
+        style={style}
         data-inverted=""
         data-tooltip={tooltip}
         data-position="bottom left"
-        className="iconface"
         onClick={this.onClickIcon}
         onMouseLeave={this.onMouseLeave}
-        style={style}
       >
-        <svg className="icon" aria-hidden="true">
-          <use xlinkHref="#iconfuzhi" />
-        </svg>
-      </IconFace>
+        {renderIcon(btnType)}
+      </Wrap>
     );
   }
 }
@@ -138,14 +179,34 @@ CopyButton.propTypes = {
   style: PropTypes.shape({
     marginLeft: PropTypes.string,
   }),
+  btnType: PropTypes.string,
+  renderIcon: PropTypes.func,
 };
 CopyButton.defaultProps = {
   intl: {
     formatMessage: () => {},
   },
-  style: {
-    marginLeft: '10px',
+  style: {},
+  btnType: '',
+  renderIcon: (btnType) => {
+    if (btnType === 'two') {
+      return (
+        <IconCopy>
+          <i className="i1" />
+          <i className="i2" />
+          <i className="i3" />
+        </IconCopy>
+      );
+    }
+    return (
+      <IconFace className="iconface">
+        <svg className="icon" aria-hidden="true">
+          <use xlinkHref="#iconfuzhi" />
+        </svg>
+      </IconFace>
+    );
   },
 };
+
 export default injectIntl(CopyButton);
 export { IconFace };
