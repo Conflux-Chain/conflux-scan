@@ -8,6 +8,7 @@ import DataList from '../../components/DataList';
 import Countdown from '../../components/Countdown';
 import EllipsisLine from '../../components/EllipsisLine';
 import '../../assets/semantic-ui/semantic.css';
+import CopyButton from '../../components/CopyButton';
 
 const { RangePicker } = DatePicker;
 
@@ -178,11 +179,13 @@ function Detail({ match }) {
         <HeadBar>
           <h1>Conflux Account</h1>
           <p>{accountid || '0x413957876f8239dd9246fefabc4e7d6d86d4f9b6'}</p>
-          <IconFace>
+          {/* <IconFace onClick={() => { }}>
             <svg className="icon" aria-hidden="true">
               <use xlinkHref="#iconfuzhi" />
             </svg>
-          </IconFace>
+          </IconFace> */}
+          <CopyButton txtToCopy={accountid} toolTipId="app.pages.account.detail.tooltip" />
+
           <IconFace>
             <svg className="icon" aria-hidden="true">
               <use xlinkHref="#iconcaidan" />

@@ -4,5 +4,7 @@
   "app.head.menu.blocksAndTxs": "Blocks & Transactions",
   "app.head.menu.directory": "Conflux Directory",
   "app.head.menu.more": "More",
-  "app.comp.nodeMap.scatter.name": "scatterName"
+  "app.comp.nodeMap.scatter.name": "scatterName",
+  "app.comp.copyButton.copySuccess": "Copied",
+  "app.pages.account.detail.tooltip": "Copy Address to clipboard"
 }
