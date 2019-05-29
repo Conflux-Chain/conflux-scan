@@ -9,6 +9,7 @@ import Countdown from '../../components/Countdown';
 import EllipsisLine from '../../components/EllipsisLine';
 import '../../assets/semantic-ui/semantic.css';
 import CopyButton from '../../components/CopyButton';
+import QrcodeButton from '../../components/QrcodeButton';
 
 const { RangePicker } = DatePicker;
 
@@ -185,12 +186,12 @@ function Detail({ match }) {
             </svg>
           </IconFace> */}
           <CopyButton txtToCopy={accountid} toolTipId="app.pages.account.detail.tooltip" />
-
-          <IconFace>
+          <QrcodeButton titleTxt={accountid} qrTxt={accountid} tooltipId="app.pages.account.detail.qr" />
+          {/* <IconFace>
             <svg className="icon" aria-hidden="true">
               <use xlinkHref="#iconcaidan" />
             </svg>
-          </IconFace>
+          </IconFace> */}
         </HeadBar>
         <Statistic>
           <div className="transaction">
