@@ -54,6 +54,7 @@ const IconFace = styled.div`
 `;
 
 const Statistic = styled.div`
+  box-shadow: 0 1px 3px 0 
   background: #fff;
   width: 100%;
   height: 100px;
@@ -94,6 +95,10 @@ const Statistic = styled.div`
     justify-content: space-between;
     section {
       width: 180px;
+      p {
+        font-size: 16px;
+        color: rgba(0,0,0,0.87);
+      }
     }
   }
 `;
@@ -101,6 +106,10 @@ const Statistic = styled.div`
 const TabZone = styled.div`
   position: relative;
   width: 100%;
+`;
+
+const TabZoneWrapper = styled.div`
+  box-shadow: 0 1px 3px 0;
 `;
 
 const PCell = styled.div`

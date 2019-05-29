@@ -4,6 +4,8 @@
 # production
 /dist
 
+/service/node_modules
+
 # misc
 .DS_Store
 yarn-error.log

@@ -4,8 +4,8 @@ import styled from 'styled-components';
 import moment from 'moment';
 
 function Countdown({ timestamp }) {
-  let beforeTime = moment(timestamp);
-  const nowTime = moment([2019, 4, 27]);
+  let nowTime = moment(timestamp);
+  const beforeTime = moment();
 
   let yearUnit = beforeTime.diff(nowTime, 'years');
   let monthUnit = beforeTime.subtract(yearUnit, 'years').diff(nowTime, 'months');
@@ -23,7 +23,7 @@ function Countdown({ timestamp }) {
   return <span>{labelStr}</span>;
 }
 Countdown.propTypes = {
-  timestamp: PropTypes.string,
+  timestamp: PropTypes.number,
 };
 Countdown.defaultProps = {
   timestamp: new Date().getTime(),

@@ -3,11 +3,13 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "serve": "SERVER_PORT=3000 SERVER_HOST=localhost SERVER_PREFIX=/proxy node ./service/index.js"
+    "serve": "SERVER_PORT=3000 SERVER_HOST=localhost SERVER_PREFIX=/proxy node ./index.js"
   },
   "license": "MIT",
   "dependencies": {
     "@hapi/hapi": "^18.3.1",
+    "joi": "^14.3.1",
+    "superagent": "^5.0.5",
     "susie": "^3.0.0"
   }
 }

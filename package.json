@@ -10,7 +10,8 @@
     "lint:staged": "lint-staged",
     "lintfix": "eslint . --fix",
     "lint:eslint": "eslint --ignore-path .eslintignore --fix",
-    "eslint-check": "eslint --print-config . | eslint-config-prettier-check"
+    "eslint-check": "eslint --print-config . | eslint-config-prettier-check",
+    "serve:dev": "NODE_ENV=development API_HOST=http://testnet-jsonrpc.conflux-chain.org:18084 SERVER_PORT=3000 SERVER_HOST=127.0.0.1 SERVER_PREFIX=/proxy node ./service/index.js"
   },
   "keywords": [],
   "author": "Angelia",
@@ -48,7 +49,8 @@
     "redux-saga": "^1.0.2",
     "redux-thunk": "^2.3.0",
     "semantic-ui-react": "^0.87.1",
-    "styled-components": "^4.2.0"
+    "styled-components": "^4.2.0",
+    "superagent": "^5.0.5"
   },
   "devDependencies": {
     "@babel/core": "^7.2.2",

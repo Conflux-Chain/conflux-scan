@@ -21,7 +21,7 @@ function DataList({ rowStyle, showHeader, columns, dataSource }) {
         <tbody>
           {dataSource.map((item, index) => {
             return !index ? (
-              <tr style={rowStyle} key={item.key}>
+              <tr style={rowStyle} key={item.hash || index}>
                 {columns.map((unit) => (
                   <th className={unit.className ? unit.className : ''} key={unit.key}>
                     {!unit.render ? item[unit.dataIndex] : unit.render(item[unit.dataIndex], item)}
@@ -29,7 +29,7 @@ function DataList({ rowStyle, showHeader, columns, dataSource }) {
                 ))}
               </tr>
             ) : (
-              <tr style={rowStyle} key={item.key}>
+              <tr style={rowStyle} key={item.hash || index}>
                 {columns.map((unit) => (
                   <th style={{ borderTop: '1px solid rgba(34,36,38,.1)' }} className={unit.className ? unit.className : ''} key={unit.key}>
                     {!unit.render ? item[unit.dataIndex] : unit.render(item[unit.dataIndex], item)}

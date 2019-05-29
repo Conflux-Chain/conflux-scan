@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { Component } from 'react';
 import styled from 'styled-components';
+import superagent from 'superagent';
 import { Pagination } from 'semantic-ui-react';
 import DataList from '../../components/DataList';
+import Countdown from '../../components/Countdown';
+import TableLoading from '../../components/TableLoading';
 import EllipsisLine from '../../components/EllipsisLine';
 import '../../assets/semantic-ui/semantic.css';
 
@@ -62,7 +65,7 @@ const IconFace = styled.div`
 const columns = [
   {
     key: 1,
-    dataIndex: 'ein',
+    dataIndex: 'epochNumber',
     title: 'Epoch',
   },
   {
@@ -71,58 +74,54 @@ const columns = [
     title: 'Position',
     render: (text, row) => (
       <div>
-        <PCell>
-          <EllipsisLine isPivot text={row.zwei} />
-        </PCell>
         <PCell>{row.drei}</PCell>
       </div>
     ),
   },
   {
     key: 3,
-    dataIndex: 'drei',
+    dataIndex: 'hash',
     title: 'Hash',
     render: (text, row) => (
       <div>
-        <EllipsisLine text={row.zwei} />
-        <PCell>{row.drei}</PCell>
+        <EllipsisLine isPivot={row.isPivot} text={text} />
       </div>
     ),
   },
   {
     key: 4,
     className: 'two wide aligned',
-    dataIndex: 'drei',
+    dataIndex: 'difficulty',
     title: 'Difficulty',
-    render: (text) => <div className="ui label">{text}</div>,
+    render: (text) => <PCell>{text}</PCell>,
   },
   {
     key: 5,
     className: 'two wide aligned',
-    dataIndex: 'drei',
+    dataIndex: 'miner',
     title: 'Miner',
-    render: (text) => <div className="ui label">{text}</div>,
+    render: (text) => <EllipsisLine text={text} />,
   },
   {
     key: 6,
     className: 'two wide aligned',
-    dataIndex: 'drei',
+    dataIndex: 'gasLimit',
     title: 'Gas Limit',
-    render: (text) => <div className="ui label">{text}</div>,
+    render: (text) => <PCell>{text}</PCell>,
   },
   {
     key: 7,
     className: 'two wide aligned',
-    dataIndex: 'drei',
+    dataIndex: 'timestamp',
     title: 'Age',
-    render: (text) => <div className="ui label">{text}</div>,
+    render: (text) => <Countdown timestamp={text * 1000} />,
   },
   {
     key: 8,
     className: 'two wide aligned',
-    dataIndex: 'drei',
+    dataIndex: 'transactionCount',
     title: 'Tx Count',
-    render: (text) => <div className="ui label">{text}</div>,
+    render: (text) => <PCell>{text}</PCell>,
   },
 ];
 const dataSource = [
@@ -130,42 +129,79 @@ const dataSource = [
   { key: 2, ein: '80581', zwei: '0xe969a6fc05897124124', drei: 'Schwarz' },
 ];
 
-function List() {
-  return (
-    <div className="page-block-list">
-      <Wrapper>
-        <HeadBar>
-          <IconFace>
-            <svg className="icon" aria-hidden="true">
-              <use xlinkHref="#iconqukuaigaoduxuanzhong" />
-            </svg>
-          </IconFace>
-          <h1>Blocks</h1>
-        </HeadBar>
-        <TabWrapper>
-          <StyledTabel>
-            <div className="ui fluid card">
-              <div className="content">
-                <DataList showHeader columns={columns} dataSource={dataSource} />
+class List extends Component {
+  constructor() {
+    super();
+    this.state = {
+      isLoading: true,
+      BlockList: [],
+      TotalCount: 100,
+    };
+  }
+
+  componentDidMount() {
+    this.fetchBlockList({ activePage: 1 });
+  }
+
+  async fetchBlockList({ activePage }) {
+    this.setState({ isLoading: true });
+    const { code, result } = (await superagent.get(
+      `http://127.0.0.1:3000/proxy/fetchInitBlockandTxList?pageNum=${activePage}&pageSize=10`
+    )).body;
+    if (!code) {
+      this.setState(
+        {
+          BlockList: result.find((item) => Object.keys(item)[0] === 'block/list')['block/list'],
+          TotalCount: result.find((item) => Object.keys(item)[0] === 'block/list')['total_block/list'],
+        },
+        () => this.setState({ isLoading: false })
+      );
+    }
+  }
+
+  render() {
+    const { BlockList, TotalCount, isLoading } = this.state;
+    return (
+      <div className="page-block-list">
+        <Wrapper>
+          <HeadBar>
+            <IconFace>
+              <svg className="icon" aria-hidden="true">
+                <use xlinkHref="#iconqukuaigaoduxuanzhong" />
+              </svg>
+            </IconFace>
+            <h1>Blocks</h1>
+          </HeadBar>
+          <TabWrapper>
+            <StyledTabel>
+              <div className="ui fluid card">
+                <div className="content">
+                  {isLoading && <TableLoading />}
+                  <DataList showHeader columns={columns} dataSource={BlockList} />
+                </div>
               </div>
-            </div>
-            <Pagination
-              style={{ float: 'right' }}
-              prevItem={{
-                'aria-label': 'Previous item',
-                content: 'Previous',
-              }}
-              nextItem={{
-                'aria-label': 'Next item',
-                content: 'Next',
-              }}
-              defaultActivePage={5}
-              totalPages={10}
-            />
-          </StyledTabel>
-        </TabWrapper>
-      </Wrapper>
-    </div>
-  );
+              <Pagination
+                style={{ float: 'right' }}
+                prevItem={{
+                  'aria-label': 'Previous item',
+                  content: 'Previous',
+                }}
+                nextItem={{
+                  'aria-label': 'Next item',
+                  content: 'Next',
+                }}
+                onPageChange={(e, data) => {
+                  e.preventDefault();
+                  this.fetchBlockList(data);
+                }}
+                defaultActivePage={1}
+                totalPages={Math.ceil(TotalCount / 10)}
+              />
+            </StyledTabel>
+          </TabWrapper>
+        </Wrapper>
+      </div>
+    );
+  }
 }
 export default List;

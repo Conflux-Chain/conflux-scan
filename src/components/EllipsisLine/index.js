@@ -11,6 +11,9 @@ const SingleLine = styled.div`
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      color: rgba(0, 0, 0, 0.87);
+      font-style: normal;
+      font-weight: 400;
     }
   }
 `;

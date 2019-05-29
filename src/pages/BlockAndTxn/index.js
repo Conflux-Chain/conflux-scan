@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import superagent from 'superagent';
 import DataList from '../../components/DataList';
 import Countdown from '../../components/Countdown';
 import EllipsisLine from '../../components/EllipsisLine';
+import TableLoading from '../../components/TableLoading';
 import '../../assets/semantic-ui/semantic.css';
-import { initSse } from '../../utils';
+import { initSse, closeSource } from '../../utils';
 
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -36,6 +39,11 @@ const IconFace = styled.div`
 `;
 const PCell = styled.div`
   margin: 0 !important;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.87);
+  font-style: normal;
+  font-weight: 400;
+  height: 25px;
 `;
 
 const StyledButton = styled.button`
@@ -102,33 +110,142 @@ class BlockAndTxn extends Component {
   constructor() {
     super();
     this.state = {
-      // dataSource: [],
-      timestamp: new Date().getTime(),
+      BlockList: [],
+      TxList: [],
     };
   }
 
   componentDidMount() {
-    initSse(this);
+    this.fetchInitList();
+    initSse(this, 'http://127.0.0.1:3000/proxy/fetchBlockandTxList?pageNum=1&pageSize=10');
+  }
+
+  componentWillUnmount() {
+    closeSource();
+  }
+
+  async fetchInitList() {
+    const { code, result } = (await superagent.get('http://127.0.0.1:3000/proxy/fetchInitBlockandTxList?pageNum=1&pageSize=10')).body;
+    if (!code) {
+      this.setState({
+        BlockList: result.find((item) => Object.keys(item)[0] === 'block/list')['block/list'],
+        TxList: result.find((item) => Object.keys(item)[0] === 'transaction/list')['transaction/list'],
+      });
+    }
   }
 
   render() {
-    const { timestamp } = this.state;
+    const { BlockList, TxList } = this.state;
+    const BlockColumns = [
+      {
+        key: 1,
+        dataIndex: 'hash',
+        title: 'Blocks',
+        render: () => (
+          <IconFace>
+            <svg className="icon" aria-hidden="true">
+              <use xlinkHref="#iconqukuaigaoduxuanzhong" />
+            </svg>
+          </IconFace>
+        ),
+      },
+      {
+        key: 2,
+        dataIndex: 'hash',
+        title: 'Blocks',
+        render: (text, row) => (
+          <div>
+            <PCell>
+              <EllipsisLine isPivot={row.isPivot} text={text} />
+            </PCell>
+            <PCell>
+              <Countdown timestamp={row.timestamp * 1000} />
+            </PCell>
+          </div>
+        ),
+      },
+      {
+        key: 3,
+        dataIndex: 'miner',
+        title: 'Blocks',
+        render: (text, row) => (
+          <div>
+            <EllipsisLine text={'Miner ' + text} />
+            <PCell>{row.transactionCount} txns</PCell>
+          </div>
+        ),
+      },
+      {
+        key: 4,
+        className: 'two wide right aligned',
+        dataIndex: 'viel',
+        title: 'Blocks',
+      },
+    ];
+
+    const TxColumns = [
+      {
+        key: 1,
+        dataIndex: 'hash',
+        title: 'Blocks',
+        render: () => (
+          <IconFace>
+            <svg className="icon" aria-hidden="true">
+              <use xlinkHref="#iconjinrijiaoyiliang" />
+            </svg>
+          </IconFace>
+        ),
+      },
+      {
+        key: 2,
+        dataIndex: 'hash',
+        title: 'Blocks',
+        render: (text, row) => (
+          <div>
+            <PCell>
+              <EllipsisLine isPivot={row.isPivot} text={text} />
+            </PCell>
+            <PCell>
+              <Countdown timestamp={row.timestamp * 1000} />
+            </PCell>
+          </div>
+        ),
+      },
+      {
+        key: 3,
+        dataIndex: 'from',
+        title: 'Blocks',
+        render: (text, row) => (
+          <div>
+            <EllipsisLine text={'From ' + text} />
+            <EllipsisLine text={'To ' + row.to} />
+          </div>
+        ),
+      },
+      {
+        key: 4,
+        className: 'three wide right aligned',
+        dataIndex: 'gasPrice',
+        title: 'Blocks',
+        render: (text) => <div className="ui label">{'GAS ' + text}</div>,
+      },
+    ];
     return (
       <div className="page-block-txn">
         <Wrapper>
           <StyledTabel className="left">
             <div className="ui card" style={{ width: '100%' }}>
               <div className="content">
-                <div className="header">
-                  Blocks
-                  <Countdown timestamp={timestamp.toString()} />
-                </div>
+                <div className="header">Blocks</div>
               </div>
               <div className="content">
-                <DataList columns={columns} dataSource={dataSource} />
+                {!BlockList.length && <TableLoading />}
+                <DataList columns={BlockColumns} dataSource={BlockList} />
               </div>
               <div className="extra content">
-                <StyledButton className="ui fluid violet button ">View All Blocks</StyledButton>
+                <Link to="/blocks">
+                  <StyledButton className="ui fluid violet button ">View All Blocks</StyledButton>
+                </Link>
               </div>
             </div>
           </StyledTabel>
@@ -138,10 +255,13 @@ class BlockAndTxn extends Component {
                 <div className="header">Transactions</div>
               </div>
               <div className="content">
-                <DataList columns={columns} dataSource={dataSource} />
+                {!TxList.length && <TableLoading />}
+                <DataList columns={TxColumns} dataSource={TxList} />
               </div>
               <div className="extra content">
-                <StyledButton className="ui fluid violet button ">View All Transactions</StyledButton>
+                <Link to="/transactions">
+                  <StyledButton className="ui fluid violet button ">View All Transactions</StyledButton>
+                </Link>
               </div>
             </div>
           </StyledTabel>

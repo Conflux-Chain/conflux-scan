@@ -12,16 +12,16 @@ export const getXmlHttpRequest = () => {
   }
 };
 
-export const initSse = (tthis) => {
+export const initSse = (tthis, uri = 'http://127.0.0.1:3000/proxy/fetch_random_time') => {
   source = null;
-  source = new EventSource('http://localhost:3000/proxy/fetch_random_time');
+  source = new EventSource(uri);
 
   const damon = (id, that) => {
-    const isValidUri = (type = 'GET', uri = '/', callback = () => {}, tthat) => {
+    const isValidUri = (type = 'GET', pingUri = '/', callback = () => {}, tthat) => {
       let xhr = getXmlHttpRequest();
       // readyState 0=>初始化 1=>载入 2=>载入完成 3=>解析 4=>完成
       // console.log(xhr.readyState);  0
-      xhr.open(type, uri, true);
+      xhr.open(type, pingUri, true);
       // console.log(xhr.readyState);  1
       xhr.send();
       // console.log(xhr.readyState);  1
@@ -30,7 +30,7 @@ export const initSse = (tthis) => {
         // console.log(xhr.readyState);  2 3 4
         if (xhr.readyState === 4 && xhr.status === 200) {
           // console.log(xhr.readyState, 200, '===log');
-          initSse(tthat);
+          initSse(tthat, uri);
           callback(true);
         } else if (xhr.readyState === 4 && xhr.status === 0) {
           // maybe 502
@@ -45,7 +45,7 @@ export const initSse = (tthis) => {
       errorId = setInterval(() => {
         isValidUri(
           'GET',
-          'http://localhost:3000/proxy/ping',
+          'http://127.0.0.1:3000/proxy/ping',
           (result) => {
             if (result) {
               clearInterval(errorId);
@@ -68,8 +68,11 @@ export const initSse = (tthis) => {
   );
   source.addEventListener('message', (data) => {
     const result = JSON.parse(data.data);
-    // console.log( result.timestamp);
-    tthis.setState({ timestamp: result.timestamp });
+    console.log(result);
+    tthis.setState({
+      BlockList: result.find((item) => Object.keys(item)[0] === 'block/list')['block/list'],
+      TxList: result.find((item) => Object.keys(item)[0] === 'transaction/list')['transaction/list'],
+    });
     // console.log(data);
     // $('body').append(`<p>${data.data}</p>`);
   });
@@ -90,5 +93,6 @@ export const initSse = (tthis) => {
 };
 
 export const closeSource = () => {
+  console.log('yes', source);
   source.close();
 };
