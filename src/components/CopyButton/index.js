@@ -106,7 +106,7 @@ class CopyButton extends PureComponent {
   }
 
   render() {
-    const { toolTipId, intl } = this.props;
+    const { toolTipId, intl, style } = this.props;
     const { tempTip } = this.state;
     const tooltip = intl.formatMessage({
       id: tempTip || toolTipId,
@@ -120,6 +120,7 @@ class CopyButton extends PureComponent {
         className="iconface"
         onClick={this.onClickIcon}
         onMouseLeave={this.onMouseLeave}
+        style={style}
       >
         <svg className="icon" aria-hidden="true">
           <use xlinkHref="#iconfuzhi" />
@@ -129,17 +130,22 @@ class CopyButton extends PureComponent {
   }
 }
 CopyButton.propTypes = {
-  toolTipId: PropTypes.string,
-  txtToCopy: PropTypes.string,
-  intl: PropTypes.objectOf({
+  toolTipId: PropTypes.string.isRequired,
+  txtToCopy: PropTypes.string.isRequired,
+  intl: PropTypes.shape({
     formatMessage: PropTypes.func,
+  }),
+  style: PropTypes.shape({
+    marginLeft: PropTypes.string,
   }),
 };
 CopyButton.defaultProps = {
-  toolTipId: '',
-  txtToCopy: '',
   intl: {
     formatMessage: () => {},
   },
+  style: {
+    marginLeft: '10px',
+  },
 };
 export default injectIntl(CopyButton);
+export { IconFace };
