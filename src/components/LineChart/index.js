@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import moment from 'moment';
 import echarts from 'echarts';
+import { toFixed } from '../../utils';
 
 const Duration = styled.div`
   width: 56px;
@@ -44,6 +45,9 @@ const Container = styled.div`
 const DurationContainer = styled.div`
   display: flex;
   justify-content: center;
+  > div:last-child {
+    margin-right: 0px;
+  }
 `;
 
 class LineChart extends Component {
@@ -57,13 +61,13 @@ class LineChart extends Component {
   }
 
   renderChart() {
-    const { formatString, data } = this.props;
-    const myChart = echarts.init(document.getElementById('chart'));
+    const { formatString, data, title } = this.props;
+    const myChart = echarts.init(document.getElementById(title + 'chart'));
     const option = {
       tooltip: {
         trigger: 'axis',
         axisPointer: {
-          type: 'cross',
+          type: 'line',
           animation: false,
           label: {
             backgroundColor: '#ccc',
@@ -78,7 +82,7 @@ class LineChart extends Component {
           },
         },
         formatter: (params) => {
-          return moment(params[0].data.time * 1000).format(formatString) + '<br />' + params[0].data.value;
+          return moment(params[0].data.time * 1000).format(formatString) + '<br />' + toFixed(params[0].data.value, 3);
         },
       },
       xAxis: {
@@ -148,7 +152,7 @@ class LineChart extends Component {
               );
             })}
           </DurationContainer>
-          <div id="chart" style={{ width: '540px', height: '250px' }} />
+          <div id={title + 'chart'} style={{ width: '540px', height: '250px' }} />
         </div>
       </Container>
     );

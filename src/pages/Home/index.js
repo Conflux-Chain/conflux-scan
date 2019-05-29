@@ -4,6 +4,7 @@ import Immutable from 'immutable';
 import moreBlue from '../../assets/images/icons/more_blue.svg';
 import moreRed from '../../assets/images/icons/more_red.svg';
 import LineChart from '../../components/LineChart';
+import { toFixed, toThousands } from '../../utils';
 
 const Container = styled.div`
   width: 100%;
@@ -14,6 +15,9 @@ const Container = styled.div`
 const BlockContainer = styled.div`
   display: flex;
   width: 100%;
+  > div:last-child {
+    margin-right: 0px;
+  }
 `;
 const Block = styled.div`
   display: flex;
@@ -51,7 +55,7 @@ const Block = styled.div`
     }
     .block-diff-up {
       font-size: 16px;
-      color: #311b92;
+      color: #1e3de4;
     }
     .block-diff-down {
       font-size: 16px;
@@ -84,6 +88,12 @@ const LineContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   margin-top: 16px;
+  .ui.card:nth-child(odd) {
+    margin: 0 16px 16px 0;
+  }
+  .ui.card:nth-child(even) {
+    margin: 0 0 16px 0;
+  }
 `;
 
 class Home extends Component {
@@ -113,78 +123,207 @@ class Home extends Component {
             time: 1559023352,
           },
         ],
+        difficulty: [
+          {
+            value: 0.01609657947686117,
+            time: 1559021323,
+          },
+          {
+            value: 0.017953321364452424,
+            time: 1559021884,
+          },
+          {
+            value: 0.015238095238095238,
+            time: 1559022410,
+          },
+          {
+            value: 0.016227180527383367,
+            time: 1559022903,
+          },
+          {
+            value: 0.017977528089887642,
+            time: 1559023352,
+          },
+        ],
+        blockTime: [
+          {
+            value: 0.01609657947686117,
+            time: 1559021323,
+          },
+          {
+            value: 0.017953321364452424,
+            time: 1559021884,
+          },
+          {
+            value: 0.015238095238095238,
+            time: 1559022410,
+          },
+          {
+            value: 0.016227180527383367,
+            time: 1559022903,
+          },
+          {
+            value: 0.017977528089887642,
+            time: 1559023352,
+          },
+        ],
+        hashRate: [
+          {
+            value: 0.01609657947686117,
+            time: 1559021323,
+          },
+          {
+            value: 0.017953321364452424,
+            time: 1559021884,
+          },
+          {
+            value: 0.015238095238095238,
+            time: 1559022410,
+          },
+          {
+            value: 0.016227180527383367,
+            time: 1559022903,
+          },
+          {
+            value: 0.017977528089887642,
+            time: 1559023352,
+          },
+        ],
       }),
       duration: Immutable.fromJS({
         tps: 'day',
+        difficulty: 'hour',
+        blockTime: 'month',
+        hashRate: 'all',
+      }),
+      summary: Immutable.fromJS({
+        tps: {
+          val: 774.26,
+          trend: 4.2999,
+        },
+        difficulty: {
+          val: 200570130,
+          trend: -13.8888,
+        },
+        blockNum: {
+          val: 4.678,
+          trend: 0,
+        },
+        hashRate: {
+          val: 42.9544,
+          trend: 16.11888,
+        },
       }),
     };
-    this.onChangeTpsDuration = this.onChangeTpsDuration.bind(this);
   }
 
   componentDidMount() {
     console.log('mount');
   }
 
-  onChangeTpsDuration(tpsDuration) {
-    console.log(tpsDuration);
+  onChangeDuration(name, value) {
+    console.log(value);
     const { duration } = this.state;
-    const newDuration = duration.set('tps', tpsDuration);
+    const newDuration = duration.set(name, value);
     this.setState({
       duration: newDuration,
     });
+  }
+
+  formatTrend(value) {
+    if (isNaN(value)) {
+      return `+ 0 %`;
+    }
+    if (value < 0) {
+      return `- ${Math.abs(value)} %`;
+    }
+    return `+ ${value} %`;
+  }
+
+  mapKeyToTitle(key) {
+    switch (key) {
+      case 'tps':
+        return 'TPS';
+      case 'difficulty':
+        return 'Difficulty';
+      case 'blockTime':
+        return 'Block Time';
+      case 'hashRate':
+        return 'Hash Rate';
+      default:
+        return 'TPS';
+    }
+  }
+
+  renderSummary() {
+    const { summary } = this.state;
+    return summary
+      .map((value, key) => {
+        if (key !== 'hashRate') {
+          return (
+            <Block key={key}>
+              <span className="block-title">{this.mapKeyToTitle(key)}</span>
+              <div className="block-content">
+                <span className="block-value">
+                  {key === 'difficulty' ? toThousands(summary.getIn([key, 'val'])) : toFixed(summary.getIn([key, 'val']), 2)}
+                </span>
+                <span className={value.get('trend') >= 0 ? 'block-diff-up' : 'block-diff-down'}>
+                  {this.formatTrend(toFixed(summary.getIn([key, 'trend']), 2))}
+                  <span className={value.get('trend') >= 0 ? 'icon-arrow-up' : 'icon-arrow-down'} />
+                </span>
+              </div>
+            </Block>
+          );
+        }
+        return (
+          <Block key={key}>
+            <span className="block-title">{this.mapKeyToTitle(key)}</span>
+            <div className="block-content">
+              <span className="block-rate">
+                <span className="block-value">{toFixed(summary.getIn([key, 'val']), 2)}</span>
+                <span className="block-unit">MH/s</span>
+              </span>
+              <span className={value.get('trend') >= 0 ? 'block-diff-up' : 'block-diff-down'}>
+                {this.formatTrend(toFixed(summary.getIn([key, 'trend']), 2))}
+                <span className={value.get('trend') >= 0 ? 'icon-arrow-up' : 'icon-arrow-down'} />
+              </span>
+            </div>
+          </Block>
+        );
+      })
+      .toList();
   }
 
   render() {
     const { data, duration } = this.state;
     return (
       <Container>
-        <BlockContainer>
-          <Block>
-            <span className="block-title">TPS</span>
-            <div className="block-content">
-              <span className="block-value">774.26</span>
-              <span className="block-diff-up">
-                + 4.2 %
-                <span className="icon-arrow-up" />
-              </span>
-            </div>
-          </Block>
-          <Block>
-            <span className="block-title">Difficulty</span>
-            <div className="block-content">
-              <span className="block-value">200,570,130</span>
-              <span className="block-diff-down">
-                - 13.88 %
-                <span className="icon-arrow-down" />
-              </span>
-            </div>
-          </Block>
-          <Block>
-            <span className="block-title">Block Time</span>
-            <div className="block-content">
-              <span className="block-value">4.67</span>
-              <span className="block-diff-up">
-                + 0 %
-                <span className="icon-arrow-up" />
-              </span>
-            </div>
-          </Block>
-          <Block>
-            <span className="block-title">Hash Rate</span>
-            <div className="block-content">
-              <span className="block-rate">
-                <span className="block-value">42.95</span>
-                <span className="block-unit">MH/s</span>
-              </span>
-              <span className="block-diff-up">
-                + 16.11 %
-                <span className="icon-arrow-up" />
-              </span>
-            </div>
-          </Block>
-        </BlockContainer>
+        <BlockContainer>{this.renderSummary()}</BlockContainer>
         <LineContainer>
-          <LineChart title="TPS" data={data.get('tps').toJS()} duration={duration.get('tps')} onChangeDuration={this.onChangeTpsDuration} />
+          <LineChart
+            title="TPS"
+            data={data.get('tps').toJS()}
+            duration={duration.get('tps')}
+            onChangeDuration={(value) => this.onChangeDuration('tps', value)}
+          />
+          <LineChart
+            title="Difficulty"
+            data={data.get('difficulty').toJS()}
+            duration={duration.get('difficulty')}
+            onChangeDuration={(value) => this.onChangeDuration('difficulty', value)}
+          />
+          <LineChart
+            title="Block Time"
+            data={data.get('blockTime').toJS()}
+            duration={duration.get('blockTime')}
+            onChangeDuration={(value) => this.onChangeDuration('blockTime', value)}
+          />
+          <LineChart
+            title="Hash Rate"
+            data={data.get('hashRate').toJS()}
+            duration={duration.get('hashRate')}
+            onChangeDuration={(value) => this.onChangeDuration('hashRate', value)}
+          />
         </LineContainer>
       </Container>
     );

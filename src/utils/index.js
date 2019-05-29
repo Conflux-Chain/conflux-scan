@@ -96,3 +96,18 @@ export const closeSource = () => {
   console.log('yes', source);
   source.close();
 };
+
+export const toFixed = (num, decimal) => {
+  if (isNaN(num)) {
+    return 0;
+  }
+  const p = 10 ** decimal;
+  return Math.round(num * p) / p;
+};
+
+export const toThousands = (num) => {
+  let str = num + '';
+  let re = /(?=(?!(\b))(\d{3})+$)/g;
+  str = str.replace(re, ',');
+  return str;
+};

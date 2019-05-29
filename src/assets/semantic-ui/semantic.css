@@ -7,7 +7,7 @@
 @import 'components/divider.css';
 @import 'components/flag.css';
 @import 'components/header.css';
-/* @import "components/icon.css"; */
+@import 'components/icon.css';
 @import 'components/image.css';
 @import 'components/input.css';
 @import 'components/label.css';

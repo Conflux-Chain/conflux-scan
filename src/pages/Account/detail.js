@@ -8,6 +8,8 @@ import DataList from '../../components/DataList';
 import Countdown from '../../components/Countdown';
 import EllipsisLine from '../../components/EllipsisLine';
 import '../../assets/semantic-ui/semantic.css';
+import CopyButton from '../../components/CopyButton';
+import QrcodeButton from '../../components/QrcodeButton';
 
 const { RangePicker } = DatePicker;
 
@@ -187,16 +189,18 @@ function Detail({ match }) {
         <HeadBar>
           <h1>Conflux Account</h1>
           <p>{accountid || '0x413957876f8239dd9246fefabc4e7d6d86d4f9b6'}</p>
-          <IconFace>
+          {/* <IconFace onClick={() => { }}>
             <svg className="icon" aria-hidden="true">
               <use xlinkHref="#iconfuzhi" />
             </svg>
-          </IconFace>
-          <IconFace>
+          </IconFace> */}
+          <CopyButton style={{ marginLeft: 10 }} txtToCopy={accountid} toolTipId="app.pages.account.detail.tooltip" />
+          <QrcodeButton titleTxt={accountid} qrTxt={accountid} tooltipId="app.pages.account.detail.qr" />
+          {/* <IconFace>
             <svg className="icon" aria-hidden="true">
               <use xlinkHref="#iconcaidan" />
             </svg>
-          </IconFace>
+          </IconFace> */}
         </HeadBar>
         <Statistic>
           <div className="transaction">

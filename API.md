@@ -47,7 +47,6 @@ params: {}
 result: {
   data: {
     'tps': { // tps/difficulty/blockTime/hashRate
-      title: '', // TPS/Difficulty/Block Time/Hash Rate
       val: num,
       trend: num
   }, ...}
@@ -63,20 +62,17 @@ params: {
   duration: '' // hour/day/month/all
 }
 result: {
-  data: {
-    title: '', // TPS/Difficulty/Block Time/Hash Rate
-    list: [{
-      time: num, // 10bit
-      value: num
-    }, ...]
-  }
+  data: [{
+    time: num, // 10bit
+    value: num
+  }, ...]
 }
 ```
 
 #### Block Detail
 
 ```js
-path: /block/:block_hash
+path: /block/:blockHash
 method: 'get'
 params: {}
 result: {
@@ -106,7 +102,7 @@ result: {
 #### Block Detail Transaction List
 
 ```js
-path: /block/:block_hash/transaction_list
+path: /block/:blockHash/transactionList
 method: 'get'
 params: {
   pageNum: 1 // num | 页码
@@ -219,7 +215,7 @@ result: {
 
 
 ```js
-path: /transaction/:txn_hash
+path: /transaction/:transactionHash
 method: 'get'
 params: {}
 result: {
@@ -254,7 +250,7 @@ result: {
 
 
 ```js
-path: /account/:account_hash
+path: /account/:address
 method: 'get'
 params: {
   startTime: 'string', // 可选：精确到小时
@@ -282,7 +278,7 @@ result: {
 #### Account Tx List (S/R Merge)
 
 ```js
-path: /account/:account_hash/transaction_list
+path: /account/:address/transactionList
 method: 'get'
 params: {
   pageNum: 1 // num | 页码
@@ -321,7 +317,7 @@ result: {
 #### Account Block List
 
 ```js
-path: /account/:account_hash/mined_block_list
+path: /account/:address/minedBlockList
 method: 'get'
 params: {
   pageNum: 1 // num | 页码
@@ -359,7 +355,7 @@ result: {
 #### Account Referee Block List
 
 ```js
-path: /account/:account_hash/referee_block_list
+path: /account/:address/refereeBlockList
 method: 'get'
 params: {
   pageNum: 1 // num | 页码
