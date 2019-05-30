@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import superagent from 'superagent';
 import { Pagination } from 'semantic-ui-react';
@@ -67,6 +68,7 @@ const columns = [
     key: 1,
     dataIndex: 'epochNumber',
     title: 'Epoch',
+    render: (text) => <EllipsisLine linkTo={`/epochsdetail/${text}`} text={text} />,
   },
   {
     key: 2,
@@ -84,13 +86,13 @@ const columns = [
     title: 'Hash',
     render: (text, row) => (
       <div>
-        <EllipsisLine isPivot={row.isPivot} text={text} />
+        <EllipsisLine isLong linkTo={`/blocksdetail/${text}`} isPivot={row.isPivot} text={text} />
       </div>
     ),
   },
   {
     key: 4,
-    className: 'two wide aligned',
+    className: 'two wide aligned plain_th',
     dataIndex: 'difficulty',
     title: 'Difficulty',
     render: (text) => <PCell>{text}</PCell>,
@@ -100,25 +102,25 @@ const columns = [
     className: 'two wide aligned',
     dataIndex: 'miner',
     title: 'Miner',
-    render: (text) => <EllipsisLine text={text} />,
+    render: (text) => <EllipsisLine linkTo={`/accountdetail/${text}`} text={text} />,
   },
   {
     key: 6,
-    className: 'two wide aligned',
+    className: 'two wide aligned plain_th',
     dataIndex: 'gasLimit',
     title: 'Gas Limit',
     render: (text) => <PCell>{text}</PCell>,
   },
   {
     key: 7,
-    className: 'two wide aligned',
+    className: 'two wide aligned plain_th',
     dataIndex: 'timestamp',
     title: 'Age',
     render: (text) => <Countdown timestamp={text * 1000} />,
   },
   {
     key: 8,
-    className: 'two wide aligned',
+    className: 'two wide center aligned plain_th',
     dataIndex: 'transactionCount',
     title: 'Tx Count',
     render: (text) => <PCell>{text}</PCell>,

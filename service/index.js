@@ -57,6 +57,43 @@ const start = async () => {
         tags: ['api', 'sse'],
       },
     },
+    // 获取 epoch list by epochNum
+    {
+      method: 'GET',
+      path: `${SERVER_PREFIX}/fetchEpochList`,
+      config: {
+        cors: true,
+        handler: async (request, h) => {
+          const querys = ['block/list'].map((ids) => {
+            console.log(`${API_HOST}/${ids}`);
+            return new Promise((resolve, reject) => {
+              superagent
+                .get(`${API_HOST}/${ids}`)
+                .query(request.query)
+                .then((callback) => {
+                  const { code, result, message } = JSON.parse(callback.text);
+                  if (code == 0) resolve({ [ids]: result.data, ['total_' + ids]: result.total });
+                  else reject([]);
+                })
+                .catch((e) => {
+                  reject([]);
+                });
+            });
+          });
+          const payload = await Promise.all(querys);
+          return h.response({ code: 0, result: payload });
+        },
+        description: '初始化获取Block&Tx List',
+        tags: ['api', 'sse'],
+        validate: {
+          query: Joi.object().keys({
+            pageNum: Joi.string().required(),
+            pageSize: Joi.string().required(),
+            epochNum: Joi.string().required(),
+          }),
+        },
+      },
+    },
     // 获取 block list & tx list 初始化数据
     {
       method: 'GET',
@@ -153,13 +190,11 @@ const start = async () => {
         cors: true,
         handler: async (request, h) => {
           const querys = [`transaction/${request.query.transactionHash}`].map((ids) => {
-            console.log(`${API_HOST}/${ids}`);
             return new Promise((resolve, reject) => {
               superagent
                 .get(`${API_HOST}/${ids}`)
                 .then((callback) => {
                   const { code, result, message } = JSON.parse(callback.text);
-                  // console.log( message, '====lfsjkaf====', result );
                   if (code == 0) resolve(result.data);
                   else reject({});
                 })
@@ -173,10 +208,96 @@ const start = async () => {
           return h.response({ code: 0, result: payload[0] });
         },
         description: '获取 tx detail',
-        tags: ['api', 'sse'],
+        tags: ['api'],
         validate: {
           query: Joi.object().keys({
             transactionHash: Joi.string().required(),
+          }),
+        },
+      },
+    },
+    // 获取 block detail
+    {
+      method: 'GET',
+      path: `${SERVER_PREFIX}/fetchBlockDetail/{blockHash}`,
+      config: {
+        cors: true,
+        handler: async (request, h) => {
+          const querys = [`block/${request.params.blockHash}`, `block/${request.params.blockHash}/transactionList`].map((ids) => {
+            return new Promise((resolve, reject) => {
+              console.log(`${API_HOST}/${ids}`);
+              superagent
+                .get(`${API_HOST}/${ids}`)
+                .query(request.query)
+                .then((callback) => {
+                  const { code, result, message } = JSON.parse(callback.text);
+                  if (code == 0) resolve({ [ids]: result.data, ['total_' + ids]: result.total });
+                  else reject({});
+                })
+                .catch((e) => {
+                  console.log(e.toString());
+                  reject({});
+                });
+            });
+          });
+          const payload = await Promise.all(querys);
+          return h.response({ code: 0, result: payload });
+        },
+        description: '获取 Block detail',
+        tags: ['api'],
+        validate: {
+          query: Joi.object().keys({
+            pageNum: Joi.string().required(),
+            pageSize: Joi.string().required(),
+          }),
+          params: Joi.object().keys({
+            blockHash: Joi.string().required(),
+          }),
+        },
+      },
+    },
+    // 获取 account detail
+    {
+      method: 'GET',
+      path: `${SERVER_PREFIX}/fetchAccountDetail/{address}`,
+      config: {
+        cors: true,
+        handler: async (request, h) => {
+          const querys = [
+            `account/${request.params.address}`,
+            // `account/${request.params.address}/transactionList`
+          ].map((ids) => {
+            return new Promise((resolve, reject) => {
+              console.log(`${API_HOST}/${ids}`);
+              superagent
+                .get(`${API_HOST}/${ids}`)
+                .query(request.query)
+                .then((callback) => {
+                  const { code, result, message } = JSON.parse(callback.text);
+                  if (code == 0) resolve({ [ids]: result.data, ['total_' + ids]: result.total });
+                  else reject({});
+                })
+                .catch((e) => {
+                  console.log(e.toString());
+                  reject({});
+                });
+            });
+          });
+          const payload = await Promise.all(querys);
+          return h.response({ code: 0, result: payload });
+        },
+        description: '获取 account detail',
+        tags: ['api'],
+        validate: {
+          query: Joi.object().keys({
+            pageNum: Joi.string().required(),
+            pageSize: Joi.string().required(),
+            startTime: Joi.string(),
+            endTime: Joi.string(),
+            txnType: Joi.string(),
+          }),
+          params: Joi.object().keys({
+            address: Joi.string().required(),
           }),
         },
       },

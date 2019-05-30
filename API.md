@@ -252,13 +252,7 @@ result: {
 ```js
 path: /account/:address
 method: 'get'
-params: {
-  startTime: 'string', // 可选：精确到小时
-  endTime: 'string', // 可选：精确到小时
-  txnType: 'All', // 可选： 默认All  All | Outgoing | Incoming
-  pageNum: 1 // num | 页码
-  pageSize: 10 // num | 每页展示数
-}
+params: {}
 result: {
   code: // 0 | 1
   msg:  //
@@ -281,6 +275,9 @@ result: {
 path: /account/:address/transactionList
 method: 'get'
 params: {
+  startTime: 'string', // 可选：精确到小时
+  endTime: 'string', // 可选：精确到小时
+  txnType: 'All', // 可选： 默认All  All | Outgoing | Incoming
   pageNum: 1 // num | 页码
   pageSize: 10 // num | 每页展示数
 }

@@ -1,9 +1,15 @@
-import React from 'react';
+import React, { Component } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import superagent from 'superagent';
+import moment from 'moment';
+import BigNumber from 'bignumber.js';
 import { Pagination } from 'semantic-ui-react';
+import Countdown from '../../components/Countdown';
+import TableLoading from '../../components/TableLoading';
 import DataList from '../../components/DataList';
 import EllipsisLine from '../../components/EllipsisLine';
+import { convertToValueorFee, converToGasPrice } from '../../utils';
 import '../../assets/semantic-ui/semantic.css';
 
 const Wrapper = styled.div`
@@ -85,141 +91,209 @@ const TabWrapper = styled.div`
   justify-content: flex-end;
 `;
 
-const columns = [
-  {
-    key: 1,
-    dataIndex: 'ein',
-    title: 'Blocks',
-    // className: 'two wide',
-    render: (text, row) => (
-      <IconFace>
-        <svg className="icon" aria-hidden="true">
-          <use xlinkHref="#iconjinrijiaoyiliang" />
-        </svg>
-      </IconFace>
-    ),
-  },
-  {
-    key: 2,
-    dataIndex: 'drei',
-    title: 'Blocks',
-    render: (text, row) => (
-      <div>
-        <PCell>
-          <EllipsisLine isPivot text={row.zwei} />
-        </PCell>
-      </div>
-    ),
-  },
-  {
-    key: 3,
-    dataIndex: 'drei',
-    title: 'Blocks',
-    render: (text, row) => (
-      <div>
-        <PCell>{row.drei}</PCell>
-      </div>
-    ),
-  },
-  {
-    key: 4,
-    className: 'two wide aligned',
-    dataIndex: 'drei',
-    title: 'Blocks',
-    render: (text) => <div className="ui label">{text}</div>,
-  },
-];
 const dataSource = [
   { key: 1, ein: '80580', zwei: '0xe969a6fc05897123123', drei: 'Alichs' },
   { key: 2, ein: '80581', zwei: '0xe969a6fc05897124124', drei: 'Schwarz' },
 ];
 
-function Detail({ match }) {
-  const { blockhash } = match.params;
-  return (
-    <div className="page-block-detail">
-      <Wrapper>
-        <HeadBar>
-          <h1>Block</h1>
-          <p>{blockhash}</p>
-        </HeadBar>
-        <StyledTabel className="ui basic padded table">
-          <tbody className="">
-            <tr className="">
-              <td className="collapsing">Block Height:</td>
-              <td className="">22</td>
-            </tr>
-            <tr className="">
-              <td className="collapsing">Epoch Number:</td>
-              <td className="">15</td>
-            </tr>
-            <tr className="">
-              <td className="collapsing">Difficulty:</td>
-              <td className="">12</td>
-            </tr>
-            <tr className="">
-              <td className="collapsing">Miner:</td>
-              <td className="">11</td>
-            </tr>
-            <tr className="">
-              <td className="collapsing">Block Hash:</td>
-              <td className="">11</td>
-            </tr>
-            <tr className="">
-              <td className="collapsing">Present Hash:</td>
-              <td className="">11</td>
-            </tr>
-            <tr className="">
-              <td className="collapsing">Nonce:</td>
-              <td className="">11</td>
-            </tr>
-            <tr className="">
-              <td className="collapsing">Gas Limit:</td>
-              <td className="">11</td>
-            </tr>
-            <tr className="">
-              <td className="collapsing">Time:</td>
-              <td className="">11</td>
-            </tr>
-            <tr className="">
-              <td className="collapsing">Size:</td>
-              <td className="">11</td>
-            </tr>
-          </tbody>
-        </StyledTabel>
+const TxColumns = [
+  {
+    key: 1,
+    dataIndex: 'hash',
+    title: 'Hash',
+    render: (text) => <EllipsisLine text={text} />,
+  },
+  {
+    key: 2,
+    dataIndex: 'from',
+    title: 'From',
+    render: (text) => <EllipsisLine text={text} />,
+  },
+  {
+    key: 3,
+    dataIndex: 'to',
+    title: 'To',
+    render: (text) => <EllipsisLine text={text} />,
+  },
+  {
+    key: 4,
+    className: 'two wide aligned',
+    dataIndex: 'value',
+    title: 'Value',
+    render: (text) => <EllipsisLine unit="CFX" text={convertToValueorFee(text)} />,
+  },
+  {
+    key: 5,
+    className: 'two wide aligned',
+    dataIndex: 'gasPrice',
+    title: 'Fee',
+    render: (text, row) => {
+      const result = new BigNumber(text).multipliedBy(row.value);
+      console.log(convertToValueorFee(result.toFixed()));
+      return <EllipsisLine unit="CFX" text={convertToValueorFee(result.toFixed())} />;
+    },
+  },
+  {
+    key: 6,
+    className: 'two wide aligned',
+    dataIndex: 'gasPrice',
+    title: 'Gas Price',
+    render: (text) => <EllipsisLine unit="Gdip" text={converToGasPrice(text)} />,
+  },
+  {
+    key: 7,
+    className: 'two wide aligned',
+    dataIndex: 'timestamp',
+    title: 'Age',
+    render: (text) => <Countdown timestamp={text * 1000} />,
+  },
+];
 
-        <TabZone>
-          <div className="ui attached tabular menu">
-            <a className="active item">Transactions</a>
-            <a className="item">Referee Block</a>
-          </div>
-          <div className="ui bottom attached segment active tab">
-            <div className="ui fluid card">
-              <div className="content">
-                <DataList showHeader columns={columns} dataSource={dataSource} />
-              </div>
+class Detail extends Component {
+  constructor() {
+    super();
+    this.state = {
+      currentTab: 1,
+      TxTotalCount: 100,
+      blockDetail: {},
+      TxList: [],
+      isLoading: true,
+    };
+  }
+
+  componentDidMount() {
+    const {
+      match: { params },
+    } = this.props;
+    this.fetchTxDetail(params.blockhash, { activePage: 1 });
+  }
+
+  async fetchTxDetail(blockHash, { activePage }) {
+    this.setState({ isLoading: true });
+    const { code, result } = (await superagent.get(
+      `http://127.0.0.1:3000/proxy/fetchBlockDetail/${blockHash}?pageNum=${activePage}&pageSize=10`
+    )).body;
+    if (!code) {
+      this.setState(
+        {
+          blockDetail: result.find((item) => Object.keys(item)[0] === `block/${blockHash}`)[`block/${blockHash}`],
+          TxList: result.find((item) => Object.keys(item)[0] === `block/${blockHash}/transactionList`)[
+            `block/${blockHash}/transactionList`
+          ],
+          TxTotalCount: result.find((item) => Object.keys(item)[0] === `block/${blockHash}/transactionList`)[
+            `total_block/${blockHash}/transactionList`
+          ],
+        },
+        () => this.setState({ isLoading: false })
+      );
+    }
+    return {};
+  }
+
+  render() {
+    const { blockDetail, TxList, TxTotalCount, isLoading, currentTab } = this.state;
+    const {
+      match: { params },
+    } = this.props;
+
+    console.log(blockDetail, isLoading, TxList);
+    return (
+      <div className="page-block-detail">
+        <Wrapper>
+          <HeadBar>
+            <h1>Block</h1>
+            <p>{params.blockhash}</p>
+          </HeadBar>
+          {isLoading ? (
+            <TableLoading />
+          ) : (
+            <StyledTabel className="ui basic padded table">
+              <tbody className="">
+                <tr className="">
+                  <td className="collapsing">Block Height:</td>
+                  <td className="">{blockDetail.height}</td>
+                </tr>
+                <tr className="">
+                  <td className="collapsing">Epoch Number:</td>
+                  <td className="">{blockDetail.epochNumber}</td>
+                </tr>
+                <tr className="">
+                  <td className="collapsing">Difficulty:</td>
+                  <td className="">{blockDetail.difficulty}</td>
+                </tr>
+                <tr className="">
+                  <td className="collapsing">Miner:</td>
+                  <td className="">{blockDetail.miner}</td>
+                </tr>
+                <tr className="">
+                  <td className="collapsing">Block Hash:</td>
+                  <td className="">{blockDetail.hash}</td>
+                </tr>
+                <tr className="">
+                  <td className="collapsing">Present Hash:</td>
+                  <td className="">{blockDetail.parentHash}</td>
+                </tr>
+                <tr className="">
+                  <td className="collapsing">Nonce:</td>
+                  <td className="">{blockDetail.nonce}</td>
+                </tr>
+                <tr className="">
+                  <td className="collapsing">Gas Limit:</td>
+                  <td className="">{blockDetail.gasLimit}</td>
+                </tr>
+                <tr className="">
+                  <td className="collapsing">Time:</td>
+                  <td className="">{moment(blockDetail.timestamp * 1000).format('YYYY-MM-DD HH:mm:ss')}</td>
+                </tr>
+                <tr className="">
+                  <td className="collapsing">Size:</td>
+                  <td className="">{blockDetail.size}</td>
+                </tr>
+              </tbody>
+            </StyledTabel>
+          )}
+          <TabZone>
+            <div className="ui attached tabular menu">
+              <button type="button" className={currentTab === 1 ? 'active item' : 'item'} onClick={() => this.setState({ currentTab: 1 })}>
+                Transactions
+              </button>
+              <button className={currentTab === 2 ? 'active item' : 'item'} type="button" onClick={() => this.setState({ currentTab: 2 })}>
+                Referee Block
+              </button>
             </div>
-            <TabWrapper>
-              <Pagination
-                prevItem={{
-                  'aria-label': 'Previous item',
-                  content: 'Previous',
-                }}
-                nextItem={{
-                  'aria-label': 'Next item',
-                  content: 'Next',
-                }}
-                defaultActivePage={5}
-                totalPages={10}
-              />
-            </TabWrapper>
-          </div>
-          <div className="ui bottom attached segment tab">Tab 2 Content</div>
-          <div className="ui bottom attached segment tab">Tab 3 Content</div>
-        </TabZone>
-      </Wrapper>
-    </div>
-  );
+            <div className={currentTab === 1 ? 'ui bottom attached segment active tab' : 'ui bottom attached segment tab'}>
+              <div className="ui fluid card">
+                <div className="content">
+                  <DataList showHeader columns={TxColumns} dataSource={TxList} />
+                </div>
+              </div>
+              <TabWrapper>
+                <Pagination
+                  prevItem={{
+                    'aria-label': 'Previous item',
+                    content: 'Previous',
+                  }}
+                  nextItem={{
+                    'aria-label': 'Next item',
+                    content: 'Next',
+                  }}
+                  onPageChange={(e, data) => {
+                    e.preventDefault();
+                    this.fetchTxDetail(params.blockhash, data);
+                  }}
+                  defaultActivePage={1}
+                  totalPages={Math.ceil(TxTotalCount / 10)}
+                />
+              </TabWrapper>
+            </div>
+            <div className={currentTab === 2 ? 'ui bottom attached segment active tab' : 'ui bottom attached segment tab'}>
+              Tab 2 Content
+            </div>
+          </TabZone>
+        </Wrapper>
+      </div>
+    );
+  }
 }
 Detail.propTypes = {
   match: PropTypes.objectOf(PropTypes.string),

@@ -6,6 +6,7 @@ import DataList from '../../components/DataList';
 import Countdown from '../../components/Countdown';
 import TableLoading from '../../components/TableLoading';
 import EllipsisLine from '../../components/EllipsisLine';
+import { convertToValueorFee, converToGasPrice } from '../../utils';
 import '../../assets/semantic-ui/semantic.css';
 
 const Wrapper = styled.div`
@@ -69,37 +70,37 @@ const columns = [
     key: 1,
     dataIndex: 'hash',
     title: 'Hash',
-    render: (text) => <EllipsisLine text={text} />,
+    render: (text) => <EllipsisLine isLong linkTo={`/transactionsdetail/${text}`} text={text} />,
   },
   {
     key: 2,
     dataIndex: 'from',
     title: 'From',
-    render: (text) => <EllipsisLine text={text} />,
+    render: (text) => <EllipsisLine linkTo={`/accountdetail/${text}`} text={text} />,
   },
   {
     key: 3,
     dataIndex: 'to',
     title: 'To',
-    render: (text) => <EllipsisLine text={text} />,
+    render: (text) => <EllipsisLine linkTo={`/accountdetail/${text}`} text={text} />,
   },
   {
     key: 4,
     className: 'two wide aligned',
     dataIndex: 'value',
     title: 'Value',
-    render: (text) => <EllipsisLine text={text} />,
+    render: (text) => <EllipsisLine unit="CFX" text={convertToValueorFee(text)} />,
   },
   {
     key: 5,
     className: 'two wide aligned',
     dataIndex: 'gasPrice',
     title: 'Gas Price',
-    render: (text) => <EllipsisLine text={text} />,
+    render: (text) => <EllipsisLine unit="Gdip" text={converToGasPrice(text)} />,
   },
   {
     key: 6,
-    className: 'two wide aligned',
+    className: 'two wide aligned plain_th',
     dataIndex: 'timestamp',
     title: 'Age',
     render: (text) => <Countdown timestamp={text * 1000} />,

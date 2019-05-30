@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import superagent from 'superagent';
 import { Pagination } from 'semantic-ui-react';
 import DataList from '../../components/DataList';
 import EllipsisLine from '../../components/EllipsisLine';
+import Countdown from '../../components/Countdown';
 import '../../assets/semantic-ui/semantic.css';
 
 const Wrapper = styled.div`
@@ -46,90 +49,121 @@ const columns = [
   {
     key: 1,
     dataIndex: 'ein',
-    title: 'Epoch',
+    title: 'Position',
+    className: 'plain_th',
   },
   {
     key: 2,
-    dataIndex: 'drei',
-    title: 'Position',
-    render: (text, row) => (
+    dataIndex: 'hash',
+    title: 'Hash',
+    render: (text) => (
       <div>
         <PCell>
-          <EllipsisLine isPivot text={row.zwei} />
+          <EllipsisLine linkTo={`/blocksdetail/${text}`} isPivot isLong text={text} />
         </PCell>
       </div>
     ),
   },
   {
     key: 3,
-    dataIndex: 'drei',
-    title: 'Hash',
-    render: (text, row) => (
+    dataIndex: 'difficulty',
+    title: 'Difficulty',
+    className: 'plain_th',
+    render: (text) => (
       <div>
-        <PCell>{row.drei}</PCell>
+        <PCell>{text}</PCell>
       </div>
     ),
   },
   {
     key: 4,
-    className: 'two wide aligned',
-    dataIndex: 'drei',
-    title: 'Difficulty',
-    render: (text) => <div className="ui label">{text}</div>,
+    dataIndex: 'miner',
+    title: 'Miner',
+    render: (text) => (
+      <div>
+        <PCell>
+          <EllipsisLine linkTo={`/accountdetail/${text}`} text={text} />
+        </PCell>
+      </div>
+    ),
   },
   {
     key: 5,
-    className: 'two wide aligned',
-    dataIndex: 'drei',
-    title: 'Miner',
-    render: (text) => <div className="ui label">{text}</div>,
+    dataIndex: 'gasLimit',
+    title: 'Gas Limit',
+    className: 'plain_th',
+    render: (text) => text,
   },
   {
     key: 6,
-    className: 'two wide aligned',
-    dataIndex: 'drei',
-    title: 'Gas Limit',
-    render: (text) => <div className="ui label">{text}</div>,
+    dataIndex: 'timestamp',
+    title: 'Age',
+    className: 'plain_th',
+    render: (text) => (
+      <PCell>
+        <Countdown timestamp={text * 1000} />
+      </PCell>
+    ),
   },
   {
     key: 7,
-    className: 'two wide aligned',
-    dataIndex: 'drei',
-    title: 'Age',
-    render: (text) => <div className="ui label">{text}</div>,
-  },
-  {
-    key: 8,
-    className: 'two wide aligned',
-    dataIndex: 'drei',
+    className: 'center aligned plain_th',
+    dataIndex: 'transactionCount',
     title: 'Tx Count',
-    render: (text) => <div className="ui label">{text}</div>,
+    render: (text) => text,
   },
-];
-const dataSource = [
-  { key: 1, ein: '80580', zwei: '0xe969a6fc05897123123', drei: 'Alichs' },
-  { key: 2, ein: '80581', zwei: '0xe969a6fc05897124124', drei: 'Schwarz' },
 ];
 
-function Detail({ match }) {
-  const { epochid } = match.params;
-  return (
-    <div className="page-epoch-detail">
-      <Wrapper>
-        <HeadBar>
-          <h1>Epoch</h1>
-          <p>{epochid}</p>
-        </HeadBar>
-        <StyledTabel>
-          <div className="ui fluid card">
-            <div className="content">
-              <DataList showHeader columns={columns} dataSource={dataSource} />
+class Detail extends Component {
+  constructor() {
+    super();
+    this.state = {
+      BlockList: [],
+    };
+  }
+
+  componentDidMount() {
+    const {
+      match: { params },
+    } = this.props;
+    this.fetchInitList({ epochid: params.epochid });
+  }
+
+  async fetchInitList({ epochid }) {
+    const { code, result } = (await superagent.get(
+      `http://127.0.0.1:3000/proxy/fetchEpochList?pageNum=1&pageSize=20&epochNum=${epochid}`
+    )).body;
+    if (!code) {
+      this.setState({
+        BlockList: result.find((item) => Object.keys(item)[0] === 'block/list')['block/list'],
+      });
+    }
+  }
+
+  render() {
+    const { BlockList } = this.state;
+    const {
+      match: { params },
+    } = this.props;
+    console.log(BlockList);
+    return (
+      <div className="page-epoch-detail">
+        <Wrapper>
+          <HeadBar>
+            <h1>Epoch</h1>
+            <p>{params.epochid}</p>
+          </HeadBar>
+          <StyledTabel>
+            <div className="ui fluid card">
+              <div className="content">
+                <DataList showHeader columns={columns} dataSource={BlockList} />
+              </div>
             </div>
-          </div>
-        </StyledTabel>
-      </Wrapper>
-    </div>
-  );
+          </StyledTabel>
+        </Wrapper>
+      </div>
+    );
+  }
 }
 Detail.propTypes = {
   match: PropTypes.objectOf(PropTypes.string),

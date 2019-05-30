@@ -156,7 +156,7 @@ class BlockAndTxn extends Component {
         render: (text, row) => (
           <div>
             <PCell>
-              <EllipsisLine isPivot={row.isPivot} text={text} />
+              <EllipsisLine linkTo={`/blocksdetail/${text}`} isPivot={row.isPivot} text={text} />
             </PCell>
             <PCell>
               <Countdown timestamp={row.timestamp * 1000} />
@@ -170,7 +170,7 @@ class BlockAndTxn extends Component {
         title: 'Blocks',
         render: (text, row) => (
           <div>
-            <EllipsisLine text={'Miner ' + text} />
+            <EllipsisLine linkTo={`/accountdetail/${text}`} text={'Miner ' + text} />
             <PCell>{row.transactionCount} txns</PCell>
           </div>
         ),
@@ -203,7 +203,7 @@ class BlockAndTxn extends Component {
         render: (text, row) => (
           <div>
             <PCell>
-              <EllipsisLine isPivot={row.isPivot} text={text} />
+              <EllipsisLine linkTo={`/transactionsdetail/${text}`} isPivot={row.isPivot} text={text} />
             </PCell>
             <PCell>
               <Countdown timestamp={row.timestamp * 1000} />
@@ -217,8 +217,8 @@ class BlockAndTxn extends Component {
         title: 'Blocks',
         render: (text, row) => (
           <div>
-            <EllipsisLine text={'From ' + text} />
-            <EllipsisLine text={'To ' + row.to} />
+            <EllipsisLine prefix="From" linkTo={`/accountdetail/${text}`} text={text} />
+            <EllipsisLine prefix="To" linkTo={`/accountdetail/${row.to}`} text={row.to} />
           </div>
         ),
       },

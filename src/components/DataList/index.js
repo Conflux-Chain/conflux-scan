@@ -3,9 +3,18 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import '../../assets/semantic-ui/semantic.css';
 
+const StyledTable = styled.div`
+  th.plain_th {
+    font-size: 16px;
+    color: rgba(0, 0, 0, 0.87);
+    font-style: normal;
+    font-weight: 400;
+  }
+`;
+
 function DataList({ rowStyle, showHeader, columns, dataSource }) {
   return (
-    <div>
+    <StyledTable>
       <table className="ui very basic padded table">
         {!showHeader ? null : (
           <thead>
@@ -40,7 +49,7 @@ function DataList({ rowStyle, showHeader, columns, dataSource }) {
           })}
         </tbody>
       </table>
-    </div>
+    </StyledTable>
   );
 }
 DataList.propTypes = {
