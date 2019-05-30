@@ -1,3 +1,5 @@
+import superagent from 'superagent';
+
 let errorId = null;
 let source = null;
 
@@ -110,4 +112,25 @@ export const toThousands = (num) => {
   let re = /(?=(?!(\b))(\d{3})+$)/g;
   str = str.replace(re, ',');
   return str;
+};
+
+/*
+  {
+    url: '/xxx',
+    type: 'GET', //默认
+    query: { // get参数
+    },
+    body: { // post参数
+    },
+    headers: {} // 可选
+  }
+*/
+
+export const sendRequest = (config) => {
+  const reqType = config.type || 'GET';
+
+  return superagent(reqType, config.url)
+    .set(config.headers || {})
+    .query(config.query || {})
+    .send(config.body);
 };
