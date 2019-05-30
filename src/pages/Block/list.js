@@ -145,9 +145,7 @@ class List extends Component {
 
   async fetchBlockList({ activePage }) {
     this.setState({ isLoading: true });
-    const { code, result } = (await superagent.get(
-      `http://127.0.0.1:3000/proxy/fetchInitBlockandTxList?pageNum=${activePage}&pageSize=10`
-    )).body;
+    const { code, result } = (await superagent.get(`/proxy/fetchInitBlockandTxList?pageNum=${activePage}&pageSize=10`)).body;
     if (!code) {
       this.setState(
         {

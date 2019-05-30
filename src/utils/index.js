@@ -1,4 +1,5 @@
 import superagent from 'superagent';
+import { toast } from '../components/Toast';
 
 let errorId = null;
 let source = null;
@@ -128,9 +129,26 @@ export const toThousands = (num) => {
 
 export const sendRequest = (config) => {
   const reqType = config.type || 'GET';
-
-  return superagent(reqType, config.url)
+  const reqPromise = superagent(reqType, config.url)
     .set(config.headers || {})
     .query(config.query || {})
     .send(config.body);
+
+  reqPromise.then((result) => {
+    if (result.body.code !== 0) {
+      toast.error({
+        content: result.body.msg || '服务器异常',
+        title: '系统错误',
+      });
+    }
+  });
+  reqPromise.catch((error) => {
+    console.log(error);
+    toast.error({
+      content: '网络异常',
+      title: '系统错误',
+    });
+  });
+
+  return reqPromise;
 };
