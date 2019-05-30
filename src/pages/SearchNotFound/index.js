@@ -1,79 +1,88 @@
 import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { injectIntl, FormattedMessage } from 'react-intl';
+import querystring from 'querystring';
 import media from '../../globalStyles/media';
-import CopyButton from '../../components/CopyButton';
 
-const nfImg = require('../../assets/images/box3.gif');
+const nfImg = require('../../assets/images/404.gif');
 
 const NfWrapDiv = styled.div`
-  margin-top: 150px;
-  ${media.pad`margin-top: 120px`}
-  ${media.tablet`margin-top: 100px`}
-  ${media.mobile`margin-top: 0`}
-  overflow: hidden;
-  .img {
-    float: left;
-    margin-left: 80px;
-    margin-right: 72px;
-    margin-bottom: 100px;
-    ${media.pad`
-      margin-left: 20px;
-      margin-right: 30px;
-    `}
-    ${media.tablet`
-      width: 150px;
-      margin-left: 20px;
-      margin-right: 30px;
-    `}
-    ${media.mobile`
-      display: none;
-    `}
-  }
-  .right {
-
+  margin-top: 103px;
+  margin-left: 126px;
+  ${media.pad`margin-left: 60px;`}
+  img {
+    width: 255px;
   }
   .title {
     font-size: 54px;
-    ${media.pad`font-size: 40px`}
-    ${media.tablet`font-size: 32px`}
-    ${media.mobile`font-size: 24px; margin-top: 20px`}
+    strong {
+      margin-left: 5px;
+    }
   }
-  .row2 {
+  .row2,
+  .row3,
+  .row4 {
     font-size: 20px;
-    margin-top: 20px;
   }
   .row3 {
-    font-size: 20px;
+    color: rgba(0, 0, 0, 0.54);
   }
-  .packing {
-    margin-left: 4px;
+  .row5 {
+    font-size: 20px;
+    a {
+      text-decoration: underline;
+      cursor: pointer;
+      color: rgba(0, 0, 0, 0.87);
+    }
   }
 `;
 class SearchNotFound extends PureComponent {
   render() {
-    const copyId = '0x8a0df7cca3b4310x8a0df7cca3b4310x8a0df7cca3b4310x8a0df7cca3b431';
+    let { searchId, location } = this.props;
+    if (!searchId) {
+      const parsed = querystring.parse(location.search.replace(/^\?/, ''));
+      if (parsed.searchId) {
+        searchId = parsed.searchId;
+      }
+    }
+
     return (
       <NfWrapDiv>
         <img src={nfImg} className="img" />
-        <div className="right">
-          <div className="title">
-            <span>Sorry your </span>
-            <strong> Transaction</strong>
-          </div>
+        <div className="title">
+          <FormattedMessage id="app.pages.SearchNotFound.title" />
+        </div>
 
-          <div className="row2">
-            <span>0x8a0df7cca3b431…</span>
-            <CopyButton style={{ marginLeft: 5 }} txtToCopy={copyId} btnType="two" toolTipId="app.pages.searchNotFound.tooltip" />
-            <span className="packing">is packing, please w</span>
-          </div>
+        <div className="row2">
+          <FormattedMessage id="app.pages.SearchNotFound.row2" />
+        </div>
+        <div className="row3">{searchId}</div>
+        <div className="row4">
+          <FormattedMessage id="app.pages.SearchNotFound.row4" />
+        </div>
 
-          <div className="row3">
-            <span> If you think there is someting wrong, please</span>
-            <a> contact us</a>
-          </div>
+        <div className="row5">
+          <FormattedMessage id="app.pages.NotFoundTx.ask" />
+          <FormattedMessage id="app.pages.NotFoundTx.concatus">{(txt) => <a href="mailto:hr@conflux-chain.org">{txt}</a>}</FormattedMessage>
         </div>
       </NfWrapDiv>
     );
   }
 }
-export default SearchNotFound;
+
+SearchNotFound.propTypes = {
+  searchId: PropTypes.string,
+  location: PropTypes.shape({
+    search: PropTypes.string,
+  }),
+};
+
+SearchNotFound.defaultProps = {
+  searchId: '',
+  location: {
+    search: '',
+  },
+};
+
+export default injectIntl(SearchNotFound);

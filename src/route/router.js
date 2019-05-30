@@ -28,6 +28,7 @@ const AccountDetail = lazy(() => import('../pages/Account/detail'));
 const TopHolder = lazy(() => import('../pages/TopList/holder'));
 const SearchNotFound = lazy(() => import('../pages/SearchNotFound'));
 const NotFound = lazy(() => import('../pages/404'));
+const NotFoundTx = lazy(() => import('../pages/NotFoundTx'));
 
 function Router() {
   return (
@@ -46,6 +47,7 @@ function Router() {
         <Route path="/epochsdetail/:epochid" component={EpochDetail} />
         <Route path="/topholders" component={TopHolder} />
         <Route path="/notfound" component={SearchNotFound} />
+        <Route path="/notfoundtx" component={NotFoundTx} />
         <Route component={NotFound} />
       </Switch>
     </Suspense>
