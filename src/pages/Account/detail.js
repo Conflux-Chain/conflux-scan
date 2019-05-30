@@ -112,6 +112,12 @@ const Statistic = styled.div`
 const TabZone = styled.div`
   position: relative;
   width: 100%;
+  button {
+    outline: none;
+    border: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+  }
 `;
 
 const TabZoneWrapper = styled.div`
