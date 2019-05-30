@@ -8,5 +8,13 @@
   "app.comp.copyButton.copySuccess": "Copied",
   "app.pages.account.detail.qr": "Click to View QR Code",
   "app.pages.account.detail.tooltip": "Copy Address to clipboard",
-  "app.pages.searchNotFound.tooltip": "Copy to clipboard"
+  "app.pages.NotFoundTx.title1": "Sorry your",
+  "app.pages.NotFoundTx.title2": " Transaction",
+  "app.pages.NotFoundTx.tooltip": "Copy to clipboard",
+  "app.pages.NotFoundTx.packing": "is packing, please wait",
+  "app.pages.NotFoundTx.ask": "If you think there is someting wrong, please",
+  "app.pages.NotFoundTx.concatus": " contact us",
+  "app.pages.SearchNotFound.title": "Search not found",
+  "app.pages.SearchNotFound.row2": "Oops! The search string you entered was:",
+  "app.pages.SearchNotFound.row4": "not found"
 }

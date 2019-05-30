@@ -7,7 +7,7 @@ import Countdown from '../../components/Countdown';
 import EllipsisLine from '../../components/EllipsisLine';
 import TableLoading from '../../components/TableLoading';
 import '../../assets/semantic-ui/semantic.css';
-import { initSse, closeSource } from '../../utils';
+import { initSse, closeSource, sendRequest } from '../../utils';
 
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -125,7 +125,13 @@ class BlockAndTxn extends Component {
   }
 
   async fetchInitList() {
-    const { code, result } = (await superagent.get('http://127.0.0.1:3000/proxy/fetchInitBlockandTxList?pageNum=1&pageSize=10')).body;
+    const { code, result } = (await sendRequest({
+      url: '/proxy/fetchInitBlockandTxList',
+      query: {
+        pageNum: 1,
+        pageSize: 10,
+      },
+    })).body;
     if (!code) {
       this.setState({
         BlockList: result.find((item) => Object.keys(item)[0] === 'block/list')['block/list'],

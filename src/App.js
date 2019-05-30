@@ -9,6 +9,7 @@ import Router from './route/router';
 import Header from './components/Header';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import { ToastComp } from './components/Toast';
 
 // styles
 import './assets/semantic-ui/semantic.css';
@@ -77,6 +78,7 @@ class App extends Component {
                 <Router />
               </Content>
               <Footer />
+              <ToastComp />
             </Container>
             <GlobalStyle />
           </Wrapper>
