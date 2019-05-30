@@ -9,10 +9,11 @@ import CopyButton from '../../components/CopyButton';
 const nfImg = require('../../assets/images/box3.gif');
 
 const NfWrapDiv = styled.div`
-  margin-top: 150px;
-  ${media.pad`margin-top: 120px`}
-  ${media.tablet`margin-top: 100px`}
-  ${media.mobile`margin-top: 0`}
+  background: #fff;
+  padding-top: 150px;
+  ${media.pad`padding-top: 120px`}
+  ${media.tablet`padding-top: 100px`}
+  ${media.mobile`padding-top: 0`}
   overflow: hidden;
   .img {
     float: left;
@@ -68,6 +69,11 @@ class NotFoundTx extends PureComponent {
       }
     }
 
+    let searchIdShow = searchId;
+    if (searchId && searchId.length > 16) {
+      searchIdShow = searchId.slice(0, 15) + '...';
+    }
+
     return (
       <NfWrapDiv>
         <img src={nfImg} className="img" />
@@ -78,7 +84,7 @@ class NotFoundTx extends PureComponent {
           </div>
 
           <div className="row2">
-            <span>0x8a0df7cca3b431…</span>
+            <span>{searchIdShow}</span>
             <CopyButton style={{ marginLeft: '5px' }} txtToCopy={searchId} btnType="two" toolTipId="app.pages.NotFoundTx.tooltip" />
             <FormattedMessage className="packing" id="app.pages.NotFoundTx.packing" />
           </div>

@@ -8,9 +8,11 @@ import media from '../../globalStyles/media';
 const nfImg = require('../../assets/images/404.gif');
 
 const NfWrapDiv = styled.div`
-  margin-top: 103px;
-  margin-left: 126px;
-  ${media.pad`margin-left: 60px;`}
+  background: #fff;
+  padding-top: 103px;
+  padding-left: 126px;
+  padding-bottom: 20px;
+  ${media.pad`padding-left: 60px;`}
   img {
     width: 255px;
   }
