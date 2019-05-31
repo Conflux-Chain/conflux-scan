@@ -4,6 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const WebpackCdnPlugin = require('webpack-cdn-plugin');
 
 const devMode = process.env.NODE_ENV !== 'production';
 
@@ -30,6 +31,53 @@ module.exports = {
       template: path.resolve(__dirname, 'src', 'index.html'), // 模板
       filename: 'index.html',
     }), // 生成Html5文件
+    new WebpackCdnPlugin({
+      modules: [
+        {
+          name: 'react',
+          var: 'React',
+          path: 'umd/react.production.min.js',
+        },
+        {
+          name: 'prop-types',
+          var: 'PropTypes',
+          path: 'prop-types.min.js',
+        },
+        {
+          name: 'react-dom',
+          var: 'ReactDOM',
+          path: 'umd/react-dom.production.min.js',
+        },
+        {
+          name: 'react-router-dom',
+          var: 'ReactRouterDOM',
+          path: 'umd/react-router-dom.min.js',
+        },
+        {
+          name: 'react-intl',
+          var: 'ReactIntl',
+          path: 'dist/react-intl.min.js',
+        },
+        {
+          name: 'moment',
+          var: 'moment',
+          path: 'min/moment-with-locales.js',
+        },
+        {
+          name: 'styled-components',
+          var: 'styled',
+          path: 'dist/styled-components.min.js',
+        },
+        {
+          name: 'echarts',
+          var: 'echarts',
+          path: 'dist/echarts.min.js',
+        },
+      ],
+      prod: process.env.NODE_ENV === 'production',
+      publicPath: '/node_modules',
+      prodUrl: 'https://cdn.jsdelivr.net/npm/:name@:version/:path',
+    }),
     new MiniCssExtractPlugin({
       filename: devMode ? '[name].css' : '[name].[hash].css',
       chunkFilename: devMode ? '[id].css' : '[id].[hash].css',
