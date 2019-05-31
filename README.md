@@ -41,6 +41,11 @@
     ${media.tablet`background: mediumseagreen;`}
     ${media.phone`background: palevioletred;`}
 
+# CSS命名规范--长名称或词组可以使用中横线全小写来为类选择器命名。
+  ```css className
+    <span className="block-rate"></span>
+  ```
+
 
 # 编码规范--Airbnb React/JSX 编码规范
 

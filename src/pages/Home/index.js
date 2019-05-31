@@ -88,6 +88,10 @@ const LineContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   margin-top: 16px;
+  .ui.card {
+    box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+    border: none;
+  }
   .ui.card:nth-child(odd) {
     margin: 0 16px 16px 0;
   }

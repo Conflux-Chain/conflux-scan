@@ -100,6 +100,7 @@ class LineChart extends Component {
           show: false,
         },
       },
+      color: ['#1E3DE4'],
       series: [
         {
           name: '',

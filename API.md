@@ -18,7 +18,8 @@
 ### Overview
 
 - All data is sent and received as JSON
-- All timestamps return in 10 / 13 digit int: `1558329858`
+- All timestamps return in 10 digit int: `1558329858`
+- All keys are named with Camel-Case
 
 ### Request
 
