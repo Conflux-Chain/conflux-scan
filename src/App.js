@@ -1,10 +1,11 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { addLocaleData, IntlProvider } from 'react-intl';
 import enLocaleData from 'react-intl/locale-data/en';
 import zhLocaleData from 'react-intl/locale-data/zh';
 import styled from 'styled-components';
 
+// components
 import Router from './route/router';
 import Header from './components/Header';
 import Navbar from './components/Navbar';
@@ -50,42 +51,27 @@ const Content = styled.div`
   min-height: 200px;
 `;
 
-class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      lang: 'en',
-    };
-    this.changeLanguage = this.changeLanguage.bind(this);
-  }
+function App() {
+  const [lang, setLang] = useState('en');
 
-  changeLanguage(lang) {
-    this.setState({
-      lang: lang,
-    });
-  }
-
-  render() {
-    const { lang } = this.state;
-    return (
-      <IntlProvider locale={lang} messages={messages[lang]}>
-        <BrowserRouter>
-          <Wrapper>
-            <Header changeLanguage={this.changeLanguage} />
-            <Navbar />
-            <Container>
-              <Content>
-                <Router />
-              </Content>
-              <Footer />
-              <ToastComp />
-            </Container>
-            <GlobalStyle />
-          </Wrapper>
-        </BrowserRouter>
-      </IntlProvider>
-    );
-  }
-} /**/
+  return (
+    <IntlProvider locale={lang} messages={messages[lang]}>
+      <BrowserRouter>
+        <Wrapper>
+          <Header changeLanguage={(l) => setLang(l)} />
+          <Navbar />
+          <Container>
+            <Content>
+              <Router />
+            </Content>
+            <Footer />
+            <ToastComp />
+          </Container>
+          <GlobalStyle />
+        </Wrapper>
+      </BrowserRouter>
+    </IntlProvider>
+  );
+}
 
 export default App;
