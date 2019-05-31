@@ -5,6 +5,10 @@ import moreBlue from '../../assets/images/icons/more_blue.svg';
 import moreRed from '../../assets/images/icons/more_red.svg';
 import LineChart from '../../components/LineChart';
 import { toFixed, toThousands } from '../../utils';
+import dashboard1 from '../../assets/images/dashboard1.png';
+import dashboard2 from '../../assets/images/dashboard2.png';
+import dashboard3 from '../../assets/images/dashboard3.png';
+import dashboard4 from '../../assets/images/dashboard4.png';
 
 const Container = styled.div`
   width: 100%;
@@ -30,6 +34,10 @@ const Block = styled.div`
   margin-right: 16px;
   font-size: 16px;
   color: rgba(0, 0, 0, 0.87);
+  background-image: url(${(props) => props.url});
+  background-size: ${(props) => props.width} ${(props) => props.height};
+  background-position: top right;
+  background-repeat: no-repeat;
   .black-title {
     font-size: 16px;
   }
@@ -209,7 +217,7 @@ class Home extends Component {
           val: 200570130,
           trend: -13.8888,
         },
-        blockNum: {
+        blockTime: {
           val: 4.678,
           trend: 0,
         },
@@ -261,11 +269,33 @@ class Home extends Component {
 
   renderSummary() {
     const { summary } = this.state;
+    const size = {
+      tps: {
+        width: '216px',
+        height: '44px',
+        url: dashboard1,
+      },
+      difficulty: {
+        width: '174px',
+        height: '58px',
+        url: dashboard2,
+      },
+      blockTime: {
+        width: '155px',
+        height: '58px',
+        url: dashboard3,
+      },
+      hashRate: {
+        width: '151px',
+        height: '59px',
+        url: dashboard4,
+      },
+    };
     return summary
       .map((value, key) => {
         if (key !== 'hashRate') {
           return (
-            <Block key={key}>
+            <Block key={key} {...size[key]}>
               <span className="block-title">{this.mapKeyToTitle(key)}</span>
               <div className="block-content">
                 <span className="block-value">
@@ -280,7 +310,7 @@ class Home extends Component {
           );
         }
         return (
-          <Block key={key}>
+          <Block key={key} {...size[key]}>
             <span className="block-title">{this.mapKeyToTitle(key)}</span>
             <div className="block-content">
               <span className="block-rate">
