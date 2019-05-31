@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { Icon } from 'semantic-ui-react';
+import { injectIntl, FormattedMessage } from 'react-intl';
 
 const Wrap = styled.div`
   width: 300px;
@@ -61,8 +62,14 @@ function ToastMessage(props) {
     <Wrap className={`toast-${level}`}>
       <Icon name={iconClassName} className="toast-icon" />
       <div className="toast-content">
-        {title ? <div className="toast-title">{title}</div> : null}
-        <div className="toast-body">{content}</div>
+        {title ? (
+          <div className="toast-title">
+            <FormattedMessage id={title} />
+          </div>
+        ) : null}
+        <div className="toast-body">
+          <FormattedMessage id={content} />
+        </div>
       </div>
       <Icon name="close icon" className="close" onClick={onClose} />
     </Wrap>
@@ -73,11 +80,11 @@ ToastMessage.propTypes = {
   level: PropTypes.string.isRequired,
   title: PropTypes.string,
   onClose: PropTypes.func.isRequired,
-  content: PropTypes.element.isRequired,
+  content: PropTypes.string.isRequired,
 };
 
 ToastMessage.defaultProps = {
   title: '',
 };
 
-export default ToastMessage;
+export default injectIntl(ToastMessage);
