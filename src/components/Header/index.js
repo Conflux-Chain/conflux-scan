@@ -1,36 +1,31 @@
 // Header Component
 
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 import styled from 'styled-components';
-import classnames from 'classnames';
 
 import SearchBox from '../SearchBox';
-import LogoBlack from '../../assets/images/logo-b@2.png';
+import LogoImage from '../../assets/images/logo-b@2.png';
 
 const Wrapper = styled.header`
-  width: 100%;
-  padding: 0 25px;
-  text-align: left;
-  height: 72px;
   display: flex;
+  width: 100%;
+  height: 72px;
+  padding: 0 25px;
   justify-content: space-between;
+  text-align: left;
   border-bottom: 1px solid #ccc;
   background-color: #fff;
 `;
 
 const Logo = styled.div`
-  margin-top: 24px;
+  margin-top: 23px;
   margin-right: 30px;
+
   img {
     width: 130px;
-    transition: 0.4s transform;
-
-    &:hover {
-      //transform: scale(1.05);
-    }
   }
 `;
 
@@ -42,7 +37,7 @@ const SearchBoxContainer = styled.div`
 const LangSelector = styled.div.attrs({
   className: 'ui menu compact',
 })`
-  margin-top: 15px !important;
+  margin-top: 14px !important;
   width: 125px;
   padding-bottom: 16px;
   border: none !important;
@@ -71,63 +66,51 @@ const LangSelector = styled.div.attrs({
   }
 `;
 
-class Header extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { lang: props.intl.locale };
-  }
+function Header(props) {
+  const { changeLanguage, intl } = props;
+  const langs = ['en', 'zh'];
 
-  changeLanguage(data) {
-    const { changeLanguage } = this.props;
-    this.setState({ lang: data });
-    changeLanguage(data);
-  }
-
-  render() {
-    const { lang } = this.state;
-    const langs = ['en', 'zh'];
-
-    return (
-      <Wrapper>
-        <Logo>
-          <NavLink to="/">
-            <img src={LogoBlack} alt="Conflux Logo" />
-          </NavLink>
-        </Logo>
-        <SearchBoxContainer>
-          <SearchBox />
-        </SearchBoxContainer>
-        <LangSelector>
-          <div className="ui dropdown link item">
-            <span className="text">
-              <FormattedMessage id={'app.header.lang.' + lang} />
-            </span>
-            <i className="dropdown icon" />
-            <div className="menu transition visible">
-              {langs
-                .filter((v) => v !== lang)
-                .map((l) => (
-                  <div
-                    className="item"
-                    onClick={() => this.changeLanguage(l)}
-                    onKeyPress={() => this.changeLanguage(l)}
-                    role="menuitem"
-                    tabIndex={0}
-                    key={l}
-                  >
-                    <FormattedMessage id={'app.header.lang.' + l} />
-                  </div>
-                ))}
-            </div>
+  return (
+    <Wrapper>
+      <Logo>
+        <NavLink to="/">
+          <img src={LogoImage} alt="Conflux Logo" />
+        </NavLink>
+      </Logo>
+      <SearchBoxContainer>
+        <SearchBox />
+      </SearchBoxContainer>
+      <LangSelector>
+        <div className="ui dropdown link item">
+          <span className="text">
+            <FormattedMessage id={'app.header.lang.' + intl.locale} />
+          </span>
+          <i className="dropdown icon" />
+          <div className="menu transition visible">
+            {langs
+              .filter((v) => v !== intl.locale)
+              .map((lang) => (
+                <div
+                  className="item"
+                  onClick={() => changeLanguage(lang)}
+                  onKeyPress={() => changeLanguage(lang)}
+                  role="menuitem"
+                  tabIndex={0}
+                  key={lang}
+                >
+                  <FormattedMessage id={'app.header.lang.' + lang} />
+                </div>
+              ))}
           </div>
-        </LangSelector>
-      </Wrapper>
-    );
-  }
+        </div>
+      </LangSelector>
+    </Wrapper>
+  );
 }
 
 Header.propTypes = {
   intl: intlShape.isRequired,
   changeLanguage: PropTypes.func.isRequired,
 };
+
 export default injectIntl(Header);

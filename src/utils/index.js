@@ -138,6 +138,11 @@ export const toThousands = (num) => {
     },
     headers: {} // 可选
   }
+  error code under HTTP status code 2xx:
+ 0. no error
+ 1. Parameter error: input parameters invalid
+ 2. Database error: database service is not available
+ 3. Full-node error: full-node is not available
 */
 
 export const sendRequest = (config) => {
@@ -149,17 +154,31 @@ export const sendRequest = (config) => {
 
   reqPromise.then((result) => {
     if (result.body.code !== 0) {
+      let title;
+      switch (result.body.code) {
+        case 1:
+          title = 'app.comp.toast.error.1';
+          break;
+        case 2:
+          title = 'app.comp.toast.error.2';
+          break;
+        case 3:
+          title = 'app.comp.toast.error.3';
+          break;
+        default:
+          title = 'app.comp.toast.error.other';
+      }
       toast.error({
-        content: result.body.msg || '服务器异常',
-        title: '系统错误',
+        content: result.body.msg || 'app.comp.toast.error.contentDefault',
+        title: title,
       });
     }
   });
   reqPromise.catch((error) => {
     console.log(error);
     toast.error({
-      content: '网络异常',
-      title: '系统错误',
+      content: 'app.comp.toast.error.networkErr',
+      title: 'app.comp.toast.error.other',
     });
   });
 

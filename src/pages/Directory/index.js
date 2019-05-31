@@ -1,12 +1,13 @@
 import React from 'react';
-import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
 import { FormattedMessage, injectIntl } from 'react-intl';
+import styled from 'styled-components';
 
 const Wrapper = styled.div`
   width: 100%;
 
   .ui.card {
+    width: 384px !important;
     min-height: 224px;
     border: none;
     box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
@@ -71,116 +72,95 @@ const Wrapper = styled.div`
       fill: #1e3de4;
       overflow: hidden;
     }
+
+    &.disabled {
+      cursor: not-allowed !important;
+      &:hover {
+        transform: none;
+        box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.12) !important;
+
+        .icon-circle {
+          animation: none;
+        }
+      }
+
+      .header,
+      .description {
+        color: rgba(0, 0, 0, 0.38);
+      }
+
+      .icon-circle {
+        border-color: rgba(0, 0, 0, 0.38);
+      }
+      .icon {
+        fill: rgba(0, 0, 0, 0.38);
+      }
+    }
   }
 `;
 
+const links = [
+  {
+    key: 'exchange',
+    icon: 'iconexchange',
+    href: '',
+    disable: true,
+  },
+  {
+    key: 'wallet',
+    icon: 'iconqianbao-',
+    href: 'https://wallet.confluxscan.io/',
+    disable: false,
+  },
+  {
+    key: 'website',
+    icon: 'iconwangluo',
+    href: 'https://www.conflux-chain.org/',
+    disable: false,
+  },
+  {
+    key: 'news',
+    icon: 'iconnews',
+    href: 'https://www.conflux-chain.org/blog/',
+    disable: false,
+  },
+  {
+    key: 'topholders',
+    icon: 'iconusers',
+    href: '',
+    disable: true,
+  },
+  {
+    key: 'community',
+    icon: 'iconcommunity',
+    href: 'https://www.conflux-chain.org/community/',
+    disable: false,
+  },
+];
+
 function Directory() {
-  // TODO loop
   return (
     <Wrapper className="page-directory">
       <div className="ui three cards">
-        <a className="ui card">
-          <div className="content">
-            <div className="center aligned icon-circle">
-              <svg className="icon" aria-hidden="true">
-                <use xlinkHref="#iconexchange" />
-              </svg>
+        {links.map((link) => (
+          <a className={`ui card ${link.disable ? 'disabled' : ''}`} href={link.href || 'javascript:void(0)'} key={link.key}>
+            <div className="content">
+              <div className="center aligned icon-circle">
+                <svg className="icon" aria-hidden="true">
+                  <use xlinkHref={'#' + link.icon} />
+                </svg>
+              </div>
+              <div className="center aligned header">
+                <FormattedMessage id={`app.directory.${link.key}.title`} />
+              </div>
+              <div className="center aligned description">
+                <p>
+                  <FormattedMessage id={`app.directory.${link.key}.desc`} />
+                </p>
+              </div>
             </div>
-            <div className="center aligned header">
-              <FormattedMessage id="app.directory.exchange.title" />
-            </div>
-            <div className="center aligned description">
-              <p>
-                <FormattedMessage id="app.directory.exchange.desc" />
-              </p>
-            </div>
-          </div>
-        </a>
-        <a className="ui card">
-          <div className="content">
-            <div className="center aligned icon-circle">
-              <svg className="icon" aria-hidden="true">
-                <use xlinkHref="#iconqianbao-" />
-              </svg>
-            </div>
-            <div className="center aligned header">
-              <FormattedMessage id="app.directory.wallet.title" />
-            </div>
-            <div className="center aligned description">
-              <p>
-                <FormattedMessage id="app.directory.wallet.desc" />
-              </p>
-            </div>
-          </div>
-        </a>
-        <a className="ui card">
-          <div className="content">
-            <div className="center aligned icon-circle">
-              <svg className="icon" aria-hidden="true">
-                <use xlinkHref="#iconwangluo" />
-              </svg>
-            </div>
-            <div className="center aligned header">
-              <FormattedMessage id="app.directory.website.title" />
-            </div>
-            <div className="center aligned description">
-              <p>
-                <FormattedMessage id="app.directory.website.desc" />
-              </p>
-            </div>
-          </div>
-        </a>
-        <a className="ui card">
-          <div className="content">
-            <div className="center aligned icon-circle">
-              <svg className="icon" aria-hidden="true">
-                <use xlinkHref="#iconnews" />
-              </svg>
-            </div>
-            <div className="center aligned header">
-              <FormattedMessage id="app.directory.news.title" />
-            </div>
-            <div className="center aligned description">
-              <p>
-                <FormattedMessage id="app.directory.news.desc" />
-              </p>
-            </div>
-          </div>
-        </a>
-        <a className="ui card">
-          <div className="content">
-            <div className="center aligned icon-circle">
-              <svg className="icon" aria-hidden="true">
-                <use xlinkHref="#iconusers" />
-              </svg>
-            </div>
-            <div className="center aligned header">
-              <FormattedMessage id="app.directory.topholders.title" />
-            </div>
-            <div className="center aligned description">
-              <p>
-                <FormattedMessage id="app.directory.topholders.desc" />
-              </p>
-            </div>
-          </div>
-        </a>
-        <a className="ui card">
-          <div className="content">
-            <div className="center aligned icon-circle">
-              <svg className="icon" aria-hidden="true">
-                <use xlinkHref="#iconcommunity" />
-              </svg>
-            </div>
-            <div className="center aligned header">
-              <FormattedMessage id="app.directory.community.title" />
-            </div>
-            <div className="center aligned description">
-              <p>
-                <FormattedMessage id="app.directory.community.desc" />
-              </p>
-            </div>
-          </div>
-        </a>
+          </a>
+        ))}
       </div>
     </Wrapper>
   );
