@@ -385,3 +385,19 @@ result: {
   }
 }
 ```
+
+#### Get type of given hash
+
+```js
+path: /util/type/:hash
+method: 'get'
+params: {
+}
+result: {
+  code: 
+  msg:  
+  result: {
+    data: 0/1/2, // 0 for block, 1 for transaction, 2 for account
+  }
+}
+```
