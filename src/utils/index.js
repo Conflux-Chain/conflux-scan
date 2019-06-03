@@ -110,6 +110,7 @@ export const initSse = (tthis, uri = '/proxy/fetch_random_time') => {
 
 export const closeSource = () => {
   console.log('yes', source);
+  clearInterval(errorId);
   source.close();
 };
 
