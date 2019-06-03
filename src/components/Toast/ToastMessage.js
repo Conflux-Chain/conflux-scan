@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { Icon } from 'semantic-ui-react';
+import { injectIntl, FormattedMessage } from 'react-intl';
 
 const Wrap = styled.div`
   width: 300px;
@@ -9,11 +10,11 @@ const Wrap = styled.div`
   padding: 15px;
   border-radius: 5px;
   position: relative;
-  .Toast-title {
+  .toast-title {
     font-size: 16px;
     font-weight: bold;
   }
-  .Toast-icon {
+  .toast-icon {
     float: left;
     font-size: 32px;
     height: 50px;
@@ -32,13 +33,13 @@ const Wrap = styled.div`
   }
 
   // colors
-  &.Toast-error {
+  &.toast-error {
     color: #fff;
     border-color: #dc3545;
     background-color: #dc3545;
   }
 
-  &.Toast-success {
+  &.toast-success {
     color: #fff;
     border-color: #28a745;
     background-color: #28a745;
@@ -58,11 +59,17 @@ function ToastMessage(props) {
   }
 
   return (
-    <Wrap className={`Toast-${level}`}>
-      <Icon name={iconClassName} className="Toast-icon" />
-      <div className="Toast-content">
-        {title ? <div className="Toast-title">{title}</div> : null}
-        <div className="Toast-body">{content}</div>
+    <Wrap className={`toast-${level}`}>
+      <Icon name={iconClassName} className="toast-icon" />
+      <div className="toast-content">
+        {title ? (
+          <div className="toast-title">
+            <FormattedMessage id={title} />
+          </div>
+        ) : null}
+        <div className="toast-body">
+          <FormattedMessage id={content} />
+        </div>
       </div>
       <Icon name="close icon" className="close" onClick={onClose} />
     </Wrap>
@@ -73,11 +80,11 @@ ToastMessage.propTypes = {
   level: PropTypes.string.isRequired,
   title: PropTypes.string,
   onClose: PropTypes.func.isRequired,
-  content: PropTypes.element.isRequired,
+  content: PropTypes.string.isRequired,
 };
 
 ToastMessage.defaultProps = {
   title: '',
 };
 
-export default ToastMessage;
+export default injectIntl(ToastMessage);
