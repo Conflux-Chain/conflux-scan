@@ -467,7 +467,7 @@ class Detail extends Component {
             <div className={currentTab === 2 ? 'ui bottom attached segment active tab' : 'ui bottom attached segment tab'}>
               <div className="ui fluid card">
                 <div className="content">
-                  <DataList showHeader columns={minedColumns} dataSource={dataSource} />
+                  <DataList showHeader columns={minedColumns} dataSource={minedBlockList} />
                 </div>
               </div>
             </div>
