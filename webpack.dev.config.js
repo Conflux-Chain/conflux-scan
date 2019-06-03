@@ -20,7 +20,10 @@ module.exports = merge(commom, {
     },
     proxy: {
       '/proxy': 'http://localhost:3000',
-      '/api': 'http://testnet-jsonrpc.conflux-chain.org:18084',
+      '/api': {
+        target: 'http://testnet-jsonrpc.conflux-chain.org:18084',
+        pathRewrite: { '^/api': '' },
+      },
     },
   },
 });
