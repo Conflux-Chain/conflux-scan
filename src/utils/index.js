@@ -28,7 +28,7 @@ export const getXmlHttpRequest = () => {
   }
 };
 
-export const initSse = (tthis, uri = 'http://127.0.0.1:3000/proxy/fetch_random_time') => {
+export const initSse = (tthis, uri = '/proxy/fetch_random_time') => {
   source = null;
   source = new EventSource(uri);
 
@@ -61,7 +61,7 @@ export const initSse = (tthis, uri = 'http://127.0.0.1:3000/proxy/fetch_random_t
       errorId = setInterval(() => {
         isValidUri(
           'GET',
-          'http://127.0.0.1:3000/proxy/ping',
+          '/proxy/ping',
           (result) => {
             if (result) {
               clearInterval(errorId);

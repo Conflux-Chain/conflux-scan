@@ -68,18 +68,21 @@ const IconFace = styled.div`
 const columns = [
   {
     key: 1,
+    className: 'two wide aligned',
     dataIndex: 'hash',
     title: 'Hash',
     render: (text) => <EllipsisLine isLong linkTo={`/transactionsdetail/${text}`} text={text} />,
   },
   {
     key: 2,
+    className: 'two wide aligned',
     dataIndex: 'from',
     title: 'From',
     render: (text) => <EllipsisLine linkTo={`/accountdetail/${text}`} text={text} />,
   },
   {
     key: 3,
+    className: 'two wide aligned',
     dataIndex: 'to',
     title: 'To',
     render: (text) => <EllipsisLine linkTo={`/accountdetail/${text}`} text={text} />,
@@ -127,9 +130,7 @@ class List extends Component {
 
   async fetchTxList({ activePage }) {
     this.setState({ isLoading: true });
-    const { code, result } = (await superagent.get(
-      `http://127.0.0.1:3000/proxy/fetchInitBlockandTxList?pageNum=${activePage}&pageSize=10`
-    )).body;
+    const { code, result } = (await superagent.get(`/proxy/fetchInitBlockandTxList?pageNum=${activePage}&pageSize=10`)).body;
     if (!code) {
       this.setState(
         {

@@ -117,7 +117,7 @@ class BlockAndTxn extends Component {
 
   componentDidMount() {
     this.fetchInitList();
-    initSse(this, 'http://127.0.0.1:3000/proxy/fetchBlockandTxList?pageNum=1&pageSize=10');
+    initSse(this, '/proxy/fetchBlockandTxList?pageNum=1&pageSize=10');
   }
 
   componentWillUnmount() {

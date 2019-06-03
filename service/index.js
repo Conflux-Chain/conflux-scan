@@ -216,6 +216,42 @@ const start = async () => {
         },
       },
     },
+    // 获取 hash的类型
+    {
+      method: 'GET',
+      path: `${SERVER_PREFIX}/fetchHashType/{hash}`,
+      config: {
+        cors: true,
+        handler: async (request, h) => {
+          const querys = [`util/type/${request.params.hash}`].map((ids) => {
+            return new Promise((resolve, reject) => {
+              console.log(`${API_HOST}/${ids}`);
+              superagent
+                .get(`${API_HOST}/${ids}`)
+                .then((callback) => {
+                  const { code, result, message } = JSON.parse(callback.text);
+                  if (code == 0) resolve({ code, result: result.data, message });
+                  else if (code == 1) resolve({ code, message });
+                  else reject({});
+                })
+                .catch((e) => {
+                  console.log(e.toString());
+                  reject({});
+                });
+            });
+          });
+          const payload = await Promise.all(querys);
+          return h.response(payload[0]);
+        },
+        description: '获取 tx detail',
+        tags: ['api'],
+        validate: {
+          params: Joi.object().keys({
+            hash: Joi.string().required(),
+          }),
+        },
+      },
+    },
     // 获取 block detail
     {
       method: 'GET',

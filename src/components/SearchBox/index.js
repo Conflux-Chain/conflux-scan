@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import superagent from 'superagent';
 import styled from 'styled-components';
 
 const Input = styled.input`
@@ -74,14 +75,34 @@ const SearchButton = styled.div`
 `;
 
 class SearchBox extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = { searchKey: '' };
   }
 
-  handleSearch(value) {
+  async handleSearch(value) {
+    console.log(this.props);
     if (value) {
-      console.log(value);
+      const { code, result } = (await superagent.get(`http://127.0.0.1:3000/proxy/fetchHashType/${value}`)).body;
+      if (code) {
+        window.location.href = '/notfound';
+      }
+      if (result) {
+        switch (result) {
+          case 0:
+            window.location.href = `/blocksdetail/${value}`;
+            break;
+          case 1:
+            window.location.href = `/transactionsdetail/${value}`;
+            break;
+          case 2:
+            window.location.href = `/accountdetail/${value}`;
+            break;
+          default:
+            console.log('unknow case');
+            break;
+        }
+      }
     }
   }
 
@@ -113,7 +134,11 @@ class SearchBox extends Component {
           type="text"
           placeholder="Search by Address / Block Hash / Txn Hash / Epoch Number"
         />
-        <SearchButton onClick={(e) => this.handleSearch(searchKey)} />
+        <SearchButton onClick={(e) => this.handleSearch(searchKey)}>
+          <svg className="icon" aria-hidden="true">
+            <use xlinkHref="#iconsousuo" />
+          </svg>
+        </SearchButton>
       </Wrapper>
     );
   }

@@ -130,9 +130,7 @@ class Detail extends Component {
   }
 
   async fetchInitList({ epochid }) {
-    const { code, result } = (await superagent.get(
-      `http://127.0.0.1:3000/proxy/fetchEpochList?pageNum=1&pageSize=20&epochNum=${epochid}`
-    )).body;
+    const { code, result } = (await superagent.get(`/proxy/fetchEpochList?pageNum=1&pageSize=20&epochNum=${epochid}`)).body;
     if (!code) {
       this.setState({
         BlockList: result.find((item) => Object.keys(item)[0] === 'block/list')['block/list'],

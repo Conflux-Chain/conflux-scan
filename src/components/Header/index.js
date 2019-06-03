@@ -1,6 +1,7 @@
 // Header Component
 
 import React, { Component, useState } from 'react';
+import { withRouter } from 'react-router';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
@@ -67,6 +68,7 @@ const LangSelector = styled.div.attrs({
 `;
 
 function Header(props) {
+  console.log('header', props);
   const { changeLanguage, intl } = props;
   const langs = ['en', 'zh'];
 

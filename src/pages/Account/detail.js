@@ -217,7 +217,7 @@ class Detail extends Component {
 
   async fetchAccountDetail(accountid, queries) {
     this.setState({ isLoading: true });
-    const { code, result } = (await superagent.get(`http://127.0.0.1:3000/proxy/fetchAccountDetail/${accountid}`).query(queries)).body;
+    const { code, result } = (await superagent.get(`/proxy/fetchAccountDetail/${accountid}`).query(queries)).body;
     console.log(result);
     if (!code) {
       this.setState(
