@@ -151,7 +151,13 @@ export const sendRequest = (config) => {
   const reqPromise = superagent(reqType, config.url)
     .set(config.headers || {})
     .query(config.query || {})
-    .send(config.body);
+    .send(config.body)
+    .ok((res) => {
+      if (res.status === 200 || res.status === 304) {
+        return true;
+      }
+      return false;
+    });
 
   reqPromise.then((result) => {
     if (result.body.code !== 0) {
