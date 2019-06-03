@@ -278,7 +278,7 @@ method: 'get'
 params: {
   startTime: 'string', // 可选：精确到小时
   endTime: 'string', // 可选：精确到小时
-  txnType: 'All', // 可选： 默认All  All | Outgoing | Incoming
+  txnType: 'all', // 可选： 默认all  all | outgoing | incoming
   pageNum: 1 // num | 页码
   pageSize: 10 // num | 每页展示数
 }
