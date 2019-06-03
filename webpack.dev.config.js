@@ -10,7 +10,7 @@ module.exports = merge(commom, {
     port: 8080,
     contentBase: [path.resolve(__dirname, 'dist')], // 开发服务运行时的文件根目录
     historyApiFallback: true, // spa不跳转,history模式的路由需要true
-    compress: true,
+    compress: false,
     before: (app, server) => {
       app.get('/node_modules/*', (req, res) => {
         res.setHeader('content-type', 'application/javascript; charset=utf-8');
