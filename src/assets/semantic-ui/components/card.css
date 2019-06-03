@@ -167,7 +167,7 @@
 .ui.card > .content > .header {
   display: block;
   margin: '';
-  font-family: 'Lato', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  font-family: 'Proxima Nova', 'Helvetica Neue', Arial, Helvetica, sans-serif;
   color: rgba(0, 0, 0, 0.85);
 }
 
@@ -176,7 +176,7 @@
 .ui.card > .content > .header:not(.ui) {
   font-weight: bold;
   font-size: 1.28571429em;
-  margin-top: -0.21425em;
+  /* margin-top: -0.21425em; */
   line-height: 1.28571429em;
 }
 .ui.cards > .card > .content > .meta + .description,
