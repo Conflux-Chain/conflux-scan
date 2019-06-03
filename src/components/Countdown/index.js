@@ -15,10 +15,10 @@ function Countdown({ timestamp }) {
   let secondUnit = beforeTime.subtract(minuteUnit, 'minutes').diff(nowTime, 'seconds');
 
   let labelStr = '';
-  if (yearUnit > 1) labelStr = `${yearUnit} 年前`;
-  else if (monthUnit > 1) labelStr = `${monthUnit} 月前`;
-  else if (dayUnit > 1) labelStr = `${dayUnit} 天前`;
-  else labelStr = `${hourUnit} 小时${minuteUnit} 分钟 ${secondUnit} 秒 前`;
+  if (yearUnit > 1) labelStr = `${yearUnit}年前`;
+  else if (monthUnit > 1) labelStr = `${monthUnit}月前`;
+  else if (dayUnit > 1) labelStr = `${dayUnit}天前`;
+  else labelStr = `${hourUnit}小时${minuteUnit}分钟${secondUnit}秒前`;
 
   return <span>{labelStr}</span>;
 }

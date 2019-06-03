@@ -105,18 +105,21 @@ const dataSource = [
 const TxColumns = [
   {
     key: 1,
+    className: 'two wide aligned',
     dataIndex: 'hash',
     title: 'Hash',
     render: (text) => <EllipsisLine text={text} />,
   },
   {
     key: 2,
+    className: 'two wide aligned',
     dataIndex: 'from',
     title: 'From',
     render: (text) => <EllipsisLine text={text} />,
   },
   {
     key: 3,
+    className: 'two wide aligned',
     dataIndex: 'to',
     title: 'To',
     render: (text) => <EllipsisLine text={text} />,
@@ -155,12 +158,80 @@ const TxColumns = [
   },
 ];
 
+const RefColumns = [
+  {
+    key: 1,
+    dataIndex: 'epochNumber',
+    className: 'one wide aligned',
+    title: 'Epoch',
+    render: (text) => <EllipsisLine linkTo={`/epochsdetail/${text}`} text={text} />,
+  },
+  {
+    key: 2,
+    dataIndex: 'drei',
+    className: 'one wide aligned',
+    title: 'Position',
+    render: (text, row) => (
+      <div>
+        <PCell>{row.drei}</PCell>
+      </div>
+    ),
+  },
+  {
+    key: 3,
+    dataIndex: 'hash',
+    className: 'one wide aligned',
+    title: 'Hash',
+    render: (text, row) => (
+      <div>
+        <EllipsisLine isLong linkTo={`/blocksdetail/${text}`} isPivot={row.isPivot} text={text} />
+      </div>
+    ),
+  },
+  {
+    key: 4,
+    dataIndex: 'difficulty',
+    className: 'one wide aligned plain_th',
+    title: 'Difficulty',
+    render: (text) => <PCell>{text}</PCell>,
+  },
+  {
+    key: 5,
+    className: 'one wide aligned',
+    dataIndex: 'miner',
+    title: 'Miner',
+    render: (text) => <EllipsisLine linkTo={`/accountdetail/${text}`} text={text} />,
+  },
+  {
+    key: 6,
+    className: 'one wide aligned plain_th',
+    dataIndex: 'gasLimit',
+    title: 'Gas Limit',
+    render: (text) => <PCell>{text}</PCell>,
+  },
+  {
+    key: 7,
+    className: 'two wide aligned plain_th',
+    dataIndex: 'timestamp',
+    title: 'Age',
+    render: (text) => <Countdown timestamp={text * 1000} />,
+  },
+  {
+    key: 8,
+    className: 'one wide aligned plain_th',
+    dataIndex: 'transactionCount',
+    title: 'Tx Count',
+    render: (text) => <PCell>{text}</PCell>,
+  },
+];
+
 class Detail extends Component {
   constructor() {
     super();
     this.state = {
       currentTab: 1,
       TxTotalCount: 100,
+      refereeBlockList: [],
       blockDetail: {},
       TxList: [],
       isLoading: true,
@@ -194,13 +265,29 @@ class Detail extends Component {
     return {};
   }
 
+  async fetchReffereBlock(blockHash) {
+    this.setState({ isLoading: true });
+    const { code, result } = (await superagent.get(`/proxy/fetchRefereeBlockList/${blockHash}?pageNum=1&pageSize=10`)).body;
+    if (!code) {
+      this.setState(
+        {
+          refereeBlockList: result.find((item) => Object.keys(item)[0] === `block/${blockHash}/refereeBlockList`)[
+            `block/${blockHash}/refereeBlockList`
+          ],
+        },
+        () => this.setState({ isLoading: false })
+      );
+    }
+    return {};
+  }
+
   render() {
-    const { blockDetail, TxList, TxTotalCount, isLoading, currentTab } = this.state;
+    const { blockDetail, TxList, TxTotalCount, isLoading, currentTab, refereeBlockList } = this.state;
     const {
       match: { params },
     } = this.props;
 
-    console.log(blockDetail, isLoading, TxList);
+    console.log(refereeBlockList, '===refereeBlockList');
     return (
       <div className="page-block-detail">
         <Wrapper>
@@ -261,7 +348,14 @@ class Detail extends Component {
               <button type="button" className={currentTab === 1 ? 'active item' : 'item'} onClick={() => this.setState({ currentTab: 1 })}>
                 Transactions
               </button>
-              <button className={currentTab === 2 ? 'active item' : 'item'} type="button" onClick={() => this.setState({ currentTab: 2 })}>
+              <button
+                className={currentTab === 2 ? 'active item' : 'item'}
+                type="button"
+                onClick={() => {
+                  this.fetchReffereBlock(params.blockhash);
+                  this.setState({ currentTab: 2 });
+                }}
+              >
                 Referee Block
               </button>
             </div>
@@ -291,7 +385,11 @@ class Detail extends Component {
               </TabWrapper>
             </div>
             <div className={currentTab === 2 ? 'ui bottom attached segment active tab' : 'ui bottom attached segment tab'}>
-              Tab 2 Content
+              <div className="ui fluid card">
+                <div className="content">
+                  <DataList showHeader columns={RefColumns} dataSource={refereeBlockList} />
+                </div>
+              </div>
             </div>
           </TabZone>
         </Wrapper>

@@ -186,6 +186,52 @@ const columns = [
     render: (text) => <div className="ui label">{text}</div>,
   },
 ];
+
+const minedColumns = [
+  {
+    key: 1,
+    dataIndex: 'ein',
+    title: 'Blocks',
+    // className: 'two wide',
+    render: (text, row) => (
+      <IconFace>
+        <svg className="icon" aria-hidden="true">
+          <use xlinkHref="#iconjinrijiaoyiliang" />
+        </svg>
+      </IconFace>
+    ),
+  },
+  {
+    key: 2,
+    dataIndex: 'drei',
+    title: 'Blocks',
+    render: (text, row) => (
+      <div>
+        <PCell>
+          <EllipsisLine isPivot text={row.zwei} />
+        </PCell>
+      </div>
+    ),
+  },
+  {
+    key: 3,
+    dataIndex: 'drei',
+    title: 'Blocks',
+    render: (text, row) => (
+      <div>
+        <PCell>{row.drei}</PCell>
+      </div>
+    ),
+  },
+  {
+    key: 4,
+    className: 'two wide aligned',
+    dataIndex: 'drei',
+    title: 'Blocks',
+    render: (text) => <div className="ui label">{text}</div>,
+  },
+];
+
 const dataSource = [
   { key: 1, ein: '80580', zwei: '0xe969a6fc05897123123', drei: 'Alichs' },
   { key: 2, ein: '80581', zwei: '0xe969a6fc05897124124', drei: 'Schwarz' },
@@ -198,6 +244,7 @@ class Detail extends Component {
       currentTab: 1,
       isLoading: false,
       accountDetail: {},
+      minedBlockList: [],
       queries: {
         pageNum: 1,
         pageSize: 100,
@@ -218,7 +265,6 @@ class Detail extends Component {
   async fetchAccountDetail(accountid, queries) {
     this.setState({ isLoading: true });
     const { code, result } = (await superagent.get(`/proxy/fetchAccountDetail/${accountid}`).query(queries)).body;
-    console.log(result);
     if (!code) {
       this.setState(
         {
@@ -232,8 +278,23 @@ class Detail extends Component {
     return {};
   }
 
+  async fetchMinedBlockList(accountid) {
+    const { code, result } = (await superagent.get(`/proxy/fetchMinedBlockList/${accountid}?pageNum=1&pageSize=20`)).body;
+    if (!code) {
+      this.setState(
+        {
+          minedBlockList: result.find((item) => Object.keys(item)[0] === `account/${accountid}/minedBlockList`)[
+            `account/${accountid}/minedBlockList`
+          ],
+        },
+        () => this.setState({ isLoading: false })
+      );
+    }
+    return {};
+  }
+
   render() {
-    const { accountDetail, queries, currentTab, isLoading } = this.state;
+    const { accountDetail, queries, currentTab, isLoading, minedBlockList } = this.state;
     const {
       match: { params },
     } = this.props;
@@ -315,7 +376,10 @@ class Detail extends Component {
                 type="button"
                 className={currentTab === 2 ? 'active item' : 'item'}
                 onKeyUp={() => {}}
-                onClick={() => this.setState({ currentTab: 2 })}
+                onClick={() => {
+                  this.setState({ currentTab: 2 });
+                  this.fetchMinedBlockList(params.accountid);
+                }}
               >
                 Miner Block
               </button>
@@ -401,7 +465,11 @@ class Detail extends Component {
               </TabWrapper>
             </div>
             <div className={currentTab === 2 ? 'ui bottom attached segment active tab' : 'ui bottom attached segment tab'}>
-              Tab 2 Content
+              <div className="ui fluid card">
+                <div className="content">
+                  <DataList showHeader columns={minedColumns} dataSource={dataSource} />
+                </div>
+              </div>
             </div>
           </TabZone>
         </Wrapper>

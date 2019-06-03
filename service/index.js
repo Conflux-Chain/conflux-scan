@@ -195,6 +195,7 @@ const start = async () => {
                 .get(`${API_HOST}/${ids}`)
                 .then((callback) => {
                   const { code, result, message } = JSON.parse(callback.text);
+                  console.log(result, message);
                   if (code == 0) resolve(result.data);
                   else reject({});
                 })
@@ -334,6 +335,86 @@ const start = async () => {
           }),
           params: Joi.object().keys({
             address: Joi.string().required(),
+          }),
+        },
+      },
+    },
+    // 获取 MinedBlockList
+    {
+      method: 'GET',
+      path: `${SERVER_PREFIX}/fetchMinedBlockList/{blockHash}`,
+      config: {
+        cors: true,
+        handler: async (request, h) => {
+          const querys = [`account/${request.params.blockHash}/minedBlockList`].map((ids) => {
+            return new Promise((resolve, reject) => {
+              console.log(`${API_HOST}/${ids}`);
+              superagent
+                .get(`${API_HOST}/${ids}`)
+                .query(request.query)
+                .then((callback) => {
+                  const { code, result, message } = JSON.parse(callback.text);
+                  if (code == 0) resolve({ [ids]: result.data });
+                  else reject({});
+                })
+                .catch((e) => {
+                  console.log(e.toString());
+                  reject({});
+                });
+            });
+          });
+          const payload = await Promise.all(querys);
+          return h.response({ code: 0, result: payload });
+        },
+        description: '获取 MinedBlockList',
+        tags: ['api'],
+        validate: {
+          query: Joi.object().keys({
+            pageNum: Joi.string().required(),
+            pageSize: Joi.string().required(),
+          }),
+          params: Joi.object().keys({
+            blockHash: Joi.string().required(),
+          }),
+        },
+      },
+    },
+    // 获取 RefereeBlockList
+    {
+      method: 'GET',
+      path: `${SERVER_PREFIX}/fetchRefereeBlockList/{blockHash}`,
+      config: {
+        cors: true,
+        handler: async (request, h) => {
+          const querys = [`block/${request.params.blockHash}/refereeBlockList`].map((ids) => {
+            return new Promise((resolve, reject) => {
+              console.log(`${API_HOST}/${ids}`);
+              superagent
+                .get(`${API_HOST}/${ids}`)
+                .query(request.query)
+                .then((callback) => {
+                  const { code, result, message } = JSON.parse(callback.text);
+                  if (code == 0) resolve({ [ids]: result.data });
+                  else reject({});
+                })
+                .catch((e) => {
+                  console.log(e.toString());
+                  reject({});
+                });
+            });
+          });
+          const payload = await Promise.all(querys);
+          return h.response({ code: 0, result: payload });
+        },
+        description: '获取 RefereeBlockList',
+        tags: ['api'],
+        validate: {
+          query: Joi.object().keys({
+            pageNum: Joi.string().required(),
+            pageSize: Joi.string().required(),
+          }),
+          params: Joi.object().keys({
+            blockHash: Joi.string().required(),
           }),
         },
       },

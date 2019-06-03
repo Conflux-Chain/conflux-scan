@@ -192,6 +192,7 @@ class BlockAndTxn extends Component {
     const TxColumns = [
       {
         key: 1,
+        className: 'one wide right aligned',
         dataIndex: 'hash',
         title: 'Blocks',
         render: () => (
@@ -204,6 +205,7 @@ class BlockAndTxn extends Component {
       },
       {
         key: 2,
+        className: 'two wide left aligned',
         dataIndex: 'hash',
         title: 'Blocks',
         render: (text, row) => (
@@ -219,6 +221,7 @@ class BlockAndTxn extends Component {
       },
       {
         key: 3,
+        className: 'two wide left aligned',
         dataIndex: 'from',
         title: 'Blocks',
         render: (text, row) => (
@@ -230,7 +233,7 @@ class BlockAndTxn extends Component {
       },
       {
         key: 4,
-        className: 'three wide right aligned',
+        className: 'one wide right aligned',
         dataIndex: 'gasPrice',
         title: 'Blocks',
         render: (text) => <div className="ui label">{'GAS ' + text}</div>,
