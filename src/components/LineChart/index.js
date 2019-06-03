@@ -52,16 +52,34 @@ const DurationContainer = styled.div`
 
 class LineChart extends Component {
   componentDidMount() {
-    this.renderChart();
+    const { data } = this.props;
+    this.renderChart(data);
   }
 
-  formatTime() {
-    const { formatString, data } = this.props;
-    return data.map((item) => moment(item.time * 1000).format(formatString));
+  componentWillReceiveProps(nextProps) {
+    const { data, duration } = this.props;
+    if (nextProps.data !== data || nextProps.duration !== duration) {
+      this.renderChart(nextProps.data);
+    }
   }
 
-  renderChart() {
-    const { formatString, data, title } = this.props;
+  formatTime(data) {
+    return data.map((item) => {
+      return moment(item.time * 1000).format('YYYY/MM/DD') + '\n' + moment(item.time * 1000).format('hh:mm');
+    });
+  }
+
+  formatDate(duration) {
+    // if (duration === 'hour' || duration === 'day') {
+    //   return 'hh:mm:00';
+    // }
+    // return 'YYYY/MM/DD';
+    return 'hh:mm';
+  }
+
+  renderChart(data) {
+    const { title } = this.props;
+    console.log(data);
     const myChart = echarts.init(document.getElementById(title + 'chart'));
     const option = {
       tooltip: {
@@ -82,12 +100,26 @@ class LineChart extends Component {
           },
         },
         formatter: (params) => {
-          return moment(params[0].data.time * 1000).format(formatString) + '<br />' + toFixed(params[0].data.value, 3);
+          return moment(params[0].data.time * 1000).format('YYYY/MM/DD hh:mm') + '<br />' + toFixed(params[0].data.value, 3);
         },
       },
       xAxis: {
         type: 'category',
-        data: this.formatTime(),
+        data: this.formatTime(data),
+        axisLabel: {
+          interval: (index, value) => {
+            const length = data.length;
+            const interval = Math.floor(length / 6) + 1;
+
+            if (interval === 1) {
+              return true;
+            }
+            if (index % interval === 0) {
+              return true;
+            }
+            return false;
+          },
+        },
         splitLine: {
           show: false,
         },
@@ -163,12 +195,10 @@ LineChart.propTypes = {
   title: PropTypes.string.isRequired,
   data: PropTypes.arrayOf(PropTypes.object).isRequired,
   duration: PropTypes.string,
-  formatString: PropTypes.string,
   onChangeDuration: PropTypes.func.isRequired,
 };
 LineChart.defaultProps = {
   duration: 'day',
-  formatString: 'YYYY/MM/DD',
 };
 
 export default LineChart;

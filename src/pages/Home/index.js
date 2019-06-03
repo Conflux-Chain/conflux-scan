@@ -114,119 +114,18 @@ class Home extends Component {
     super(props);
     this.state = {
       data: Immutable.fromJS({
-        tps: [
-          {
-            value: 0.01609657947686117,
-            time: 1559021323,
-          },
-          {
-            value: 0.017953321364452424,
-            time: 1559021884,
-          },
-          {
-            value: 0.015238095238095238,
-            time: 1559022410,
-          },
-          {
-            value: 0.016227180527383367,
-            time: 1559022903,
-          },
-          {
-            value: 0.017977528089887642,
-            time: 1559023352,
-          },
-        ],
-        difficulty: [
-          {
-            value: 0.01609657947686117,
-            time: 1559021323,
-          },
-          {
-            value: 0.017953321364452424,
-            time: 1559021884,
-          },
-          {
-            value: 0.015238095238095238,
-            time: 1559022410,
-          },
-          {
-            value: 0.016227180527383367,
-            time: 1559022903,
-          },
-          {
-            value: 0.017977528089887642,
-            time: 1559023352,
-          },
-        ],
-        blockTime: [
-          {
-            value: 0.01609657947686117,
-            time: 1559021323,
-          },
-          {
-            value: 0.017953321364452424,
-            time: 1559021884,
-          },
-          {
-            value: 0.015238095238095238,
-            time: 1559022410,
-          },
-          {
-            value: 0.016227180527383367,
-            time: 1559022903,
-          },
-          {
-            value: 0.017977528089887642,
-            time: 1559023352,
-          },
-        ],
-        hashRate: [
-          {
-            value: 0.01609657947686117,
-            time: 1559021323,
-          },
-          {
-            value: 0.017953321364452424,
-            time: 1559021884,
-          },
-          {
-            value: 0.015238095238095238,
-            time: 1559022410,
-          },
-          {
-            value: 0.016227180527383367,
-            time: 1559022903,
-          },
-          {
-            value: 0.017977528089887642,
-            time: 1559023352,
-          },
-        ],
+        tps: [],
+        difficulty: [],
+        blockTime: [],
+        hashRate: [],
       }),
       duration: Immutable.fromJS({
         tps: 'day',
-        difficulty: 'hour',
-        blockTime: 'month',
-        hashRate: 'all',
+        difficulty: 'day',
+        blockTime: 'day',
+        hashRate: 'day',
       }),
-      summary: Immutable.fromJS({
-        tps: {
-          val: 774.26,
-          trend: 4.2999,
-        },
-        difficulty: {
-          val: 200570130,
-          trend: -13.8888,
-        },
-        blockTime: {
-          val: 4.678,
-          trend: 0,
-        },
-        hashRate: {
-          val: 42.9544,
-          trend: 16.11888,
-        },
-      }),
+      summary: Immutable.fromJS({}),
     };
   }
 
@@ -239,7 +138,6 @@ class Home extends Component {
   }
 
   onChangeDuration(name, value) {
-    console.log(value);
     const { duration } = this.state;
     const newDuration = duration.set(name, value);
     this.setState({
