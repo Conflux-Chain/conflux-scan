@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import Immutable from 'immutable';
+import superagent from 'superagent';
 import moreBlue from '../../assets/images/icons/more_blue.svg';
 import moreRed from '../../assets/images/icons/more_red.svg';
 import LineChart from '../../components/LineChart';
@@ -230,7 +231,11 @@ class Home extends Component {
   }
 
   componentDidMount() {
-    console.log('mount');
+    this.fetchStatistic();
+    this.fetchLineData('tps', 'day');
+    this.fetchLineData('difficulty', 'day');
+    this.fetchLineData('blockTime', 'day');
+    this.fetchLineData('hashRate', 'day');
   }
 
   onChangeDuration(name, value) {
@@ -240,6 +245,27 @@ class Home extends Component {
     this.setState({
       duration: newDuration,
     });
+    this.fetchLineData(name, value);
+  }
+
+  async fetchStatistic() {
+    const { code, result } = (await superagent.get('/api/dashboard/statistics')).body;
+    if (!code) {
+      this.setState({
+        summary: Immutable.fromJS(result.data),
+      });
+    }
+  }
+
+  async fetchLineData(name, duration) {
+    const { code, result } = (await superagent.get(`/api/dashboard/statistics/${name}?duration=${duration}`)).body;
+    let { data } = this.state;
+    if (!code) {
+      data = data.set(name, Immutable.fromJS(result.data));
+      this.setState({
+        data,
+      });
+    }
   }
 
   formatTrend(value) {

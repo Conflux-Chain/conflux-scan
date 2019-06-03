@@ -11,8 +11,8 @@ module.exports = merge(commom, {
     contentBase: [path.resolve(__dirname, 'dist')], // 开发服务运行时的文件根目录
     historyApiFallback: true, // spa不跳转,history模式的路由需要true
     compress: true,
-    before: function(app, server) {
-      app.get('/node_modules/*', function(req, res) {
+    before: (app, server) => {
+      app.get('/node_modules/*', (req, res) => {
         res.setHeader('content-type', 'application/javascript; charset=utf-8');
         const filePath = path.resolve(__dirname, '.' + req.url);
         fs.createReadStream(filePath).pipe(res);
@@ -20,6 +20,7 @@ module.exports = merge(commom, {
     },
     proxy: {
       '/proxy': 'http://localhost:3000',
+      '/api': 'http://testnet-jsonrpc.conflux-chain.org:18084',
     },
   },
 });
