@@ -350,10 +350,10 @@ result: {
 }
 ```
 
-#### Account Referee Block List
+#### Referee Block List
 
 ```js
-path: /account/:address/refereeBlockList
+path: /block/:blockHash/refereeBlockList
 method: 'get'
 params: {
   pageNum: 1 // num | 页码
