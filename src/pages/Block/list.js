@@ -67,12 +67,14 @@ const columns = [
   {
     key: 1,
     dataIndex: 'epochNumber',
+    className: 'one wide aligned',
     title: 'Epoch',
     render: (text) => <EllipsisLine linkTo={`/epochsdetail/${text}`} text={text} />,
   },
   {
     key: 2,
     dataIndex: 'drei',
+    className: 'one wide aligned',
     title: 'Position',
     render: (text, row) => (
       <div>
@@ -83,6 +85,7 @@ const columns = [
   {
     key: 3,
     dataIndex: 'hash',
+    className: 'two wide aligned',
     title: 'Hash',
     render: (text, row) => (
       <div>
@@ -92,8 +95,8 @@ const columns = [
   },
   {
     key: 4,
-    className: 'two wide aligned plain_th',
     dataIndex: 'difficulty',
+    className: 'one wide aligned plain_th',
     title: 'Difficulty',
     render: (text) => <PCell>{text}</PCell>,
   },
@@ -113,14 +116,14 @@ const columns = [
   },
   {
     key: 7,
-    className: 'two wide aligned plain_th',
+    className: 'one wide aligned plain_th',
     dataIndex: 'timestamp',
     title: 'Age',
     render: (text) => <Countdown timestamp={text * 1000} />,
   },
   {
     key: 8,
-    className: 'two wide center aligned plain_th',
+    className: 'one wide aligned plain_th',
     dataIndex: 'transactionCount',
     title: 'Tx Count',
     render: (text) => <PCell>{text}</PCell>,

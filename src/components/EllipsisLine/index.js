@@ -58,21 +58,23 @@ const PrefixTag = styled.i`
 
 function EllipsisLine({ prefix, unit, isPivot, isLong, linkTo, text, textInout }) {
   return (
-    <SingleLine>
-      <div className="wrap">
-        {prefix && <PrefixTag>{prefix}</PrefixTag>}
-        {!linkTo ? (
-          <div className={isLong ? 'ellipsis long' : 'ellipsis'}>{text}</div>
-        ) : (
-          <div className={isLong ? 'ellipsis link long' : 'ellipsis link'}>
-            <Link to={linkTo}>{text}</Link>
-          </div>
-        )}
-        {isPivot && <PivotTag>Pivot</PivotTag>}
-        {textInout && <InOutTag>{textInout}</InOutTag>}
-        <UnitTag>{unit}</UnitTag>
-      </div>
-    </SingleLine>
+    <div className="ui button" style={{ background: 'transparent', margin: 0, padding: 0 }} data-tooltip={text} data-position="top center">
+      <SingleLine>
+        <div className="wrap">
+          {prefix && <PrefixTag>{prefix}</PrefixTag>}
+          {!linkTo ? (
+            <div className={isLong ? 'ellipsis long' : 'ellipsis'}>{text}</div>
+          ) : (
+            <div className={isLong ? 'ellipsis link long' : 'ellipsis link'}>
+              <Link to={linkTo}>{text}</Link>
+            </div>
+          )}
+          {isPivot && <PivotTag>Pivot</PivotTag>}
+          {textInout && <InOutTag>{textInout}</InOutTag>}
+          <UnitTag>{unit}</UnitTag>
+        </div>
+      </SingleLine>
+    </div>
   );
 }
 EllipsisLine.propTypes = {
