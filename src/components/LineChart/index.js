@@ -69,17 +69,8 @@ class LineChart extends Component {
     });
   }
 
-  formatDate(duration) {
-    // if (duration === 'hour' || duration === 'day') {
-    //   return 'hh:mm:00';
-    // }
-    // return 'YYYY/MM/DD';
-    return 'hh:mm';
-  }
-
   renderChart(data) {
     const { title } = this.props;
-    console.log(data);
     const myChart = echarts.init(document.getElementById(title + 'chart'));
     const option = {
       tooltip: {

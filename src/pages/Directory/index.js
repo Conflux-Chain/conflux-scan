@@ -5,6 +5,8 @@ import styled from 'styled-components';
 
 const Wrapper = styled.div`
   width: 100%;
+  max-width: 1220px;
+  margin: 0 auto;
 
   .ui.card {
     width: 384px !important;

@@ -1,10 +1,10 @@
 // Navbar Component
 
 import React, { Component } from 'react';
-import styled from 'styled-components';
+import PropTypes from 'prop-types';
 import { NavLink, withRouter } from 'react-router-dom';
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
-import PropTypes from 'prop-types';
+import styled from 'styled-components';
 
 const Wrapper = styled.div`
   position: fixed;
@@ -67,7 +67,6 @@ function Navbar(props) {
   const { location } = props;
   const blocktxnPaths = ['blocktxn', 'blocks', 'blocksdetail', 'transactions', 'transactionsdetail', 'accountdetail', 'epochsdetail'];
   const directoryPaths = ['directory', 'topholders'];
-  console.log(props);
 
   return (
     <Wrapper>
