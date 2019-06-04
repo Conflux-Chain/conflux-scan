@@ -1,112 +1,273 @@
-import React from 'react';
+import React, { Component } from 'react';
+import styled from 'styled-components';
+import Immutable from 'immutable';
+import superagent from 'superagent';
+import { injectIntl, FormattedMessage, intlShape } from 'react-intl';
+import moreBlue from '../../assets/images/icons/more_blue.svg';
+import moreRed from '../../assets/images/icons/more_red.svg';
+import LineChart from '../../components/LineChart';
+import { toFixed, toThousands } from '../../utils';
+import dashboard1 from '../../assets/images/dashboard1.png';
+import dashboard2 from '../../assets/images/dashboard2.png';
+import dashboard3 from '../../assets/images/dashboard3.png';
+import dashboard4 from '../../assets/images/dashboard4.png';
 
-function Home() {
-  return (
-    <div className="home">
-      <div className="banner">
-        <p>banner</p>
-      </div>
-      <section className="ourselves">
-        <div className="our-left">
-          <img src={require('../../assets/images/homeImg/tps.png')} />
-        </div>
-        <div className="our-right">
-          <p className="our-title">我是标题21</p>
-          <p className="our-con">我是副标题</p>
-          <a href="" className="button">
-            我是按钮
-          </a>
-        </div>
-      </section>
-      <section className="property">
-        <p className="pro-title">我是标题</p>
-        <div className="pro-top">
-          <div className="top-left">
-            <p className="pro-subhead">我是小标题</p>
-            <p className="pro-con">我是内容</p>
-          </div>
-          <div className="top-right" />
-        </div>
-        <div className="pro-bottom">
-          <div className="bottom-left" />
-          <div className="bottom-right">
-            <p className="pro-subhead">我是小标题</p>
-            <p className="pro-con">我是内容</p>
-          </div>
-        </div>
-      </section>
-      <section className="product">
-        <p className="product-title">我是标题</p>
-        <div className="product-left">
-          <img className="product-img" src={require('../../assets/images/homeImg/scalability.png')} />
-          <p className="product-subhead">扩容性</p>
-          <p className="product-con">我是扩容内容</p>
-        </div>
-        <div className="product-center">
-          <img className="product-img" src={require('../../assets/images/homeImg/security.png')} />
-          <p className="product-subhead">扩容性</p>
-          <p className="product-con">我是扩容内容</p>
-        </div>
-        <div className="product-right">
-          <img className="product-img" src={require('../../assets/images/homeImg/extensibility.png')} />
-          <p className="product-subhead">扩容性</p>
-          <p className="product-con">我是扩容内容</p>
-        </div>
-      </section>
-      <section className="roadMap">
-        <div className="road-title">我是标题</div>
-        <div className="line-top">
-          <div className="top-title">
-            <span className="title1">我是我</span>
-            <span className="title2">我是我</span>
-            <span className="title3">我是我</span>
-          </div>
-          <div className="top-time">
-            <span className="time1">2018.1</span>
-            <span className="time2">2018.1</span>
-            <span className="time3">2018.1</span>
-          </div>
-        </div>
-        <div className="line" />
-        <div className="line-bottom">
-          <div className="bot-title">
-            <span className="bot-title1">我是我</span>
-            <span className="bot-title2">我是我</span>
-            <span className="bot-title3">我是我</span>
-          </div>
-          <div className="bot-time">
-            <span className="bot-time1">2018.1</span>
-            <span className="bot-time2">2018.1</span>
-            <span className="bot-time3">2018.1</span>
-          </div>
-        </div>
-      </section>
-      <section className="tea">
-        <a
-          href="https://www.forbes.com/sites/darrynpollock/2018/12/04/notable-investors-pursuing-dapp-protocol-conflux-despite-market-concern/?from=singlemessage&isappinstalled=0#404e338b1a2c"
-          target="_blank"
-        >
-          <div className="tea-a">
-            <img src={require('../../assets/images/homeImg/forbes.jpg')} />
-          </div>
-        </a>
-        <a href="http://fortune.com/2018/12/04/conflux-blockchain/?from=singlemessage&isappinstalled=0" target="_blank">
-          <div className="tea-a">
-            <img src={require('../../assets/images/homeImg/fortune.jpg')} />
-          </div>
-        </a>
-        <a href="http://www.mittrchina.com/news/%203376" target="_blank">
-          <div className="tea-a">
-            <img src={require('../../assets/images/homeImg/36kr.jpg')} />
-          </div>
-        </a>
-        <a href="https://36kr.com/p/5164892.html" target="_blank">
-          <div className="tea-a">
-            <img src={require('../../assets/images/homeImg/mit.jpg')} />
-          </div>
-        </a>
-      </section>
-    </div>
-  );
+const Container = styled.div`
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+`;
+
+const BlockContainer = styled.div`
+  display: flex;
+  width: 100%;
+  > div:last-child {
+    margin-right: 0px;
+  }
+`;
+const Block = styled.div`
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 28px 24px;
+  background: #ffffff;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12);
+  border-radius: 4px;
+  margin-right: 16px;
+  font-size: 16px;
+  color: rgba(0, 0, 0, 0.87);
+  background-image: url(${(props) => props.url});
+  background-size: ${(props) => props.width} ${(props) => props.height};
+  background-position: top right;
+  background-repeat: no-repeat;
+  .black-title {
+    font-size: 16px;
+  }
+  .block-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+    .block-value {
+      font-size: 24px;
+      line-height: 28px;
+      font-weight: 700;
+    }
+    .block-unit {
+      font-size: 14px;
+      line-height: 18px;
+      margin-left: 8px;
+      color: rgba(0, 0, 0, 0.87);
+    }
+    .block-rate {
+      display: flex;
+      align-items: baseline;
+    }
+    .block-diff-up {
+      font-size: 16px;
+      color: #1e3de4;
+    }
+    .block-diff-down {
+      font-size: 16px;
+      color: #b00020;
+    }
+    .icon-arrow-up {
+      display: inline-block;
+      background-image: url(${moreBlue});
+      background-size: 11px auto;
+      background-repeat: no-repeat;
+      transform: scaleX(-1) rotate(-90deg);
+      width: 11px;
+      height: 12px;
+      margin-left: 6px;
+    }
+    .icon-arrow-down {
+      display: inline-block;
+      background-image: url(${moreRed});
+      background-size: 11px auto;
+      background-repeat: no-repeat;
+      transform: scaleX(-1) rotate(90deg);
+      width: 11px;
+      height: 12px;
+      margin-left: 6px;
+    }
+  }
+`;
+
+const LineContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 16px;
+  .ui.card {
+    box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+    border: none;
+    .header {
+      padding-top: 2px;
+    }
+  }
+  .ui.card:nth-child(odd) {
+    margin: 0 16px 16px 0;
+  }
+  .ui.card:nth-child(even) {
+    margin: 0 0 16px 0;
+  }
+`;
+
+class Home extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: Immutable.fromJS({
+        tps: [],
+        difficulty: [],
+        blockTime: [],
+        hashRate: [],
+      }),
+      duration: Immutable.fromJS({
+        tps: 'day',
+        difficulty: 'day',
+        blockTime: 'day',
+        hashRate: 'day',
+      }),
+      summary: Immutable.fromJS({}),
+    };
+  }
+
+  componentDidMount() {
+    this.fetchStatistic();
+    this.fetchLineData('tps', 'day');
+    this.fetchLineData('difficulty', 'day');
+    this.fetchLineData('blockTime', 'day');
+    this.fetchLineData('hashRate', 'day');
+  }
+
+  onChangeDuration(name, value) {
+    const { duration } = this.state;
+    const newDuration = duration.set(name, value);
+    this.setState({
+      duration: newDuration,
+    });
+    this.fetchLineData(name, value);
+  }
+
+  async fetchStatistic() {
+    const { code, result } = (await superagent.get('/api/dashboard/statistics')).body;
+    if (!code) {
+      this.setState({
+        summary: Immutable.fromJS(result.data),
+      });
+    }
+  }
+
+  async fetchLineData(name, duration) {
+    const { code, result } = (await superagent.get(`/api/dashboard/statistics/${name}?duration=${duration}`)).body;
+    let { data } = this.state;
+    if (!code) {
+      data = data.set(name, Immutable.fromJS(result.data));
+      this.setState({
+        data,
+      });
+    }
+  }
+
+  formatTrend(value) {
+    if (isNaN(value)) {
+      return `+ 0 %`;
+    }
+    if (value < 0) {
+      return `- ${Math.abs(value)} %`;
+    }
+    return `+ ${value} %`;
+  }
+
+  render() {
+    const { data, duration, summary } = this.state;
+    const { intl } = this.props;
+    return (
+      <Container>
+        <BlockContainer>
+          <Block key="tps" width="216px" height="44px" url={dashboard1}>
+            <span className="block-title">
+              <FormattedMessage id="app.pages.dashboard.tps" />
+            </span>
+            <div className="block-content">
+              <span className="block-value">{toFixed(summary.getIn(['tps', 'val']), 2)}</span>
+              <span className={summary.getIn(['tps', 'trend']) >= 0 ? 'block-diff-up' : 'block-diff-down'}>
+                {this.formatTrend(toFixed(summary.getIn(['tps', 'trend']), 2))}
+                <span className={summary.getIn(['tps', 'trend']) >= 0 ? 'icon-arrow-up' : 'icon-arrow-down'} />
+              </span>
+            </div>
+          </Block>
+          <Block key="difficulty" width="174px" height="58px" url={dashboard2}>
+            <span className="block-title">
+              <FormattedMessage id="app.pages.dashboard.difficulty" />
+            </span>
+            <div className="block-content">
+              <span className="block-value">{toFixed(summary.getIn(['difficulty', 'val']), 2)}</span>
+              <span className={summary.getIn(['difficulty', 'trend']) >= 0 ? 'block-diff-up' : 'block-diff-down'}>
+                {this.formatTrend(toThousands(summary.getIn(['difficulty', 'trend']), 2))}
+                <span className={summary.getIn(['difficulty', 'trend']) >= 0 ? 'icon-arrow-up' : 'icon-arrow-down'} />
+              </span>
+            </div>
+          </Block>
+          <Block key="blockTime" width="155px" height="58px" url={dashboard3}>
+            <span className="block-title">
+              <FormattedMessage id="app.pages.dashboard.blockTime" />
+            </span>
+            <div className="block-content">
+              <span className="block-value">{toFixed(summary.getIn(['blockTime', 'val']), 2)}</span>
+              <span className={summary.getIn(['blockTime', 'trend']) >= 0 ? 'block-diff-up' : 'block-diff-down'}>
+                {this.formatTrend(toFixed(summary.getIn(['blockTime', 'trend']), 2))}
+                <span className={summary.getIn(['blockTime', 'trend']) >= 0 ? 'icon-arrow-up' : 'icon-arrow-down'} />
+              </span>
+            </div>
+          </Block>
+          <Block key="hashRate" width="151px" height="59px" url={dashboard4}>
+            <span className="block-title">
+              <FormattedMessage id="app.pages.dashboard.hashRate" />
+            </span>
+            <div className="block-content">
+              <span className="block-value">{toFixed(summary.getIn(['hashRate', 'val']), 2)}</span>
+              <span className={summary.getIn(['hashRate', 'trend']) >= 0 ? 'block-diff-up' : 'block-diff-down'}>
+                {this.formatTrend(toFixed(summary.getIn(['hashRate', 'trend']), 2))}
+                <span className={summary.getIn(['hashRate', 'trend']) >= 0 ? 'icon-arrow-up' : 'icon-arrow-down'} />
+              </span>
+            </div>
+          </Block>
+        </BlockContainer>
+        <LineContainer>
+          <LineChart
+            title={intl.formatMessage({ id: 'app.pages.dashboard.tps' })}
+            data={data.get('tps').toJS()}
+            duration={duration.get('tps')}
+            onChangeDuration={(value) => this.onChangeDuration('tps', value)}
+          />
+          <LineChart
+            title={intl.formatMessage({ id: 'app.pages.dashboard.difficulty' })}
+            data={data.get('difficulty').toJS()}
+            duration={duration.get('difficulty')}
+            onChangeDuration={(value) => this.onChangeDuration('difficulty', value)}
+          />
+          <LineChart
+            title={intl.formatMessage({ id: 'app.pages.dashboard.blockTime' })}
+            data={data.get('blockTime').toJS()}
+            duration={duration.get('blockTime')}
+            onChangeDuration={(value) => this.onChangeDuration('blockTime', value)}
+          />
+          <LineChart
+            title={intl.formatMessage({ id: 'app.pages.dashboard.hashRate' })}
+            data={data.get('hashRate').toJS()}
+            duration={duration.get('hashRate')}
+            onChangeDuration={(value) => this.onChangeDuration('hashRate', value)}
+          />
+        </LineContainer>
+      </Container>
+    );
+  }
 }
-export default Home;
+
+Home.propTypes = {
+  intl: intlShape.isRequired,
+};
+
+export default injectIntl(Home);

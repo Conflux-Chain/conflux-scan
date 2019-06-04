@@ -1,28 +1,56 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { Route, Switch } from 'react-router-dom';
-import Home from '../pages/Home';
-import Blog from '../pages/Blog';
-import Media from '../pages/Media';
-import Teams from '../pages/Teams';
-import JoinUs from '../pages/JoinUs';
-import Community from '../pages/Community';
-import Privacy from '../pages/Privacy';
-import Policy from '../pages/Policy';
-import Faqs from '../pages/Faqs';
+// import Home from '../pages/Home';
+// import Directory from '../pages/Directory';
+// import BlockAndTxn from '../pages/BlockAndTxn';
+// import More from '../pages/More';
+// import EpochList from '../pages/Epoch/list';
+// import EpochDetail from '../pages/Epoch/detail';
+// import BlockList from '../pages/Block/list';
+// import BlockDetail from '../pages/Block/detail';
+// import TransactionList from '../pages/Transaction/list';
+// import TransactionDetail from '../pages/Transaction/detail';
+// import AccountDetail from '../pages/Account/detail';
+// import TopHolder from '../pages/TopList/holder';
+// import SearchNotFound from '../pages/SearchNotFound';
+// import NotFound from '../pages/404';
+
+const Home = lazy(() => import('../pages/Home'));
+const Directory = lazy(() => import('../pages/Directory'));
+const BlockAndTxn = lazy(() => import('../pages/BlockAndTxn'));
+const More = lazy(() => import('../pages/More'));
+const EpochDetail = lazy(() => import('../pages/Epoch/detail'));
+const BlockList = lazy(() => import('../pages/Block/list'));
+const BlockDetail = lazy(() => import('../pages/Block/detail'));
+const TransactionList = lazy(() => import('../pages/Transaction/list'));
+const TransactionDetail = lazy(() => import('../pages/Transaction/detail'));
+const AccountDetail = lazy(() => import('../pages/Account/detail'));
+const TopHolder = lazy(() => import('../pages/TopList/holder'));
+const SearchNotFound = lazy(() => import('../pages/SearchNotFound'));
+const NotFound = lazy(() => import('../pages/404'));
+const NotFoundTx = lazy(() => import('../pages/NotFoundTx'));
 
 function Router() {
   return (
-    <Switch>
-      <Route path="/home" component={Home} />
-      <Route path="/teams" component={Teams} />
-      <Route path="/community" component={Community} />
-      <Route path="/joinus" component={JoinUs} />
-      <Route path="/media" component={Media} />
-      <Route path="/blog" component={Blog} />
-      <Route path="/privacy" component={Privacy} />
-      <Route path="/policy" component={Policy} />
-      <Route path="/faqs" component={Faqs} />
-    </Switch>
+    <Suspense fallback={<div className="ui active loader" />}>
+      <Switch>
+        <Route path="/" exact component={Home} />
+        <Route path="/dashboard" component={Home} />
+        <Route path="/directory" component={Directory} />
+        <Route path="/blocktxn" component={BlockAndTxn} />
+        <Route path="/more" component={More} />
+        <Route path="/blocks" component={BlockList} />
+        <Route path="/blocksdetail/:blockhash" component={BlockDetail} />
+        <Route path="/transactions" component={TransactionList} />
+        <Route path="/transactionsdetail/:txnhash" component={TransactionDetail} />
+        <Route path="/accountdetail/:accountid" component={AccountDetail} />
+        <Route path="/epochsdetail/:epochid" component={EpochDetail} />
+        <Route path="/topholders" component={TopHolder} />
+        <Route path="/notfound" component={SearchNotFound} />
+        <Route path="/notfoundtx" component={NotFoundTx} />
+        <Route component={NotFound} />
+      </Switch>
+    </Suspense>
   );
 }
 export default Router;
