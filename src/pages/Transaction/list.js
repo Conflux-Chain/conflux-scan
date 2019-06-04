@@ -103,7 +103,7 @@ const columns = [
   },
   {
     key: 6,
-    className: 'two wide aligned plain_th',
+    className: 'three wide aligned plain_th',
     dataIndex: 'timestamp',
     title: 'Age',
     render: (text) => <Countdown timestamp={text * 1000} />,

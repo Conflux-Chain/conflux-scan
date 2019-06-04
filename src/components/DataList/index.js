@@ -7,6 +7,7 @@ const StyledTable = styled.div`
   th.plain_th {
     font-size: 16px;
     color: rgba(0, 0, 0, 0.87);
+    font-family: ProximaNova-Regular;
     font-style: normal;
     font-weight: 400;
   }

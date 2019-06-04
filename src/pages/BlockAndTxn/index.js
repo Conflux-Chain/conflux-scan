@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import superagent from 'superagent';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import DataList from '../../components/DataList';
 import Countdown from '../../components/Countdown';
 import EllipsisLine from '../../components/EllipsisLine';
@@ -32,6 +34,8 @@ const IconFace = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  float: left;
+  margin-right: 16px;
   svg {
     width: 23px;
     height: 23px;
@@ -40,71 +44,33 @@ const IconFace = styled.div`
 const PCell = styled.div`
   margin: 0 !important;
   font-size: 14px;
+  font-family: ProximaNova-Regular;
   color: rgba(0, 0, 0, 0.87);
-  font-style: normal;
   font-weight: 400;
-  height: 25px;
+  height: 17px;
+  line-height: 19px;
 `;
 
 const StyledButton = styled.button`
-  color: rgba(0, 0, 0, 0.56) !important;
-  background: #e0e1e2 !important;
+  color: rgba(0, 0, 0, 0.87) !important;
+  background: #e3eef9 !important;
+  font-size: 14px !important;
+  font-family: ProximaNova-Bold !important;
+  font-weight: bold !important;
   &:hover {
     color: #fff !important;
     background: #1e3de4 !important;
   }
 `;
-
-const columns = [
-  {
-    key: 1,
-    dataIndex: 'ein',
-    title: 'Blocks',
-    // className: 'two wide',
-    render: (text, row) => (
-      <IconFace>
-        <svg className="icon" aria-hidden="true">
-          <use xlinkHref="#iconjinrijiaoyiliang" />
-        </svg>
-      </IconFace>
-    ),
-  },
-  {
-    key: 2,
-    dataIndex: 'drei',
-    title: 'Blocks',
-    render: (text, row) => (
-      <div>
-        <PCell>
-          <EllipsisLine isPivot text={row.zwei} />
-        </PCell>
-        <PCell>{row.drei}</PCell>
-      </div>
-    ),
-  },
-  {
-    key: 3,
-    dataIndex: 'drei',
-    title: 'Blocks',
-    render: (text, row) => (
-      <div>
-        <EllipsisLine text={row.zwei} />
-        <PCell>{row.drei}</PCell>
-      </div>
-    ),
-  },
-  {
-    key: 4,
-    className: 'two wide right aligned',
-    dataIndex: 'drei',
-    title: 'Blocks',
-    render: (text) => <div className="ui label">{text}</div>,
-  },
-];
-const dataSource = [
-  { key: 1, ein: '80580', zwei: '0xe969a6fc05897123123', drei: 'Alichs' },
-  { key: 2, ein: '80581', zwei: '0xe969a6fc05897124124', drei: 'Schwarz' },
-];
+const StyledLabel = styled.div.attrs({
+  className: 'ui label',
+})`
+  font-size: 12px;
+  font-family: ProximaNova-Semibold;
+  font-weight: bolder !important;
+  color: rgba(0, 0, 0, 0.56);
+  max-width: 100px;
+`;
 
 class BlockAndTxn extends Component {
   constructor() {
@@ -141,29 +107,24 @@ class BlockAndTxn extends Component {
   }
 
   render() {
+    const {
+      intl: { locale },
+    } = this.props;
     const { BlockList, TxList } = this.state;
     const BlockColumns = [
       {
-        key: 1,
-        dataIndex: 'hash',
-        title: 'Blocks',
-        render: () => (
-          <IconFace>
-            <svg className="icon" aria-hidden="true">
-              <use xlinkHref="#iconqukuaigaoduxuanzhong" />
-            </svg>
-          </IconFace>
-        ),
-      },
-      {
         key: 2,
         dataIndex: 'hash',
+        className: 'four wide left aligned',
         title: 'Blocks',
         render: (text, row) => (
           <div>
-            <PCell>
-              <EllipsisLine linkTo={`/blocksdetail/${text}`} isPivot={row.isPivot} text={text} />
-            </PCell>
+            <IconFace>
+              <svg className="icon" aria-hidden="true">
+                <use xlinkHref="#iconqukuaigaoduxuanzhong" />
+              </svg>
+            </IconFace>
+            <EllipsisLine linkTo={`/blocksdetail/${text}`} isPivot={row.isPivot} text={text} />
             <PCell>
               <Countdown timestamp={row.timestamp * 1000} />
             </PCell>
@@ -173,6 +134,7 @@ class BlockAndTxn extends Component {
       {
         key: 3,
         dataIndex: 'miner',
+        className: 'one wide left aligned',
         title: 'Blocks',
         render: (text, row) => (
           <div>
@@ -191,28 +153,18 @@ class BlockAndTxn extends Component {
 
     const TxColumns = [
       {
-        key: 1,
-        className: 'one wide right aligned',
-        dataIndex: 'hash',
-        title: 'Blocks',
-        render: () => (
-          <IconFace>
-            <svg className="icon" aria-hidden="true">
-              <use xlinkHref="#iconjinrijiaoyiliang" />
-            </svg>
-          </IconFace>
-        ),
-      },
-      {
         key: 2,
-        className: 'two wide left aligned',
         dataIndex: 'hash',
+        className: 'five wide left aligned',
         title: 'Blocks',
         render: (text, row) => (
           <div>
-            <PCell>
-              <EllipsisLine linkTo={`/transactionsdetail/${text}`} isPivot={row.isPivot} text={text} />
-            </PCell>
+            <IconFace>
+              <svg className="icon" aria-hidden="true">
+                <use xlinkHref="#iconjinrijiaoyiliang" />
+              </svg>
+            </IconFace>
+            <EllipsisLine linkTo={`/transactionsdetail/${text}`} isPivot={row.isPivot} text={text} />
             <PCell>
               <Countdown timestamp={row.timestamp * 1000} />
             </PCell>
@@ -221,22 +173,22 @@ class BlockAndTxn extends Component {
       },
       {
         key: 3,
-        className: 'two wide left aligned',
         dataIndex: 'from',
+        className: 'one wide left aligned',
         title: 'Blocks',
         render: (text, row) => (
           <div>
             <EllipsisLine prefix="From" linkTo={`/accountdetail/${text}`} text={text} />
-            <EllipsisLine prefix="To" linkTo={`/accountdetail/${row.to}`} text={row.to} />
+            <EllipsisLine is2ndLine prefix="To" linkTo={`/accountdetail/${row.to}`} text={row.to} />
           </div>
         ),
       },
       {
         key: 4,
-        className: 'one wide right aligned',
+        className: 'two wide center aligned',
         dataIndex: 'gasPrice',
         title: 'Blocks',
-        render: (text) => <div className="ui label">{'GAS ' + text}</div>,
+        render: (text) => <StyledLabel>{'GAS ' + text}</StyledLabel>,
       },
     ];
     return (
@@ -245,7 +197,7 @@ class BlockAndTxn extends Component {
           <StyledTabel className="left">
             <div className="ui card" style={{ width: '100%' }}>
               <div className="content">
-                <div className="header">Blocks</div>
+                <div className="header">{locale === 'zh' ? '区块' : 'Blocks'}</div>
               </div>
               <div className="content">
                 {!BlockList.length && <TableLoading />}
@@ -253,7 +205,7 @@ class BlockAndTxn extends Component {
               </div>
               <div className="extra content">
                 <Link to="/blocks">
-                  <StyledButton className="ui fluid violet button ">View All Blocks</StyledButton>
+                  <StyledButton className="ui fluid violet button ">{locale === 'zh' ? '查看所有区块' : 'View All Blocks'}</StyledButton>
                 </Link>
               </div>
             </div>
@@ -261,7 +213,7 @@ class BlockAndTxn extends Component {
           <StyledTabel className="right">
             <div className="ui card" style={{ width: '100%' }}>
               <div className="content">
-                <div className="header">Transactions</div>
+                <div className="header">{locale === 'zh' ? '交易' : 'Transactions'}</div>
               </div>
               <div className="content">
                 {!TxList.length && <TableLoading />}
@@ -269,7 +221,9 @@ class BlockAndTxn extends Component {
               </div>
               <div className="extra content">
                 <Link to="/transactions">
-                  <StyledButton className="ui fluid violet button ">View All Transactions</StyledButton>
+                  <StyledButton className="ui fluid violet button ">
+                    {locale === 'zh' ? '查看所有交易' : 'View All Transactions'}
+                  </StyledButton>
                 </Link>
               </div>
             </div>
@@ -279,4 +233,15 @@ class BlockAndTxn extends Component {
     );
   }
 }
-export default BlockAndTxn;
+BlockAndTxn.propTypes = {
+  intl: PropTypes.shape({
+    lang: PropTypes.string,
+  }),
+};
+BlockAndTxn.defaultProps = {
+  intl: {
+    lang: 'zh',
+  },
+};
+
+export default injectIntl(BlockAndTxn);

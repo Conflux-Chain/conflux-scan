@@ -328,7 +328,7 @@ class Detail extends Component {
                   <use xlinkHref="#iconwakuang" />
                 </svg>
                 <div>
-                  <h2>Miner Blocks</h2>
+                  <h2>Mined Blocks</h2>
                   <p>{accountDetail.minedBlocks} block</p>
                 </div>
               </div>

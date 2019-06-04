@@ -2,8 +2,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import moment from 'moment';
+import { injectIntl, FormattedMessage } from 'react-intl';
 
-function Countdown({ timestamp }) {
+function Countdown(props) {
+  const {
+    timestamp,
+    intl: { locale },
+  } = props;
   let nowTime = moment(timestamp);
   const beforeTime = moment();
 
@@ -15,18 +20,24 @@ function Countdown({ timestamp }) {
   let secondUnit = beforeTime.subtract(minuteUnit, 'minutes').diff(nowTime, 'seconds');
 
   let labelStr = '';
-  if (yearUnit > 1) labelStr = `${yearUnit}年前`;
-  else if (monthUnit > 1) labelStr = `${monthUnit}月前`;
-  else if (dayUnit > 1) labelStr = `${dayUnit}天前`;
-  else labelStr = `${hourUnit}小时${minuteUnit}分钟${secondUnit}秒前`;
+  if (yearUnit > 1) labelStr = locale === 'zh' ? `${yearUnit}年前` : `${yearUnit} years ago`;
+  else if (monthUnit > 1) labelStr = locale === 'zh' ? `${monthUnit}月前` : `${monthUnit} monthes ago`;
+  else if (dayUnit > 1) labelStr = locale === 'zh' ? `${dayUnit}天前` : `${dayUnit} days ago`;
+  else
+    labelStr =
+      locale === 'zh' ? `${hourUnit}小时${minuteUnit}分钟${secondUnit}秒前` : `${hourUnit} hrs ${minuteUnit} min ${secondUnit} secs ago`;
 
   return <span>{labelStr}</span>;
 }
 Countdown.propTypes = {
   timestamp: PropTypes.number,
+  intl: PropTypes.shape({
+    lang: PropTypes.string,
+  }),
 };
 Countdown.defaultProps = {
   timestamp: new Date().getTime(),
+  intl: { lang: 'zh' },
 };
 
-export default Countdown;
+export default injectIntl(Countdown);

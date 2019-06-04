@@ -50,12 +50,13 @@ const columns = [
     key: 1,
     dataIndex: 'ein',
     title: 'Position',
-    className: 'plain_th',
+    className: 'one wide aligned plain_th',
   },
   {
     key: 2,
     dataIndex: 'hash',
     title: 'Hash',
+    className: 'two wide aligned plain_th',
     render: (text) => (
       <div>
         <PCell>
@@ -68,7 +69,7 @@ const columns = [
     key: 3,
     dataIndex: 'difficulty',
     title: 'Difficulty',
-    className: 'plain_th',
+    className: 'one wide aligned plain_th',
     render: (text) => (
       <div>
         <PCell>{text}</PCell>
@@ -79,6 +80,7 @@ const columns = [
     key: 4,
     dataIndex: 'miner',
     title: 'Miner',
+    className: 'one wide aligned',
     render: (text) => (
       <div>
         <PCell>
@@ -91,14 +93,14 @@ const columns = [
     key: 5,
     dataIndex: 'gasLimit',
     title: 'Gas Limit',
-    className: 'plain_th',
+    className: 'one wide aligned plain_th',
     render: (text) => text,
   },
   {
     key: 6,
     dataIndex: 'timestamp',
     title: 'Age',
-    className: 'plain_th',
+    className: 'two wide aligned plain_th',
     render: (text) => (
       <PCell>
         <Countdown timestamp={text * 1000} />
@@ -107,7 +109,7 @@ const columns = [
   },
   {
     key: 7,
-    className: 'center aligned plain_th',
+    className: 'one wide center aligned plain_th',
     dataIndex: 'transactionCount',
     title: 'Tx Count',
     render: (text) => text,
@@ -143,7 +145,6 @@ class Detail extends Component {
     const {
       match: { params },
     } = this.props;
-    console.log(BlockList);
     return (
       <div className="page-epoch-detail">
         <Wrapper>

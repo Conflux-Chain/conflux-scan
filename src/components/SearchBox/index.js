@@ -77,11 +77,10 @@ const SearchButton = styled.div`
 class SearchBox extends Component {
   constructor(props) {
     super(props);
-    this.state = { searchKey: '' };
+    this.state = { searchKey: '', filterName: 'All Filters' };
   }
 
   async handleSearch(value) {
-    console.log(this.props);
     if (value) {
       const { code, result } = (await superagent.get(`http://127.0.0.1:3000/proxy/fetchHashType/${value}`)).body;
       if (code) {
@@ -107,20 +106,27 @@ class SearchBox extends Component {
   }
 
   render() {
-    const { searchKey } = this.state;
+    const { searchKey, filterName } = this.state;
+    const filters = ['All Filters', 'Epoch', 'Block', 'Transactions', 'Address'];
     return (
       <Wrapper>
         <FilterSelector>
           <div className="ui dropdown link item">
-            <span className="text">All Filters</span>
+            <span className="text">{filterName}</span>
             <i className="dropdown icon" />
             <div className="menu transition visible">
-              <div className="item" role="menuitem">
-                abc
-              </div>
-              <div className="item" role="menuitem">
-                bcd
-              </div>
+              {filters.map((name, index) => (
+                <div
+                  key={name}
+                  className="item"
+                  role="button"
+                  tabindex={index}
+                  onClick={() => this.setState({ filterName: name })}
+                  onKeyPress={() => this.setState({ filterName: name })}
+                >
+                  {name}
+                </div>
+              ))}
             </div>
           </div>
         </FilterSelector>
