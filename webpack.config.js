@@ -65,7 +65,7 @@ function cpFile(inFilePath, outFilePath) {
 
 const vendorPlugin = {
   apply: (compiler) => {
-    compiler.hooks.done.tap('vendorPlugin', () => {
+    compiler.hooks.afterEmit.tap('vendorPlugin', () => {
       if (devMode) return;
       const writeVendor = async () => {
         for (let i = 0; i < cdnModules.length; i++) {

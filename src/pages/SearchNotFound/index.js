@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { injectIntl, FormattedMessage } from 'react-intl';
+import { injectIntl, FormattedMessage, FormattedHTMLMessage } from 'react-intl';
 import querystring from 'querystring';
 import media from '../../globalStyles/media';
 
@@ -13,14 +13,25 @@ const NfWrapDiv = styled.div`
   padding-left: 126px;
   padding-bottom: 20px;
   ${media.pad`padding-left: 60px;`}
+  ${media.mobile`
+    padding-top: 85px;
+    padding-left: 16px;
+  `}
   img {
     width: 255px;
+    ${media.mobile`
+      margin-bottom: 60px;
+    `}
   }
   .title {
     font-size: 54px;
     strong {
       margin-left: 5px;
     }
+    ${media.mobile`
+      font-size: 34px;
+      line-height: 41px;
+    `}
   }
   .row2,
   .row3,
@@ -28,6 +39,7 @@ const NfWrapDiv = styled.div`
     font-size: 20px;
   }
   .row3 {
+    font-weight: bold;
     color: rgba(0, 0, 0, 0.54);
   }
   .row5 {
@@ -53,20 +65,20 @@ class SearchNotFound extends PureComponent {
       <NfWrapDiv>
         <img src={nfImg} className="img" />
         <div className="title">
-          <FormattedMessage id="app.pages.SearchNotFound.title" />
+          <FormattedHTMLMessage id="app.pages.searchNotFound.title" />
         </div>
 
         <div className="row2">
-          <FormattedMessage id="app.pages.SearchNotFound.row2" />
+          <FormattedMessage id="app.pages.searchNotFound.row2" />
         </div>
         <div className="row3">{searchId}</div>
         <div className="row4">
-          <FormattedMessage id="app.pages.SearchNotFound.row4" />
+          <FormattedMessage id="app.pages.searchNotFound.row4" />
         </div>
 
         <div className="row5">
-          <FormattedMessage id="app.pages.NotFoundTx.ask" />
-          <FormattedMessage id="app.pages.NotFoundTx.concatus">{(txt) => <a href="mailto:hr@conflux-chain.org">{txt}</a>}</FormattedMessage>
+          <FormattedMessage id="app.pages.notFoundTx.ask" />
+          <FormattedMessage id="app.pages.notFoundTx.concatus">{(txt) => <a href="mailto:hr@conflux-chain.org">{txt}</a>}</FormattedMessage>
         </div>
       </NfWrapDiv>
     );
