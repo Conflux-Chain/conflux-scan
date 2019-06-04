@@ -120,7 +120,7 @@ class SearchBox extends Component {
                   key={name}
                   className="item"
                   role="button"
-                  tabindex={index}
+                  tabIndex={index}
                   onClick={() => this.setState({ filterName: name })}
                   onKeyPress={() => this.setState({ filterName: name })}
                 >
