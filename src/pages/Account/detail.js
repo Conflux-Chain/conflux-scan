@@ -130,18 +130,15 @@ const Statistic = styled.div`
   .sectionWrap {
     width: 100%;
     display: flex;
-    ${media.mobile`
-      display: block;
-    `}
-    justify-content: space-between;
+    ${media.mobile`display: block;`}
     section {
-      width: 180px;
+      flex: 1;
       p {
         font-size: 16px;
         color: rgba(0, 0, 0, 0.87);
       }
       &:nth-child(2) {
-        padding-top: 24px;
+        ${media.mobile`padding-top: 24px;`}
       }
     }
   }
