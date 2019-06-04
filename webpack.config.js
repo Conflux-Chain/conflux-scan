@@ -6,6 +6,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const WebpackCdnPlugin = require('webpack-cdn-plugin');
 const fs = require('fs');
+const webpack = require('webpack');
 
 const devMode = process.env.NODE_ENV !== 'production';
 /* eslint no-underscore-dangle: 0 */
@@ -128,6 +129,10 @@ module.exports = {
       chunkFilename: devMode ? '[id].css' : '[id].[hash].css',
     }),
     vendorPlugin,
+    new webpack.NormalModuleReplacementPlugin(
+      /node_modules\/antd\/lib\/style\/index\.less/,
+      path.resolve(__dirname, './src/globalStyles/ant-pfx.less')
+    ),
   ],
   module: {
     // 模块加载
@@ -157,6 +162,9 @@ module.exports = {
           },
           {
             loader: 'less-loader',
+            options: {
+              javascriptEnabled: true,
+            },
           },
         ],
       },
