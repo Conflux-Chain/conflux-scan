@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { injectIntl, FormattedMessage } from 'react-intl';
+import { injectIntl, FormattedMessage, FormattedHTMLMessage } from 'react-intl';
 import querystring from 'querystring';
 import media from '../../globalStyles/media';
 import CopyButton from '../../components/CopyButton';
@@ -31,17 +31,22 @@ const NfWrapDiv = styled.div`
       margin-right: 30px;
     `}
     ${media.mobile`
-      display: none;
+      width: 272px;
     `}
   }
   .right {
-
+    ${media.mobile`
+      clear: both;
+    `}
   }
   .title {
     font-size: 54px;
     ${media.pad`font-size: 40px`}
-    ${media.tablet`font-size: 32px`}
-    ${media.mobile`font-size: 24px; margin-top: 20px`}
+    ${media.tablet`font-size: 34px`}
+    ${media.mobile`
+      font-size: 34px; 
+      line-height: 40px;
+      margin-top: 20px`}
   }
   .row2 {
     font-size: 20px;
@@ -57,6 +62,10 @@ const NfWrapDiv = styled.div`
   }
   .packing {
     margin-left: 4px;
+    ${media.mobile`font-weight: bold;`}
+  }
+  .pack-wrap {
+    ${media.mobile`display: block`}
   }
 `;
 class NotFoundTx extends PureComponent {
@@ -79,19 +88,21 @@ class NotFoundTx extends PureComponent {
         <img src={nfImg} className="img" />
         <div className="right">
           <div className="title">
-            <FormattedMessage id="app.pages.NotFoundTx.title1" />
-            <FormattedMessage id="app.pages.NotFoundTx.title2">{(txt) => <strong>{txt}</strong>}</FormattedMessage>
+            <FormattedMessage id="app.pages.notFoundTx.title1" />
+            <FormattedMessage id="app.pages.notFoundTx.title2">{(txt) => <strong>{txt}</strong>}</FormattedMessage>
           </div>
 
           <div className="row2">
             <span>{searchIdShow}</span>
-            <CopyButton style={{ marginLeft: '5px' }} txtToCopy={searchId} btnType="two" toolTipId="app.pages.NotFoundTx.tooltip" />
-            <FormattedMessage className="packing" id="app.pages.NotFoundTx.packing" />
+            <CopyButton style={{ marginLeft: '5px' }} txtToCopy={searchId} btnType="two" toolTipId="app.pages.notFoundTx.tooltip" />
+            <span className="pack-wrap">
+              <FormattedHTMLMessage id="app.pages.notFoundTx.packing" />
+            </span>
           </div>
 
           <div className="row3">
-            <FormattedMessage id="app.pages.NotFoundTx.ask" />
-            <FormattedMessage id="app.pages.NotFoundTx.concatus">
+            <FormattedMessage id="app.pages.notFoundTx.ask" />
+            <FormattedMessage id="app.pages.notFoundTx.concatus">
               {(txt) => <a href="mailto:hr@conflux-chain.org">{txt}</a>}
             </FormattedMessage>
           </div>
