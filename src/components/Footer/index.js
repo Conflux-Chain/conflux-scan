@@ -6,7 +6,7 @@ import { FormattedMessage } from 'react-intl';
 const Wrapper = styled.footer`
   width: calc(100% - 20px);
   margin: 30px auto 0;
-  padding: 28px 0;
+  padding: 28px 0 20px;
   display: flex;
   justify-content: space-around;
   text-align: left;
@@ -31,7 +31,7 @@ const Info = styled.div`
   span {
     display: inline-block;
     margin-right: 14px;
-    margin-bottom: 13px;
+    margin-bottom: 16px;
   }
 
   .icon {
@@ -95,12 +95,12 @@ function Footer() {
             </svg>
             <a href="mailto:hr@conflux-chain.org">hr@conflux-chain.org</a>
           </span>
-          <span>
-            <svg className="icon" aria-hidden="true">
-              <use xlinkHref="#iconiclocationonpx" />
-            </svg>
-            <FormattedMessage id="app.footer.address" />
-          </span>
+          {/* <span> */}
+          {/*  <svg className="icon" aria-hidden="true"> */}
+          {/*    <use xlinkHref="#iconiclocationonpx" /> */}
+          {/*  </svg> */}
+          {/*  <FormattedMessage id="app.footer.address" /> */}
+          {/* </span> */}
         </Info>
         <Copyright>Copyright © 2019 Conflux. All Rights Reserved</Copyright>
       </Content>

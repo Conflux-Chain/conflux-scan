@@ -38,7 +38,7 @@ const Wrapper = styled.div`
 
 const Container = styled.div`
   position: relative;
-  padding: 20px;
+  padding: 20px 20px 0;
   margin-left: 120px;
   max-height: calc(100vh - 72px);
   overflow-x: hidden;
@@ -48,7 +48,7 @@ const Container = styled.div`
 const Content = styled.div`
   position: relative;
   max-width: calc(100vw - 160px);
-  min-height: 200px;
+  min-height: calc(100vh - 245px);
 `;
 
 function App() {

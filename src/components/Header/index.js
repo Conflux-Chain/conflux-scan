@@ -11,14 +11,17 @@ import SearchBox from '../SearchBox';
 import LogoImage from '../../assets/images/logo-b@2.png';
 
 const Wrapper = styled.header`
+  position: relative;
   display: flex;
   width: 100%;
   height: 72px;
   padding: 0 25px;
   justify-content: space-between;
   text-align: left;
-  border-bottom: 1px solid #ccc;
+  //border-bottom: 1px solid #ccc;
   background-color: #fff;
+  box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.19);
+  z-index: 1000;
 `;
 
 const Logo = styled.div`
