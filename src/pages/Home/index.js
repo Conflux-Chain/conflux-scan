@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import Immutable from 'immutable';
 import superagent from 'superagent';
+import { injectIntl, FormattedMessage, intlShape } from 'react-intl';
 import moreBlue from '../../assets/images/icons/more_blue.svg';
 import moreRed from '../../assets/images/icons/more_red.svg';
 import LineChart from '../../components/LineChart';
@@ -100,6 +101,9 @@ const LineContainer = styled.div`
   .ui.card {
     box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
     border: none;
+    .header {
+      padding-top: 2px;
+    }
   }
   .ui.card:nth-child(odd) {
     margin: 0 16px 16px 0;
@@ -176,108 +180,82 @@ class Home extends Component {
     return `+ ${value} %`;
   }
 
-  mapKeyToTitle(key) {
-    switch (key) {
-      case 'tps':
-        return 'TPS';
-      case 'difficulty':
-        return 'Difficulty';
-      case 'blockTime':
-        return 'Block Time';
-      case 'hashRate':
-        return 'Hash Rate';
-      default:
-        return 'TPS';
-    }
-  }
-
-  renderSummary() {
-    const { summary } = this.state;
-    const size = {
-      tps: {
-        width: '216px',
-        height: '44px',
-        url: dashboard1,
-      },
-      difficulty: {
-        width: '174px',
-        height: '58px',
-        url: dashboard2,
-      },
-      blockTime: {
-        width: '155px',
-        height: '58px',
-        url: dashboard3,
-      },
-      hashRate: {
-        width: '151px',
-        height: '59px',
-        url: dashboard4,
-      },
-    };
-    return summary
-      .map((value, key) => {
-        if (key !== 'hashRate') {
-          return (
-            <Block key={key} {...size[key]}>
-              <span className="block-title">{this.mapKeyToTitle(key)}</span>
-              <div className="block-content">
-                <span className="block-value">
-                  {key === 'difficulty' ? toThousands(summary.getIn([key, 'val'])) : toFixed(summary.getIn([key, 'val']), 2)}
-                </span>
-                <span className={value.get('trend') >= 0 ? 'block-diff-up' : 'block-diff-down'}>
-                  {this.formatTrend(toFixed(summary.getIn([key, 'trend']), 2))}
-                  <span className={value.get('trend') >= 0 ? 'icon-arrow-up' : 'icon-arrow-down'} />
-                </span>
-              </div>
-            </Block>
-          );
-        }
-        return (
-          <Block key={key} {...size[key]}>
-            <span className="block-title">{this.mapKeyToTitle(key)}</span>
+  render() {
+    const { data, duration, summary } = this.state;
+    const { intl } = this.props;
+    return (
+      <Container>
+        <BlockContainer>
+          <Block key="tps" width="216px" height="44px" url={dashboard1}>
+            <span className="block-title">
+              <FormattedMessage id="app.pages.dashboard.tps" />
+            </span>
             <div className="block-content">
-              <span className="block-rate">
-                <span className="block-value">{toFixed(summary.getIn([key, 'val']), 2)}</span>
-                <span className="block-unit">MH/s</span>
-              </span>
-              <span className={value.get('trend') >= 0 ? 'block-diff-up' : 'block-diff-down'}>
-                {this.formatTrend(toFixed(summary.getIn([key, 'trend']), 2))}
-                <span className={value.get('trend') >= 0 ? 'icon-arrow-up' : 'icon-arrow-down'} />
+              <span className="block-value">{toFixed(summary.getIn(['tps', 'val']), 2)}</span>
+              <span className={summary.getIn(['tps', 'trend']) >= 0 ? 'block-diff-up' : 'block-diff-down'}>
+                {this.formatTrend(toFixed(summary.getIn(['tps', 'trend']), 2))}
+                <span className={summary.getIn(['tps', 'trend']) >= 0 ? 'icon-arrow-up' : 'icon-arrow-down'} />
               </span>
             </div>
           </Block>
-        );
-      })
-      .toList();
-  }
-
-  render() {
-    const { data, duration } = this.state;
-    return (
-      <Container>
-        <BlockContainer>{this.renderSummary()}</BlockContainer>
+          <Block key="difficulty" width="174px" height="58px" url={dashboard2}>
+            <span className="block-title">
+              <FormattedMessage id="app.pages.dashboard.difficulty" />
+            </span>
+            <div className="block-content">
+              <span className="block-value">{toFixed(summary.getIn(['difficulty', 'val']), 2)}</span>
+              <span className={summary.getIn(['difficulty', 'trend']) >= 0 ? 'block-diff-up' : 'block-diff-down'}>
+                {this.formatTrend(toThousands(summary.getIn(['difficulty', 'trend']), 2))}
+                <span className={summary.getIn(['difficulty', 'trend']) >= 0 ? 'icon-arrow-up' : 'icon-arrow-down'} />
+              </span>
+            </div>
+          </Block>
+          <Block key="blockTime" width="155px" height="58px" url={dashboard3}>
+            <span className="block-title">
+              <FormattedMessage id="app.pages.dashboard.blockTime" />
+            </span>
+            <div className="block-content">
+              <span className="block-value">{toFixed(summary.getIn(['blockTime', 'val']), 2)}</span>
+              <span className={summary.getIn(['blockTime', 'trend']) >= 0 ? 'block-diff-up' : 'block-diff-down'}>
+                {this.formatTrend(toFixed(summary.getIn(['blockTime', 'trend']), 2))}
+                <span className={summary.getIn(['blockTime', 'trend']) >= 0 ? 'icon-arrow-up' : 'icon-arrow-down'} />
+              </span>
+            </div>
+          </Block>
+          <Block key="hashRate" width="151px" height="59px" url={dashboard4}>
+            <span className="block-title">
+              <FormattedMessage id="app.pages.dashboard.hashRate" />
+            </span>
+            <div className="block-content">
+              <span className="block-value">{toFixed(summary.getIn(['hashRate', 'val']), 2)}</span>
+              <span className={summary.getIn(['hashRate', 'trend']) >= 0 ? 'block-diff-up' : 'block-diff-down'}>
+                {this.formatTrend(toFixed(summary.getIn(['hashRate', 'trend']), 2))}
+                <span className={summary.getIn(['hashRate', 'trend']) >= 0 ? 'icon-arrow-up' : 'icon-arrow-down'} />
+              </span>
+            </div>
+          </Block>
+        </BlockContainer>
         <LineContainer>
           <LineChart
-            title="TPS"
+            title={intl.formatMessage({ id: 'app.pages.dashboard.tps' })}
             data={data.get('tps').toJS()}
             duration={duration.get('tps')}
             onChangeDuration={(value) => this.onChangeDuration('tps', value)}
           />
           <LineChart
-            title="Difficulty"
+            title={intl.formatMessage({ id: 'app.pages.dashboard.difficulty' })}
             data={data.get('difficulty').toJS()}
             duration={duration.get('difficulty')}
             onChangeDuration={(value) => this.onChangeDuration('difficulty', value)}
           />
           <LineChart
-            title="Block Time"
+            title={intl.formatMessage({ id: 'app.pages.dashboard.blockTime' })}
             data={data.get('blockTime').toJS()}
             duration={duration.get('blockTime')}
             onChangeDuration={(value) => this.onChangeDuration('blockTime', value)}
           />
           <LineChart
-            title="Hash Rate"
+            title={intl.formatMessage({ id: 'app.pages.dashboard.hashRate' })}
             data={data.get('hashRate').toJS()}
             duration={duration.get('hashRate')}
             onChangeDuration={(value) => this.onChangeDuration('hashRate', value)}
@@ -287,4 +265,9 @@ class Home extends Component {
     );
   }
 }
-export default Home;
+
+Home.propTypes = {
+  intl: intlShape.isRequired,
+};
+
+export default injectIntl(Home);

@@ -19,6 +19,7 @@ const Duration = styled.div`
     background-color: #1e3de4;
     color: rgba(255, 255, 255, 1);
   }
+  margin-top: 16px;
 `;
 
 function DurationButton({ text, duration, isActive, onChangeDuration }) {
@@ -65,7 +66,7 @@ class LineChart extends Component {
 
   formatTime(data) {
     return data.map((item) => {
-      return moment(item.time * 1000).format('YYYY/MM/DD') + '\n' + moment(item.time * 1000).format('hh:mm');
+      return moment(item.time * 1000).format('YYYY/M/D') + '\n' + moment(item.time * 1000).format('kk:mm');
     });
   }
 
@@ -91,7 +92,7 @@ class LineChart extends Component {
           },
         },
         formatter: (params) => {
-          return moment(params[0].data.time * 1000).format('YYYY/MM/DD hh:mm') + '<br />' + toFixed(params[0].data.value, 3);
+          return moment(params[0].data.time * 1000).format('YYYY/M/D kk:mm') + '<br />' + toFixed(params[0].data.value, 3);
         },
       },
       xAxis: {
@@ -110,6 +111,12 @@ class LineChart extends Component {
             }
             return false;
           },
+          color: 'rgba(0, 0, 0, 0.87)',
+        },
+        axisLine: {
+          lineStyle: {
+            color: 'rgba(0, 0, 0, 0.12)',
+          },
         },
         splitLine: {
           show: false,
@@ -119,6 +126,14 @@ class LineChart extends Component {
       yAxis: {
         type: 'value',
         boundaryGap: [0, '100%'],
+        axisLabel: {
+          color: 'rgba(0, 0, 0, 0.87)',
+        },
+        axisLine: {
+          lineStyle: {
+            color: 'rgba(0, 0, 0, 0.12)',
+          },
+        },
         splitLine: {
           show: false,
         },

@@ -19,12 +19,12 @@ import GlobalStyle from './globalStyles';
 import JnoodleEn from './lang/jnoodle.en';
 import JnoodleZh from './lang/jnoodle.zh';
 
+import zhTranslationMessages from './lang/zh';
+import enTranslationMessages from './lang/en';
+
 require('./assets/iconfont/iconfont.js');
 
 // import { hashHistory } from 'react-router';
-const zhTranslationMessages = require('./lang/zh.json');
-const enTranslationMessages = require('./lang/en.json');
-
 addLocaleData([...enLocaleData, ...zhLocaleData]);
 
 const messages = {
