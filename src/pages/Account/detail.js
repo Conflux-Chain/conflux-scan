@@ -94,14 +94,14 @@ const Statistic = styled.div`
   .transaction {
     width: 28%;
     ${fullWidthMobile}
-    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    ${media.mobile`border-bottom: 1px solid rgba(0, 0, 0, 0.08);`}
   }
   .miner,
   .balance {
     width: 20%;
     border-left: 1px solid rgba(0, 0, 0, 0.08);
     ${fullWidthMobile}
-    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    ${media.mobile`border-bottom: 1px solid rgba(0, 0, 0, 0.08);`}
   }
   .seen {
     width: 36%;
@@ -173,6 +173,17 @@ const PCell = styled.div`
 const TabWrapper = styled.div`
   display: flex;
   justify-content: flex-end;
+  .page-pc {
+    display: inline-flex !important;
+  }
+  .page-h5 {
+    ${commonCss.hide}
+  }
+  ${media.mobile`
+    justify-content: center;
+    .page-pc { ${commonCss.hide} }
+    .page-h5 { display: inline-flex!important; }
+  `}
 `;
 
 const CtrlPanel = styled.div`
@@ -534,18 +545,39 @@ class Detail extends Component {
                   </div>
                 </div>
                 <TabWrapper>
-                  <Pagination
-                    prevItem={{
-                      'aria-label': 'Previous item',
-                      content: 'Previous',
-                    }}
-                    nextItem={{
-                      'aria-label': 'Next item',
-                      content: 'Next',
-                    }}
-                    defaultActivePage={5}
-                    totalPages={10}
-                  />
+                  <div className="page-pc">
+                    <Pagination
+                      prevItem={{
+                        'aria-label': 'Previous item',
+                        content: 'Previous',
+                      }}
+                      nextItem={{
+                        'aria-label': 'Next item',
+                        content: 'Next',
+                      }}
+                      defaultActivePage={5}
+                    />
+                  </div>
+                  <div className="page-h5">
+                    <Pagination
+                      prevItem={{
+                        'aria-label': 'Previous item',
+                        content: 'Previous',
+                      }}
+                      nextItem={{
+                        'aria-label': 'Next item',
+                        content: 'Next',
+                      }}
+                      boundaryRange={0}
+                      activePage={2}
+                      onPageChange={() => {}}
+                      ellipsisItem={null}
+                      firstItem={null}
+                      lastItem={null}
+                      siblingRange={1}
+                      totalPages={10}
+                    />
+                  </div>
                 </TabWrapper>
               </TabPanel>
 
