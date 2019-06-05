@@ -17,9 +17,6 @@ import { ToastComp } from './components/Toast';
 import './assets/semantic-ui/semantic.css';
 import GlobalStyle from './globalStyles';
 
-import JnoodleEn from './lang/jnoodle.en';
-import JnoodleZh from './lang/jnoodle.zh';
-
 import zhTranslationMessages from './lang/zh';
 import enTranslationMessages from './lang/en';
 
@@ -29,8 +26,8 @@ require('./assets/iconfont/iconfont.js');
 addLocaleData([...enLocaleData, ...zhLocaleData]);
 
 const messages = {
-  en: Object.assign({}, enTranslationMessages, JnoodleEn),
-  zh: Object.assign({}, zhTranslationMessages, JnoodleZh),
+  en: enTranslationMessages,
+  zh: zhTranslationMessages,
 };
 
 const Wrapper = styled.div`
@@ -44,6 +41,7 @@ const Container = styled.div`
   max-height: calc(100vh - 72px);
   overflow-x: hidden;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 
   ${media.pad`
     margin-left: 0;
@@ -88,7 +86,13 @@ function App() {
     <IntlProvider locale={lang} messages={messages[lang]}>
       <BrowserRouter>
         <Wrapper>
-          <Header changeLanguage={(l) => setLang(l)} toggleNavbar={() => setShowNavbar(!showNavbar)} />
+          <Header
+            changeLanguage={(l) => {
+              document.title = l === 'en' ? 'Conflux Blockchain Explorer' : 'Conflux 区块链浏览器';
+              setLang(l);
+            }}
+            toggleNavbar={() => setShowNavbar(!showNavbar)}
+          />
           <Navbar showNavbar={showNavbar} />
           <ContainerMask className={showNavbar ? 'show' : ''} />
           <Container>
