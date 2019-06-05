@@ -75,15 +75,15 @@ export default {
 
   // Directory Page
   'app.directory.exchange.title': 'Exchange',
-  'app.directory.exchange.desc': 'Places to buy and sell cryptocurrencies',
+  'app.directory.exchange.desc': 'Blockchain & Crypto Asset Exchange',
   'app.directory.wallet.title': 'Wallet',
-  'app.directory.wallet.desc': 'Used to receive and spend cryptoassets',
+  'app.directory.wallet.desc': 'Crypto Asset Management & Protection',
   'app.directory.website.title': 'Office Website',
-  'app.directory.website.desc': 'Show the latest development of Conflux',
+  'app.directory.website.desc': 'Follow-up Official Announcement & Development',
   'app.directory.news.title': 'News',
-  'app.directory.news.desc': 'Faster to know what’s happening to us',
+  'app.directory.news.desc': 'Follow-up Latest Updates',
   'app.directory.topholders.title': 'Top Token Holders',
-  'app.directory.topholders.desc': 'Follow the status to everyone for publicity',
+  'app.directory.topholders.desc': 'Publicity & Transparency for the Community',
   'app.directory.community.title': 'Community',
-  'app.directory.community.desc': 'Welcome to Conflux community',
+  'app.directory.community.desc': 'Join the Next Generation Decentralized Application Community',
 };
