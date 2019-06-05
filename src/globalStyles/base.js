@@ -15,6 +15,7 @@ const BaseStyle = css`
     overflow-y: auto;
     -ms-text-size-adjust: 100%;
     -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   }
 
   * {
@@ -67,6 +68,7 @@ const BaseStyle = css`
     -moz-osx-font-smoothing: grayscale;
     background-color: #f9f9f9;
     overflow: hidden;
+    -webkit-overflow-scrolling: touch;
   }
 
   .icon {
