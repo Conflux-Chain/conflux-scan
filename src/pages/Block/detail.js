@@ -359,7 +359,7 @@ class Detail extends Component {
                     <td className="top">{blockDetail.height}</td>
                   </tr>
                   <tr className="">
-                    <td className="collapsing">{i18n('Epoch Number')}</td>
+                    <td className="collapsing">{i18n('Epoch')}</td>
                     <td className="">{blockDetail.epochNumber}</td>
                   </tr>
                   <tr className="">

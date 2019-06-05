@@ -80,7 +80,11 @@ class SearchNotFound extends PureComponent {
         <div className="row5">
           <FormattedMessage id="app.pages.notFoundTx.ask" />
           <FormattedMessage id="app.pages.notFoundTx.concatus">
-            {(txt) => <a href="mailto:conflux-dev@conflux-chain.org">{txt}</a>}
+            {(txt) => (
+              <a target="_blank" href="mailto:conflux-dev@conflux-chain.org">
+                {txt}
+              </a>
+            )}
           </FormattedMessage>
         </div>
       </NfWrapDiv>
