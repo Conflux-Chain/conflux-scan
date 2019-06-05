@@ -288,75 +288,6 @@ const TabPanel = styled.div`
   }
 `;
 
-const columns = [
-  {
-    key: 1,
-    dataIndex: 'ein',
-    className: 'two wide aligned plain_th',
-    title: 'Hash',
-    // className: 'two wide',
-    render: (text, row) => (
-      <IconFace>
-        <svg className="icon" aria-hidden="true">
-          <use xlinkHref="#iconjinrijiaoyiliang" />
-        </svg>
-      </IconFace>
-    ),
-  },
-  {
-    key: 2,
-    dataIndex: 'drei',
-    className: 'two wide aligned plain_th',
-    title: 'From',
-    render: (text, row) => (
-      <div>
-        <PCell>
-          <EllipsisLine isPivot text={row.zwei} />
-        </PCell>
-      </div>
-    ),
-  },
-  {
-    key: 3,
-    className: 'two wide aligned plain_th',
-    dataIndex: 'drei',
-    title: 'To',
-    render: (text, row) => (
-      <div>
-        <PCell>{row.drei}</PCell>
-      </div>
-    ),
-  },
-  {
-    key: 4,
-    className: 'two wide aligned plain_th',
-    dataIndex: 'drei',
-    title: 'Value',
-    render: (text) => <div className="ui label">{text}</div>,
-  },
-  {
-    key: 5,
-    className: 'two wide aligned plain_th',
-    dataIndex: 'drei',
-    title: 'Fee',
-    render: (text) => <div className="ui label">{text}</div>,
-  },
-  {
-    key: 6,
-    className: 'two wide aligned plain_th',
-    dataIndex: 'drei',
-    title: 'Gas Price',
-    render: (text) => <div className="ui label">{text}</div>,
-  },
-  {
-    key: 7,
-    className: 'two wide aligned plain_th',
-    dataIndex: 'drei',
-    title: 'Age',
-    render: (text) => <div className="ui label">{text}</div>,
-  },
-];
-
 const minedColumns = [
   {
     key: 1,
@@ -417,7 +348,7 @@ const minedColumns = [
   },
   {
     key: 8,
-    className: 'one wide aligned plain_th',
+    className: 'two wide aligned plain_th',
     dataIndex: 'transactionCount',
     title: 'Tx Count',
     render: (text) => <PCell>{text}</PCell>,
@@ -473,7 +404,7 @@ class Detail extends Component {
           ),
           TxTotalCount: get(
             result.find((item) => Object.keys(item)[0] === `account/${accountid}/transactionList`),
-            `total_block/${accountid}/transactionList`,
+            `total_account/${accountid}/transactionList`,
             []
           ),
         },
@@ -504,7 +435,78 @@ class Detail extends Component {
       intl,
       match: { params },
     } = this.props;
-    console.log(TxList, '===== TxList');
+    const columns = [
+      {
+        key: 1,
+        dataIndex: 'hash',
+        className: 'two wide aligned plain_th',
+        title: 'Hash',
+        render: (text, row) => <EllipsisLine linkTo={`/transactions/${text}`} isPivot text={text} />,
+      },
+      {
+        key: 2,
+        dataIndex: 'from',
+        className: 'two wide aligned plain_th',
+        title: 'From',
+        render: (text, row) => (
+          <div>
+            <PCell>
+              {text !== params.accountid ? (
+                <EllipsisLine textInout="In" linkTo={`/accountdetail/${text}`} text={text} />
+              ) : (
+                <EllipsisLine linkTo={`/accountdetail/${text}`} text={text} />
+              )}
+            </PCell>
+          </div>
+        ),
+      },
+      {
+        key: 3,
+        className: 'two wide aligned plain_th',
+        dataIndex: 'to',
+        title: 'To',
+        render: (text) => (
+          <div>
+            <PCell>
+              {text !== params.accountid ? (
+                <EllipsisLine textInout="Out" linkTo={`/accountdetail/${text}`} text={text} />
+              ) : (
+                <EllipsisLine linkTo={`/accountdetail/${text}`} text={text} />
+              )}
+            </PCell>
+          </div>
+        ),
+      },
+      {
+        key: 4,
+        className: 'two wide aligned plain_th',
+        dataIndex: 'value',
+        title: 'Value',
+        render: (text) => <EllipsisLine unit="CFX" text={convertToValueorFee(text)} />,
+      },
+      {
+        key: 5,
+        className: 'two wide aligned plain_th',
+        dataIndex: 'drei',
+        title: 'Fee',
+        render: (text, row) => <EllipsisLine unit="CFX" text={convertToValueorFee(row.value * row.gasPrice)} />,
+      },
+      {
+        key: 6,
+        className: 'two wide aligned plain_th',
+        dataIndex: 'gasPrice',
+        title: 'Gas Price',
+        render: (text) => <EllipsisLine unit="Gdip" text={converToGasPrice(text)} />,
+      },
+      {
+        key: 7,
+        className: 'three wide aligned plain_th',
+        dataIndex: 'timestamp',
+        title: 'Age',
+        render: (text) => <Countdown timestamp={text * 1000} />,
+      },
+    ];
+
     return (
       <div className="page-address-detail">
         <Wrapper>
@@ -681,6 +683,10 @@ class Detail extends Component {
                       nextItem={{
                         'aria-label': 'Next item',
                         content: i18n('nextPage'),
+                      }}
+                      onPageChange={(e, data) => {
+                        e.preventDefault();
+                        this.fetchAccountDetail(params.accountid, { ...queries, pageNum: data.activePage });
                       }}
                       defaultActivePage={1}
                       totalPages={Math.ceil(TxTotalCount / 10)}

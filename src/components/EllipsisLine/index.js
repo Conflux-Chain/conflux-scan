@@ -56,14 +56,16 @@ const PivotTag = styled.span`
 `;
 
 const InOutTag = styled.span`
-  margin-top: 3px;
+  /* margin-top: 3px; */
   font-size: 12px;
-  background: #67a312;
+  background: rgba(141, 136, 128, 1);
   color: #fff;
   border-radius: 2px;
-  padding: 1px 5px;
-  height: 17px;
+  height: 14px;
+  padding: 0px 5px;
   font-weight: 400;
+  font-family: ProximaNova-Regular;
+  line-height: 14px;
 `;
 
 const UnitTag = styled.i`
