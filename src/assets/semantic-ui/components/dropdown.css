@@ -48,9 +48,8 @@
   font-size: 1em;
   text-shadow: none;
   text-align: left;
-  -webkit-box-shadow: 0px 2px 3px 0px rgba(34, 36, 38, 0.15);
-  box-shadow: 0px 2px 3px 0px rgba(34, 36, 38, 0.15);
-  border: 1px solid rgba(34, 36, 38, 0.15);
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px 1px;
+  border: 0;
   border-radius: 0.28571429rem;
   -webkit-transition: opacity 0.1s ease;
   transition: opacity 0.1s ease;

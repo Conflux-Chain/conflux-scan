@@ -7,7 +7,13 @@ const SingleLine = styled.div`
   .wrap {
     display: flex;
     font-size: 16px;
+    font-family: ProximaNova-Regular;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.87);
+    line-height: 19px;
+    align-items: center;
     .ellipsis {
+      text-align: left;
       max-width: 114px;
       white-space: nowrap;
       overflow: hidden;
@@ -18,6 +24,12 @@ const SingleLine = styled.div`
     }
     .link {
       color: #405ae7;
+      font-weight: 600;
+      color: rgba(64, 90, 231, 1);
+      &:hover {
+        font-weight: 700;
+        color: rgba(30, 61, 228, 1);
+      }
     }
     .long {
       max-width: 204px;
@@ -26,15 +38,18 @@ const SingleLine = styled.div`
 `;
 
 const PivotTag = styled.span`
-  margin-top: 3px;
+  /* margin-top: 3px; */
   font-size: 12px;
   background: #67a312;
   color: #fff;
   border-radius: 2px;
-  padding: 1px 5px;
-  height: 17px;
+  padding: 0px 5px;
+  height: 14px;
   font-weight: 400;
+  font-family: ProximaNova-Regular;
+  line-height: 14px;
 `;
+
 const InOutTag = styled.span`
   margin-top: 3px;
   font-size: 12px;
@@ -45,20 +60,31 @@ const InOutTag = styled.span`
   height: 17px;
   font-weight: 400;
 `;
+
 const UnitTag = styled.i`
   font-style: normal;
   margin-left: 5px;
-  font-weight: normal;
+  font-size: 16px;
+  font-family: ProximaNova-Regular;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.87);
 `;
+
 const PrefixTag = styled.i`
   font-style: normal;
   margin-right: 5px;
-  font-weight: normal;
+  font-size: 14px !important;
+  font-family: ProximaNova-Regular;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.87);
 `;
 
-function EllipsisLine({ prefix, unit, isPivot, isLong, linkTo, text, textInout }) {
+function EllipsisLine({ prefix, unit, is2ndLine, isPivot, isLong, linkTo, text, textInout }) {
+  const baseStyle = is2ndLine
+    ? { background: 'transparent', margin: 0, marginTop: '2px', padding: 0 }
+    : { background: 'transparent', margin: 0, padding: 0 };
   return (
-    <div className="ui button" style={{ background: 'transparent', margin: 0, padding: 0 }} data-tooltip={text} data-position="top center">
+    <div style={baseStyle} data-tooltip={text} data-position="top center">
       <SingleLine>
         <div className="wrap">
           {prefix && <PrefixTag>{prefix}</PrefixTag>}
@@ -85,6 +111,7 @@ EllipsisLine.propTypes = {
   textInout: PropTypes.string,
   isPivot: PropTypes.bool,
   isLong: PropTypes.bool,
+  is2ndLine: PropTypes.bool,
 };
 EllipsisLine.defaultProps = {
   prefix: '',
@@ -94,6 +121,7 @@ EllipsisLine.defaultProps = {
   textInout: '',
   isPivot: false,
   isLong: false,
+  is2ndLine: false,
 };
 
 export default EllipsisLine;

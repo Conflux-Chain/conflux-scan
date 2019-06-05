@@ -32,9 +32,12 @@
   background: #ffffff;
   padding: 0em;
   border: none;
-  border-radius: 0.28571429rem;
-  -webkit-box-shadow: 0px 1px 3px 0px #d4d4d5, 0px 0px 0px 1px #d4d4d5;
-  box-shadow: 0px 1px 3px 0px #d4d4d5, 0px 0px 0px 1px #d4d4d5;
+  box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+  -webkit-box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+  border-radius: 4px;
+  /* border-radius: 0.28571429rem; */
+  /* -webkit-box-shadow: 0px 1px 3px 0px #d4d4d5, 0px 0px 0px 1px #d4d4d5; */
+  /* box-shadow: 0px 1px 3px 0px #d4d4d5, 0px 0px 0px 1px #d4d4d5; */
   -webkit-transition: -webkit-box-shadow 0.1s ease, -webkit-transform 0.1s ease;
   transition: -webkit-box-shadow 0.1s ease, -webkit-transform 0.1s ease;
   transition: box-shadow 0.1s ease, transform 0.1s ease;
@@ -174,10 +177,10 @@
 /* Default Header Size */
 .ui.cards > .card > .content > .header:not(.ui),
 .ui.card > .content > .header:not(.ui) {
-  font-weight: bold;
+  font-weight: bolder;
   font-size: 1.28571429em;
   /* margin-top: -0.21425em; */
-  line-height: 1.28571429em;
+  /* line-height: 1.28571429em; */
 }
 .ui.cards > .card > .content > .meta + .description,
 .ui.cards > .card > .content > .header + .description,

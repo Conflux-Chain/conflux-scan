@@ -771,6 +771,7 @@ Floated Menu / Item
 .ui.pagination.menu .item {
   min-width: 3em;
   text-align: center;
+  outline: none;
 }
 .ui.pagination.menu .icon.item i.icon {
   vertical-align: top;
@@ -780,8 +781,10 @@ Floated Menu / Item
 .ui.pagination.menu .active.item {
   border-top: none;
   padding-top: 0.92857143em;
-  background-color: rgba(0, 0, 0, 0.05);
-  color: rgba(0, 0, 0, 0.95);
+  background: #1e3de4;
+  color: #fff;
+  /* background-color: rgba(0, 0, 0, 0.05); */
+  /* color: rgba(0, 0, 0, 0.95); */
   -webkit-box-shadow: none;
   box-shadow: none;
 }
