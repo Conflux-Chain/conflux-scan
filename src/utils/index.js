@@ -19,7 +19,8 @@ export const converToGasPrice = (bigNumber) => {
 
 export const converToGasPrice3Fixed = (bigNumber) => {
   const result = new BigNumber(bigNumber).dividedBy(10 ** 18);
-  if (result.toFixed() === 0) return 0;
+  console.log(result.toNumber());
+  if (result.toFixed() < 0.001) return 0;
   if (result.toFixed(3) >= 1) return result.toFixed();
   return result.toFixed(3);
 };

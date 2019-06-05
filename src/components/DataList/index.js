@@ -11,6 +11,9 @@ const StyledTable = styled.div`
     font-style: normal;
     font-weight: 400;
   }
+  th.right-pad {
+    padding-right: 16px !important;
+  }
 `;
 
 function DataList({ rowStyle, showHeader, columns, dataSource }) {
@@ -21,7 +24,7 @@ function DataList({ rowStyle, showHeader, columns, dataSource }) {
           <thead>
             <tr>
               {columns.map((item) => (
-                <th colSpan={item.colSpan ? item.colSpan : 1} key={item.key}>
+                <th className={item.className ? item.className : ''} colSpan={item.colSpan ? item.colSpan : 1} key={item.key}>
                   {item.title}
                 </th>
               ))}
