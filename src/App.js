@@ -41,6 +41,7 @@ const Container = styled.div`
   max-height: calc(100vh - 72px);
   overflow-x: hidden;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 
   ${media.pad`
     margin-left: 0;
