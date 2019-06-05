@@ -18,10 +18,21 @@ export default {
   'app.comp.searchbox.filter.transaction': 'Transaction',
   'app.comp.searchbox.filter.address': 'Address',
   'app.comp.searchbox.placeholder': 'Search by Address / Block Hash / Txn Hash / Epoch Number',
-  'app.pages.account.detail.qr': 'Click to View QR Code',
-  'app.pages.account.detail.tooltip': 'Copy Address to clipboard',
-  'app.pages.notFoundTx.title1': 'Sorry your',
-  'app.pages.notFoundTx.title2': ' Transaction',
+
+  'app.pages.account.detail.viewAll': 'View All',
+  'app.pages.account.detail.viewOutGoing': 'View Outgoing Txns',
+  'app.pages.account.detail.viewIncoming': 'View Incoming Txns',
+
+  // blocks
+  'app.pages.blocks.position': 'Position',
+  'app.pages.blocks.hash': 'Hash',
+  'app.pages.blocks.gasLimit': 'Gas Limit',
+  'app.pages.blocks.age': 'Age',
+  'app.pages.blocks.txCount': 'Tx Count',
+
+  // blocks & txns
+
+  'app.pages.notFoundTx.title': 'Sorry your <strong>Transaction</strong>',
   'app.pages.notFoundTx.tooltip': 'Copy to clipboard',
   'app.pages.notFoundTx.packing': 'is packing, please wait',
   'app.pages.notFoundTx.ask': 'If you think there is someting wrong, please',

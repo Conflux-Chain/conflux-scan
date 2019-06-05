@@ -9,6 +9,7 @@ import TableLoading from '../../components/TableLoading';
 import EllipsisLine from '../../components/EllipsisLine';
 import '../../assets/semantic-ui/semantic.css';
 import media from '../../globalStyles/media';
+import { i18n } from '../../utils/index';
 
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -196,7 +197,7 @@ class List extends Component {
                 <use xlinkHref="#iconqukuaigaoduxuanzhong" />
               </svg>
             </IconFace>
-            <h1>Blocks</h1>
+            <h1>{i18n('Blocks')}</h1>
           </HeadBar>
           <TabWrapper>
             <StyledTabel>

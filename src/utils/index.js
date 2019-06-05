@@ -1,5 +1,7 @@
+import React from 'react';
 import BigNumber from 'bignumber.js';
 import superagent from 'superagent';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import { toast } from '../components/Toast';
 
 let errorId = null;
@@ -199,3 +201,13 @@ export const sendRequest = (config) => {
 
   return reqPromise;
 };
+
+/* eslint react/prop-types: 0 */
+function I18nComp({ id }) {
+  return <FormattedMessage id={id} />;
+}
+const I18nComp1 = injectIntl(I18nComp);
+
+export function i18n(id) {
+  return <I18nComp1 id={id} />;
+}

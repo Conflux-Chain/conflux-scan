@@ -5,12 +5,14 @@ import superagent from 'superagent';
 import moment from 'moment';
 import { Pagination, Dropdown } from 'semantic-ui-react';
 import { DatePicker } from 'antd';
+import { injectIntl } from 'react-intl';
+import get from 'lodash/get';
 import DataList from '../../components/DataList';
 import Countdown from '../../components/Countdown';
 import TableLoading from '../../components/TableLoading';
 import EllipsisLine from '../../components/EllipsisLine';
 import '../../assets/semantic-ui/semantic.css';
-import { convertToValueorFee, converToGasPrice } from '../../utils';
+import { convertToValueorFee, converToGasPrice, i18n } from '../../utils';
 import CopyButton from '../../components/CopyButton';
 import QrcodeButton from '../../components/QrcodeButton';
 import * as commonCss from '../../globalStyles/common';
@@ -23,7 +25,7 @@ const Wrapper = styled.div`
   margin: 0 auto;
   .ctrlpanel-wrap {
     box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px 1px;
-    ${media.mobile`
+    ${media.pad`
       margin-top: -1px;
       box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px 1px;
     `}
@@ -56,6 +58,23 @@ const HeadBar = styled.div`
   font-family: ProximaNova-Regular;
   font-weight: 400;
   margin-bottom: 24px;
+  .sep {
+    display: none;
+  }
+  .sep + div {
+    margin-left: 10px;
+  }
+  ${media.pad`
+    padding-left: 16px;
+    .sep{display: block;}
+    .sep + div {
+      margin-left: 0;
+    }
+    p {
+      padding-top: 5px;
+      padding-bottom: 5px;
+    }
+  `}
   * {
     display: inline-block;
     margin: 0;
@@ -91,9 +110,9 @@ const IconFace = styled.div`
   }
 `;
 
-const fullWidthMobile = media.mobile`
+const fullWidthMobile = media.pad`
   width: auto;
-  margin-left: 24px;
+  margin-left: 0px;
   margin-right: 24px;
   padding-top: 24px;
   padding-bottom: 24px;
@@ -107,9 +126,12 @@ const Statistic = styled.div`
   width: 100%;
   height: 100px;
   display: flex;
-  ${media.mobile`
+  ${media.pad`
     display: block;
     height: auto;
+    margin-left: 16px;
+    margin-right: 16px;
+    width: auto;
   `}
   justify-content: flex-start;
   align-items: center;
@@ -120,14 +142,14 @@ const Statistic = styled.div`
   .transaction {
     width: 28%;
     ${fullWidthMobile}
-    ${media.mobile`border-bottom: 1px solid rgba(0, 0, 0, 0.08);`}
+    ${media.pad`border-bottom: 1px solid rgba(0, 0, 0, 0.08);`}
   }
   .miner,
   .balance {
     width: 20%;
     border-left: 1px solid rgba(0, 0, 0, 0.08);
     ${fullWidthMobile}
-    ${media.mobile`border-bottom: 1px solid rgba(0, 0, 0, 0.08);`}
+    ${media.pad`border-bottom: 1px solid rgba(0, 0, 0, 0.08);`}
   }
   .seen {
     width: 36%;
@@ -156,7 +178,7 @@ const Statistic = styled.div`
   .sectionWrap {
     width: 100%;
     display: flex;
-    ${media.mobile`display: block;`}
+    ${media.pad`display: block;`}
     section {
       flex: 1;
       p {
@@ -164,7 +186,7 @@ const Statistic = styled.div`
         color: rgba(0, 0, 0, 0.87);
       }
       &:nth-child(2) {
-        ${media.mobile`padding-top: 24px;`}
+        ${media.pad`padding-top: 24px;`}
       }
     }
   }
@@ -173,6 +195,11 @@ const Statistic = styled.div`
 const TabZone = styled.div`
   position: relative;
   width: 100%;
+  ${media.pad`
+    margin-left: 16px;
+    margin-right: 16px;
+    width: auto;
+  `}
   button {
     outline: none;
     border: none;
@@ -206,7 +233,7 @@ const TabWrapper = styled.div`
   .page-h5 {
     ${commonCss.hide}
   }
-  ${media.mobile`
+  ${media.pad`
     justify-content: center;
     .page-pc { ${commonCss.hide} }
     .page-h5 { display: inline-flex!important; }
@@ -217,11 +244,10 @@ const CtrlPanel = styled.div`
   position: absolute;
   right: 0;
   top: 0px;
-  width: 45%;
   display: flex;
   justify-content: space-around;
   align-items: center;
-  ${media.mobile`
+  ${media.pad`
     display: block;
     position: relative;
     width: auto;
@@ -231,18 +257,18 @@ const CtrlPanel = styled.div`
     z-inde: 10;
   `}
   .screentime {
-    ${media.mobile`display: block; margin-bottom: 8px; margin-right: 0;`}
+    ${media.pad`display: block; margin-bottom: 8px; margin-right: 0;`}
     font-size: 16px;
     margin-right: 5px;
   }
   .date-picker {
-    ${media.mobile`width: 250px!important; display: inline-block;`}
+    ${media.pad`width: 250px!important; display: inline-block;`}
   }
   .drop-btn {
-    ${media.mobile`
+    ${media.pad`
       position: absolute;
       right: 10px;
-      top: 55px;
+      top: 18px;
       svg {
         transform: rotate(90deg);
       }
@@ -255,7 +281,7 @@ const TabPanel = styled.div`
     border: 0;
     margin-left: 0px;
     margin-right: 0px;
-    ${media.mobile`
+    ${media.pad`
       box-shadow: none;
       width: auto;
     `}
@@ -412,12 +438,19 @@ class Detail extends Component {
       this.setState(
         {
           accountDetail: result.find((item) => Object.keys(item)[0] === `account/${accountid}`)[`account/${accountid}`],
-          TxList: result.find((item) => Object.keys(item)[0] === `account/${accountid}/transactionList`)[
-            `account/${accountid}/transactionList`
-          ],
-          TxTotalCount: result.find((item) => Object.keys(item)[0] === `account/${accountid}/transactionList`)[
-            `total_block/${accountid}/transactionList`
-          ],
+          // TxList: result.find((item) => Object.keys(item)[0] === `account/${accountid}/transactionList`)[
+          //   `account/${accountid}/transactionList`
+          // ],
+          TxList: get(
+            result.find((item) => Object.keys(item)[0] === `account/${accountid}/transactionList`),
+            `account/${accountid}/transactionList`,
+            []
+          ),
+          TxTotalCount: get(
+            result.find((item) => Object.keys(item)[0] === `account/${accountid}/transactionList`),
+            `total_block/${accountid}/transactionList`,
+            []
+          ),
         },
         () => this.setState({ isLoading: false, queries })
       );
@@ -443,6 +476,7 @@ class Detail extends Component {
   render() {
     const { accountDetail, queries, currentTab, isLoading, minedBlockList, TxList, TxTotalCount } = this.state;
     const {
+      intl,
       match: { params },
     } = this.props;
     console.log(TxList, '===== TxList');
@@ -450,10 +484,11 @@ class Detail extends Component {
       <div className="page-address-detail">
         <Wrapper>
           <HeadBar>
-            <h1>Conflux Account</h1>
+            <h1>{i18n('Account')}</h1>
             <p>{params.accountid}</p>
-            <CopyButton style={{ marginLeft: 10 }} txtToCopy={params.accountid} toolTipId="app.pages.account.detail.tooltip" />
-            <QrcodeButton titleTxt={params.accountid} qrTxt={params.accountid} tooltipId="app.pages.account.detail.qr" />
+            <br className="sep" />
+            <CopyButton txtToCopy={params.accountid} toolTipId="Copy address to clipboard" />
+            <QrcodeButton titleTxt={params.accountid} qrTxt={params.accountid} tooltipId="Click to view QR Code" />
           </HeadBar>
           {isLoading && <TableLoading />}
           <Statistic>
@@ -463,9 +498,12 @@ class Detail extends Component {
                   <use xlinkHref="#iconshiliangzhinengduixiang" />
                 </svg>
                 <div>
-                  <h2>Transactions</h2>
+                  <h2>{i18n('Transactions')}</h2>
                   <p>
-                    Sent {accountDetail.sentTransactions} & Received {accountDetail.receivedTransactions}
+                    {i18n('Sent')}
+                    <span>{accountDetail.sentTransactions} & </span>
+                    {i18n('Received')}
+                    <span>{accountDetail.receivedTransactions}</span>
                   </p>
                 </div>
               </div>
@@ -476,7 +514,7 @@ class Detail extends Component {
                   <use xlinkHref="#iconwakuang" />
                 </svg>
                 <div>
-                  <h2>Mined Blocks</h2>
+                  <h2>{i18n('Mined Blocks')}</h2>
                   <p>{accountDetail.minedBlocks} block</p>
                 </div>
               </div>
@@ -487,7 +525,7 @@ class Detail extends Component {
                   <use xlinkHref="#iconEquilibrium-type" />
                 </svg>
                 <div>
-                  <h2>Belance</h2>
+                  <h2>{i18n('Balance')}</h2>
                   <EllipsisLine unit="CFX" text={convertToValueorFee(accountDetail.balance)} />
                 </div>
               </div>
@@ -499,11 +537,11 @@ class Detail extends Component {
                 </svg>
                 <div className="sectionWrap">
                   <section>
-                    <h2>First Seen</h2>
+                    <h2>{i18n('First Seen')}</h2>
                     <p>{moment(accountDetail.firstSeen * 1000).format('YYYY-MM-DD HH:mm:ss')}</p>
                   </section>
                   <section>
-                    <h2>Last Seen</h2>
+                    <h2>{i18n('Last Seen')}</h2>
                     <p>{moment(accountDetail.lastSeen * 1000).format('YYYY-MM-DD HH:mm:ss')}</p>
                   </section>
                 </div>
@@ -518,7 +556,7 @@ class Detail extends Component {
                 onKeyUp={() => {}}
                 onClick={() => this.setState({ currentTab: 1 })}
               >
-                Transactions
+                {i18n('First Seen')}
               </button>
               <button
                 type="button"
@@ -529,17 +567,23 @@ class Detail extends Component {
                   this.fetchMinedBlockList(params.accountid);
                 }}
               >
-                Miner Block
+                {i18n('Last Seen')}
               </button>
             </div>
             <div className="ctrlpanel-wrap">
               <CtrlPanel>
-                <span className="screentime">Screening Time</span>
                 <RangePicker
                   className="date-picker"
                   showTime={{ format: 'HH:00' }}
                   format="YYYY-MM-DD HH:00"
-                  placeholder={['Start Time', 'End Time']}
+                  placeholder={[
+                    intl.formatMessage({
+                      id: 'startTime',
+                    }),
+                    intl.formatMessage({
+                      id: 'endTime',
+                    }),
+                  ]}
                   onChange={(value) => {
                     if (!value.length) {
                       delete queries.startTime;
@@ -561,14 +605,14 @@ class Detail extends Component {
                   icon={
                     <IconFace style={{ borderRadius: '4px' }}>
                       <svg className="icon" aria-hidden="true">
-                        <use xlinkHref="#iconmore2" />
+                        <use xlinkHref="#iconmore1" />
                       </svg>
                     </IconFace>
                   }
                 >
                   <Dropdown.Menu>
                     <Dropdown.Item
-                      text="View All"
+                      text={i18n('app.pages.account.detail.viewAll')}
                       value="all"
                       onClick={(e, data) => {
                         e.preventDefault();
@@ -576,7 +620,7 @@ class Detail extends Component {
                       }}
                     />
                     <Dropdown.Item
-                      text="View Outgoing Txns"
+                      text={i18n('app.pages.account.detail.viewOutGoing')}
                       value="outgoing"
                       onClick={(e, data) => {
                         e.preventDefault();
@@ -584,7 +628,7 @@ class Detail extends Component {
                       }}
                     />
                     <Dropdown.Item
-                      text="View Incoming Txns"
+                      text={i18n('app.pages.account.detail.viewIncoming')}
                       value="incoming"
                       onClick={(e, data) => {
                         e.preventDefault();
@@ -607,11 +651,11 @@ class Detail extends Component {
                     <Pagination
                       prevItem={{
                         'aria-label': 'Previous item',
-                        content: 'Previous',
+                        content: i18n('lastPage'),
                       }}
                       nextItem={{
                         'aria-label': 'Next item',
-                        content: 'Next',
+                        content: i18n('nextPage'),
                       }}
                       defaultActivePage={5}
                     />
@@ -620,11 +664,11 @@ class Detail extends Component {
                     <Pagination
                       prevItem={{
                         'aria-label': 'Previous item',
-                        content: 'Previous',
+                        content: i18n('lastPage'),
                       }}
                       nextItem={{
                         'aria-label': 'Next item',
-                        content: 'Next',
+                        content: i18n('nextPage'),
                       }}
                       boundaryRange={0}
                       activePage={2}
@@ -656,8 +700,11 @@ class Detail extends Component {
 }
 Detail.propTypes = {
   match: PropTypes.objectOf(PropTypes.string),
+  intl: PropTypes.shape({
+    formatMessage: PropTypes.func,
+  }).isRequired,
 };
 Detail.defaultProps = {
   match: {},
 };
-export default Detail;
+export default injectIntl(Detail);

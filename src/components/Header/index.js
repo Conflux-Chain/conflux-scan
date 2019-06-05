@@ -67,7 +67,7 @@ const SearchBoxContainer = styled.div`
   width: 100%;
   margin-top: 15px;
   max-width: calc(100vw - 370px);
-  overflow: hidden;
+  overflow: visible;
 
   ${media.pad`
     margin-top: 8px;

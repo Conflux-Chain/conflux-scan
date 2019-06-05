@@ -10,7 +10,7 @@ import EllipsisLine from '../../components/EllipsisLine';
 import TableLoading from '../../components/TableLoading';
 import '../../assets/semantic-ui/semantic.css';
 import media from '../../globalStyles/media';
-import { converToGasPrice3Fixed, initSse, closeSource, sendRequest } from '../../utils';
+import { converToGasPrice3Fixed, initSse, closeSource, sendRequest, i18n } from '../../utils';
 
 const Wrapper = styled.div`
   max-width: 1200px;
