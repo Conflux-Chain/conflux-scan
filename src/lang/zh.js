@@ -41,6 +41,7 @@ export default {
   EndTime: '结束时间',
   lastPage: '上一页',
   nextPage: '下一页',
+  Age: '打包时间',
 
   'app.head.menu.home': '首页',
   'app.head.menu.dashboard': 'Dashboard',
