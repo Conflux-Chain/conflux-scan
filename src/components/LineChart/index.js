@@ -104,8 +104,9 @@ class LineChart extends Component {
         data: this.formatTime(data),
         axisLabel: {
           interval: (index, value) => {
+            const tickNum = window.innerWidth < 992 ? 4 : 6;
             const length = data.length;
-            const interval = Math.floor(length / 6) + 1;
+            const interval = Math.floor(length / tickNum) + 1;
 
             if (interval === 1) {
               return true;
