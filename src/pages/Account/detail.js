@@ -216,7 +216,7 @@ const CtrlPanel = styled.div`
   position: absolute;
   right: 0;
   top: 0px;
-  width: 43%;
+  width: 45%;
   display: flex;
   justify-content: space-around;
   align-items: center;
