@@ -21,6 +21,19 @@ const TabWrapper = styled.div`
 
 const StyledTabel = styled.div`
   width: 100%;
+  .content {
+    padding: 0 !important;
+  }
+  thead tr th {
+    background: rgba(0, 0, 0, 0.05) !important;
+  }
+  tr th {
+    padding: 16px 20px !important;
+    padding-right: 0 !important;
+    &:last-of-type {
+      padding: 16px 0 !important;
+    }
+  }
 
   &.right {
     margin-left: 16px;
@@ -116,7 +129,7 @@ const columns = [
   },
   {
     key: 7,
-    className: 'two wide aligned plain_th',
+    className: 'three wide aligned plain_th',
     dataIndex: 'timestamp',
     title: 'Age',
     render: (text) => <Countdown timestamp={text * 1000} />,

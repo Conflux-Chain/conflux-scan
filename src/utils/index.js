@@ -17,6 +17,13 @@ export const converToGasPrice = (bigNumber) => {
   return `${result.toFixed(4)}`;
 };
 
+export const converToGasPrice3Fixed = (bigNumber) => {
+  const result = new BigNumber(bigNumber).dividedBy(10 ** 18);
+  if (result.toFixed() === 0) return 0;
+  if (result.toFixed(3) >= 1) return result.toFixed();
+  return result.toFixed(3);
+};
+
 export const getXmlHttpRequest = () => {
   try {
     // 主流浏览器提供了XMLHttpRequest对象

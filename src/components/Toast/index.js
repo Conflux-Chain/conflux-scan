@@ -6,6 +6,7 @@ const Wrap = styled.div`
   position: fixed;
   top: 10px;
   right: 10px;
+  z-index: 1001;
 `;
 
 let toastRef;

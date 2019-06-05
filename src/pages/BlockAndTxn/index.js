@@ -9,7 +9,7 @@ import Countdown from '../../components/Countdown';
 import EllipsisLine from '../../components/EllipsisLine';
 import TableLoading from '../../components/TableLoading';
 import '../../assets/semantic-ui/semantic.css';
-import { initSse, closeSource, sendRequest } from '../../utils';
+import { converToGasPrice3Fixed, initSse, closeSource, sendRequest } from '../../utils';
 
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -139,7 +139,9 @@ class BlockAndTxn extends Component {
         render: (text, row) => (
           <div>
             <EllipsisLine linkTo={`/accountdetail/${text}`} text={'Miner ' + text} />
-            <PCell>{row.transactionCount} txns</PCell>
+            <PCell>
+              {row.transactionCount} {row.transactionCount <= 1 ? 'txn' : 'txns'}
+            </PCell>
           </div>
         ),
       },
@@ -188,7 +190,7 @@ class BlockAndTxn extends Component {
         className: 'two wide center aligned',
         dataIndex: 'gasPrice',
         title: 'Blocks',
-        render: (text) => <StyledLabel>{'GAS ' + text}</StyledLabel>,
+        render: (text) => <StyledLabel>{converToGasPrice3Fixed(text) + ' CFX'}</StyledLabel>,
       },
     ];
     return (

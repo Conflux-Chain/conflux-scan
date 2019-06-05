@@ -11,6 +11,7 @@ import dashboard1 from '../../assets/images/dashboard1.png';
 import dashboard2 from '../../assets/images/dashboard2.png';
 import dashboard3 from '../../assets/images/dashboard3.png';
 import dashboard4 from '../../assets/images/dashboard4.png';
+import media from '../../globalStyles/media';
 
 const Container = styled.div`
   width: 100%;
@@ -22,8 +23,14 @@ const BlockContainer = styled.div`
   display: flex;
   width: 100%;
   > div:last-child {
-    margin-right: 0px;
+    margin-right: 0;
   }
+  ${media.pad`
+    flex-direction: column;
+    > div {
+      margin-right: 0;
+    }
+  `}
 `;
 const Block = styled.div`
   display: flex;
@@ -92,6 +99,9 @@ const Block = styled.div`
       margin-left: 6px;
     }
   }
+  ${media.pad`
+    margin-bottom: 16px;
+  `}
 `;
 
 const LineContainer = styled.div`
@@ -111,6 +121,11 @@ const LineContainer = styled.div`
   .ui.card:nth-child(even) {
     margin: 0 0 16px 0;
   }
+  ${media.pad`
+    .ui.card:nth-child(odd) {
+      margin: 0 0 16px 0;
+    }
+  `}
 `;
 
 class Home extends Component {

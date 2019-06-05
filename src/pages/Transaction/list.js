@@ -24,6 +24,20 @@ const StyledTabel = styled.div`
   // margin-top: 20px;
   width: 100%;
 
+  .content {
+    padding: 0 !important;
+  }
+  thead tr th {
+    background: rgba(0, 0, 0, 0.05) !important;
+  }
+  tr th {
+    padding: 16px 20px !important;
+    padding-right: 0 !important;
+    &:last-of-type {
+      padding: 16px 0 16px 20px !important;
+    }
+  }
+
   &.right {
     margin-left: 16px;
   }

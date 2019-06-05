@@ -4,8 +4,7 @@ import PropTypes from 'prop-types';
 import superagent from 'superagent';
 import moment from 'moment';
 import { Pagination, Dropdown } from 'semantic-ui-react';
-import DatePicker from 'antd/lib/date-picker';
-import 'antd/lib/date-picker/style/css';
+import { DatePicker } from 'antd';
 import DataList from '../../components/DataList';
 import Countdown from '../../components/Countdown';
 import TableLoading from '../../components/TableLoading';
@@ -14,12 +13,40 @@ import '../../assets/semantic-ui/semantic.css';
 import { convertToValueorFee, converToGasPrice } from '../../utils';
 import CopyButton from '../../components/CopyButton';
 import QrcodeButton from '../../components/QrcodeButton';
+import * as commonCss from '../../globalStyles/common';
+import media from '../../globalStyles/media';
 
 const { RangePicker } = DatePicker;
 
 const Wrapper = styled.div`
   max-width: 1200px;
   margin: 0 auto;
+  .ctrlpanel-wrap {
+    box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px 1px;
+    ${media.mobile`
+      margin-top: -1px;
+      box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px 1px;
+    `}
+  }
+`;
+
+const StyledTabel = styled.div`
+  .content {
+    padding: 0 !important;
+  }
+  thead tr th {
+    background: rgba(0, 0, 0, 0.05) !important;
+  }
+  tr th {
+    padding: 16px 20px !important;
+    padding-right: 0 !important;
+    &:last-of-type {
+      padding: 16px 0 16px 20px !important;
+    }
+  }
+  &.right {
+    margin-left: 16px;
+  }
 `;
 
 const HeadBar = styled.div`
@@ -63,6 +90,15 @@ const IconFace = styled.div`
   }
 `;
 
+const fullWidthMobile = media.mobile`
+  width: auto;
+  margin-left: 24px;
+  margin-right: 24px;
+  padding-top: 24px;
+  padding-bottom: 24px;
+  border-left: 0;
+`;
+
 const Statistic = styled.div`
   background: rgba(255, 255, 255, 1);
   box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
@@ -70,26 +106,38 @@ const Statistic = styled.div`
   width: 100%;
   height: 100px;
   display: flex;
+  ${media.mobile`
+    display: block;
+    height: auto;
+  `}
   justify-content: flex-start;
   align-items: center;
   margin-bottom: 34px;
+  ${commonCss.lightBorder}
+  border-radius: 4px;
+
   .transaction {
     width: 28%;
+    ${fullWidthMobile}
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
   }
   .miner,
   .balance {
     width: 20%;
     border-left: 1px solid rgba(0, 0, 0, 0.08);
+    ${fullWidthMobile}
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
   }
   .seen {
     width: 36%;
     border-left: 1px solid rgba(0, 0, 0, 0.08);
+    ${fullWidthMobile}
   }
   .wrap {
     /* height: 68px; */
     width: 100%;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     * {
       font-size: 16px;
     }
@@ -98,17 +146,27 @@ const Statistic = styled.div`
       height: 32px;
       opacity: 0.38;
       margin: 0 16px;
+      margin-top: 5px;
+    }
+    h2 {
+      margin-bottom: 7px;
     }
   }
   .sectionWrap {
     width: 100%;
     display: flex;
+    ${media.mobile`
+      display: block;
+    `}
     justify-content: space-between;
     section {
       width: 180px;
       p {
         font-size: 16px;
         color: rgba(0, 0, 0, 0.87);
+      }
+      &:nth-child(2) {
+        padding-top: 24px;
       }
     }
   }
@@ -123,6 +181,13 @@ const TabZone = styled.div`
     -webkit-appearance: none;
     -moz-appearance: none;
   }
+  .ui.attached.tabular.menu {
+    border-bottom: none;
+  }
+  .ui.tabular.menu .active.item {
+    ${commonCss.lightBorder}
+    background:rgba(255,255,255,1);
+  }
 `;
 
 const TabZoneWrapper = styled.div`
@@ -134,6 +199,7 @@ const PCell = styled.div`
 `;
 
 const TabWrapper = styled.div`
+  margin-top: 24px;
   display: flex;
   justify-content: flex-end;
 `;
@@ -141,10 +207,49 @@ const TabWrapper = styled.div`
 const CtrlPanel = styled.div`
   position: absolute;
   right: 0;
+  top: 0px;
   width: 43%;
   display: flex;
   justify-content: space-around;
   align-items: center;
+  ${media.mobile`
+    display: block;
+    position: relative;
+    width: auto;
+    padding-top: 20px;
+    padding-left: 16px;
+    background: #fff;
+    z-inde: 10;
+  `}
+  .screentime {
+    ${media.mobile`display: block; margin-bottom: 8px;`}
+    font-size: 16px;
+  }
+  .date-picker {
+    ${media.mobile`width: 250px!important; display: inline-block;`}
+  }
+  .drop-btn {
+    ${media.mobile`
+      position: absolute;
+      right: 10px;
+      top: 55px;
+      svg {
+        transform: rotate(90deg);
+      }
+    `}
+  }
+`;
+
+const TabPanel = styled.div`
+  &.ui.bottom.attached.segment.tab {
+    border: 0;
+    margin-left: 0px;
+    margin-right: 0px;
+    ${media.mobile`
+      box-shadow: none;
+      width: auto;
+    `}
+  }
 `;
 
 const columns = [
@@ -416,9 +521,12 @@ class Detail extends Component {
               >
                 Miner Block
               </button>
+            </div>
+            <div className="ctrlpanel-wrap">
               <CtrlPanel>
-                <span>Screening Time</span>
+                <span className="screentime">Screening Time</span>
                 <RangePicker
+                  className="date-picker"
                   showTime={{ format: 'HH:00' }}
                   format="YYYY-MM-DD HH:00"
                   placeholder={['Start Time', 'End Time']}
@@ -438,6 +546,7 @@ class Detail extends Component {
                   }}
                 />
                 <Dropdown
+                  className="drop-btn"
                   direction="left"
                   icon={
                     <IconFace style={{ borderRadius: '4px' }}>
@@ -475,34 +584,38 @@ class Detail extends Component {
                   </Dropdown.Menu>
                 </Dropdown>
               </CtrlPanel>
-            </div>
-            <div className={currentTab === 1 ? 'ui bottom attached segment active tab' : 'ui bottom attached segment tab'}>
-              <div className="ui fluid card">
-                <div className="content">
-                  <DataList showHeader columns={columns} dataSource={dataSource} />
-                </div>
-              </div>
-              <TabWrapper>
-                <Pagination
-                  prevItem={{
-                    'aria-label': 'Previous item',
-                    content: 'Previous',
-                  }}
-                  nextItem={{
-                    'aria-label': 'Next item',
-                    content: 'Next',
-                  }}
-                  defaultActivePage={5}
-                  totalPages={Math.ceil(TxTotalCount / 10)}
-                />
-              </TabWrapper>
-            </div>
-            <div className={currentTab === 2 ? 'ui bottom attached segment active tab' : 'ui bottom attached segment tab'}>
-              <div className="ui fluid card">
-                <div className="content">
-                  <DataList showHeader columns={minedColumns} dataSource={minedBlockList} />
-                </div>
-              </div>
+              <TabPanel className={currentTab === 1 ? 'ui bottom attached segment active tab' : 'ui bottom attached segment tab'}>
+                <StyledTabel>
+                  <div className="ui fluid card">
+                    <div className="content">
+                      <DataList showHeader columns={columns} dataSource={dataSource} />
+                    </div>
+                  </div>
+                </StyledTabel>
+                <TabWrapper>
+                  <Pagination
+                    prevItem={{
+                      'aria-label': 'Previous item',
+                      content: 'Previous',
+                    }}
+                    nextItem={{
+                      'aria-label': 'Next item',
+                      content: 'Next',
+                    }}
+                    defaultActivePage={5}
+                    totalPages={10}
+                  />
+                </TabWrapper>
+              </TabPanel>
+              <TabPanel className={currentTab === 2 ? 'ui bottom attached segment active tab' : 'ui bottom attached segment tab'}>
+                <StyledTabel>
+                  <div className="ui fluid card">
+                    <div className="content">
+                      <DataList showHeader columns={minedColumns} dataSource={minedBlockList} />
+                    </div>
+                  </div>
+                </StyledTabel>
+              </TabPanel>
             </div>
           </TabZone>
         </Wrapper>
