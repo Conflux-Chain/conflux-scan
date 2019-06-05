@@ -59,7 +59,7 @@ export default {
   'app.navbar.home': 'Dashboard',
   'app.navbar.dashboard': 'Dashboard',
   'app.navbar.blocksAndTxs': 'Blocks & Transactions',
-  'app.navbar.directory': 'Conflux Directory',
+  'app.navbar.directory': 'Directory',
   'app.navbar.more': 'More',
 
   // Directory Page

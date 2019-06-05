@@ -96,7 +96,7 @@ export default {
   'app.navbar.home': '面板',
   'app.navbar.dashboard': '面板',
   'app.navbar.blocksAndTxs': '区块 & 转账',
-  'app.navbar.directory': 'Conflux 目录',
+  'app.navbar.directory': '目录',
   'app.navbar.more': '更多',
 
   // Directory Page
