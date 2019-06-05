@@ -17,9 +17,6 @@ import { ToastComp } from './components/Toast';
 import './assets/semantic-ui/semantic.css';
 import GlobalStyle from './globalStyles';
 
-import JnoodleEn from './lang/jnoodle.en';
-import JnoodleZh from './lang/jnoodle.zh';
-
 import zhTranslationMessages from './lang/zh';
 import enTranslationMessages from './lang/en';
 
@@ -29,8 +26,8 @@ require('./assets/iconfont/iconfont.js');
 addLocaleData([...enLocaleData, ...zhLocaleData]);
 
 const messages = {
-  en: Object.assign({}, enTranslationMessages, JnoodleEn),
-  zh: Object.assign({}, zhTranslationMessages, JnoodleZh),
+  en: enTranslationMessages,
+  zh: zhTranslationMessages,
 };
 
 const Wrapper = styled.div`
