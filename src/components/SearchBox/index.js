@@ -41,7 +41,7 @@ const FilterSelector = styled.div.attrs({
   className: 'ui menu compact',
 })`
   margin-top: 10px !important;
-  width: 120px;
+  width: 128px;
   height: 50px;
   border: none !important;
   box-shadow: none !important;
