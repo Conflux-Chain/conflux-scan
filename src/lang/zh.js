@@ -1,6 +1,7 @@
 export default {
   // common words
   Block: '区块',
+  'Block Height': '区块高度',
   Epoch: 'Epoch',
   Transaction: '交易',
   Address: '地址',
@@ -10,6 +11,7 @@ export default {
   Position: '位置',
   Hash: '哈希',
   'Gas Limit': '燃料上限',
+  'Present Hash': '当前区块哈希',
   // 'Age': '打包时间',
   'Tx Count': '交易笔数',
   Value: '价值',
@@ -20,6 +22,7 @@ export default {
   Received: '接受',
   'Mined Blocks': '挖出区块',
   Balance: '余额',
+  Difficulty: '难度',
   'Copy address to clipboard': '将地址复制到粘贴板',
   'Click to view QR Code': '点击查看二维码',
   'First Seen': '最早出现',
@@ -38,6 +41,7 @@ export default {
   EndTime: '结束时间',
   lastPage: '上一页',
   nextPage: '下一页',
+  Age: '打包时间',
 
   'app.head.menu.home': '首页',
   'app.head.menu.dashboard': 'Dashboard',
@@ -68,10 +72,15 @@ export default {
   'app.pages.blocks.gasLimit': '燃料上限',
   'app.pages.blocks.age': '打包时间',
   'app.pages.blocks.txCount': '交易笔数',
+  'app.pages.blocks.packTime': '打包时间',
 
   'app.pages.blockAndTx.blocks': '区块',
   'app.pages.blockAndTx.viewAllBlocks': '查看所有区块',
   'app.pages.blockAndTx.viewAllTransactions': '查看所有交易',
+
+  // Age
+  'app.pages.txns.age': '打包时间',
+  'app.pages.txns.time': '打包时间',
 
   'app.pages.notFoundTx.title': '对不起，你的交易',
   'app.pages.notFoundTx.tooltip': '复制到剪切板',

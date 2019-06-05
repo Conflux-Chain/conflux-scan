@@ -9,6 +9,7 @@ import DataList from '../../components/DataList';
 import EllipsisLine from '../../components/EllipsisLine';
 import '../../assets/semantic-ui/semantic.css';
 import media from '../../globalStyles/media';
+import { i18n } from '../../utils';
 
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -111,7 +112,7 @@ class Detail extends Component {
       <div className="page-transaction-detail">
         <Wrapper>
           <HeadBar>
-            <h1>Transaction</h1>
+            <h1>{i18n('Transaction')}</h1>
             <p>{params.txnhash}</p>
           </HeadBar>
           {isLoading ? (
@@ -120,47 +121,47 @@ class Detail extends Component {
             <StyledTabel className="ui basic padded table">
               <tbody className="">
                 <tr className="">
-                  <td className="collapsing top">Transation Hash</td>
+                  <td className="collapsing top">{i18n('Transaction Hash')}</td>
                   <td className="top">{result.hash}</td>
                 </tr>
                 <tr className="">
-                  <td className="collapsing">Data</td>
+                  <td className="collapsing">{i18n('Data')}</td>
                   <td className="">{result.data}</td>
                 </tr>
                 <tr className="">
-                  <td className="collapsing">From</td>
+                  <td className="collapsing">{i18n('From')}</td>
                   <td className="">{result.from}</td>
                 </tr>
                 <tr className="">
-                  <td className="collapsing">To</td>
+                  <td className="collapsing">{i18n('To')}</td>
                   <td className="">{result.to}</td>
                 </tr>
                 <tr className="">
-                  <td className="collapsing">Gas</td>
+                  <td className="collapsing">{i18n('Gas')}</td>
                   <td className="">{result.gas}</td>
                 </tr>
                 <tr className="">
-                  <td className="collapsing">Gas Price</td>
+                  <td className="collapsing">{i18n('Gas Price')}</td>
                   <td className="">{result.gasPrice}</td>
                 </tr>
                 <tr className="">
-                  <td className="collapsing">Value</td>
+                  <td className="collapsing">{i18n('Value')}</td>
                   <td className="">{result.value}</td>
                 </tr>
                 <tr className="">
-                  <td className="collapsing">Nonce</td>
+                  <td className="collapsing">{i18n('Nonce')}</td>
                   <td className="">{result.nonce}</td>
                 </tr>
                 <tr className="">
-                  <td className="collapsing">Block Hash</td>
+                  <td className="collapsing">{i18n('Block Hash')}</td>
                   <td className="">{result.blockHash}</td>
                 </tr>
                 <tr className="">
-                  <td className="collapsing">Position</td>
+                  <td className="collapsing">{i18n('Position')}</td>
                   <td className="">{result.transactionIndex}</td>
                 </tr>
                 <tr className="">
-                  <td className="collapsing bottom">Time</td>
+                  <td className="collapsing bottom">{i18n('app.pages.txns.time')}</td>
                   <td className="bottom">{moment(result.timestamp * 1000).format('YYYY-MM-DD HH:mm:ss')}</td>
                 </tr>
               </tbody>

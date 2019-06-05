@@ -91,15 +91,14 @@ const columns = [
   {
     key: 1,
     dataIndex: 'epochNumber',
+    title: i18n('Epoch'),
     className: 'one wide aligned plain_th',
-    title: 'Epoch',
     render: (text) => <EllipsisLine linkTo={`/epochsdetail/${text}`} text={text} />,
   },
   {
     key: 2,
-    dataIndex: 'position',
+    title: i18n('Position'),
     className: 'one wide aligned plain_th',
-    title: 'Position',
     render: (text, row) => (
       <div>
         <PCell>{text}</PCell>
@@ -109,8 +108,8 @@ const columns = [
   {
     key: 3,
     dataIndex: 'hash',
+    title: i18n('Hash'),
     className: 'two wide aligned plain_th',
-    title: 'Hash',
     render: (text, row) => (
       <div>
         <EllipsisLine isLong linkTo={`/blocksdetail/${text}`} isPivot={row.isPivot} text={text} />
@@ -121,35 +120,35 @@ const columns = [
     key: 4,
     dataIndex: 'difficulty',
     className: 'one wide aligned plain_th',
-    title: 'Difficulty',
+    title: i18n('Difficulty'),
     render: (text) => <PCell>{text}</PCell>,
   },
   {
     key: 5,
     className: 'one wide aligned plain_th',
     dataIndex: 'miner',
-    title: 'Miner',
+    title: i18n('Miner'),
     render: (text) => <EllipsisLine linkTo={`/accountdetail/${text}`} text={text} />,
   },
   {
     key: 6,
     className: 'one wide aligned plain_th',
     dataIndex: 'gasLimit',
-    title: 'Gas Limit',
+    title: i18n('Gas Limit'),
     render: (text) => <PCell>{text}</PCell>,
   },
   {
     key: 7,
     className: 'three wide aligned plain_th',
     dataIndex: 'timestamp',
-    title: 'Age',
+    title: i18n('Age'),
     render: (text) => <Countdown timestamp={text * 1000} />,
   },
   {
     key: 8,
     className: 'one wide aligned plain_th',
     dataIndex: 'transactionCount',
-    title: 'Tx Count',
+    title: i18n('Tx Count'),
     render: (text) => <PCell>{text}</PCell>,
   },
 ];
@@ -197,7 +196,7 @@ class List extends Component {
                 <use xlinkHref="#iconqukuaigaoduxuanzhong" />
               </svg>
             </IconFace>
-            <h1>{i18n('Blocks')}</h1>
+            <h1>{i18n('app.pages.blockAndTx.blocks')}</h1>
           </HeadBar>
           <TabWrapper>
             <StyledTabel>
