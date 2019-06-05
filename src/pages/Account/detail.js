@@ -527,10 +527,7 @@ class Detail extends Component {
                 <div>
                   <h2>{i18n('Transactions')}</h2>
                   <p>
-                    {i18n('Sent')}
-                    <span>{accountDetail.sentTransactions} & </span>
-                    {i18n('Received')}
-                    <span>{accountDetail.receivedTransactions}</span>
+                    <span>{accountDetail.transactions}</span>
                   </p>
                 </div>
               </div>
@@ -542,7 +539,7 @@ class Detail extends Component {
                 </svg>
                 <div>
                   <h2>{i18n('Mined Blocks')}</h2>
-                  <p>{accountDetail.minedBlocks} block</p>
+                  <p>{accountDetail.minedBlocks}</p>
                 </div>
               </div>
             </div>
