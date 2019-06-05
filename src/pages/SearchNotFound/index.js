@@ -79,7 +79,9 @@ class SearchNotFound extends PureComponent {
 
         <div className="row5">
           <FormattedMessage id="app.pages.notFoundTx.ask" />
-          <FormattedMessage id="app.pages.notFoundTx.concatus">{(txt) => <a href="mailto:hr@conflux-chain.org">{txt}</a>}</FormattedMessage>
+          <FormattedMessage id="app.pages.notFoundTx.concatus">
+            {(txt) => <a href="mailto:conflux-dev@conflux-chain.org">{txt}</a>}
+          </FormattedMessage>
         </div>
       </NfWrapDiv>
     );

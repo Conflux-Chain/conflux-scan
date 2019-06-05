@@ -5,6 +5,7 @@ import superagent from 'superagent';
 import moment from 'moment';
 import { Pagination, Dropdown } from 'semantic-ui-react';
 import { DatePicker } from 'antd';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import DataList from '../../components/DataList';
 import Countdown from '../../components/Countdown';
 import TableLoading from '../../components/TableLoading';
@@ -23,7 +24,7 @@ const Wrapper = styled.div`
   margin: 0 auto;
   .ctrlpanel-wrap {
     box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px 1px;
-    ${media.mobile`
+    ${media.pad`
       margin-top: -1px;
       box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px 1px;
     `}
@@ -34,6 +35,23 @@ const HeadBar = styled.div`
   width: 100%;
   font-size: 16px;
   margin-bottom: 24px;
+  .sep {
+    display: none;
+  }
+  .sep + div {
+    margin-left: 10px;
+  }
+  ${media.pad`
+    padding-left: 16px;
+    .sep{display: block;}
+    .sep + div {
+      margin-left: 0;
+    }
+    p {
+      padding-top: 5px;
+      padding-bottom: 5px;
+    }
+  `}
   * {
     display: inline-block;
     margin: 0;
@@ -67,9 +85,9 @@ const IconFace = styled.div`
   }
 `;
 
-const fullWidthMobile = media.mobile`
+const fullWidthMobile = media.pad`
   width: auto;
-  margin-left: 24px;
+  margin-left: 0px;
   margin-right: 24px;
   padding-top: 24px;
   padding-bottom: 24px;
@@ -81,9 +99,12 @@ const Statistic = styled.div`
   width: 100%;
   height: 100px;
   display: flex;
-  ${media.mobile`
+  ${media.pad`
     display: block;
     height: auto;
+    margin-left: 16px;
+    margin-right: 16px;
+    width: auto;
   `}
   justify-content: flex-start;
   align-items: center;
@@ -94,14 +115,14 @@ const Statistic = styled.div`
   .transaction {
     width: 28%;
     ${fullWidthMobile}
-    ${media.mobile`border-bottom: 1px solid rgba(0, 0, 0, 0.08);`}
+    ${media.pad`border-bottom: 1px solid rgba(0, 0, 0, 0.08);`}
   }
   .miner,
   .balance {
     width: 20%;
     border-left: 1px solid rgba(0, 0, 0, 0.08);
     ${fullWidthMobile}
-    ${media.mobile`border-bottom: 1px solid rgba(0, 0, 0, 0.08);`}
+    ${media.pad`border-bottom: 1px solid rgba(0, 0, 0, 0.08);`}
   }
   .seen {
     width: 36%;
@@ -130,7 +151,7 @@ const Statistic = styled.div`
   .sectionWrap {
     width: 100%;
     display: flex;
-    ${media.mobile`display: block;`}
+    ${media.pad`display: block;`}
     section {
       flex: 1;
       p {
@@ -138,7 +159,7 @@ const Statistic = styled.div`
         color: rgba(0, 0, 0, 0.87);
       }
       &:nth-child(2) {
-        ${media.mobile`padding-top: 24px;`}
+        ${media.pad`padding-top: 24px;`}
       }
     }
   }
@@ -147,6 +168,11 @@ const Statistic = styled.div`
 const TabZone = styled.div`
   position: relative;
   width: 100%;
+  ${media.pad`
+    margin-left: 16px;
+    margin-right: 16px;
+    width: auto;
+  `}
   button {
     outline: none;
     border: none;
@@ -179,7 +205,7 @@ const TabWrapper = styled.div`
   .page-h5 {
     ${commonCss.hide}
   }
-  ${media.mobile`
+  ${media.pad`
     justify-content: center;
     .page-pc { ${commonCss.hide} }
     .page-h5 { display: inline-flex!important; }
@@ -190,11 +216,10 @@ const CtrlPanel = styled.div`
   position: absolute;
   right: 0;
   top: 0px;
-  width: 43%;
   display: flex;
   justify-content: space-around;
   align-items: center;
-  ${media.mobile`
+  ${media.pad`
     display: block;
     position: relative;
     width: auto;
@@ -204,18 +229,18 @@ const CtrlPanel = styled.div`
     z-inde: 10;
   `}
   .screentime {
-    ${media.mobile`display: block; margin-bottom: 8px; margin-right: 0;`}
+    ${media.pad`display: block; margin-bottom: 8px; margin-right: 0;`}
     font-size: 16px;
     margin-right: 5px;
   }
   .date-picker {
-    ${media.mobile`width: 250px!important; display: inline-block;`}
+    ${media.pad`width: 250px!important; display: inline-block;`}
   }
   .drop-btn {
-    ${media.mobile`
+    ${media.pad`
       position: absolute;
       right: 10px;
-      top: 55px;
+      top: 18px;
       svg {
         transform: rotate(90deg);
       }
@@ -228,7 +253,7 @@ const TabPanel = styled.div`
     border: 0;
     margin-left: 0px;
     margin-right: 0px;
-    ${media.mobile`
+    ${media.pad`
       box-shadow: none;
       width: auto;
     `}
@@ -389,15 +414,19 @@ class Detail extends Component {
   render() {
     const { accountDetail, queries, currentTab, isLoading, minedBlockList } = this.state;
     const {
+      intl,
       match: { params },
     } = this.props;
     return (
       <div className="page-address-detail">
         <Wrapper>
           <HeadBar>
-            <h1>Conflux Account</h1>
+            <h1>
+              <FormattedMessage id="app.pages.account.detail.h1" />
+            </h1>
             <p>{params.accountid || '0x413957876f8239dd9246fefabc4e7d6d86d4f9b6'}</p>
-            <CopyButton style={{ marginLeft: 10 }} txtToCopy={params.accountid} toolTipId="app.pages.account.detail.tooltip" />
+            <br className="sep" />
+            <CopyButton txtToCopy={params.accountid} toolTipId="app.pages.account.detail.tooltip" />
             <QrcodeButton titleTxt={params.accountid} qrTxt={params.accountid} tooltipId="app.pages.account.detail.qr" />
           </HeadBar>
           {isLoading && <TableLoading />}
@@ -408,9 +437,14 @@ class Detail extends Component {
                   <use xlinkHref="#iconshiliangzhinengduixiang" />
                 </svg>
                 <div>
-                  <h2>Transactions</h2>
+                  <h2>
+                    <FormattedMessage id="app.pages.account.detail.transactions" />
+                  </h2>
                   <p>
-                    Sent {accountDetail.sentTransactions} & Received {accountDetail.receivedTransactions}
+                    <FormattedMessage id="app.pages.account.detail.sent" />
+                    <span>{accountDetail.sentTransactions} & </span>
+                    <FormattedMessage id="app.pages.account.detail.received" />
+                    <span>{accountDetail.receivedTransactions}</span>
                   </p>
                 </div>
               </div>
@@ -421,7 +455,9 @@ class Detail extends Component {
                   <use xlinkHref="#iconwakuang" />
                 </svg>
                 <div>
-                  <h2>Mined Blocks</h2>
+                  <h2>
+                    <FormattedMessage id="app.pages.account.detail.minedBlocks" />
+                  </h2>
                   <p>{accountDetail.minedBlocks} block</p>
                 </div>
               </div>
@@ -432,7 +468,9 @@ class Detail extends Component {
                   <use xlinkHref="#iconEquilibrium-type" />
                 </svg>
                 <div>
-                  <h2>Belance</h2>
+                  <h2>
+                    <FormattedMessage id="app.pages.account.detail.balance" />
+                  </h2>
                   <EllipsisLine unit="CFX" text={convertToValueorFee(accountDetail.balance)} />
                 </div>
               </div>
@@ -444,11 +482,15 @@ class Detail extends Component {
                 </svg>
                 <div className="sectionWrap">
                   <section>
-                    <h2>First Seen</h2>
+                    <h2>
+                      <FormattedMessage id="app.pages.account.detail.firstSeen" />
+                    </h2>
                     <p>{moment(accountDetail.firstSeen * 1000).format('YYYY-MM-DD HH:mm:ss')}</p>
                   </section>
                   <section>
-                    <h2>Last Seen</h2>
+                    <h2>
+                      <FormattedMessage id="app.pages.account.detail.lastSeen" />
+                    </h2>
                     <p>{moment(accountDetail.lastSeen * 1000).format('YYYY-MM-DD HH:mm:ss')}</p>
                   </section>
                 </div>
@@ -463,7 +505,7 @@ class Detail extends Component {
                 onKeyUp={() => {}}
                 onClick={() => this.setState({ currentTab: 1 })}
               >
-                Transactions
+                <FormattedMessage id="app.pages.account.detail.firstSeen" />
               </button>
               <button
                 type="button"
@@ -474,17 +516,23 @@ class Detail extends Component {
                   this.fetchMinedBlockList(params.accountid);
                 }}
               >
-                Miner Block
+                <FormattedMessage id="app.pages.account.detail.lastSeen" />
               </button>
             </div>
             <div className="ctrlpanel-wrap">
               <CtrlPanel>
-                <span className="screentime">Screening Time</span>
                 <RangePicker
                   className="date-picker"
                   showTime={{ format: 'HH:00' }}
                   format="YYYY-MM-DD HH:00"
-                  placeholder={['Start Time', 'End Time']}
+                  placeholder={[
+                    intl.formatMessage({
+                      id: 'app.pages.account.detail.startTime',
+                    }),
+                    intl.formatMessage({
+                      id: 'app.pages.account.detail.endTime',
+                    }),
+                  ]}
                   onChange={(value) => {
                     if (!value.length) {
                       delete queries.startTime;
@@ -513,7 +561,7 @@ class Detail extends Component {
                 >
                   <Dropdown.Menu>
                     <Dropdown.Item
-                      text="View All"
+                      text={<FormattedMessage id="app.pages.account.detail.viewAll" />}
                       value="All"
                       onClick={(e, data) => {
                         e.preventDefault();
@@ -521,7 +569,7 @@ class Detail extends Component {
                       }}
                     />
                     <Dropdown.Item
-                      text="View Outgoing Txns"
+                      text={<FormattedMessage id="app.pages.account.detail.viewOutGoing" />}
                       value="Outgoing"
                       onClick={(e, data) => {
                         e.preventDefault();
@@ -529,7 +577,7 @@ class Detail extends Component {
                       }}
                     />
                     <Dropdown.Item
-                      text="View Incoming Txns"
+                      text={<FormattedMessage id="app.pages.account.detail.viewIncoming" />}
                       value="Incoming"
                       onClick={(e, data) => {
                         e.preventDefault();
@@ -550,11 +598,11 @@ class Detail extends Component {
                     <Pagination
                       prevItem={{
                         'aria-label': 'Previous item',
-                        content: 'Previous',
+                        content: <FormattedMessage id="app.pages.account.detail.lastPage" />,
                       }}
                       nextItem={{
                         'aria-label': 'Next item',
-                        content: 'Next',
+                        content: <FormattedMessage id="app.pages.account.detail.nextPage" />,
                       }}
                       defaultActivePage={5}
                     />
@@ -563,11 +611,11 @@ class Detail extends Component {
                     <Pagination
                       prevItem={{
                         'aria-label': 'Previous item',
-                        content: 'Previous',
+                        content: <FormattedMessage id="app.pages.account.detail.lastPage" />,
                       }}
                       nextItem={{
                         'aria-label': 'Next item',
-                        content: 'Next',
+                        content: <FormattedMessage id="app.pages.account.detail.nextPage" />,
                       }}
                       boundaryRange={0}
                       activePage={2}
@@ -598,8 +646,11 @@ class Detail extends Component {
 }
 Detail.propTypes = {
   match: PropTypes.objectOf(PropTypes.string),
+  intl: PropTypes.shape({
+    formatMessage: PropTypes.func,
+  }).isRequired,
 };
 Detail.defaultProps = {
   match: {},
 };
-export default Detail;
+export default injectIntl(Detail);
