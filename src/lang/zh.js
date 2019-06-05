@@ -31,6 +31,6 @@ export default {
   'app.pages.searchNotFound.row4': '没有搜索结果',
   'app.pages.dashboard.tps': '吞吐率',
   'app.pages.dashboard.difficulty': '难度',
-  'app.pages.dashboard.blockTime': '出块时间',
+  'app.pages.dashboard.blockTime': '出块间隔',
   'app.pages.dashboard.hashRate': '哈希率',
 };
