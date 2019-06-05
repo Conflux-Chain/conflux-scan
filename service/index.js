@@ -166,7 +166,7 @@ const start = async () => {
               // 业务逻辑
               const payload = await Promise.all(querys);
               rs.push(JSON.stringify(payload));
-            }, 5000);
+            }, 1000);
           };
           rs.on('data', (chunk) => {});
 
