@@ -114,7 +114,7 @@ const fullWidthMobile = media.pad`
   width: auto;
   margin-left: 0px;
   margin-right: 24px;
-  padding-top: 24px;
+  padding-top: 16px;
   padding-bottom: 24px;
   border-left: 0;
 `;
@@ -292,6 +292,7 @@ const columns = [
   {
     key: 1,
     dataIndex: 'ein',
+    className: 'two wide aligned plain_th',
     title: 'Hash',
     // className: 'two wide',
     render: (text, row) => (
@@ -305,6 +306,7 @@ const columns = [
   {
     key: 2,
     dataIndex: 'drei',
+    className: 'two wide aligned plain_th',
     title: 'From',
     render: (text, row) => (
       <div>
@@ -316,6 +318,7 @@ const columns = [
   },
   {
     key: 3,
+    className: 'two wide aligned plain_th',
     dataIndex: 'drei',
     title: 'To',
     render: (text, row) => (
@@ -326,28 +329,28 @@ const columns = [
   },
   {
     key: 4,
-    className: 'two wide aligned',
+    className: 'two wide aligned plain_th',
     dataIndex: 'drei',
     title: 'Value',
     render: (text) => <div className="ui label">{text}</div>,
   },
   {
     key: 5,
-    className: 'two wide aligned',
+    className: 'two wide aligned plain_th',
     dataIndex: 'drei',
     title: 'Fee',
     render: (text) => <div className="ui label">{text}</div>,
   },
   {
     key: 6,
-    className: 'two wide aligned',
+    className: 'two wide aligned plain_th',
     dataIndex: 'drei',
     title: 'Gas Price',
     render: (text) => <div className="ui label">{text}</div>,
   },
   {
     key: 7,
-    className: 'two wide aligned',
+    className: 'two wide aligned plain_th',
     dataIndex: 'drei',
     title: 'Age',
     render: (text) => <div className="ui label">{text}</div>,
@@ -357,45 +360,67 @@ const columns = [
 const minedColumns = [
   {
     key: 1,
-    dataIndex: 'ein',
-    title: 'Blocks',
-    // className: 'two wide',
-    render: (text, row) => (
-      <IconFace>
-        <svg className="icon" aria-hidden="true">
-          <use xlinkHref="#iconjinrijiaoyiliang" />
-        </svg>
-      </IconFace>
-    ),
+    dataIndex: 'epochNumber',
+    className: 'one wide aligned plain_th',
+    title: 'Epoch',
+    render: (text) => <EllipsisLine linkTo={`/epochsdetail/${text}`} text={text} />,
   },
   {
     key: 2,
-    dataIndex: 'drei',
-    title: 'Blocks',
+    dataIndex: 'position',
+    className: 'one wide aligned plain_th',
+    title: 'Position',
     render: (text, row) => (
       <div>
-        <PCell>
-          <EllipsisLine isPivot text={row.zwei} />
-        </PCell>
+        <PCell>{text}</PCell>
       </div>
     ),
   },
   {
     key: 3,
-    dataIndex: 'drei',
-    title: 'Blocks',
+    dataIndex: 'hash',
+    className: 'two wide aligned plain_th',
+    title: 'Hash',
     render: (text, row) => (
       <div>
-        <PCell>{row.drei}</PCell>
+        <EllipsisLine isLong linkTo={`/blocksdetail/${text}`} isPivot={row.isPivot} text={text} />
       </div>
     ),
   },
   {
     key: 4,
-    className: 'two wide aligned',
-    dataIndex: 'drei',
-    title: 'Blocks',
-    render: (text) => <div className="ui label">{text}</div>,
+    dataIndex: 'difficulty',
+    className: 'one wide aligned plain_th',
+    title: 'Difficulty',
+    render: (text) => <PCell>{text}</PCell>,
+  },
+  {
+    key: 5,
+    className: 'one wide aligned plain_th',
+    dataIndex: 'miner',
+    title: 'Miner',
+    render: (text) => <EllipsisLine linkTo={`/accountdetail/${text}`} text={text} />,
+  },
+  {
+    key: 6,
+    className: 'one wide aligned plain_th',
+    dataIndex: 'gasLimit',
+    title: 'Gas Limit',
+    render: (text) => <PCell>{text}</PCell>,
+  },
+  {
+    key: 7,
+    className: 'three wide aligned plain_th',
+    dataIndex: 'timestamp',
+    title: 'Age',
+    render: (text) => <Countdown timestamp={text * 1000} />,
+  },
+  {
+    key: 8,
+    className: 'one wide aligned plain_th',
+    dataIndex: 'transactionCount',
+    title: 'Tx Count',
+    render: (text) => <PCell>{text}</PCell>,
   },
 ];
 
@@ -642,7 +667,7 @@ class Detail extends Component {
                 <StyledTabel>
                   <div className="ui fluid card">
                     <div className="content">
-                      <DataList showHeader columns={columns} dataSource={dataSource} />
+                      <DataList showHeader columns={columns} dataSource={TxList} />
                     </div>
                   </div>
                 </StyledTabel>
@@ -657,7 +682,8 @@ class Detail extends Component {
                         'aria-label': 'Next item',
                         content: i18n('nextPage'),
                       }}
-                      defaultActivePage={5}
+                      defaultActivePage={1}
+                      totalPages={Math.ceil(TxTotalCount / 10)}
                     />
                   </div>
                   <div className="page-h5">
@@ -677,7 +703,7 @@ class Detail extends Component {
                       firstItem={null}
                       lastItem={null}
                       siblingRange={1}
-                      totalPages={10}
+                      totalPages={Math.ceil(TxTotalCount / 10)}
                     />
                   </div>
                 </TabWrapper>

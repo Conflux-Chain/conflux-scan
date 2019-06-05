@@ -16,7 +16,7 @@ const Wrapper = styled.div`
   max-width: 1200px;
   margin: 0 auto;
   display: flex;
-  justify-content: space-around;
+  justify-content: flex-start;
   ${media.mobile`
     flex-wrap: wrap;
     justify-content: center;
@@ -26,11 +26,14 @@ const Wrapper = styled.div`
 const StyledTabel = styled.div`
   margin-top: 20px;
   width: calc(50% - 6px);
-  /* ${media.pad`
+  &.right {
+    margin-left: 16px;
+  }
+  ${media.pad`
     &.right {
-      margin-left: 16px;
+      margin-left: auto;
     }
-  `} */
+  `}
 
   ${media.mobile`
     width: 95%;
@@ -279,7 +282,7 @@ class BlockAndTxn extends Component {
           <StyledTabel className="left">
             <div className="ui card" style={{ width: '100%' }}>
               <div className="content">
-                <div className="header">{locale === 'zh' ? '区块' : 'Blocks'}</div>
+                <div className="header">{i18n('app.comp.searchbox.filter.block')}</div>
               </div>
               <div className="content">
                 {!BlockList.length && <TableLoading />}
@@ -295,7 +298,7 @@ class BlockAndTxn extends Component {
           <StyledTabel className="right">
             <div className="ui card" style={{ width: '100%' }}>
               <div className="content">
-                <div className="header">{locale === 'zh' ? '交易' : 'Transactions'}</div>
+                <div className="header">{i18n('app.comp.searchbox.filter.transaction')}</div>
               </div>
               <div className="content">
                 {!TxList.length && <TableLoading />}

@@ -91,25 +91,25 @@ const columns = [
   {
     key: 1,
     dataIndex: 'epochNumber',
-    className: 'one wide aligned',
+    className: 'one wide aligned plain_th',
     title: 'Epoch',
     render: (text) => <EllipsisLine linkTo={`/epochsdetail/${text}`} text={text} />,
   },
   {
     key: 2,
-    dataIndex: 'drei',
-    className: 'one wide aligned',
+    dataIndex: 'position',
+    className: 'one wide aligned plain_th',
     title: 'Position',
     render: (text, row) => (
       <div>
-        <PCell>{row.drei}</PCell>
+        <PCell>{text}</PCell>
       </div>
     ),
   },
   {
     key: 3,
     dataIndex: 'hash',
-    className: 'two wide aligned',
+    className: 'two wide aligned plain_th',
     title: 'Hash',
     render: (text, row) => (
       <div>
@@ -126,7 +126,7 @@ const columns = [
   },
   {
     key: 5,
-    className: 'one wide aligned',
+    className: 'one wide aligned plain_th',
     dataIndex: 'miner',
     title: 'Miner',
     render: (text) => <EllipsisLine linkTo={`/accountdetail/${text}`} text={text} />,

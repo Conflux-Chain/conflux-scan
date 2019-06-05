@@ -33,6 +33,9 @@ const StyledTabel = styled.table`
     font-size: 16px !important;
     background: #fff !important;
   }
+  .ui.padded.table td {
+    padding: none;
+  }
 
   &.right {
     margin-left: 16px;
