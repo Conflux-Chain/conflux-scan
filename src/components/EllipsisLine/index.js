@@ -32,7 +32,7 @@ const SingleLine = styled.div`
       }
     }
     .long {
-      max-width: 204px;
+      max-width: 280px;
     }
   }
 `;

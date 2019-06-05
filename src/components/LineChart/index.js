@@ -104,13 +104,14 @@ class LineChart extends Component {
         data: this.formatTime(data),
         axisLabel: {
           interval: (index, value) => {
+            const tickNum = window.innerWidth < 992 ? 3 : 5;
             const length = data.length;
-            const interval = Math.floor(length / 6) + 1;
+            const interval = Math.floor(length / tickNum);
 
             if (interval === 1) {
               return true;
             }
-            if (index % interval === 0) {
+            if (index % interval === 0 || index === length) {
               return true;
             }
             return false;
@@ -129,7 +130,7 @@ class LineChart extends Component {
       },
       yAxis: {
         type: 'value',
-        boundaryGap: [0, '100%'],
+        boundaryGap: false,
         axisLabel: {
           color: 'rgba(0, 0, 0, 0.87)',
         },

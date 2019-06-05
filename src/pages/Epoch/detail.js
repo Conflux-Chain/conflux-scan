@@ -16,7 +16,19 @@ const Wrapper = styled.div`
 
 const StyledTabel = styled.div`
   margin-top: 20px;
-
+  .content {
+    padding: 0 !important;
+  }
+  thead tr th {
+    background: rgba(0, 0, 0, 0.05) !important;
+  }
+  tr th {
+    padding: 16px 20px !important;
+    padding-right: 0 !important;
+    &:last-of-type {
+      padding: 16px 0 !important;
+    }
+  }
   &.right {
     margin-left: 16px;
   }
@@ -100,7 +112,7 @@ const columns = [
     key: 6,
     dataIndex: 'timestamp',
     title: 'Age',
-    className: 'two wide aligned plain_th',
+    className: 'three wide aligned plain_th',
     render: (text) => (
       <PCell>
         <Countdown timestamp={text * 1000} />
@@ -109,7 +121,7 @@ const columns = [
   },
   {
     key: 7,
-    className: 'one wide center aligned plain_th',
+    className: 'one wide left aligned plain_th',
     dataIndex: 'transactionCount',
     title: 'Tx Count',
     render: (text) => text,

@@ -48,6 +48,37 @@ export default {
   'app.pages.searchNotFound.row4': '该字符串无法被查询到',
   'app.pages.dashboard.tps': '吞吐率',
   'app.pages.dashboard.difficulty': '难度',
-  'app.pages.dashboard.blockTime': '出块时间',
+  'app.pages.dashboard.blockTime': '出块间隔',
   'app.pages.dashboard.hashRate': '哈希率',
+
+  // Header Components
+  'app.header.lang.en': 'English',
+  'app.header.lang.short.en': 'EN',
+  'app.header.lang.zh': '中文',
+  'app.header.lang.short.zh': '中',
+
+  // Footer Components
+  'app.footer.title': '联系我们',
+  'app.footer.address': 'Room 1002, Building B, Xueyandasha, No. 30, Shuangqing Road, Beijing, P.R. China.',
+
+  // Navbar Components
+  'app.navbar.home': '面板',
+  'app.navbar.dashboard': '面板',
+  'app.navbar.blocksAndTxs': '区块 & 转账',
+  'app.navbar.directory': 'Conflux 目录',
+  'app.navbar.more': '更多',
+
+  // Directory Page
+  'app.directory.exchange.title': '交易所',
+  'app.directory.exchange.desc': '请在这里交易数字货币',
+  'app.directory.wallet.title': '钱包',
+  'app.directory.wallet.desc': '用于数字货币接受和发送',
+  'app.directory.website.title': '官网',
+  'app.directory.website.desc': '展示 Conflux 最新进展',
+  'app.directory.news.title': '新闻',
+  'app.directory.news.desc': '更快知道我们发生了什么',
+  'app.directory.topholders.title': '持币大户',
+  'app.directory.topholders.desc': '依照章程对所有人进行公示',
+  'app.directory.community.title': '社区',
+  'app.directory.community.desc': 'Conflux 社区欢迎您',
 };

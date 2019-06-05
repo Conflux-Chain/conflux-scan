@@ -6,6 +6,7 @@ import moment from 'moment';
 import { Pagination, Dropdown } from 'semantic-ui-react';
 import { DatePicker } from 'antd';
 import { injectIntl, FormattedMessage } from 'react-intl';
+import get from 'lodash/get';
 import DataList from '../../components/DataList';
 import Countdown from '../../components/Countdown';
 import TableLoading from '../../components/TableLoading';
@@ -31,9 +32,30 @@ const Wrapper = styled.div`
   }
 `;
 
+const StyledTabel = styled.div`
+  .content {
+    padding: 0 !important;
+  }
+  thead tr th {
+    background: rgba(0, 0, 0, 0.05) !important;
+  }
+  tr th {
+    padding: 16px 20px !important;
+    padding-right: 0 !important;
+    &:last-of-type {
+      padding: 16px 0 16px 20px !important;
+    }
+  }
+  &.right {
+    margin-left: 16px;
+  }
+`;
+
 const HeadBar = styled.div`
   width: 100%;
   font-size: 16px;
+  font-family: ProximaNova-Regular;
+  font-weight: 400;
   margin-bottom: 24px;
   .sep {
     display: none;
@@ -59,6 +81,8 @@ const HeadBar = styled.div`
   h1 {
     color: #000;
     font-size: 20px;
+    font-family: ProximaNova-Bold;
+    font-weight: bold;
     margin-right: 24px;
   }
 `;
@@ -95,7 +119,9 @@ const fullWidthMobile = media.pad`
 `;
 
 const Statistic = styled.div`
-  background: #fff;
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+  border-radius: 4px;
   width: 100%;
   height: 100px;
   display: flex;
@@ -197,6 +223,7 @@ const PCell = styled.div`
 `;
 
 const TabWrapper = styled.div`
+  margin-top: 24px;
   display: flex;
   justify-content: flex-end;
   .page-pc {
@@ -264,7 +291,7 @@ const columns = [
   {
     key: 1,
     dataIndex: 'ein',
-    title: 'Blocks',
+    title: 'Hash',
     // className: 'two wide',
     render: (text, row) => (
       <IconFace>
@@ -277,7 +304,7 @@ const columns = [
   {
     key: 2,
     dataIndex: 'drei',
-    title: 'Blocks',
+    title: 'From',
     render: (text, row) => (
       <div>
         <PCell>
@@ -289,7 +316,7 @@ const columns = [
   {
     key: 3,
     dataIndex: 'drei',
-    title: 'Blocks',
+    title: 'To',
     render: (text, row) => (
       <div>
         <PCell>{row.drei}</PCell>
@@ -300,7 +327,28 @@ const columns = [
     key: 4,
     className: 'two wide aligned',
     dataIndex: 'drei',
-    title: 'Blocks',
+    title: 'Value',
+    render: (text) => <div className="ui label">{text}</div>,
+  },
+  {
+    key: 5,
+    className: 'two wide aligned',
+    dataIndex: 'drei',
+    title: 'Fee',
+    render: (text) => <div className="ui label">{text}</div>,
+  },
+  {
+    key: 6,
+    className: 'two wide aligned',
+    dataIndex: 'drei',
+    title: 'Gas Price',
+    render: (text) => <div className="ui label">{text}</div>,
+  },
+  {
+    key: 7,
+    className: 'two wide aligned',
+    dataIndex: 'drei',
+    title: 'Age',
     render: (text) => <div className="ui label">{text}</div>,
   },
 ];
@@ -363,10 +411,12 @@ class Detail extends Component {
       isLoading: false,
       accountDetail: {},
       minedBlockList: [],
+      TxList: [],
+      TxTotalCount: 100,
       queries: {
         pageNum: 1,
-        pageSize: 100,
-        txnType: 'All',
+        pageSize: 10,
+        txnType: 'all',
       },
     };
   }
@@ -387,8 +437,19 @@ class Detail extends Component {
       this.setState(
         {
           accountDetail: result.find((item) => Object.keys(item)[0] === `account/${accountid}`)[`account/${accountid}`],
-          // TxList: result.find((item) => Object.keys(item)[0] === `block/${blockHash}/transactionList`)[`block/${blockHash}/transactionList`],
-          // TxTotalCount: result.find((item) => Object.keys(item)[0] === `block/${blockHash}/transactionList`)[`total_block/${blockHash}/transactionList`],
+          // TxList: result.find((item) => Object.keys(item)[0] === `account/${accountid}/transactionList`)[
+          //   `account/${accountid}/transactionList`
+          // ],
+          TxList: get(
+            result.find((item) => Object.keys(item)[0] === `account/${accountid}/transactionList`),
+            `account/${accountid}/transactionList`,
+            []
+          ),
+          TxTotalCount: get(
+            result.find((item) => Object.keys(item)[0] === `account/${accountid}/transactionList`),
+            `total_block/${accountid}/transactionList`,
+            []
+          ),
         },
         () => this.setState({ isLoading: false, queries })
       );
@@ -412,11 +473,12 @@ class Detail extends Component {
   }
 
   render() {
-    const { accountDetail, queries, currentTab, isLoading, minedBlockList } = this.state;
+    const { accountDetail, queries, currentTab, isLoading, minedBlockList, TxList, TxTotalCount } = this.state;
     const {
       intl,
       match: { params },
     } = this.props;
+    console.log(TxList, '===== TxList');
     return (
       <div className="page-address-detail">
         <Wrapper>
@@ -424,7 +486,7 @@ class Detail extends Component {
             <h1>
               <FormattedMessage id="app.pages.account.detail.h1" />
             </h1>
-            <p>{params.accountid || '0x413957876f8239dd9246fefabc4e7d6d86d4f9b6'}</p>
+            <p>{params.accountid}</p>
             <br className="sep" />
             <CopyButton txtToCopy={params.accountid} toolTipId="app.pages.account.detail.tooltip" />
             <QrcodeButton titleTxt={params.accountid} qrTxt={params.accountid} tooltipId="app.pages.account.detail.qr" />
@@ -562,7 +624,7 @@ class Detail extends Component {
                   <Dropdown.Menu>
                     <Dropdown.Item
                       text={<FormattedMessage id="app.pages.account.detail.viewAll" />}
-                      value="All"
+                      value="all"
                       onClick={(e, data) => {
                         e.preventDefault();
                         this.fetchAccountDetail(params.accountid, { ...queries, txnType: data.value });
@@ -570,7 +632,7 @@ class Detail extends Component {
                     />
                     <Dropdown.Item
                       text={<FormattedMessage id="app.pages.account.detail.viewOutGoing" />}
-                      value="Outgoing"
+                      value="outgoing"
                       onClick={(e, data) => {
                         e.preventDefault();
                         this.fetchAccountDetail(params.accountid, { ...queries, txnType: data.value });
@@ -578,7 +640,7 @@ class Detail extends Component {
                     />
                     <Dropdown.Item
                       text={<FormattedMessage id="app.pages.account.detail.viewIncoming" />}
-                      value="Incoming"
+                      value="incoming"
                       onClick={(e, data) => {
                         e.preventDefault();
                         this.fetchAccountDetail(params.accountid, { ...queries, txnType: data.value });
@@ -588,11 +650,13 @@ class Detail extends Component {
                 </Dropdown>
               </CtrlPanel>
               <TabPanel className={currentTab === 1 ? 'ui bottom attached segment active tab' : 'ui bottom attached segment tab'}>
-                <div className="ui fluid card">
-                  <div className="content">
-                    <DataList showHeader columns={columns} dataSource={dataSource} />
+                <StyledTabel>
+                  <div className="ui fluid card">
+                    <div className="content">
+                      <DataList showHeader columns={columns} dataSource={dataSource} />
+                    </div>
                   </div>
-                </div>
+                </StyledTabel>
                 <TabWrapper>
                   <div className="page-pc">
                     <Pagination
@@ -629,13 +693,14 @@ class Detail extends Component {
                   </div>
                 </TabWrapper>
               </TabPanel>
-
               <TabPanel className={currentTab === 2 ? 'ui bottom attached segment active tab' : 'ui bottom attached segment tab'}>
-                <div className="ui fluid card">
-                  <div className="content">
-                    <DataList showHeader columns={minedColumns} dataSource={minedBlockList} />
+                <StyledTabel>
+                  <div className="ui fluid card">
+                    <div className="content">
+                      <DataList showHeader columns={minedColumns} dataSource={minedBlockList} />
+                    </div>
                   </div>
-                </div>
+                </StyledTabel>
               </TabPanel>
             </div>
           </TabZone>

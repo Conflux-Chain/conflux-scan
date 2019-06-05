@@ -300,10 +300,7 @@ const start = async () => {
       config: {
         cors: true,
         handler: async (request, h) => {
-          const querys = [
-            `account/${request.params.address}`,
-            // `account/${request.params.address}/transactionList`
-          ].map((ids) => {
+          const querys = [`account/${request.params.address}`, `account/${request.params.address}/transactionList`].map((ids) => {
             return new Promise((resolve, reject) => {
               console.log(`${API_HOST}/${ids}`);
               superagent
