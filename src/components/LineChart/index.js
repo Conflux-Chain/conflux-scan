@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import moment from 'moment';
 import echarts from 'echarts';
 import { toFixed } from '../../utils';
+import media from '../../globalStyles/media';
 
 const Duration = styled.div`
   width: 56px;
@@ -40,7 +41,10 @@ DurationButton.defaultProps = {
 };
 
 const Container = styled.div`
-  width: 592px !important;
+  width: calc((100% - 16px) / 2) !important;
+  ${media.pad`
+    width: 100% !important;
+  `}
 `;
 
 const DurationContainer = styled.div`
@@ -191,7 +195,7 @@ class LineChart extends Component {
               );
             })}
           </DurationContainer>
-          <div id={title + 'chart'} style={{ width: '540px', height: '250px' }} />
+          <div id={title + 'chart'} style={{ width: '100%', height: '250px' }} />
         </div>
       </Container>
     );
