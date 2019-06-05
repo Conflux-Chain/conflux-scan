@@ -1,4 +1,7 @@
 export default {
+  lastPage: 'Previous',
+  nextPage: 'Next',
+
   'app.head.menu.home': 'Dashboard',
   'app.head.menu.dashboard': 'Dashboard',
   'app.head.menu.blocksAndTxs': 'Blocks & Transactions',
@@ -29,11 +32,16 @@ export default {
   'app.pages.blocks.gasLimit': 'Gas Limit',
   'app.pages.blocks.age': 'Age',
   'app.pages.blocks.txCount': 'Tx Count',
+  'app.pages.blocks.packTime': 'Time',
 
   // blocks & txns
   'app.pages.blockAndTx.blocks': 'Blocks',
   'app.pages.blockAndTx.viewAllBlocks': 'View All Blocks',
   'app.pages.blockAndTx.viewAllTransactions': 'View All Transactions',
+
+  // age
+  'app.pages.txns.age': 'Age',
+  'app.pages.txns.time': 'Age',
 
   'app.pages.notFoundTx.title': 'Sorry your <strong>Transaction</strong>',
   'app.pages.notFoundTx.tooltip': 'Copy to clipboard',

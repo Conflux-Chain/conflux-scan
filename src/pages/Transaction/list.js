@@ -6,7 +6,7 @@ import DataList from '../../components/DataList';
 import Countdown from '../../components/Countdown';
 import TableLoading from '../../components/TableLoading';
 import EllipsisLine from '../../components/EllipsisLine';
-import { convertToValueorFee, converToGasPrice } from '../../utils';
+import { convertToValueorFee, converToGasPrice, i18n } from '../../utils';
 import '../../assets/semantic-ui/semantic.css';
 import media from '../../globalStyles/media';
 
@@ -93,42 +93,42 @@ const columns = [
     key: 1,
     className: 'two wide aligned',
     dataIndex: 'hash',
-    title: 'Hash',
+    title: i18n('Hash'),
     render: (text) => <EllipsisLine isLong linkTo={`/transactionsdetail/${text}`} text={text} />,
   },
   {
     key: 2,
     className: 'two wide aligned',
     dataIndex: 'from',
-    title: 'From',
+    title: i18n('From'),
     render: (text) => <EllipsisLine linkTo={`/accountdetail/${text}`} text={text} />,
   },
   {
     key: 3,
     className: 'two wide aligned',
     dataIndex: 'to',
-    title: 'To',
+    title: i18n('To'),
     render: (text) => <EllipsisLine linkTo={`/accountdetail/${text}`} text={text} />,
   },
   {
     key: 4,
     className: 'two wide aligned',
     dataIndex: 'value',
-    title: 'Value',
+    title: i18n('Value'),
     render: (text) => <EllipsisLine unit="CFX" text={convertToValueorFee(text)} />,
   },
   {
     key: 5,
     className: 'two wide aligned',
     dataIndex: 'gasPrice',
-    title: 'Gas Price',
+    title: i18n('Gas Price'),
     render: (text) => <EllipsisLine unit="Gdip" text={converToGasPrice(text)} />,
   },
   {
     key: 6,
     className: 'three wide aligned plain_th',
     dataIndex: 'timestamp',
-    title: 'Age',
+    title: i18n('app.pages.txns.age'),
     render: (text) => <Countdown timestamp={text * 1000} />,
   },
 ];
@@ -176,7 +176,7 @@ class List extends Component {
                 <use xlinkHref="#iconjinrijiaoyiliang" />
               </svg>
             </IconFace>
-            <h1>Transactions</h1>
+            <h1>{i18n('Transactions')}</h1>
           </HeadBar>
           <TabWrapper>
             <StyledTabel>
@@ -190,11 +190,11 @@ class List extends Component {
                 style={{ float: 'right', width: '100%' }}
                 prevItem={{
                   'aria-label': 'Previous item',
-                  content: 'Previous',
+                  content: i18n('lastPage'),
                 }}
                 nextItem={{
                   'aria-label': 'Next item',
-                  content: 'Next',
+                  content: i18n('nextPage'),
                 }}
                 onPageChange={(e, data) => {
                   e.preventDefault();

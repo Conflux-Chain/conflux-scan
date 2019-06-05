@@ -1,6 +1,7 @@
 export default {
   // common words
   Block: '区块',
+  'Block Height': '区块高度',
   Epoch: 'Epoch',
   Transaction: '交易',
   Address: '地址',
@@ -10,6 +11,7 @@ export default {
   Position: '位置',
   Hash: '哈希',
   'Gas Limit': '燃料上限',
+  'Present Hash': '当前区块哈希',
   // 'Age': '打包时间',
   'Tx Count': '交易笔数',
   Value: '价值',
@@ -69,10 +71,15 @@ export default {
   'app.pages.blocks.gasLimit': '燃料上限',
   'app.pages.blocks.age': '打包时间',
   'app.pages.blocks.txCount': '交易笔数',
+  'app.pages.blocks.packTime': '打包时间',
 
   'app.pages.blockAndTx.blocks': '区块',
   'app.pages.blockAndTx.viewAllBlocks': '查看所有区块',
   'app.pages.blockAndTx.viewAllTransactions': '查看所有交易',
+
+  // Age
+  'app.pages.txns.age': '打包时间',
+  'app.pages.txns.time': '打包时间',
 
   'app.pages.notFoundTx.title': '对不起，你的交易',
   'app.pages.notFoundTx.tooltip': '复制到剪切板',

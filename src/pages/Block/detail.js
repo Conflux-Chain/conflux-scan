@@ -9,7 +9,7 @@ import Countdown from '../../components/Countdown';
 import TableLoading from '../../components/TableLoading';
 import DataList from '../../components/DataList';
 import EllipsisLine from '../../components/EllipsisLine';
-import { convertToValueorFee, converToGasPrice } from '../../utils';
+import { convertToValueorFee, converToGasPrice, i18n } from '../../utils';
 import '../../assets/semantic-ui/semantic.css';
 import media from '../../globalStyles/media';
 
@@ -159,35 +159,35 @@ const TxColumns = [
     key: 1,
     className: 'two wide aligned',
     dataIndex: 'hash',
-    title: 'Hash',
+    title: i18n('Hash'),
     render: (text) => <EllipsisLine text={text} />,
   },
   {
     key: 2,
     className: 'two wide aligned',
     dataIndex: 'from',
-    title: 'From',
+    title: i18n('From'),
     render: (text) => <EllipsisLine text={text} />,
   },
   {
     key: 3,
     className: 'two wide aligned',
     dataIndex: 'to',
-    title: 'To',
+    title: i18n('To'),
     render: (text) => <EllipsisLine text={text} />,
   },
   {
     key: 4,
     className: 'two wide aligned',
     dataIndex: 'value',
-    title: 'Value',
+    title: i18n('Value'),
     render: (text) => <EllipsisLine unit="CFX" text={convertToValueorFee(text)} />,
   },
   {
     key: 5,
     className: 'two wide aligned',
     dataIndex: 'gasPrice',
-    title: 'Fee',
+    title: i18n('Fee'),
     render: (text, row) => {
       const result = new BigNumber(text).multipliedBy(row.value);
       console.log(convertToValueorFee(result.toFixed()));
@@ -198,14 +198,14 @@ const TxColumns = [
     key: 6,
     className: 'two wide aligned',
     dataIndex: 'gasPrice',
-    title: 'Gas Price',
+    title: i18n('Gas Price'),
     render: (text) => <EllipsisLine unit="Gdip" text={converToGasPrice(text)} />,
   },
   {
     key: 7,
     className: 'three wide aligned plain_th',
     dataIndex: 'timestamp',
-    title: 'Age',
+    title: i18n('Age'),
     render: (text) => <Countdown timestamp={text * 1000} />,
   },
 ];
@@ -215,14 +215,14 @@ const RefColumns = [
     key: 1,
     dataIndex: 'epochNumber',
     className: 'one wide aligned',
-    title: 'Epoch',
+    title: i18n('Epoch'),
     render: (text) => <EllipsisLine linkTo={`/epochsdetail/${text}`} text={text} />,
   },
   {
     key: 2,
     dataIndex: 'drei',
     className: 'one wide aligned',
-    title: 'Position',
+    title: i18n('Position'),
     render: (text, row) => (
       <div>
         <PCell>{row.drei}</PCell>
@@ -233,7 +233,7 @@ const RefColumns = [
     key: 3,
     dataIndex: 'hash',
     className: 'one wide aligned',
-    title: 'Hash',
+    title: i18n('Hash'),
     render: (text, row) => (
       <div>
         <EllipsisLine isLong linkTo={`/blocksdetail/${text}`} isPivot={row.isPivot} text={text} />
@@ -244,35 +244,35 @@ const RefColumns = [
     key: 4,
     dataIndex: 'difficulty',
     className: 'one wide aligned plain_th',
-    title: 'Difficulty',
+    title: i18n('Difficulty'),
     render: (text) => <PCell>{text}</PCell>,
   },
   {
     key: 5,
     className: 'one wide aligned',
     dataIndex: 'miner',
-    title: 'Miner',
+    title: i18n('Miner'),
     render: (text) => <EllipsisLine linkTo={`/accountdetail/${text}`} text={text} />,
   },
   {
     key: 6,
     className: 'one wide aligned plain_th',
     dataIndex: 'gasLimit',
-    title: 'Gas Limit',
+    title: i18n('Gas Limit'),
     render: (text) => <PCell>{text}</PCell>,
   },
   {
     key: 7,
     className: 'three wide aligned plain_th',
     dataIndex: 'timestamp',
-    title: 'Age',
+    title: i18n('Age'),
     render: (text) => <Countdown timestamp={text * 1000} />,
   },
   {
     key: 8,
     className: 'two wide left aligned plain_th',
     dataIndex: 'transactionCount',
-    title: 'Tx Count',
+    title: i18n('Tx Count'),
     render: (text) => <PCell>{text}</PCell>,
   },
 ];
@@ -344,7 +344,7 @@ class Detail extends Component {
       <div className="page-block-detail">
         <Wrapper>
           <HeadBar>
-            <h1>Block</h1>
+            <h1>{i18n('Block')}</h1>
             <p>{params.blockhash}</p>
           </HeadBar>
           {isLoading ? (
@@ -354,43 +354,43 @@ class Detail extends Component {
               <table className="ui basic table">
                 <tbody className="">
                   <tr className="">
-                    <td className="collapsing top">Block Height</td>
+                    <td className="collapsing top">{i18n('Block Height')}</td>
                     <td className="top">{blockDetail.height}</td>
                   </tr>
                   <tr className="">
-                    <td className="collapsing">Epoch Number</td>
+                    <td className="collapsing">{i18n('Epoch Number')}</td>
                     <td className="">{blockDetail.epochNumber}</td>
                   </tr>
                   <tr className="">
-                    <td className="collapsing">Difficulty</td>
+                    <td className="collapsing">{i18n('Difficulty')}</td>
                     <td className="">{blockDetail.difficulty}</td>
                   </tr>
                   <tr className="">
-                    <td className="collapsing">Miner</td>
+                    <td className="collapsing">{i18n('Miner')}</td>
                     <td className="">{blockDetail.miner}</td>
                   </tr>
                   <tr className="">
-                    <td className="collapsing">Block Hash</td>
+                    <td className="collapsing">{i18n('Block Hash')}</td>
                     <td className="">{blockDetail.hash}</td>
                   </tr>
                   <tr className="">
-                    <td className="collapsing">Present Hash</td>
+                    <td className="collapsing">{i18n('Present Hash')}</td>
                     <td className="">{blockDetail.parentHash}</td>
                   </tr>
                   <tr className="">
-                    <td className="collapsing">Nonce</td>
+                    <td className="collapsing">{i18n('Nonce')}</td>
                     <td className="">{blockDetail.nonce}</td>
                   </tr>
                   <tr className="">
-                    <td className="collapsing">Gas Limit</td>
+                    <td className="collapsing">{i18n('Gas Limit')}</td>
                     <td className="">{blockDetail.gasLimit}</td>
                   </tr>
                   <tr className="">
-                    <td className="collapsing">Time</td>
+                    <td className="collapsing">{i18n('app.pages.blocks.packTime')}</td>
                     <td className="">{moment(blockDetail.timestamp * 1000).format('YYYY-MM-DD HH:mm:ss')}</td>
                   </tr>
                   <tr className="">
-                    <td className="collapsing bottom">Size</td>
+                    <td className="collapsing bottom">{i18n('Size')}</td>
                     <td className="bottom">{blockDetail.size}</td>
                   </tr>
                 </tbody>
@@ -400,7 +400,7 @@ class Detail extends Component {
           <TabZone>
             <div className="ui attached tabular menu">
               <button type="button" className={currentTab === 1 ? 'active item' : 'item'} onClick={() => this.setState({ currentTab: 1 })}>
-                Transactions
+                {i18n('Transactions')}
               </button>
               <button
                 className={currentTab === 2 ? 'active item' : 'item'}
@@ -410,7 +410,7 @@ class Detail extends Component {
                   this.setState({ currentTab: 2 });
                 }}
               >
-                Referee Block
+                {i18n('Reference Blocks')}
               </button>
             </div>
             <div className={currentTab === 1 ? 'ui bottom attached segment active tab' : 'ui bottom attached segment tab'}>
@@ -425,11 +425,11 @@ class Detail extends Component {
                 <Pagination
                   prevItem={{
                     'aria-label': 'Previous item',
-                    content: 'Previous',
+                    content: i18n('lastPage'),
                   }}
                   nextItem={{
                     'aria-label': 'Next item',
-                    content: 'Next',
+                    content: i18n('nextPage'),
                   }}
                   onPageChange={(e, data) => {
                     e.preventDefault();
