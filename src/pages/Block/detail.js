@@ -11,10 +11,15 @@ import DataList from '../../components/DataList';
 import EllipsisLine from '../../components/EllipsisLine';
 import { convertToValueorFee, converToGasPrice } from '../../utils';
 import '../../assets/semantic-ui/semantic.css';
+import media from '../../globalStyles/media';
 
 const Wrapper = styled.div`
   max-width: 1200px;
   margin: 0 auto;
+  ${media.mobile`
+    width: 95%;
+    margin: 0 auto;
+  `}
 `;
 
 const StyledTabelWrapper = styled.div`
@@ -40,14 +45,22 @@ const StyledTabelWrapper = styled.div`
   }
 `;
 
-const StyledTabel = styled.table`
-  margin-top: 20px;
+const StyledTabel = styled.div`
+  /* margin-top: 20px;
   width: 100%;
+  background: #fff;
+  border-radius: 4px !important;
+  box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.12) !important; */
+  ${media.mobile`
+    margin: 0 auto;
+    overflow-x: scroll;
+  `}
 
   tr > td {
     padding-left: 3.2em !important;
     border: none !important;
     font-size: 16px !important;
+    background: #fff !important;
   }
 
   &.right {
@@ -55,14 +68,24 @@ const StyledTabel = styled.table`
   }
   td.collapsing {
     font-weight: bold !important;
-    padding: 1.2em 5em 1.2em 2em !important;
+    padding: 0.5em 5em 0.5em 2em !important;
+    ${media.mobile`
+      padding: 0.1em 2em 0.1em 2em !important;
+    `}
     background: #edf2f9 !important;
+  }
+  td.top {
+    padding-top: 2em !important;
+  }
+  td.bottom {
+    padding-bottom: 2em !important;
   }
 `;
 
 const HeadBar = styled.div`
   width: 100%;
   font-size: 16px;
+  margin-top: 24px;
   margin-bottom: 10px;
   display: flex;
   justify-content: flex-start;
@@ -102,6 +125,7 @@ const IconFace = styled.div`
 `;
 
 const TabZone = styled.div`
+  margin-top: 16px;
   position: relative;
   width: 100%;
   button {
@@ -117,8 +141,12 @@ const PCell = styled.div`
 `;
 
 const TabWrapper = styled.div`
+  margin-top: 1em;
   display: flex;
   justify-content: flex-end;
+  ${media.mobile`
+    justify-content: center;
+  `}
 `;
 
 const dataSource = [
@@ -242,7 +270,7 @@ const RefColumns = [
   },
   {
     key: 8,
-    className: 'two wide right aligned plain_th right-pad',
+    className: 'two wide left aligned plain_th',
     dataIndex: 'transactionCount',
     title: 'Tx Count',
     render: (text) => <PCell>{text}</PCell>,
@@ -322,49 +350,51 @@ class Detail extends Component {
           {isLoading ? (
             <TableLoading />
           ) : (
-            <StyledTabel className="ui basic padded table">
-              <tbody className="">
-                <tr className="">
-                  <td className="collapsing">Block Height:</td>
-                  <td className="">{blockDetail.height}</td>
-                </tr>
-                <tr className="">
-                  <td className="collapsing">Epoch Number:</td>
-                  <td className="">{blockDetail.epochNumber}</td>
-                </tr>
-                <tr className="">
-                  <td className="collapsing">Difficulty:</td>
-                  <td className="">{blockDetail.difficulty}</td>
-                </tr>
-                <tr className="">
-                  <td className="collapsing">Miner:</td>
-                  <td className="">{blockDetail.miner}</td>
-                </tr>
-                <tr className="">
-                  <td className="collapsing">Block Hash:</td>
-                  <td className="">{blockDetail.hash}</td>
-                </tr>
-                <tr className="">
-                  <td className="collapsing">Present Hash:</td>
-                  <td className="">{blockDetail.parentHash}</td>
-                </tr>
-                <tr className="">
-                  <td className="collapsing">Nonce:</td>
-                  <td className="">{blockDetail.nonce}</td>
-                </tr>
-                <tr className="">
-                  <td className="collapsing">Gas Limit:</td>
-                  <td className="">{blockDetail.gasLimit}</td>
-                </tr>
-                <tr className="">
-                  <td className="collapsing">Time:</td>
-                  <td className="">{moment(blockDetail.timestamp * 1000).format('YYYY-MM-DD HH:mm:ss')}</td>
-                </tr>
-                <tr className="">
-                  <td className="collapsing">Size:</td>
-                  <td className="">{blockDetail.size}</td>
-                </tr>
-              </tbody>
+            <StyledTabel>
+              <table className="ui basic table">
+                <tbody className="">
+                  <tr className="">
+                    <td className="collapsing top">Block Height</td>
+                    <td className="top">{blockDetail.height}</td>
+                  </tr>
+                  <tr className="">
+                    <td className="collapsing">Epoch Number</td>
+                    <td className="">{blockDetail.epochNumber}</td>
+                  </tr>
+                  <tr className="">
+                    <td className="collapsing">Difficulty</td>
+                    <td className="">{blockDetail.difficulty}</td>
+                  </tr>
+                  <tr className="">
+                    <td className="collapsing">Miner</td>
+                    <td className="">{blockDetail.miner}</td>
+                  </tr>
+                  <tr className="">
+                    <td className="collapsing">Block Hash</td>
+                    <td className="">{blockDetail.hash}</td>
+                  </tr>
+                  <tr className="">
+                    <td className="collapsing">Present Hash</td>
+                    <td className="">{blockDetail.parentHash}</td>
+                  </tr>
+                  <tr className="">
+                    <td className="collapsing">Nonce</td>
+                    <td className="">{blockDetail.nonce}</td>
+                  </tr>
+                  <tr className="">
+                    <td className="collapsing">Gas Limit</td>
+                    <td className="">{blockDetail.gasLimit}</td>
+                  </tr>
+                  <tr className="">
+                    <td className="collapsing">Time</td>
+                    <td className="">{moment(blockDetail.timestamp * 1000).format('YYYY-MM-DD HH:mm:ss')}</td>
+                  </tr>
+                  <tr className="">
+                    <td className="collapsing bottom">Size</td>
+                    <td className="bottom">{blockDetail.size}</td>
+                  </tr>
+                </tbody>
+              </table>
             </StyledTabel>
           )}
           <TabZone>
@@ -387,7 +417,7 @@ class Detail extends Component {
               <StyledTabelWrapper>
                 <div className="ui fluid card">
                   <div className="content">
-                    <DataList showHeader columns={TxColumns} dataSource={TxList} />
+                    <DataList isMobile showHeader columns={TxColumns} dataSource={TxList} />
                   </div>
                 </div>
               </StyledTabelWrapper>
@@ -414,7 +444,7 @@ class Detail extends Component {
               <StyledTabelWrapper>
                 <div className="ui fluid card">
                   <div className="content">
-                    <DataList showHeader columns={RefColumns} dataSource={refereeBlockList} />
+                    <DataList isMobile showHeader columns={RefColumns} dataSource={refereeBlockList} />
                   </div>
                 </div>
               </StyledTabelWrapper>

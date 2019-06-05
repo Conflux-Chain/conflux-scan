@@ -9,22 +9,35 @@ import Countdown from '../../components/Countdown';
 import EllipsisLine from '../../components/EllipsisLine';
 import TableLoading from '../../components/TableLoading';
 import '../../assets/semantic-ui/semantic.css';
+import media from '../../globalStyles/media';
 import { converToGasPrice3Fixed, initSse, closeSource, sendRequest } from '../../utils';
 
 const Wrapper = styled.div`
   max-width: 1200px;
   margin: 0 auto;
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-around;
+  ${media.mobile`
+    flex-wrap: wrap;
+    justify-content: center;
+  `}
 `;
 
 const StyledTabel = styled.div`
   margin-top: 20px;
   width: calc(50% - 6px);
+  /* ${media.pad`
+    &.right {
+      margin-left: 16px;
+    }
+  `} */
 
-  &.right {
-    margin-left: 16px;
-  }
+  ${media.mobile`
+    width: 95%;
+    margin: 0 auto;
+    display: block;
+    margin-bottom: 16px;
+  `}
 `;
 const IconFace = styled.div`
   width: 40px;
@@ -35,7 +48,7 @@ const IconFace = styled.div`
   justify-content: center;
   align-items: center;
   float: left;
-  margin-right: 16px;
+  margin: 0 16px;
   svg {
     width: 23px;
     height: 23px;
@@ -70,6 +83,17 @@ const StyledLabel = styled.div.attrs({
   font-weight: bolder !important;
   color: rgba(0, 0, 0, 0.56);
   max-width: 100px;
+`;
+const StyledMobile = styled.div`
+  position: relative;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+`;
+const FloatGas = styled.div`
+  position: absolute;
+  right: 0;
+  bottom: 0;
 `;
 
 class BlockAndTxn extends Component {
@@ -111,6 +135,35 @@ class BlockAndTxn extends Component {
       intl: { locale },
     } = this.props;
     const { BlockList, TxList } = this.state;
+    const MBlockColumns = [
+      {
+        key: 2,
+        dataIndex: 'hash',
+        className: 'five wide left aligned',
+        title: 'Blocks',
+        render: (text, row) => (
+          <StyledMobile>
+            <IconFace>
+              <svg className="icon" aria-hidden="true">
+                <use xlinkHref="#iconqukuaigaoduxuanzhong" />
+              </svg>
+            </IconFace>
+            <div>
+              <EllipsisLine isLong linkTo={`/blocksdetail/${text}`} isPivot={row.isPivot} text={text} />
+              <PCell>
+                <Countdown timestamp={row.timestamp * 1000} />
+              </PCell>
+              <EllipsisLine linkTo={`/accountdetail/${text}`} text={'Miner ' + text} />
+              <FloatGas>
+                <PCell>
+                  {row.transactionCount} {row.transactionCount <= 1 ? 'txn' : 'txns'}
+                </PCell>
+              </FloatGas>
+            </div>
+          </StyledMobile>
+        ),
+      },
+    ];
     const BlockColumns = [
       {
         key: 2,
@@ -152,7 +205,34 @@ class BlockAndTxn extends Component {
         title: 'Blocks',
       },
     ];
-
+    const MTxColumns = [
+      {
+        key: 2,
+        dataIndex: 'hash',
+        className: 'five wide left aligned',
+        title: 'Blocks',
+        render: (text, row) => (
+          <StyledMobile>
+            <IconFace>
+              <svg className="icon" aria-hidden="true">
+                <use xlinkHref="#iconjinrijiaoyiliang" />
+              </svg>
+            </IconFace>
+            <div>
+              <EllipsisLine linkTo={`/transactionsdetail/${text}`} isPivot={row.isPivot} text={text} />
+              <PCell>
+                <Countdown timestamp={row.timestamp * 1000} />
+              </PCell>
+              <EllipsisLine prefix="From" linkTo={`/accountdetail/${text}`} text={text} />
+              <EllipsisLine is2ndLine prefix="To" linkTo={`/accountdetail/${row.to}`} text={row.to} />
+              <FloatGas>
+                <StyledLabel>{converToGasPrice3Fixed(row.gasPrice) + ' CFX'}</StyledLabel>
+              </FloatGas>
+            </div>
+          </StyledMobile>
+        ),
+      },
+    ];
     const TxColumns = [
       {
         key: 2,
@@ -203,7 +283,7 @@ class BlockAndTxn extends Component {
               </div>
               <div className="content">
                 {!BlockList.length && <TableLoading />}
-                <DataList columns={BlockColumns} dataSource={BlockList} />
+                <DataList columns={window.innerWidth > 576 ? BlockColumns : MBlockColumns} dataSource={BlockList} />
               </div>
               <div className="extra content">
                 <Link to="/blocks">
@@ -219,7 +299,7 @@ class BlockAndTxn extends Component {
               </div>
               <div className="content">
                 {!TxList.length && <TableLoading />}
-                <DataList columns={TxColumns} dataSource={TxList} />
+                <DataList columns={window.innerWidth > 576 ? TxColumns : MTxColumns} dataSource={TxList} />
               </div>
               <div className="extra content">
                 <Link to="/transactions">

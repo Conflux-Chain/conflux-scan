@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import media from '../../globalStyles/media';
 
 const SingleLine = styled.div`
   .wrap {
@@ -33,6 +34,9 @@ const SingleLine = styled.div`
     }
     .long {
       max-width: 280px;
+      ${media.mobile`
+        max-width: 200px;
+      `}
     }
   }
 `;

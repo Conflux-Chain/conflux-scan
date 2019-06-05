@@ -8,6 +8,7 @@ import TableLoading from '../../components/TableLoading';
 import EllipsisLine from '../../components/EllipsisLine';
 import { convertToValueorFee, converToGasPrice } from '../../utils';
 import '../../assets/semantic-ui/semantic.css';
+import media from '../../globalStyles/media';
 
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -21,8 +22,11 @@ const TabWrapper = styled.div`
 `;
 
 const StyledTabel = styled.div`
-  // margin-top: 20px;
   width: 100%;
+  ${media.mobile`
+    width: 95%;
+    margin: 0 auto;
+  `}
 
   .content {
     padding: 0 !important;
@@ -50,6 +54,11 @@ const PCell = styled.div`
 const HeadBar = styled.div`
   width: 100%;
   font-size: 16px;
+  ${media.mobile`
+    width: 95%;
+    margin: 0 auto;
+    margin-bottom: 24px;
+  `}
   margin-bottom: 24px;
   display: flex;
   justify-content: flex-start;
@@ -174,11 +183,11 @@ class List extends Component {
               <div className="ui fluid card">
                 <div className="content">
                   {isLoading && <TableLoading />}
-                  <DataList showHeader columns={columns} dataSource={TxList} />
+                  <DataList isMobile showHeader columns={columns} dataSource={TxList} />
                 </div>
               </div>
               <Pagination
-                style={{ float: 'right' }}
+                style={{ float: 'right', width: '100%' }}
                 prevItem={{
                   'aria-label': 'Previous item',
                   content: 'Previous',
