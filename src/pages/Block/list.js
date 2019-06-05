@@ -52,6 +52,11 @@ const PCell = styled.div`
 const HeadBar = styled.div`
   width: 100%;
   font-size: 16px;
+  ${media.mobile`
+    width: 95%;
+    margin: 0 auto;
+    margin-bottom: 24px;
+  `}
   margin-bottom: 24px;
   display: flex;
   justify-content: flex-start;
