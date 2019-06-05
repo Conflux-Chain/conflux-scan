@@ -115,7 +115,7 @@ class BlockAndTxn extends Component {
       {
         key: 2,
         dataIndex: 'hash',
-        className: 'four wide left aligned',
+        className: 'five wide left aligned',
         title: 'Blocks',
         render: (text, row) => (
           <div>
@@ -124,7 +124,7 @@ class BlockAndTxn extends Component {
                 <use xlinkHref="#iconqukuaigaoduxuanzhong" />
               </svg>
             </IconFace>
-            <EllipsisLine linkTo={`/blocksdetail/${text}`} isPivot={row.isPivot} text={text} />
+            <EllipsisLine isLong linkTo={`/blocksdetail/${text}`} isPivot={row.isPivot} text={text} />
             <PCell>
               <Countdown timestamp={row.timestamp * 1000} />
             </PCell>

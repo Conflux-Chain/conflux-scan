@@ -25,6 +25,8 @@ const Wrapper = styled.div`
 const HeadBar = styled.div`
   width: 100%;
   font-size: 16px;
+  font-family: ProximaNova-Regular;
+  font-weight: 400;
   margin-bottom: 24px;
   * {
     display: inline-block;
@@ -33,6 +35,8 @@ const HeadBar = styled.div`
   h1 {
     color: #000;
     font-size: 20px;
+    font-family: ProximaNova-Bold;
+    font-weight: bold;
     margin-right: 24px;
   }
 `;
@@ -60,8 +64,9 @@ const IconFace = styled.div`
 `;
 
 const Statistic = styled.div`
-  box-shadow: 0 1px 3px 0;
-  background: #fff;
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+  border-radius: 4px;
   width: 100%;
   height: 100px;
   display: flex;
@@ -146,7 +151,7 @@ const columns = [
   {
     key: 1,
     dataIndex: 'ein',
-    title: 'Blocks',
+    title: 'Hash',
     // className: 'two wide',
     render: (text, row) => (
       <IconFace>
@@ -159,7 +164,7 @@ const columns = [
   {
     key: 2,
     dataIndex: 'drei',
-    title: 'Blocks',
+    title: 'From',
     render: (text, row) => (
       <div>
         <PCell>
@@ -171,7 +176,7 @@ const columns = [
   {
     key: 3,
     dataIndex: 'drei',
-    title: 'Blocks',
+    title: 'To',
     render: (text, row) => (
       <div>
         <PCell>{row.drei}</PCell>
@@ -182,7 +187,28 @@ const columns = [
     key: 4,
     className: 'two wide aligned',
     dataIndex: 'drei',
-    title: 'Blocks',
+    title: 'Value',
+    render: (text) => <div className="ui label">{text}</div>,
+  },
+  {
+    key: 5,
+    className: 'two wide aligned',
+    dataIndex: 'drei',
+    title: 'Fee',
+    render: (text) => <div className="ui label">{text}</div>,
+  },
+  {
+    key: 6,
+    className: 'two wide aligned',
+    dataIndex: 'drei',
+    title: 'Gas Price',
+    render: (text) => <div className="ui label">{text}</div>,
+  },
+  {
+    key: 7,
+    className: 'two wide aligned',
+    dataIndex: 'drei',
+    title: 'Age',
     render: (text) => <div className="ui label">{text}</div>,
   },
 ];
@@ -245,10 +271,12 @@ class Detail extends Component {
       isLoading: false,
       accountDetail: {},
       minedBlockList: [],
+      TxList: [],
+      TxTotalCount: 100,
       queries: {
         pageNum: 1,
-        pageSize: 100,
-        txnType: 'All',
+        pageSize: 10,
+        txnType: 'all',
       },
     };
   }
@@ -269,8 +297,12 @@ class Detail extends Component {
       this.setState(
         {
           accountDetail: result.find((item) => Object.keys(item)[0] === `account/${accountid}`)[`account/${accountid}`],
-          // TxList: result.find((item) => Object.keys(item)[0] === `block/${blockHash}/transactionList`)[`block/${blockHash}/transactionList`],
-          // TxTotalCount: result.find((item) => Object.keys(item)[0] === `block/${blockHash}/transactionList`)[`total_block/${blockHash}/transactionList`],
+          TxList: result.find((item) => Object.keys(item)[0] === `account/${accountid}/transactionList`)[
+            `account/${accountid}/transactionList`
+          ],
+          TxTotalCount: result.find((item) => Object.keys(item)[0] === `account/${accountid}/transactionList`)[
+            `total_block/${accountid}/transactionList`
+          ],
         },
         () => this.setState({ isLoading: false, queries })
       );
@@ -294,16 +326,17 @@ class Detail extends Component {
   }
 
   render() {
-    const { accountDetail, queries, currentTab, isLoading, minedBlockList } = this.state;
+    const { accountDetail, queries, currentTab, isLoading, minedBlockList, TxList, TxTotalCount } = this.state;
     const {
       match: { params },
     } = this.props;
+    console.log(TxList, '===== TxList');
     return (
       <div className="page-address-detail">
         <Wrapper>
           <HeadBar>
             <h1>Conflux Account</h1>
-            <p>{params.accountid || '0x413957876f8239dd9246fefabc4e7d6d86d4f9b6'}</p>
+            <p>{params.accountid}</p>
             <CopyButton style={{ marginLeft: 10 }} txtToCopy={params.accountid} toolTipId="app.pages.account.detail.tooltip" />
             <QrcodeButton titleTxt={params.accountid} qrTxt={params.accountid} tooltipId="app.pages.account.detail.qr" />
           </HeadBar>
@@ -409,7 +442,7 @@ class Detail extends Component {
                   icon={
                     <IconFace style={{ borderRadius: '4px' }}>
                       <svg className="icon" aria-hidden="true">
-                        <use xlinkHref="#iconmore1" />
+                        <use xlinkHref="#iconmore2" />
                       </svg>
                     </IconFace>
                   }
@@ -417,7 +450,7 @@ class Detail extends Component {
                   <Dropdown.Menu>
                     <Dropdown.Item
                       text="View All"
-                      value="All"
+                      value="all"
                       onClick={(e, data) => {
                         e.preventDefault();
                         this.fetchAccountDetail(params.accountid, { ...queries, txnType: data.value });
@@ -425,7 +458,7 @@ class Detail extends Component {
                     />
                     <Dropdown.Item
                       text="View Outgoing Txns"
-                      value="Outgoing"
+                      value="outgoing"
                       onClick={(e, data) => {
                         e.preventDefault();
                         this.fetchAccountDetail(params.accountid, { ...queries, txnType: data.value });
@@ -433,7 +466,7 @@ class Detail extends Component {
                     />
                     <Dropdown.Item
                       text="View Incoming Txns"
-                      value="Incoming"
+                      value="incoming"
                       onClick={(e, data) => {
                         e.preventDefault();
                         this.fetchAccountDetail(params.accountid, { ...queries, txnType: data.value });
@@ -460,7 +493,7 @@ class Detail extends Component {
                     content: 'Next',
                   }}
                   defaultActivePage={5}
-                  totalPages={10}
+                  totalPages={Math.ceil(TxTotalCount / 10)}
                 />
               </TabWrapper>
             </div>
