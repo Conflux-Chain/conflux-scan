@@ -20,6 +20,7 @@ export default {
   Received: '接受',
   'Mined Blocks': '挖出区块',
   Balance: '余额',
+  Difficulty: '难度',
   'Copy address to clipboard': '将地址复制到粘贴板',
   'Click to view QR Code': '点击查看二维码',
   'First Seen': '最早出现',
