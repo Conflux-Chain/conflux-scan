@@ -1,7 +1,9 @@
 export default {
   // Header Components
   'app.header.lang.en': 'English',
+  'app.header.lang.short.en': 'EN',
   'app.header.lang.zh': '中文',
+  'app.header.lang.short.zh': '中',
 
   // Footer Components
   'app.footer.title': '联系我们',
