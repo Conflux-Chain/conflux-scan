@@ -19,7 +19,7 @@ const StyledTable = styled.div`
     width: 200px !important;
   }
   ${media.mobile`
-    overflow-x: scroll;
+    overflow-x: auto;
   `}
   .ui.table {
     box-shadow: none;
