@@ -5,14 +5,14 @@ import superagent from 'superagent';
 import moment from 'moment';
 import { Pagination, Dropdown } from 'semantic-ui-react';
 import { DatePicker } from 'antd';
-import { injectIntl, FormattedMessage } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import get from 'lodash/get';
 import DataList from '../../components/DataList';
 import Countdown from '../../components/Countdown';
 import TableLoading from '../../components/TableLoading';
 import EllipsisLine from '../../components/EllipsisLine';
 import '../../assets/semantic-ui/semantic.css';
-import { convertToValueorFee, converToGasPrice } from '../../utils';
+import { convertToValueorFee, converToGasPrice, i18n } from '../../utils';
 import CopyButton from '../../components/CopyButton';
 import QrcodeButton from '../../components/QrcodeButton';
 import * as commonCss from '../../globalStyles/common';
@@ -484,13 +484,11 @@ class Detail extends Component {
       <div className="page-address-detail">
         <Wrapper>
           <HeadBar>
-            <h1>
-              <FormattedMessage id="app.pages.account.detail.h1" />
-            </h1>
+            <h1>{i18n('Account')}</h1>
             <p>{params.accountid}</p>
             <br className="sep" />
-            <CopyButton txtToCopy={params.accountid} toolTipId="app.pages.account.detail.tooltip" />
-            <QrcodeButton titleTxt={params.accountid} qrTxt={params.accountid} tooltipId="app.pages.account.detail.qr" />
+            <CopyButton txtToCopy={params.accountid} toolTipId="Copy address to clipboard" />
+            <QrcodeButton titleTxt={params.accountid} qrTxt={params.accountid} tooltipId="Click to view QR Code" />
           </HeadBar>
           {isLoading && <TableLoading />}
           <Statistic>
@@ -500,13 +498,11 @@ class Detail extends Component {
                   <use xlinkHref="#iconshiliangzhinengduixiang" />
                 </svg>
                 <div>
-                  <h2>
-                    <FormattedMessage id="app.pages.account.detail.transactions" />
-                  </h2>
+                  <h2>{i18n('Transactions')}</h2>
                   <p>
-                    <FormattedMessage id="app.pages.account.detail.sent" />
+                    {i18n('Sent')}
                     <span>{accountDetail.sentTransactions} & </span>
-                    <FormattedMessage id="app.pages.account.detail.received" />
+                    {i18n('Received')}
                     <span>{accountDetail.receivedTransactions}</span>
                   </p>
                 </div>
@@ -518,9 +514,7 @@ class Detail extends Component {
                   <use xlinkHref="#iconwakuang" />
                 </svg>
                 <div>
-                  <h2>
-                    <FormattedMessage id="app.pages.account.detail.minedBlocks" />
-                  </h2>
+                  <h2>{i18n('Mined Blocks')}</h2>
                   <p>{accountDetail.minedBlocks} block</p>
                 </div>
               </div>
@@ -531,9 +525,7 @@ class Detail extends Component {
                   <use xlinkHref="#iconEquilibrium-type" />
                 </svg>
                 <div>
-                  <h2>
-                    <FormattedMessage id="app.pages.account.detail.balance" />
-                  </h2>
+                  <h2>{i18n('Balance')}</h2>
                   <EllipsisLine unit="CFX" text={convertToValueorFee(accountDetail.balance)} />
                 </div>
               </div>
@@ -545,15 +537,11 @@ class Detail extends Component {
                 </svg>
                 <div className="sectionWrap">
                   <section>
-                    <h2>
-                      <FormattedMessage id="app.pages.account.detail.firstSeen" />
-                    </h2>
+                    <h2>{i18n('First Seen')}</h2>
                     <p>{moment(accountDetail.firstSeen * 1000).format('YYYY-MM-DD HH:mm:ss')}</p>
                   </section>
                   <section>
-                    <h2>
-                      <FormattedMessage id="app.pages.account.detail.lastSeen" />
-                    </h2>
+                    <h2>{i18n('Last Seen')}</h2>
                     <p>{moment(accountDetail.lastSeen * 1000).format('YYYY-MM-DD HH:mm:ss')}</p>
                   </section>
                 </div>
@@ -568,7 +556,7 @@ class Detail extends Component {
                 onKeyUp={() => {}}
                 onClick={() => this.setState({ currentTab: 1 })}
               >
-                <FormattedMessage id="app.pages.account.detail.firstSeen" />
+                {i18n('First Seen')}
               </button>
               <button
                 type="button"
@@ -579,7 +567,7 @@ class Detail extends Component {
                   this.fetchMinedBlockList(params.accountid);
                 }}
               >
-                <FormattedMessage id="app.pages.account.detail.lastSeen" />
+                {i18n('Last Seen')}
               </button>
             </div>
             <div className="ctrlpanel-wrap">
@@ -590,10 +578,10 @@ class Detail extends Component {
                   format="YYYY-MM-DD HH:00"
                   placeholder={[
                     intl.formatMessage({
-                      id: 'app.pages.account.detail.startTime',
+                      id: 'startTime',
                     }),
                     intl.formatMessage({
-                      id: 'app.pages.account.detail.endTime',
+                      id: 'endTime',
                     }),
                   ]}
                   onChange={(value) => {
@@ -624,7 +612,7 @@ class Detail extends Component {
                 >
                   <Dropdown.Menu>
                     <Dropdown.Item
-                      text={<FormattedMessage id="app.pages.account.detail.viewAll" />}
+                      text={i18n('app.pages.account.detail.viewAll')}
                       value="all"
                       onClick={(e, data) => {
                         e.preventDefault();
@@ -632,7 +620,7 @@ class Detail extends Component {
                       }}
                     />
                     <Dropdown.Item
-                      text={<FormattedMessage id="app.pages.account.detail.viewOutGoing" />}
+                      text={i18n('app.pages.account.detail.viewOutGoing')}
                       value="outgoing"
                       onClick={(e, data) => {
                         e.preventDefault();
@@ -640,7 +628,7 @@ class Detail extends Component {
                       }}
                     />
                     <Dropdown.Item
-                      text={<FormattedMessage id="app.pages.account.detail.viewIncoming" />}
+                      text={i18n('app.pages.account.detail.viewIncoming')}
                       value="incoming"
                       onClick={(e, data) => {
                         e.preventDefault();
@@ -663,11 +651,11 @@ class Detail extends Component {
                     <Pagination
                       prevItem={{
                         'aria-label': 'Previous item',
-                        content: <FormattedMessage id="app.pages.account.detail.lastPage" />,
+                        content: i18n('lastPage'),
                       }}
                       nextItem={{
                         'aria-label': 'Next item',
-                        content: <FormattedMessage id="app.pages.account.detail.nextPage" />,
+                        content: i18n('nextPage'),
                       }}
                       defaultActivePage={5}
                     />
@@ -676,11 +664,11 @@ class Detail extends Component {
                     <Pagination
                       prevItem={{
                         'aria-label': 'Previous item',
-                        content: <FormattedMessage id="app.pages.account.detail.lastPage" />,
+                        content: i18n('lastPage'),
                       }}
                       nextItem={{
                         'aria-label': 'Next item',
-                        content: <FormattedMessage id="app.pages.account.detail.nextPage" />,
+                        content: i18n('nextPage'),
                       }}
                       boundaryRange={0}
                       activePage={2}
