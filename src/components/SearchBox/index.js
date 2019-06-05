@@ -1,19 +1,27 @@
 import React, { Component } from 'react';
 import superagent from 'superagent';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
+import { injectIntl, FormattedMessage } from 'react-intl';
+import compose from 'lodash/fp/compose';
+import media from '../../globalStyles/media';
 
 const Input = styled.input`
-  width: calc(100% - 120px);
   height: 100%;
   border: none;
   outline: 0;
-  padding-left: 16px;
+  flex: 1;
+  width: auto;
+  padding-left: 0;
+  margin-left: 10px;
+  margin-left: 16px;
 `;
 
 const Wrapper = styled.div`
-  width: 1050px;
   height: 40px;
   margin: 0 auto;
+  margin-right: 24px;
   display: flex;
   align-items: center;
   border: 1px solid #ccc;
@@ -23,6 +31,10 @@ const Wrapper = styled.div`
   border-top-right-radius: 40px;
   /* overflow: hidden; */
   border-bottom-right-radius: 40px;
+  ${media.mobile`
+  border: 1px solid #ccc;
+  margin-right: 7px;
+  `}
 `;
 
 const FilterSelector = styled.div.attrs({
@@ -34,6 +46,9 @@ const FilterSelector = styled.div.attrs({
   border: none !important;
   box-shadow: none !important;
   padding-bottom: 10px !important;
+  ${media.mobile`
+    display: none!important;
+  `}
 
   .ui.dropdown {
     width: 100%;
@@ -74,28 +89,33 @@ const SearchButton = styled.div`
   }
 `;
 
+const baseId = 'app.comp.searchbox.filter.';
+const filterKeys = ['all', 'epoch', 'block', 'transaction', 'address'].map((s) => baseId + s);
+
 class SearchBox extends Component {
   constructor(props) {
     super(props);
-    this.state = { searchKey: '', filterName: 'All Filters' };
+    this.state = { searchKey: '', filterName: 'app.comp.searchbox.filter.all' };
   }
 
   async handleSearch(value) {
+    const { history } = this.props;
     if (value) {
-      const { code, result } = (await superagent.get(`http://127.0.0.1:3000/proxy/fetchHashType/${value}`)).body;
-      if (code) {
-        window.location.href = '/notfound';
+      const { code, result, message } = (await superagent.get(`/proxy/fetchHashType/${value}`)).body;
+      if (code !== 0) {
+        history.push(`/search-notfound?searchId=${value}&errMsg=${message}`);
+        return;
       }
       if (result) {
         switch (result) {
           case 0:
-            window.location.href = `/blocksdetail/${value}`;
+            history.push(`/blocksdetail/${value}`);
             break;
           case 1:
-            window.location.href = `/transactionsdetail/${value}`;
+            history.push(`/transactionsdetail/${value}`);
             break;
           case 2:
-            window.location.href = `/accountdetail/${value}`;
+            history.push(`/accountdetail/${value}`);
             break;
           default:
             console.log('unknow case');
@@ -107,15 +127,16 @@ class SearchBox extends Component {
 
   render() {
     const { searchKey, filterName } = this.state;
-    const filters = ['All Filters', 'Epoch', 'Block', 'Transactions', 'Address'];
+    const { intl } = this.props;
+
     return (
       <Wrapper>
         <FilterSelector>
           <div className="ui dropdown link item">
-            <span className="text">{filterName}</span>
+            <FormattedMessage id={filterName}>{(s) => <span className="text">{s}</span>}</FormattedMessage>
             <i className="dropdown icon" />
             <div className="menu transition visible">
-              {filters.map((name, index) => (
+              {filterKeys.map((name, index) => (
                 <div
                   key={name}
                   className="item"
@@ -124,7 +145,7 @@ class SearchBox extends Component {
                   onClick={() => this.setState({ filterName: name })}
                   onKeyPress={() => this.setState({ filterName: name })}
                 >
-                  {name}
+                  <FormattedMessage id={name} />
                 </div>
               ))}
             </div>
@@ -138,7 +159,7 @@ class SearchBox extends Component {
             }
           }}
           type="text"
-          placeholder="Search by Address / Block Hash / Txn Hash / Epoch Number"
+          placeholder={intl.formatMessage({ id: 'app.comp.searchbox.placeholder' })}
         />
         <SearchButton onClick={(e) => this.handleSearch(searchKey)}>
           <svg className="icon" aria-hidden="true">
@@ -149,5 +170,18 @@ class SearchBox extends Component {
     );
   }
 }
+SearchBox.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
+  intl: PropTypes.shape({
+    formatMessage: PropTypes.func,
+  }).isRequired,
+};
 
-export default SearchBox;
+const hoc = compose(
+  injectIntl,
+  withRouter
+);
+
+export default hoc(SearchBox);

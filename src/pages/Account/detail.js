@@ -204,8 +204,9 @@ const CtrlPanel = styled.div`
     z-inde: 10;
   `}
   .screentime {
-    ${media.mobile`display: block; margin-bottom: 8px;`}
+    ${media.mobile`display: block; margin-bottom: 8px; margin-right: 0;`}
     font-size: 16px;
+    margin-right: 5px;
   }
   .date-picker {
     ${media.mobile`width: 250px!important; display: inline-block;`}

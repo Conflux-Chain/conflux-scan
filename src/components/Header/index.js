@@ -35,7 +35,7 @@ const Logo = styled.div`
 
 const SearchBoxContainer = styled.div`
   width: 100%;
-  margin-top: 17px;
+  margin-top: 15px;
 `;
 
 const LangSelector = styled.div.attrs({

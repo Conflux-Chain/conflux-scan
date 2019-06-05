@@ -46,7 +46,7 @@ function Router() {
         <Route path="/accountdetail/:accountid" component={AccountDetail} />
         <Route path="/epochsdetail/:epochid" component={EpochDetail} />
         <Route path="/topholders" component={TopHolder} />
-        <Route path="/notfound" component={SearchNotFound} />
+        <Route path="/search-notfound" component={SearchNotFound} />
         <Route path="/notfoundtx" component={NotFoundTx} />
         <Route component={NotFound} />
       </Switch>
