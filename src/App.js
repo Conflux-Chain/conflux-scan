@@ -86,7 +86,13 @@ function App() {
     <IntlProvider locale={lang} messages={messages[lang]}>
       <BrowserRouter>
         <Wrapper>
-          <Header changeLanguage={(l) => setLang(l)} toggleNavbar={() => setShowNavbar(!showNavbar)} />
+          <Header
+            changeLanguage={(l) => {
+              document.title = l === 'en' ? 'Conflux Blockchain Explorer' : 'Conflux 区块链浏览器';
+              setLang(l);
+            }}
+            toggleNavbar={() => setShowNavbar(!showNavbar)}
+          />
           <Navbar showNavbar={showNavbar} />
           <ContainerMask className={showNavbar ? 'show' : ''} />
           <Container>
