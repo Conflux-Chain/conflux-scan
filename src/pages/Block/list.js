@@ -97,6 +97,7 @@ const columns = [
   },
   {
     key: 2,
+    dataIndex: 'position',
     title: i18n('Position'),
     className: 'one wide aligned plain_th',
     render: (text, row) => (
@@ -207,7 +208,7 @@ class List extends Component {
                 </div>
               </div>
               <Pagination
-                style={{ float: 'right', width: '100%' }}
+                style={{ float: 'right' }}
                 prevItem={{
                   'aria-label': 'Previous item',
                   content: 'Previous',

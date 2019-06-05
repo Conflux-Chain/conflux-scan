@@ -91,35 +91,35 @@ const IconFace = styled.div`
 const columns = [
   {
     key: 1,
-    className: 'two wide aligned',
+    className: 'two wide aligned plain_th',
     dataIndex: 'hash',
     title: i18n('Hash'),
     render: (text) => <EllipsisLine isLong linkTo={`/transactionsdetail/${text}`} text={text} />,
   },
   {
     key: 2,
-    className: 'two wide aligned',
+    className: 'two wide aligned plain_th',
     dataIndex: 'from',
     title: i18n('From'),
     render: (text) => <EllipsisLine linkTo={`/accountdetail/${text}`} text={text} />,
   },
   {
     key: 3,
-    className: 'two wide aligned',
+    className: 'two wide aligned plain_th',
     dataIndex: 'to',
     title: i18n('To'),
     render: (text) => <EllipsisLine linkTo={`/accountdetail/${text}`} text={text} />,
   },
   {
     key: 4,
-    className: 'two wide aligned',
+    className: 'two wide aligned plain_th',
     dataIndex: 'value',
     title: i18n('Value'),
     render: (text) => <EllipsisLine unit="CFX" text={convertToValueorFee(text)} />,
   },
   {
     key: 5,
-    className: 'two wide aligned',
+    className: 'two wide aligned plain_th',
     dataIndex: 'gasPrice',
     title: i18n('Gas Price'),
     render: (text) => <EllipsisLine unit="Gdip" text={converToGasPrice(text)} />,
@@ -187,7 +187,7 @@ class List extends Component {
                 </div>
               </div>
               <Pagination
-                style={{ float: 'right', width: '100%' }}
+                style={{ float: 'right' }}
                 prevItem={{
                   'aria-label': 'Previous item',
                   content: i18n('lastPage'),

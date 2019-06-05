@@ -58,7 +58,7 @@ const StyledTabel = styled.table`
 `;
 
 const HeadBar = styled.div`
-  margin-top: 24px;
+  margin-top: 16px;
   width: 100%;
   font-size: 16px;
   margin-bottom: 10px;
