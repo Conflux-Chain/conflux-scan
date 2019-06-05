@@ -23,6 +23,7 @@ const Wrapper = styled.div`
 `;
 
 const StyledTabelWrapper = styled.div`
+  overflow: hidden;
   .content {
     padding: 0 !important;
   }
@@ -85,7 +86,7 @@ const StyledTabel = styled.div`
 const HeadBar = styled.div`
   width: 100%;
   font-size: 16px;
-  margin-top: 24px;
+  margin-top: 16px;
   margin-bottom: 10px;
   display: flex;
   justify-content: flex-start;
@@ -160,21 +161,21 @@ const TxColumns = [
     className: 'two wide aligned',
     dataIndex: 'hash',
     title: i18n('Hash'),
-    render: (text) => <EllipsisLine text={text} />,
+    render: (text) => <EllipsisLine linkTo={`/transactionsdetail/${text}`} text={text} />,
   },
   {
     key: 2,
     className: 'two wide aligned',
     dataIndex: 'from',
     title: i18n('From'),
-    render: (text) => <EllipsisLine text={text} />,
+    render: (text) => <EllipsisLine linkTo={`/accountdetail/${text}`} text={text} />,
   },
   {
     key: 3,
     className: 'two wide aligned',
     dataIndex: 'to',
     title: i18n('To'),
-    render: (text) => <EllipsisLine text={text} />,
+    render: (text) => <EllipsisLine linkTo={`/accountdetail/${text}`} text={text} />,
   },
   {
     key: 4,
@@ -214,26 +215,26 @@ const RefColumns = [
   {
     key: 1,
     dataIndex: 'epochNumber',
-    className: 'one wide aligned',
     title: i18n('Epoch'),
+    className: 'one wide aligned plain_th',
     render: (text) => <EllipsisLine linkTo={`/epochsdetail/${text}`} text={text} />,
   },
   {
     key: 2,
-    dataIndex: 'drei',
-    className: 'one wide aligned',
     title: i18n('Position'),
+    dataIndex: 'position',
+    className: 'one wide aligned plain_th',
     render: (text, row) => (
       <div>
-        <PCell>{row.drei}</PCell>
+        <PCell>{text}</PCell>
       </div>
     ),
   },
   {
     key: 3,
     dataIndex: 'hash',
-    className: 'one wide aligned',
     title: i18n('Hash'),
+    className: 'one wide aligned plain_th',
     render: (text, row) => (
       <div>
         <EllipsisLine isLong linkTo={`/blocksdetail/${text}`} isPivot={row.isPivot} text={text} />
@@ -249,7 +250,7 @@ const RefColumns = [
   },
   {
     key: 5,
-    className: 'one wide aligned',
+    className: 'one wide aligned plain_th',
     dataIndex: 'miner',
     title: i18n('Miner'),
     render: (text) => <EllipsisLine linkTo={`/accountdetail/${text}`} text={text} />,

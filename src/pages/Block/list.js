@@ -91,26 +91,25 @@ const columns = [
   {
     key: 1,
     dataIndex: 'epochNumber',
-    className: 'one wide aligned',
     title: i18n('Epoch'),
+    className: 'one wide aligned plain_th',
     render: (text) => <EllipsisLine linkTo={`/epochsdetail/${text}`} text={text} />,
   },
   {
     key: 2,
-    dataIndex: 'drei',
-    className: 'one wide aligned',
     title: i18n('Position'),
+    className: 'one wide aligned plain_th',
     render: (text, row) => (
       <div>
-        <PCell>{row.drei}</PCell>
+        <PCell>{text}</PCell>
       </div>
     ),
   },
   {
     key: 3,
     dataIndex: 'hash',
-    className: 'two wide aligned',
     title: i18n('Hash'),
+    className: 'two wide aligned plain_th',
     render: (text, row) => (
       <div>
         <EllipsisLine isLong linkTo={`/blocksdetail/${text}`} isPivot={row.isPivot} text={text} />
@@ -126,7 +125,7 @@ const columns = [
   },
   {
     key: 5,
-    className: 'one wide aligned',
+    className: 'one wide aligned plain_th',
     dataIndex: 'miner',
     title: i18n('Miner'),
     render: (text) => <EllipsisLine linkTo={`/accountdetail/${text}`} text={text} />,

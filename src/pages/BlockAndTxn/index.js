@@ -16,7 +16,7 @@ const Wrapper = styled.div`
   max-width: 1200px;
   margin: 0 auto;
   display: flex;
-  justify-content: space-around;
+  justify-content: flex-start;
   ${media.mobile`
     flex-wrap: wrap;
     justify-content: center;
@@ -26,11 +26,14 @@ const Wrapper = styled.div`
 const StyledTabel = styled.div`
   margin-top: 20px;
   width: calc(50% - 6px);
-  /* ${media.pad`
+  &.right {
+    margin-left: 16px;
+  }
+  ${media.pad`
     &.right {
-      margin-left: 16px;
+      margin-left: auto;
     }
-  `} */
+  `}
 
   ${media.mobile`
     width: 95%;
