@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { NavLink, withRouter } from 'react-router-dom';
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 import styled from 'styled-components';
+import media from '../../globalStyles/media';
 
 const Wrapper = styled.div`
   position: fixed;
@@ -19,6 +20,37 @@ const Wrapper = styled.div`
   z-index: 999;
   overflow-x: hidden;
   overflow-y: auto;
+
+  ${media.pad`
+    top: 56px;
+    left: -120px;
+    max-height: calc(100vh - 56px);
+    transition: 0.1s all ease-out;
+    
+    &.show {
+      left: 0;
+      animation: bounce-in-left 0.5s forwards;
+    }
+  `}
+
+  @keyframes bounce-in-left {
+    0% {
+      transform: translateX(-600px);
+      animation-timing-function: ease-in;
+    }
+    30% {
+      transform: translateX(0);
+      animation-timing-function: ease-out;
+    }
+    45% {
+      transform: translateX(-40px);
+      animation-timing-function: ease-in;
+    }
+    60% {
+      transform: translateX(0);
+      animation-timing-function: ease-out;
+    }
+  }
 `;
 
 const Menu = styled.ul`
@@ -64,12 +96,12 @@ const Menu = styled.ul`
 `;
 
 function Navbar(props) {
-  const { location } = props;
+  const { location, showNavbar } = props;
   const blocktxnPaths = ['blocktxn', 'blocks', 'blocksdetail', 'transactions', 'transactionsdetail', 'accountdetail', 'epochsdetail'];
   const directoryPaths = ['directory', 'topholders'];
 
   return (
-    <Wrapper>
+    <Wrapper className={showNavbar ? 'show' : ''}>
       <Menu>
         <li>
           <NavLink exact to="/" activeClassName="actived">
@@ -112,6 +144,7 @@ Navbar.propTypes = {
   location: PropTypes.shape({
     pathname: PropTypes.string.isRequired,
   }),
+  showNavbar: PropTypes.bool.isRequired,
 };
 
 Navbar.defaultProps = {

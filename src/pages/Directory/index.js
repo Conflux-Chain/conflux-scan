@@ -2,11 +2,21 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import styled from 'styled-components';
+import media from '../../globalStyles/media';
 
 const Wrapper = styled.div`
   width: 100%;
-  max-width: 1220px;
+  max-width: 1260px;
   margin: 0 auto;
+
+  ${media.pad`
+    padding-left: 16px;
+    padding-right: 16px;
+  `}
+
+  .ui.cards {
+    justify-content: center;
+  }
 
   .ui.card {
     width: 384px !important;
@@ -14,6 +24,8 @@ const Wrapper = styled.div`
     border: none;
     box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
     border-radius: 4px;
+    margin-left: 12px !important;
+    margin-right: 12px !important;
 
     &:hover {
       box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.4) !important;

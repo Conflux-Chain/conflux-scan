@@ -119,14 +119,14 @@ const Statistic = styled.div`
   .transaction {
     width: 28%;
     ${fullWidthMobile}
-    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    ${media.mobile`border-bottom: 1px solid rgba(0, 0, 0, 0.08);`}
   }
   .miner,
   .balance {
     width: 20%;
     border-left: 1px solid rgba(0, 0, 0, 0.08);
     ${fullWidthMobile}
-    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    ${media.mobile`border-bottom: 1px solid rgba(0, 0, 0, 0.08);`}
   }
   .seen {
     width: 36%;
@@ -155,18 +155,15 @@ const Statistic = styled.div`
   .sectionWrap {
     width: 100%;
     display: flex;
-    ${media.mobile`
-      display: block;
-    `}
-    justify-content: space-between;
+    ${media.mobile`display: block;`}
     section {
-      width: 180px;
+      flex: 1;
       p {
         font-size: 16px;
         color: rgba(0, 0, 0, 0.87);
       }
       &:nth-child(2) {
-        padding-top: 24px;
+        ${media.mobile`padding-top: 24px;`}
       }
     }
   }
@@ -202,6 +199,17 @@ const TabWrapper = styled.div`
   margin-top: 24px;
   display: flex;
   justify-content: flex-end;
+  .page-pc {
+    display: inline-flex !important;
+  }
+  .page-h5 {
+    ${commonCss.hide}
+  }
+  ${media.mobile`
+    justify-content: center;
+    .page-pc { ${commonCss.hide} }
+    .page-h5 { display: inline-flex!important; }
+  `}
 `;
 
 const CtrlPanel = styled.div`
@@ -222,8 +230,9 @@ const CtrlPanel = styled.div`
     z-inde: 10;
   `}
   .screentime {
-    ${media.mobile`display: block; margin-bottom: 8px;`}
+    ${media.mobile`display: block; margin-bottom: 8px; margin-right: 0;`}
     font-size: 16px;
+    margin-right: 5px;
   }
   .date-picker {
     ${media.mobile`width: 250px!important; display: inline-block;`}
@@ -593,18 +602,39 @@ class Detail extends Component {
                   </div>
                 </StyledTabel>
                 <TabWrapper>
-                  <Pagination
-                    prevItem={{
-                      'aria-label': 'Previous item',
-                      content: 'Previous',
-                    }}
-                    nextItem={{
-                      'aria-label': 'Next item',
-                      content: 'Next',
-                    }}
-                    defaultActivePage={5}
-                    totalPages={10}
-                  />
+                  <div className="page-pc">
+                    <Pagination
+                      prevItem={{
+                        'aria-label': 'Previous item',
+                        content: 'Previous',
+                      }}
+                      nextItem={{
+                        'aria-label': 'Next item',
+                        content: 'Next',
+                      }}
+                      defaultActivePage={5}
+                    />
+                  </div>
+                  <div className="page-h5">
+                    <Pagination
+                      prevItem={{
+                        'aria-label': 'Previous item',
+                        content: 'Previous',
+                      }}
+                      nextItem={{
+                        'aria-label': 'Next item',
+                        content: 'Next',
+                      }}
+                      boundaryRange={0}
+                      activePage={2}
+                      onPageChange={() => {}}
+                      ellipsisItem={null}
+                      firstItem={null}
+                      lastItem={null}
+                      siblingRange={1}
+                      totalPages={10}
+                    />
+                  </div>
                 </TabWrapper>
               </TabPanel>
               <TabPanel className={currentTab === 2 ? 'ui bottom attached segment active tab' : 'ui bottom attached segment tab'}>

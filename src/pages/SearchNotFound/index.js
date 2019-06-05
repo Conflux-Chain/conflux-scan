@@ -53,11 +53,12 @@ const NfWrapDiv = styled.div`
 `;
 class SearchNotFound extends PureComponent {
   render() {
-    let { searchId, location } = this.props;
+    let { searchId, location, errMsg = '' } = this.props;
     if (!searchId) {
       const parsed = querystring.parse(location.search.replace(/^\?/, ''));
       if (parsed.searchId) {
         searchId = parsed.searchId;
+        errMsg = parsed.errMsg;
       }
     }
 
@@ -73,7 +74,7 @@ class SearchNotFound extends PureComponent {
         </div>
         <div className="row3">{searchId}</div>
         <div className="row4">
-          <FormattedMessage id="app.pages.searchNotFound.row4" />
+          <FormattedMessage id={errMsg || 'app.pages.searchNotFound.row4'} />
         </div>
 
         <div className="row5">
@@ -90,6 +91,7 @@ SearchNotFound.propTypes = {
   location: PropTypes.shape({
     search: PropTypes.string,
   }),
+  errMsg: PropTypes.string,
 };
 
 SearchNotFound.defaultProps = {
@@ -97,6 +99,7 @@ SearchNotFound.defaultProps = {
   location: {
     search: '',
   },
+  errMsg: '',
 };
 
 export default injectIntl(SearchNotFound);

@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { FormattedMessage } from 'react-intl';
+import media from '../../globalStyles/media';
 
 const Wrapper = styled.footer`
   width: calc(100% - 20px);
@@ -11,11 +12,32 @@ const Wrapper = styled.footer`
   justify-content: space-around;
   text-align: left;
   border-top: 1px solid rgba(0, 0, 0, 0.08);
+
+  .copyright {
+    display: none;
+    margin-top: 20px;
+    margin-bottom: 12px;
+  }
+
+  ${media.pad` 
+    width: calc(100% - 32px);
+    flex-direction: column;
+    
+    .copyright {
+      display: block;
+    }
+  `}
 `;
 
 const Content = styled.div`
   width: 100%;
   line-height: 1;
+
+  ${media.pad`
+    .copyright-in {
+      display: none;
+    }
+  `}
 `;
 
 const Title = styled.div`
@@ -32,6 +54,11 @@ const Info = styled.div`
     display: inline-block;
     margin-right: 14px;
     margin-bottom: 16px;
+
+    ${media.pad`
+      display: block;
+      margin-bottom: 8px;
+    `}
   }
 
   .icon {
@@ -42,6 +69,10 @@ const Info = styled.div`
     overflow: hidden;
     margin-right: 10px;
   }
+
+  .copyright-in {
+    display: block;
+  }
 `;
 
 const Copyright = styled.div`
@@ -49,7 +80,7 @@ const Copyright = styled.div`
 `;
 
 const Links = styled.div`
-  width: 120px;
+  width: 140px;
   a {
     margin-left: 8px;
     margin-right: 8px;
@@ -73,6 +104,10 @@ const Links = styled.div`
       }
     }
   }
+
+  ${media.pad`
+    margin-top: 16px;
+  `}
 `;
 
 function Footer() {
@@ -102,7 +137,7 @@ function Footer() {
           {/*  <FormattedMessage id="app.footer.address" /> */}
           {/* </span> */}
         </Info>
-        <Copyright>Copyright © 2019 Conflux. All Rights Reserved</Copyright>
+        <Copyright className="copyright-in">Copyright © 2019 Conflux. All Rights Reserved</Copyright>
       </Content>
       <Links>
         <a href="https://twitter.com/ConfluxChain" target="_blank" title="Twitter">
@@ -121,6 +156,7 @@ function Footer() {
           </svg>
         </a>
       </Links>
+      <Copyright className="copyright">Copyright©2019 Conflux. All Rights Reserved</Copyright>
     </Wrapper>
   );
 }
