@@ -67,7 +67,6 @@ const SearchBoxContainer = styled.div`
   width: 100%;
   margin-top: 15px;
   max-width: calc(100vw - 370px);
-  overflow: visible;
 
   ${media.pad`
     margin-top: 8px;
@@ -83,6 +82,7 @@ const LangSelector = styled.div.attrs({
   padding-bottom: 16px;
   border: none !important;
   box-shadow: none !important;
+  cursor: pointer;
 
   .text-short {
     display: none;
@@ -104,7 +104,8 @@ const LangSelector = styled.div.attrs({
     top: calc(100% + 8px);
   }
 
-  &:hover {
+  &:hover,
+  &:active {
     .menu.visible {
       display: block !important;
     }
@@ -112,6 +113,7 @@ const LangSelector = styled.div.attrs({
 
   ${media.pad`
     width: 50px;
+    min-height: 20px !important;
     
     .item > i.dropdown.icon {
       margin-left: 4px !important;

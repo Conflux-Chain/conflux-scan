@@ -17,7 +17,7 @@ export default {
   'app.comp.searchbox.filter.block': 'Block',
   'app.comp.searchbox.filter.transaction': 'Transaction',
   'app.comp.searchbox.filter.address': 'Address',
-  'app.comp.searchbox.placeholder': 'Search by Address / Block Hash / Txn Hash / Epoch Number',
+  'app.comp.searchbox.placeholder': 'Epoch / Block hash / Txn hash / Address',
 
   'app.pages.account.detail.viewAll': 'View All',
   'app.pages.account.detail.viewOutGoing': 'View Outgoing Txns',
@@ -31,6 +31,9 @@ export default {
   'app.pages.blocks.txCount': 'Tx Count',
 
   // blocks & txns
+  'app.pages.blockAndTx.blocks': 'Blocks',
+  'app.pages.blockAndTx.viewAllBlocks': 'View All Blocks',
+  'app.pages.blockAndTx.viewAllTransactions': 'View All Transactions',
 
   'app.pages.notFoundTx.title': 'Sorry your <strong>Transaction</strong>',
   'app.pages.notFoundTx.tooltip': 'Copy to clipboard',
@@ -59,7 +62,7 @@ export default {
   'app.navbar.home': 'Dashboard',
   'app.navbar.dashboard': 'Dashboard',
   'app.navbar.blocksAndTxs': 'Blocks & Transactions',
-  'app.navbar.directory': 'Conflux Directory',
+  'app.navbar.directory': 'Directory',
   'app.navbar.more': 'More',
 
   // Directory Page

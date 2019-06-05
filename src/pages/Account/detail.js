@@ -581,7 +581,7 @@ class Detail extends Component {
                 onKeyUp={() => {}}
                 onClick={() => this.setState({ currentTab: 1 })}
               >
-                {i18n('First Seen')}
+                {i18n('Transactions')}
               </button>
               <button
                 type="button"
@@ -592,7 +592,7 @@ class Detail extends Component {
                   this.fetchMinedBlockList(params.accountid);
                 }}
               >
-                {i18n('Last Seen')}
+                {i18n('Mined Blocks')}
               </button>
             </div>
             <div className="ctrlpanel-wrap">
@@ -603,10 +603,10 @@ class Detail extends Component {
                   format="YYYY-MM-DD HH:00"
                   placeholder={[
                     intl.formatMessage({
-                      id: 'startTime',
+                      id: 'StartTime',
                     }),
                     intl.formatMessage({
-                      id: 'endTime',
+                      id: 'EndTime',
                     }),
                   ]}
                   onChange={(value) => {

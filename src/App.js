@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { addLocaleData, IntlProvider } from 'react-intl';
 import enLocaleData from 'react-intl/locale-data/en';
@@ -46,7 +46,7 @@ const Container = styled.div`
   ${media.pad`
     margin-left: 0;
     max-height: calc(100vh - 56px);
-    padding: 20px 0 0;
+    padding: 20px 0 70px;
   `}
 `;
 
@@ -94,7 +94,7 @@ function App() {
             toggleNavbar={() => setShowNavbar(!showNavbar)}
           />
           <Navbar showNavbar={showNavbar} />
-          <ContainerMask className={showNavbar ? 'show' : ''} />
+          <ContainerMask className={showNavbar ? 'show' : ''} onClick={() => setShowNavbar(!showNavbar)} />
           <Container>
             <Content>
               <Router />
