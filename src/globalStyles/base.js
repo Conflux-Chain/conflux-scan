@@ -59,7 +59,7 @@ const BaseStyle = css`
 
   body {
     font-family: 'Proxima Nova', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-size: 14px;
+    font-size: 16px;
     line-height: 1.6;
     font-weight: 400;
     word-wrap: break-word;
