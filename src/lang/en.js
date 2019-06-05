@@ -43,6 +43,10 @@ export default {
   'app.pages.txns.age': 'Age',
   'app.pages.txns.time': 'Age',
 
+  'app.pages.block.confirm.title': 'Please Confirm',
+  'app.pages.block.confirm.pageWarning': 'page > 10000 is not supported',
+  'app.pages.block.confirm.done': 'Done',
+
   'app.pages.notFoundTx.title': 'Sorry your <strong>Transaction</strong>',
   'app.pages.notFoundTx.tooltip': 'Copy to clipboard',
   'app.pages.notFoundTx.packing': 'is packing, please wait',

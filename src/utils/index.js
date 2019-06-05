@@ -1,7 +1,7 @@
 import React from 'react';
 import BigNumber from 'bignumber.js';
 import superagent from 'superagent';
-import { injectIntl, FormattedMessage } from 'react-intl';
+import { injectIntl, FormattedMessage, FormattedHTMLMessage } from 'react-intl';
 import { toast } from '../components/Toast';
 
 let errorId = null;
@@ -203,11 +203,20 @@ export const sendRequest = (config) => {
 };
 
 /* eslint react/prop-types: 0 */
-function I18nComp({ id }) {
+function I18nComp({ id, html }) {
+  if (html) {
+    return (
+      <FormattedHTMLMessage id={id}>
+        {(s) => {
+          return <div />;
+        }}
+      </FormattedHTMLMessage>
+    );
+  }
   return <FormattedMessage id={id} />;
 }
 const I18nComp1 = injectIntl(I18nComp);
 
-export function i18n(id) {
-  return <I18nComp1 id={id} />;
+export function i18n(id, config = {}) {
+  return <I18nComp1 id={id} html={config.html} />;
 }

@@ -82,6 +82,10 @@ export default {
   'app.pages.txns.age': '打包时间',
   'app.pages.txns.time': '打包时间',
 
+  'app.pages.block.confirm.title': '<div class="header">请确认</div>',
+  'app.pages.block.confirm.pageWarning': '<div class="content">暂不支持>10000分页</div>',
+  'app.pages.block.confirm.done': '确定',
+
   'app.pages.notFoundTx.title': '对不起，你的交易',
   'app.pages.notFoundTx.tooltip': '复制到剪切板',
   'app.pages.notFoundTx.packing': '正在被打包, 请稍等一下',

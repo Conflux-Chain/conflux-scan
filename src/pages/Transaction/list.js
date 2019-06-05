@@ -9,6 +9,7 @@ import EllipsisLine from '../../components/EllipsisLine';
 import { convertToValueorFee, converToGasPrice, i18n } from '../../utils';
 import '../../assets/semantic-ui/semantic.css';
 import media from '../../globalStyles/media';
+import ConfirmSimple from '../../components/ConfirmSimple';
 
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -152,6 +153,12 @@ class List extends Component {
   }
 
   async fetchTxList({ activePage }) {
+    if (activePage > 10000) {
+      this.setState({
+        confirmOpen: true,
+      });
+      return;
+    }
     this.setState({ isLoading: true });
     const { code, result } = (await superagent.get(`/proxy/fetchInitBlockandTxList?pageNum=${activePage}&pageSize=10`)).body;
     if (!code) {
@@ -166,7 +173,7 @@ class List extends Component {
   }
 
   render() {
-    const { TxList, TotalCount, isLoading } = this.state;
+    const { TxList, TotalCount, isLoading, confirmOpen } = this.state;
     return (
       <div className="page-transaction-list">
         <Wrapper>
@@ -206,6 +213,14 @@ class List extends Component {
             </StyledTabel>
           </TabWrapper>
         </Wrapper>
+        <ConfirmSimple
+          open={confirmOpen}
+          onConfirm={() => {
+            this.setState({
+              confirmOpen: false,
+            });
+          }}
+        />
       </div>
     );
   }

@@ -10,6 +10,7 @@ import EllipsisLine from '../../components/EllipsisLine';
 import '../../assets/semantic-ui/semantic.css';
 import media from '../../globalStyles/media';
 import { i18n } from '../../utils/index';
+import ConfirmSimple from '../../components/ConfirmSimple';
 
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -165,6 +166,7 @@ class List extends Component {
       isLoading: true,
       BlockList: [],
       TotalCount: 100,
+      curPage: 1,
     };
   }
 
@@ -173,6 +175,12 @@ class List extends Component {
   }
 
   async fetchBlockList({ activePage }) {
+    if (activePage > 10000) {
+      this.setState({
+        confirmOpen: true,
+      });
+      return;
+    }
     this.setState({ isLoading: true });
     const { code, result } = (await superagent.get(`/proxy/fetchInitBlockandTxList?pageNum=${activePage}&pageSize=10`)).body;
     if (!code) {
@@ -181,13 +189,13 @@ class List extends Component {
           BlockList: result.find((item) => Object.keys(item)[0] === 'block/list')['block/list'],
           TotalCount: result.find((item) => Object.keys(item)[0] === 'block/list')['total_block/list'],
         },
-        () => this.setState({ isLoading: false })
+        () => this.setState({ isLoading: false, curPage: activePage })
       );
     }
   }
 
   render() {
-    const { BlockList, TotalCount, isLoading } = this.state;
+    const { BlockList, TotalCount, isLoading, confirmOpen, curPage } = this.state;
     return (
       <div className="page-block-list">
         <Wrapper>
@@ -221,12 +229,21 @@ class List extends Component {
                   e.preventDefault();
                   this.fetchBlockList(data);
                 }}
-                defaultActivePage={1}
+                activePage={curPage}
                 totalPages={Math.ceil(TotalCount / 10)}
               />
             </StyledTabel>
           </TabWrapper>
         </Wrapper>
+
+        <ConfirmSimple
+          open={confirmOpen}
+          onConfirm={() => {
+            this.setState({
+              confirmOpen: false,
+            });
+          }}
+        />
       </div>
     );
   }
