@@ -35,7 +35,7 @@ const IconFace = styled.div`
   justify-content: center;
   align-items: center;
   float: left;
-  margin-right: 16px;
+  margin: 0 16px;
   svg {
     width: 23px;
     height: 23px;

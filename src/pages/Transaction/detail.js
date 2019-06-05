@@ -17,10 +17,15 @@ const Wrapper = styled.div`
 const StyledTabel = styled.table`
   margin-top: 20px;
   width: 100%;
+  background: #fff;
+  border-radius: 4px !important;
+  box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.12) !important;
+
   tr > td {
     padding-left: 3.2em !important;
     border: none !important;
     font-size: 16px !important;
+    background: #fff !important;
   }
 
   &.right {
@@ -28,12 +33,19 @@ const StyledTabel = styled.table`
   }
   td.collapsing {
     font-weight: bold !important;
-    padding: 1.2em 5em 1.2em 2em !important;
+    padding: 0.5em 5em 0.5em 2em !important;
     background: #edf2f9 !important;
+  }
+  td.top {
+    padding-top: 2em !important;
+  }
+  td.bottom {
+    padding-bottom: 2em !important;
   }
 `;
 
 const HeadBar = styled.div`
+  margin-top: 24px;
   width: 100%;
   font-size: 16px;
   margin-bottom: 10px;
@@ -96,48 +108,48 @@ class Detail extends Component {
             <StyledTabel className="ui basic padded table">
               <tbody className="">
                 <tr className="">
-                  <td className="collapsing">Transation Hash:</td>
-                  <td className="">{result.hash}</td>
+                  <td className="collapsing top">Transation Hash</td>
+                  <td className="top">{result.hash}</td>
                 </tr>
                 <tr className="">
-                  <td className="collapsing">Data:</td>
+                  <td className="collapsing">Data</td>
                   <td className="">{result.data}</td>
                 </tr>
                 <tr className="">
-                  <td className="collapsing">From:</td>
+                  <td className="collapsing">From</td>
                   <td className="">{result.from}</td>
                 </tr>
                 <tr className="">
-                  <td className="collapsing">To:</td>
+                  <td className="collapsing">To</td>
                   <td className="">{result.to}</td>
                 </tr>
                 <tr className="">
-                  <td className="collapsing">Gas:</td>
+                  <td className="collapsing">Gas</td>
                   <td className="">{result.gas}</td>
                 </tr>
                 <tr className="">
-                  <td className="collapsing">Gas Price:</td>
+                  <td className="collapsing">Gas Price</td>
                   <td className="">{result.gasPrice}</td>
                 </tr>
                 <tr className="">
-                  <td className="collapsing">Value:</td>
+                  <td className="collapsing">Value</td>
                   <td className="">{result.value}</td>
                 </tr>
                 <tr className="">
-                  <td className="collapsing">Nonce:</td>
+                  <td className="collapsing">Nonce</td>
                   <td className="">{result.nonce}</td>
                 </tr>
                 <tr className="">
-                  <td className="collapsing">Block Hash:</td>
+                  <td className="collapsing">Block Hash</td>
                   <td className="">{result.blockHash}</td>
                 </tr>
                 <tr className="">
-                  <td className="collapsing">Position:</td>
+                  <td className="collapsing">Position</td>
                   <td className="">{result.transactionIndex}</td>
                 </tr>
                 <tr className="">
-                  <td className="collapsing">Time:</td>
-                  <td className="">{moment(result.timestamp * 1000).format('YYYY-MM-DD HH:mm:ss')}</td>
+                  <td className="collapsing bottom">Time</td>
+                  <td className="bottom">{moment(result.timestamp * 1000).format('YYYY-MM-DD HH:mm:ss')}</td>
                 </tr>
               </tbody>
             </StyledTabel>

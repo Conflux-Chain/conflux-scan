@@ -43,11 +43,15 @@ const StyledTabelWrapper = styled.div`
 const StyledTabel = styled.table`
   margin-top: 20px;
   width: 100%;
+  background: #fff;
+  border-radius: 4px !important;
+  box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.12) !important;
 
   tr > td {
     padding-left: 3.2em !important;
     border: none !important;
     font-size: 16px !important;
+    background: #fff !important;
   }
 
   &.right {
@@ -55,14 +59,21 @@ const StyledTabel = styled.table`
   }
   td.collapsing {
     font-weight: bold !important;
-    padding: 1.2em 5em 1.2em 2em !important;
+    padding: 0.5em 5em 0.5em 2em !important;
     background: #edf2f9 !important;
+  }
+  td.top {
+    padding-top: 2em !important;
+  }
+  td.bottom {
+    padding-bottom: 2em !important;
   }
 `;
 
 const HeadBar = styled.div`
   width: 100%;
   font-size: 16px;
+  margin-top: 24px;
   margin-bottom: 10px;
   display: flex;
   justify-content: flex-start;
@@ -117,6 +128,7 @@ const PCell = styled.div`
 `;
 
 const TabWrapper = styled.div`
+  margin-top: 1em;
   display: flex;
   justify-content: flex-end;
 `;
@@ -242,7 +254,7 @@ const RefColumns = [
   },
   {
     key: 8,
-    className: 'two wide right aligned plain_th right-pad',
+    className: 'two wide left aligned plain_th',
     dataIndex: 'transactionCount',
     title: 'Tx Count',
     render: (text) => <PCell>{text}</PCell>,
@@ -322,47 +334,47 @@ class Detail extends Component {
           {isLoading ? (
             <TableLoading />
           ) : (
-            <StyledTabel className="ui basic padded table">
+            <StyledTabel className="ui basic table">
               <tbody className="">
                 <tr className="">
-                  <td className="collapsing">Block Height:</td>
-                  <td className="">{blockDetail.height}</td>
+                  <td className="collapsing top">Block Height</td>
+                  <td className="top">{blockDetail.height}</td>
                 </tr>
                 <tr className="">
-                  <td className="collapsing">Epoch Number:</td>
+                  <td className="collapsing">Epoch Number</td>
                   <td className="">{blockDetail.epochNumber}</td>
                 </tr>
                 <tr className="">
-                  <td className="collapsing">Difficulty:</td>
+                  <td className="collapsing">Difficulty</td>
                   <td className="">{blockDetail.difficulty}</td>
                 </tr>
                 <tr className="">
-                  <td className="collapsing">Miner:</td>
+                  <td className="collapsing">Miner</td>
                   <td className="">{blockDetail.miner}</td>
                 </tr>
                 <tr className="">
-                  <td className="collapsing">Block Hash:</td>
+                  <td className="collapsing">Block Hash</td>
                   <td className="">{blockDetail.hash}</td>
                 </tr>
                 <tr className="">
-                  <td className="collapsing">Present Hash:</td>
+                  <td className="collapsing">Present Hash</td>
                   <td className="">{blockDetail.parentHash}</td>
                 </tr>
                 <tr className="">
-                  <td className="collapsing">Nonce:</td>
+                  <td className="collapsing">Nonce</td>
                   <td className="">{blockDetail.nonce}</td>
                 </tr>
                 <tr className="">
-                  <td className="collapsing">Gas Limit:</td>
+                  <td className="collapsing">Gas Limit</td>
                   <td className="">{blockDetail.gasLimit}</td>
                 </tr>
                 <tr className="">
-                  <td className="collapsing">Time:</td>
+                  <td className="collapsing">Time</td>
                   <td className="">{moment(blockDetail.timestamp * 1000).format('YYYY-MM-DD HH:mm:ss')}</td>
                 </tr>
                 <tr className="">
-                  <td className="collapsing">Size:</td>
-                  <td className="">{blockDetail.size}</td>
+                  <td className="collapsing bottom">Size</td>
+                  <td className="bottom">{blockDetail.size}</td>
                 </tr>
               </tbody>
             </StyledTabel>

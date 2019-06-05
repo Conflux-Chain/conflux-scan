@@ -39,6 +39,7 @@ const PCell = styled.div`
 `;
 
 const HeadBar = styled.div`
+  margin-top: 24px;
   width: 100%;
   font-size: 16px;
   margin-bottom: 24px;

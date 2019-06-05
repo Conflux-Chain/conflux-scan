@@ -50,6 +50,7 @@ const StyledTabel = styled.div`
 `;
 
 const HeadBar = styled.div`
+  margin-top: 24px;
   width: 100%;
   font-size: 16px;
   font-family: ProximaNova-Regular;
