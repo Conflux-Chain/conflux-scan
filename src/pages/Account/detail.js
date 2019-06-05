@@ -293,14 +293,14 @@ const minedColumns = [
     key: 1,
     dataIndex: 'epochNumber',
     className: 'one wide aligned plain_th',
-    title: 'Epoch',
+    title: i18n('Epoch'),
     render: (text) => <EllipsisLine linkTo={`/epochsdetail/${text}`} text={text} />,
   },
   {
     key: 2,
     dataIndex: 'position',
     className: 'one wide aligned plain_th',
-    title: 'Position',
+    title: i18n('Position'),
     render: (text, row) => (
       <div>
         <PCell>{text}</PCell>
@@ -311,7 +311,7 @@ const minedColumns = [
     key: 3,
     dataIndex: 'hash',
     className: 'two wide aligned plain_th',
-    title: 'Hash',
+    title: i18n('Hash'),
     render: (text, row) => (
       <div>
         <EllipsisLine isLong linkTo={`/blocksdetail/${text}`} isPivot={row.isPivot} text={text} />
@@ -322,35 +322,35 @@ const minedColumns = [
     key: 4,
     dataIndex: 'difficulty',
     className: 'one wide aligned plain_th',
-    title: 'Difficulty',
+    title: i18n('Difficulty'),
     render: (text) => <PCell>{text}</PCell>,
   },
   {
     key: 5,
     className: 'one wide aligned plain_th',
     dataIndex: 'miner',
-    title: 'Miner',
+    title: i18n('Miner'),
     render: (text) => <EllipsisLine linkTo={`/accountdetail/${text}`} text={text} />,
   },
   {
     key: 6,
     className: 'one wide aligned plain_th',
     dataIndex: 'gasLimit',
-    title: 'Gas Limit',
+    title: i18n('Gas Limit'),
     render: (text) => <PCell>{text}</PCell>,
   },
   {
     key: 7,
     className: 'three wide aligned plain_th',
     dataIndex: 'timestamp',
-    title: 'Age',
+    title: i18n('Age'),
     render: (text) => <Countdown timestamp={text * 1000} />,
   },
   {
     key: 8,
     className: 'two wide aligned plain_th',
     dataIndex: 'transactionCount',
-    title: 'Tx Count',
+    title: i18n('Tx Count'),
     render: (text) => <PCell>{text}</PCell>,
   },
 ];
@@ -440,14 +440,14 @@ class Detail extends Component {
         key: 1,
         dataIndex: 'hash',
         className: 'two wide aligned plain_th',
-        title: 'Hash',
+        title: i18n('Hash'),
         render: (text, row) => <EllipsisLine linkTo={`/transactions/${text}`} isPivot text={text} />,
       },
       {
         key: 2,
         dataIndex: 'from',
         className: 'two wide aligned plain_th',
-        title: 'From',
+        title: i18n('From'),
         render: (text, row) => (
           <div>
             <PCell>
@@ -464,7 +464,7 @@ class Detail extends Component {
         key: 3,
         className: 'two wide aligned plain_th',
         dataIndex: 'to',
-        title: 'To',
+        title: i18n('To'),
         render: (text) => (
           <div>
             <PCell>
@@ -481,28 +481,28 @@ class Detail extends Component {
         key: 4,
         className: 'two wide aligned plain_th',
         dataIndex: 'value',
-        title: 'Value',
+        title: i18n('Value'),
         render: (text) => <EllipsisLine unit="CFX" text={convertToValueorFee(text)} />,
       },
       {
         key: 5,
         className: 'two wide aligned plain_th',
         dataIndex: 'drei',
-        title: 'Fee',
+        title: i18n('Fee'),
         render: (text, row) => <EllipsisLine unit="CFX" text={convertToValueorFee(row.value * row.gasPrice)} />,
       },
       {
         key: 6,
         className: 'two wide aligned plain_th',
         dataIndex: 'gasPrice',
-        title: 'Gas Price',
+        title: i18n('Gas Price'),
         render: (text) => <EllipsisLine unit="Gdip" text={converToGasPrice(text)} />,
       },
       {
         key: 7,
         className: 'three wide aligned plain_th',
         dataIndex: 'timestamp',
-        title: 'Age',
+        title: i18n('Age'),
         render: (text) => <Countdown timestamp={text * 1000} />,
       },
     ];
