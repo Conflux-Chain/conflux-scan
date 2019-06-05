@@ -8,10 +8,16 @@ import TableLoading from '../../components/TableLoading';
 import DataList from '../../components/DataList';
 import EllipsisLine from '../../components/EllipsisLine';
 import '../../assets/semantic-ui/semantic.css';
+import media from '../../globalStyles/media';
 
 const Wrapper = styled.div`
   max-width: 1200px;
   margin: 0 auto;
+  ${media.mobile`
+    width: 95%;
+    margin: 0 auto;
+    overflow-x: scroll;
+  `}
 `;
 
 const StyledTabel = styled.table`
@@ -34,6 +40,9 @@ const StyledTabel = styled.table`
   td.collapsing {
     font-weight: bold !important;
     padding: 0.5em 5em 0.5em 2em !important;
+    ${media.mobile`
+      padding: 0.1em 2em 0.1em 2em !important;
+    `}
     background: #edf2f9 !important;
   }
   td.top {

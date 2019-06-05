@@ -142,53 +142,6 @@
   display: block;
 }
 
-/* Responsive */
-@media only screen and (max-width: 767px) {
-  .ui.table:not(.unstackable) {
-    width: 100%;
-  }
-  .ui.table:not(.unstackable) tbody,
-  .ui.table:not(.unstackable) tr,
-  .ui.table:not(.unstackable) tr > th,
-  .ui.table:not(.unstackable) tr > td {
-    width: auto !important;
-    display: block !important;
-  }
-  .ui.table:not(.unstackable) {
-    padding: 0em;
-  }
-  .ui.table:not(.unstackable) thead {
-    display: block;
-  }
-  .ui.table:not(.unstackable) tfoot {
-    display: block;
-  }
-  .ui.table:not(.unstackable) tr {
-    padding-top: 1em;
-    padding-bottom: 1em;
-    -webkit-box-shadow: 0px -1px 0px 0px rgba(0, 0, 0, 0.1) inset !important;
-    box-shadow: 0px -1px 0px 0px rgba(0, 0, 0, 0.1) inset !important;
-  }
-  .ui.table:not(.unstackable) tr > th,
-  .ui.table:not(.unstackable) tr > td {
-    background: none;
-    border: none !important;
-    padding: 0.25em 0.75em !important;
-    -webkit-box-shadow: none !important;
-    box-shadow: none !important;
-  }
-  .ui.table:not(.unstackable) th:first-child,
-  .ui.table:not(.unstackable) td:first-child {
-    font-weight: bold;
-  }
-
-  /* Definition Table */
-  .ui.definition.table:not(.unstackable) thead th:first-child {
-    -webkit-box-shadow: none !important;
-    box-shadow: none !important;
-  }
-}
-
 /*******************************
             Coupling
 *******************************/

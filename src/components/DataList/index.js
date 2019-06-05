@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import '../../assets/semantic-ui/semantic.css';
+import media from '../../globalStyles/media';
 
 const StyledTable = styled.div`
   th.plain_th {
@@ -14,12 +15,25 @@ const StyledTable = styled.div`
   th.right-pad {
     padding-right: 16px !important;
   }
+  th.fixed_th {
+    width: 200px !important;
+  }
+  ${media.mobile`
+    overflow-x: scroll;
+  `}
+  .ui.table {
+    box-shadow: none;
+  }
+  .ui.table.mobile {
+    width: 1200px;
+    box-shadow: none;
+  }
 `;
 
-function DataList({ rowStyle, showHeader, columns, dataSource }) {
+function DataList({ isMobile, rowStyle, showHeader, columns, dataSource }) {
   return (
     <StyledTable>
-      <table className="ui very basic padded table">
+      <table className={isMobile ? 'ui very basic padded table mobile' : 'ui very basic padded table'}>
         {!showHeader ? null : (
           <thead>
             <tr>
@@ -57,12 +71,14 @@ function DataList({ rowStyle, showHeader, columns, dataSource }) {
   );
 }
 DataList.propTypes = {
+  isMobile: PropTypes.bool,
   rowStyle: PropTypes.objectOf(PropTypes.string),
   showHeader: PropTypes.bool,
   columns: PropTypes.arrayOf(PropTypes.object),
   dataSource: PropTypes.arrayOf(PropTypes.object),
 };
 DataList.defaultProps = {
+  isMobile: false,
   rowStyle: {},
   showHeader: false,
   columns: [

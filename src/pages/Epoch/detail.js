@@ -8,10 +8,15 @@ import DataList from '../../components/DataList';
 import EllipsisLine from '../../components/EllipsisLine';
 import Countdown from '../../components/Countdown';
 import '../../assets/semantic-ui/semantic.css';
+import media from '../../globalStyles/media';
 
 const Wrapper = styled.div`
   max-width: 1200px;
   margin: 0 auto;
+  ${media.mobile`
+    width: 95%;
+    margin: 0 auto;
+  `}
 `;
 
 const StyledTabel = styled.div`
@@ -168,7 +173,7 @@ class Detail extends Component {
           <StyledTabel>
             <div className="ui fluid card">
               <div className="content">
-                <DataList showHeader columns={columns} dataSource={BlockList} />
+                <DataList isMobile showHeader columns={columns} dataSource={BlockList} />
               </div>
             </div>
           </StyledTabel>

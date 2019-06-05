@@ -8,6 +8,7 @@ import Countdown from '../../components/Countdown';
 import TableLoading from '../../components/TableLoading';
 import EllipsisLine from '../../components/EllipsisLine';
 import '../../assets/semantic-ui/semantic.css';
+import media from '../../globalStyles/media';
 
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -21,6 +22,10 @@ const TabWrapper = styled.div`
 
 const StyledTabel = styled.div`
   width: 100%;
+  ${media.mobile`
+    width: 95%;
+    margin: 0 auto;
+  `}
   .content {
     padding: 0 !important;
   }
@@ -193,11 +198,11 @@ class List extends Component {
               <div className="ui fluid card">
                 <div className="content">
                   {isLoading && <TableLoading />}
-                  <DataList showHeader columns={columns} dataSource={BlockList} />
+                  <DataList isMobile showHeader columns={columns} dataSource={BlockList} />
                 </div>
               </div>
               <Pagination
-                style={{ float: 'right' }}
+                style={{ float: 'right', width: '100%' }}
                 prevItem={{
                   'aria-label': 'Previous item',
                   content: 'Previous',
