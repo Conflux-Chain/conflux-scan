@@ -17,9 +17,33 @@ const Wrapper = styled.div`
   margin: 0 auto;
 `;
 
+const StyledTabelWrapper = styled.div`
+  .content {
+    padding: 0 !important;
+  }
+  thead tr th {
+    background: rgba(0, 0, 0, 0.05) !important;
+  }
+  tr th {
+    padding: 16px 20px !important;
+    padding-right: 0 !important;
+    &:last-of-type {
+      padding: 16px 16px !important;
+      padding-right: 0 !important;
+    }
+    &.right-pad {
+      padding-right: 16px !important;
+    }
+  }
+  &.right {
+    margin-left: 16px;
+  }
+`;
+
 const StyledTabel = styled.table`
   margin-top: 20px;
   width: 100%;
+
   tr > td {
     padding-left: 3.2em !important;
     border: none !important;
@@ -151,7 +175,7 @@ const TxColumns = [
   },
   {
     key: 7,
-    className: 'two wide aligned',
+    className: 'three wide aligned plain_th',
     dataIndex: 'timestamp',
     title: 'Age',
     render: (text) => <Countdown timestamp={text * 1000} />,
@@ -211,14 +235,14 @@ const RefColumns = [
   },
   {
     key: 7,
-    className: 'two wide aligned plain_th',
+    className: 'three wide aligned plain_th',
     dataIndex: 'timestamp',
     title: 'Age',
     render: (text) => <Countdown timestamp={text * 1000} />,
   },
   {
     key: 8,
-    className: 'one wide aligned plain_th',
+    className: 'two wide right aligned plain_th right-pad',
     dataIndex: 'transactionCount',
     title: 'Tx Count',
     render: (text) => <PCell>{text}</PCell>,
@@ -360,11 +384,13 @@ class Detail extends Component {
               </button>
             </div>
             <div className={currentTab === 1 ? 'ui bottom attached segment active tab' : 'ui bottom attached segment tab'}>
-              <div className="ui fluid card">
-                <div className="content">
-                  <DataList showHeader columns={TxColumns} dataSource={TxList} />
+              <StyledTabelWrapper>
+                <div className="ui fluid card">
+                  <div className="content">
+                    <DataList showHeader columns={TxColumns} dataSource={TxList} />
+                  </div>
                 </div>
-              </div>
+              </StyledTabelWrapper>
               <TabWrapper>
                 <Pagination
                   prevItem={{
@@ -385,11 +411,13 @@ class Detail extends Component {
               </TabWrapper>
             </div>
             <div className={currentTab === 2 ? 'ui bottom attached segment active tab' : 'ui bottom attached segment tab'}>
-              <div className="ui fluid card">
-                <div className="content">
-                  <DataList showHeader columns={RefColumns} dataSource={refereeBlockList} />
+              <StyledTabelWrapper>
+                <div className="ui fluid card">
+                  <div className="content">
+                    <DataList showHeader columns={RefColumns} dataSource={refereeBlockList} />
+                  </div>
                 </div>
-              </div>
+              </StyledTabelWrapper>
             </div>
           </TabZone>
         </Wrapper>
