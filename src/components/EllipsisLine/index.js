@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import { injectIntl } from 'react-intl';
 import media from '../../globalStyles/media';
 
 const SingleLine = styled.div`
@@ -83,12 +84,18 @@ const PrefixTag = styled.i`
   color: rgba(0, 0, 0, 0.87);
 `;
 
-function EllipsisLine({ prefix, unit, is2ndLine, isPivot, isLong, linkTo, text, textInout }) {
+function EllipsisLine({ intl, prefix, unit, is2ndLine, isPivot, isLong, linkTo, text, textInout }) {
   const baseStyle = is2ndLine
     ? { background: 'transparent', margin: 0, marginTop: '2px', padding: 0 }
     : { background: 'transparent', margin: 0, padding: 0 };
+  let tooltip;
+  if (typeof text === 'function') {
+    tooltip = text((id) => intl.formatMessage({ id }));
+  } else {
+    tooltip = text;
+  }
   return (
-    <div style={baseStyle} data-tooltip={text} data-position="top center">
+    <div style={baseStyle} data-tooltip={tooltip} data-position="top center">
       <SingleLine>
         <div className="wrap">
           {prefix && <PrefixTag>{prefix}</PrefixTag>}
@@ -96,7 +103,7 @@ function EllipsisLine({ prefix, unit, is2ndLine, isPivot, isLong, linkTo, text, 
             <div className={isLong ? 'ellipsis long' : 'ellipsis'}>{text}</div>
           ) : (
             <div className={isLong ? 'ellipsis link long' : 'ellipsis link'}>
-              <Link to={linkTo}>{text}</Link>
+              <Link to={linkTo}>{tooltip}</Link>
             </div>
           )}
           {isPivot && <PivotTag>Pivot</PivotTag>}
@@ -111,11 +118,14 @@ EllipsisLine.propTypes = {
   prefix: PropTypes.string,
   linkTo: PropTypes.string,
   unit: PropTypes.string,
-  text: PropTypes.string,
+  text: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
   textInout: PropTypes.string,
   isPivot: PropTypes.bool,
   isLong: PropTypes.bool,
   is2ndLine: PropTypes.bool,
+  intl: PropTypes.shape({
+    formatMessage: PropTypes.func,
+  }).isRequired,
 };
 EllipsisLine.defaultProps = {
   prefix: '',
@@ -128,4 +138,4 @@ EllipsisLine.defaultProps = {
   is2ndLine: false,
 };
 
-export default EllipsisLine;
+export default injectIntl(EllipsisLine);

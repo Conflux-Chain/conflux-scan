@@ -34,8 +34,8 @@ export default {
   Size: '容量',
   'Reference Blocks': '引用区块',
   Directory: '目录',
-  startTime: '开始时间',
-  endTime: '结束时间',
+  StartTime: '开始时间',
+  EndTime: '结束时间',
   lastPage: '上一页',
   nextPage: '下一页',
 
@@ -57,7 +57,7 @@ export default {
   'app.comp.searchbox.filter.block': '区块',
   'app.comp.searchbox.filter.transaction': '交易',
   'app.comp.searchbox.filter.address': '地址',
-  'app.comp.searchbox.placeholder': '筛选条件 / 区块哈希 / 交易哈希 / 地址 ',
+  'app.comp.searchbox.placeholder': 'Epoch / 区块哈希 / 交易哈希 / 地址',
 
   'app.pages.account.detail.viewAll': '查看所有交易',
   'app.pages.account.detail.viewOutGoing': '查看发送交易',
@@ -68,6 +68,10 @@ export default {
   'app.pages.blocks.gasLimit': '燃料上限',
   'app.pages.blocks.age': '打包时间',
   'app.pages.blocks.txCount': '交易笔数',
+
+  'app.pages.blockAndTx.blocks': '区块',
+  'app.pages.blockAndTx.viewAllBlocks': '查看所有区块',
+  'app.pages.blockAndTx.viewAllTransactions': '查看所有交易',
 
   'app.pages.notFoundTx.title': '对不起，你的交易',
   'app.pages.notFoundTx.tooltip': '复制到剪切板',

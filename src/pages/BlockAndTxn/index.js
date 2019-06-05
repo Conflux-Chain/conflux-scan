@@ -191,7 +191,12 @@ class BlockAndTxn extends Component {
         title: 'Blocks',
         render: (text, row) => (
           <div>
-            <EllipsisLine linkTo={`/accountdetail/${text}`} text={'Miner ' + text} />
+            <EllipsisLine
+              linkTo={`/accountdetail/${text}`}
+              text={(fmt) => {
+                return fmt('Miner') + ' ' + text;
+              }}
+            />
             <PCell>
               {row.transactionCount} {row.transactionCount <= 1 ? 'txn' : 'txns'}
             </PCell>
@@ -279,7 +284,7 @@ class BlockAndTxn extends Component {
           <StyledTabel className="left">
             <div className="ui card" style={{ width: '100%' }}>
               <div className="content">
-                <div className="header">{locale === 'zh' ? '区块' : 'Blocks'}</div>
+                <div className="header">{i18n('app.pages.blockAndTx.blocks')}</div>
               </div>
               <div className="content">
                 {!BlockList.length && <TableLoading />}
@@ -287,7 +292,7 @@ class BlockAndTxn extends Component {
               </div>
               <div className="extra content">
                 <Link to="/blocks">
-                  <StyledButton className="ui fluid violet button ">{locale === 'zh' ? '查看所有区块' : 'View All Blocks'}</StyledButton>
+                  <StyledButton className="ui fluid violet button ">{i18n('app.pages.blockAndTx.viewAllBlocks')}</StyledButton>
                 </Link>
               </div>
             </div>
@@ -295,7 +300,7 @@ class BlockAndTxn extends Component {
           <StyledTabel className="right">
             <div className="ui card" style={{ width: '100%' }}>
               <div className="content">
-                <div className="header">{locale === 'zh' ? '交易' : 'Transactions'}</div>
+                <div className="header">{i18n('Transactions')}</div>
               </div>
               <div className="content">
                 {!TxList.length && <TableLoading />}
@@ -303,9 +308,7 @@ class BlockAndTxn extends Component {
               </div>
               <div className="extra content">
                 <Link to="/transactions">
-                  <StyledButton className="ui fluid violet button ">
-                    {locale === 'zh' ? '查看所有交易' : 'View All Transactions'}
-                  </StyledButton>
+                  <StyledButton className="ui fluid violet button ">{i18n('app.pages.blockAndTx.viewAllTransactions')}</StyledButton>
                 </Link>
               </div>
             </div>
