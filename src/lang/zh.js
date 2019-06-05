@@ -114,15 +114,15 @@ export default {
 
   // Directory Page
   'app.directory.exchange.title': '交易所',
-  'app.directory.exchange.desc': '请在这里交易数字货币',
+  'app.directory.exchange.desc': '区块链资产交易平台',
   'app.directory.wallet.title': '钱包',
-  'app.directory.wallet.desc': '用于数字货币接收和发送',
+  'app.directory.wallet.desc': '区块链资产管理与安全储存',
   'app.directory.website.title': '官网',
-  'app.directory.website.desc': '展示 Conflux 最新进展',
+  'app.directory.website.desc': '关注 Conflux 官方动态与进展',
   'app.directory.news.title': '新闻',
-  'app.directory.news.desc': '更快知道我们发生了什么',
-  'app.directory.topholders.title': '持币大户',
-  'app.directory.topholders.desc': '依照章程对所有人进行公示',
+  'app.directory.news.desc': '关注 Conflux 最新进展',
+  'app.directory.topholders.title': '持币排行',
+  'app.directory.topholders.desc': '保证社区的公开与透明',
   'app.directory.community.title': '社区',
-  'app.directory.community.desc': 'Conflux 社区欢迎您',
+  'app.directory.community.desc': '成为下一代去中心化社区的一员',
 };
