@@ -138,6 +138,8 @@ const dataSource = [
   { key: 2, ein: '80581', zwei: '0xe969a6fc05897124124', drei: 'Schwarz' },
 ];
 
+let curPageBase = 1;
+/* eslint react/destructuring-assignment: 0 */
 class List extends Component {
   constructor() {
     super();
@@ -145,11 +147,17 @@ class List extends Component {
       isLoading: true,
       TxList: [],
       TotalCount: 100,
+      curPage: curPageBase,
     };
   }
 
   componentDidMount() {
-    this.fetchTxList({ activePage: 1 });
+    const { curPage } = this.state;
+    this.fetchTxList({ activePage: curPage });
+  }
+
+  componentWillUnmount() {
+    curPageBase = this.state.curPage;
   }
 
   async fetchTxList({ activePage }) {
@@ -167,7 +175,7 @@ class List extends Component {
           TxList: result.find((item) => Object.keys(item)[0] === 'transaction/list')['transaction/list'],
           TotalCount: result.find((item) => Object.keys(item)[0] === 'transaction/list')['total_transaction/list'],
         },
-        () => this.setState({ isLoading: false })
+        () => this.setState({ isLoading: false, curPage: activePage })
       );
     }
   }

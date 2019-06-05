@@ -159,6 +159,9 @@ const dataSource = [
   { key: 2, ein: '80581', zwei: '0xe969a6fc05897124124', drei: 'Schwarz' },
 ];
 
+let curPageBase = 1;
+/* eslint react/destructuring-assignment: 0 */
+
 class List extends Component {
   constructor() {
     super();
@@ -166,12 +169,16 @@ class List extends Component {
       isLoading: true,
       BlockList: [],
       TotalCount: 100,
-      curPage: 1,
+      curPage: curPageBase,
     };
   }
 
   componentDidMount() {
-    this.fetchBlockList({ activePage: 1 });
+    this.fetchBlockList({ activePage: this.state.curPage });
+  }
+
+  componentWillUnmount() {
+    curPageBase = this.state.curPage;
   }
 
   async fetchBlockList({ activePage }) {
