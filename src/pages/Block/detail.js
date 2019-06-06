@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import superagent from 'superagent';
@@ -235,10 +236,10 @@ const RefColumns = [
     key: 2,
     title: i18n('Position'),
     dataIndex: 'position',
-    className: 'one wide aligned',
+    className: 'one wide aligned plain_th',
     render: (text, row) => (
       <div>
-        <PCell>{text}</PCell>
+        <PCell>{1 + text}</PCell>
       </div>
     ),
   },
@@ -256,7 +257,7 @@ const RefColumns = [
   {
     key: 4,
     dataIndex: 'difficulty',
-    className: 'one wide aligned',
+    className: 'one wide aligned plain_th',
     title: i18n('Difficulty'),
     render: (text) => <PCell>{text}</PCell>,
   },
@@ -269,7 +270,7 @@ const RefColumns = [
   },
   {
     key: 6,
-    className: 'one wide aligned',
+    className: 'one wide aligned plain_th',
     dataIndex: 'gasLimit',
     title: i18n('Gas Limit'),
     render: (text) => <PCell>{text}</PCell>,
@@ -283,7 +284,7 @@ const RefColumns = [
   },
   {
     key: 8,
-    className: 'two wide left aligned',
+    className: 'two wide left aligned plain_th',
     dataIndex: 'transactionCount',
     title: i18n('Tx Count'),
     render: (text) => <PCell>{text}</PCell>,
@@ -294,6 +295,7 @@ class Detail extends Component {
   constructor() {
     super();
     this.state = {
+      blockhash: '',
       currentTab: 1,
       TxTotalCount: 100,
       refereeBlockList: [],
@@ -311,7 +313,7 @@ class Detail extends Component {
   }
 
   async fetchTxDetail(blockHash, { activePage }) {
-    this.setState({ isLoading: true });
+    this.setState({ isLoading: true, blockhash: blockHash });
     const { code, result } = (await superagent.get(`/proxy/fetchBlockDetail/${blockHash}?pageNum=${activePage}&pageSize=10`)).body;
     if (!code) {
       this.setState(
@@ -347,12 +349,15 @@ class Detail extends Component {
   }
 
   render() {
-    const { blockDetail, TxList, TxTotalCount, isLoading, currentTab, refereeBlockList } = this.state;
+    const { blockDetail, TxList, TxTotalCount, isLoading, currentTab, refereeBlockList, blockhash } = this.state;
     const {
       match: { params },
     } = this.props;
+    if (blockhash !== params.blockhash) {
+      this.fetchTxDetail(params.blockhash, { activePage: 1 });
+    }
 
-    console.log(refereeBlockList, '===refereeBlockList');
+    // console.log(refereeBlockList, '===refereeBlockList');
     return (
       <div className="page-block-detail">
         <Wrapper>
@@ -372,7 +377,9 @@ class Detail extends Component {
                   </tr>
                   <tr className="">
                     <td className="collapsing">{i18n('Epoch')}</td>
-                    <td className="">{blockDetail.epochNumber}</td>
+                    <td className="">
+                      <Link to={`/epochsdetail/${blockDetail.epochNumber}`}>{blockDetail.epochNumber}</Link>
+                    </td>
                   </tr>
                   <tr className="">
                     <td className="collapsing">{i18n('Difficulty')}</td>
@@ -380,15 +387,21 @@ class Detail extends Component {
                   </tr>
                   <tr className="">
                     <td className="collapsing">{i18n('Miner')}</td>
-                    <td className="">{blockDetail.miner}</td>
+                    <td className="">
+                      <Link to={`/accountdetail/${blockDetail.miner}`}>{blockDetail.miner}</Link>
+                    </td>
                   </tr>
                   <tr className="">
                     <td className="collapsing">{i18n('Block Hash')}</td>
-                    <td className="">{blockDetail.hash}</td>
+                    <td className="">
+                      <Link to={`/blocksdetail/${blockDetail.hash}`}>{blockDetail.hash}</Link>
+                    </td>
                   </tr>
                   <tr className="">
                     <td className="collapsing">{i18n('Present Hash')}</td>
-                    <td className="">{blockDetail.parentHash}</td>
+                    <td className="">
+                      <Link to={`/blocksdetail/${blockDetail.parentHash}`}>{blockDetail.parentHash}</Link>
+                    </td>
                   </tr>
                   <tr className="">
                     <td className="collapsing">{i18n('Nonce')}</td>

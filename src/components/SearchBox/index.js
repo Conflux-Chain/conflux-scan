@@ -101,10 +101,11 @@ const filterKeys = ['all', 'epoch', 'block', 'transaction', 'address'].map((s) =
 class SearchBox extends Component {
   constructor(props) {
     super(props);
-    this.state = { searchKey: '', filterName: 'app.comp.searchbox.filter.all' };
+    this.state = { searchKey: '', filterName: 'app.comp.searchbox.filter.all', filterValue: 0 };
   }
 
   async handleSearch(value) {
+    const { filterValue } = this.state;
     const { history } = this.props;
     if (value) {
       this.setState({
@@ -126,13 +127,20 @@ class SearchBox extends Component {
         if (typeof result !== 'undefined') {
           switch (result) {
             case 0:
-              history.push(`/blocksdetail/${value}`);
+              if (filterValue === 0 || filterValue === 2) history.push(`/blocksdetail/${value}`);
+              else history.push(`/search-notfound?searchId=${value}&errMsg=${message}`);
               break;
             case 1:
-              history.push(`/transactionsdetail/${value}`);
+              if (filterValue === 0 || filterValue === 3) history.push(`/transactionsdetail/${value}`);
+              else history.push(`/search-notfound?searchId=${value}&errMsg=${message}`);
               break;
             case 2:
-              history.push(`/accountdetail/${value}`);
+              if (filterValue === 0 || filterValue === 4) history.push(`/accountdetail/${value}`);
+              else history.push(`/search-notfound?searchId=${value}&errMsg=${message}`);
+              break;
+            case 3:
+              if (filterValue === 0 || filterValue === 1) history.push(`/epochsdetail/${value}`);
+              else history.push(`/search-notfound?searchId=${value}&errMsg=${message}`);
               break;
             default:
               console.log('unknow case');
@@ -151,7 +159,7 @@ class SearchBox extends Component {
   }
 
   render() {
-    const { searchKey, filterName, showLoading } = this.state;
+    const { searchKey, filterName, showLoading, filterValue } = this.state;
     const { intl } = this.props;
 
     return (
@@ -179,8 +187,8 @@ class SearchBox extends Component {
                   className="item"
                   role="button"
                   tabIndex={index}
-                  onClick={() => this.setState({ filterName: name })}
-                  onKeyPress={() => this.setState({ filterName: name })}
+                  onClick={() => this.setState({ filterName: name, filterValue: index })}
+                  onKeyPress={() => this.setState({ filterName: name, filterValue: index })}
                 >
                   <FormattedMessage id={name} />
                 </div>

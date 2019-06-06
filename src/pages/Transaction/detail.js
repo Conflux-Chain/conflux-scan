@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import superagent from 'superagent';
@@ -81,6 +82,7 @@ class Detail extends Component {
   constructor() {
     super();
     this.state = {
+      txnhash: '',
       result: {},
       isLoading: true,
     };
@@ -94,7 +96,7 @@ class Detail extends Component {
   }
 
   async fetchTxDetail(txnhash) {
-    this.setState({ isLoading: true });
+    this.setState({ isLoading: true, txnhash });
     const { code, result } = (await superagent.get(`/proxy/fetchTxDetail?transactionHash=${txnhash}`)).body;
     if (!code) {
       this.setState({ result }, () => this.setState({ isLoading: false }));
@@ -103,10 +105,13 @@ class Detail extends Component {
   }
 
   render() {
-    const { result, isLoading } = this.state;
+    const { result, isLoading, txnhash } = this.state;
     const {
       match: { params },
     } = this.props;
+    if (txnhash !== params.txnhash) {
+      this.fetchTxDetail(params.txnhash, { activePage: 1 });
+    }
 
     return (
       <div className="page-transaction-detail">
@@ -118,7 +123,7 @@ class Detail extends Component {
           {isLoading ? (
             <TableLoading />
           ) : (
-            <StyledTabel className="ui basic padded table">
+            <StyledTabel className="ui basic table">
               <tbody className="">
                 <tr className="">
                   <td className="collapsing top">{i18n('Transaction Hash')}</td>
@@ -130,11 +135,15 @@ class Detail extends Component {
                 </tr>
                 <tr className="">
                   <td className="collapsing">{i18n('From')}</td>
-                  <td className="">{result.from}</td>
+                  <td className="">
+                    <Link to={`/accountdetail/${result.from}`}>{result.from}</Link>
+                  </td>
                 </tr>
                 <tr className="">
                   <td className="collapsing">{i18n('To')}</td>
-                  <td className="">{result.to}</td>
+                  <td className="">
+                    <Link to={`/accountdetail/${result.to}`}>{result.to}</Link>
+                  </td>
                 </tr>
                 <tr className="">
                   <td className="collapsing">{i18n('Gas')}</td>
@@ -154,7 +163,9 @@ class Detail extends Component {
                 </tr>
                 <tr className="">
                   <td className="collapsing">{i18n('Block Hash')}</td>
-                  <td className="">{result.blockHash}</td>
+                  <td className="">
+                    <Link to={`/blocksdetail/${result.blockHash}`}>{result.blockHash}</Link>
+                  </td>
                 </tr>
                 <tr className="">
                   <td className="collapsing">{i18n('Position')}</td>
