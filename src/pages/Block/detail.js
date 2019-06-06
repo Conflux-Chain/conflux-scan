@@ -387,7 +387,7 @@ class Detail extends Component {
                     <td className="">{blockDetail.hash}</td>
                   </tr>
                   <tr className="">
-                    <td className="collapsing">{i18n('Present Hash')}</td>
+                    <td className="collapsing">{i18n('Parent Hash')}</td>
                     <td className="">{blockDetail.parentHash}</td>
                   </tr>
                   <tr className="">

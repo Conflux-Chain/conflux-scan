@@ -79,7 +79,8 @@ const PrefixTag = styled.i`
   font-size: 14px !important;
   font-weight: 400;
   color: rgba(0, 0, 0, 0.87);
-  width: 35px;
+  margin-right: 8px;
+  flex: none;
 `;
 
 function EllipsisLine({ intl, prefix, unit, is2ndLine, isPivot, isLong, linkTo, text, textInout }) {

@@ -231,8 +231,8 @@ class BlockAndTxn extends Component {
               <PCell>
                 <Countdown timestamp={row.timestamp * 1000} />
               </PCell>
-              <EllipsisLine prefix="From" linkTo={`/accountdetail/${text}`} text={text} />
-              <EllipsisLine is2ndLine prefix="To" linkTo={`/accountdetail/${row.to}`} text={row.to} />
+              <EllipsisLine prefix={i18n('From')} linkTo={`/accountdetail/${text}`} text={text} />
+              <EllipsisLine is2ndLine prefix={i18n('To')} linkTo={`/accountdetail/${row.to}`} text={row.to} />
               <FloatGas>
                 <StyledLabel>{converToGasPrice3Fixed(row.gasPrice) + ' CFX'}</StyledLabel>
               </FloatGas>
@@ -268,8 +268,8 @@ class BlockAndTxn extends Component {
         title: 'Blocks',
         render: (text, row) => (
           <div>
-            <EllipsisLine prefix="From" linkTo={`/accountdetail/${text}`} text={text} />
-            <EllipsisLine is2ndLine prefix="To" linkTo={`/accountdetail/${row.to}`} text={row.to} />
+            <EllipsisLine prefix={i18n('From')} linkTo={`/accountdetail/${text}`} text={text} />
+            <EllipsisLine is2ndLine prefix={i18n('To')} linkTo={`/accountdetail/${row.to}`} text={row.to} />
           </div>
         ),
       },
