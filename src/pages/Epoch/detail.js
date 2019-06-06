@@ -68,7 +68,8 @@ const columns = [
     key: 1,
     dataIndex: 'position',
     title: 'Position',
-    className: 'one wide aligned',
+    className: 'one wide aligned plain_th',
+    render: (text) => 1 + text,
   },
   {
     key: 2,
@@ -87,7 +88,7 @@ const columns = [
     key: 3,
     dataIndex: 'difficulty',
     title: 'Difficulty',
-    className: 'one wide aligned',
+    className: 'one wide aligned plain_th',
     render: (text) => (
       <div>
         <PCell>{text}</PCell>
@@ -111,14 +112,14 @@ const columns = [
     key: 5,
     dataIndex: 'gasLimit',
     title: 'Gas Limit',
-    className: 'one wide aligned',
+    className: 'one wide aligned plain_th',
     render: (text) => text,
   },
   {
     key: 6,
     dataIndex: 'timestamp',
     title: 'Age',
-    className: 'three wide aligned',
+    className: 'three wide aligned plain_th',
     render: (text) => (
       <PCell>
         <Countdown timestamp={text * 1000} />
@@ -127,7 +128,7 @@ const columns = [
   },
   {
     key: 7,
-    className: 'one wide left aligned',
+    className: 'one wide left aligned plain_th',
     dataIndex: 'transactionCount',
     title: 'Tx Count',
     render: (text) => text,

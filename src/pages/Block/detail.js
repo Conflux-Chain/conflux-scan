@@ -235,10 +235,10 @@ const RefColumns = [
     key: 2,
     title: i18n('Position'),
     dataIndex: 'position',
-    className: 'one wide aligned',
+    className: 'one wide aligned plain_th',
     render: (text, row) => (
       <div>
-        <PCell>{text}</PCell>
+        <PCell>{1 + text}</PCell>
       </div>
     ),
   },
@@ -256,7 +256,7 @@ const RefColumns = [
   {
     key: 4,
     dataIndex: 'difficulty',
-    className: 'one wide aligned',
+    className: 'one wide aligned plain_th',
     title: i18n('Difficulty'),
     render: (text) => <PCell>{text}</PCell>,
   },
@@ -269,7 +269,7 @@ const RefColumns = [
   },
   {
     key: 6,
-    className: 'one wide aligned',
+    className: 'one wide aligned plain_th',
     dataIndex: 'gasLimit',
     title: i18n('Gas Limit'),
     render: (text) => <PCell>{text}</PCell>,
@@ -283,7 +283,7 @@ const RefColumns = [
   },
   {
     key: 8,
-    className: 'two wide left aligned',
+    className: 'two wide left aligned plain_th',
     dataIndex: 'transactionCount',
     title: i18n('Tx Count'),
     render: (text) => <PCell>{text}</PCell>,

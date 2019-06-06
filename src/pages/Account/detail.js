@@ -304,11 +304,11 @@ const minedColumns = [
   {
     key: 2,
     dataIndex: 'position',
-    className: 'one wide aligned',
+    className: 'one wide aligned plain_th',
     title: i18n('Position'),
     render: (text, row) => (
       <div>
-        <PCell>{text}</PCell>
+        <PCell>{1 + text}</PCell>
       </div>
     ),
   },
@@ -326,7 +326,7 @@ const minedColumns = [
   {
     key: 4,
     dataIndex: 'difficulty',
-    className: 'one wide aligned',
+    className: 'one wide aligned plain_th',
     title: i18n('Difficulty'),
     render: (text) => <PCell>{text}</PCell>,
   },
@@ -339,7 +339,7 @@ const minedColumns = [
   },
   {
     key: 6,
-    className: 'one wide aligned',
+    className: 'one wide aligned plain_th',
     dataIndex: 'gasLimit',
     title: i18n('Gas Limit'),
     render: (text) => <PCell>{text}</PCell>,
@@ -353,7 +353,7 @@ const minedColumns = [
   },
   {
     key: 8,
-    className: 'two wide aligned',
+    className: 'two wide aligned plain_th',
     dataIndex: 'transactionCount',
     title: i18n('Tx Count'),
     render: (text) => <PCell>{text}</PCell>,
