@@ -381,7 +381,6 @@ class Detail extends Component {
     const {
       match: { params },
     } = this.props;
-
     this.fetchAccountDetail(params.accountid, queries);
   }
 
