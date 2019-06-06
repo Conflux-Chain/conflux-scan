@@ -118,7 +118,7 @@ class Detail extends Component {
           {isLoading ? (
             <TableLoading />
           ) : (
-            <StyledTabel className="ui basic padded table">
+            <StyledTabel className="ui basic table">
               <tbody className="">
                 <tr className="">
                   <td className="collapsing top">{i18n('Transaction Hash')}</td>
