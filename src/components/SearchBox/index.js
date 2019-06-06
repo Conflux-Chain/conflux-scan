@@ -115,8 +115,18 @@ class SearchBox extends Component {
         const eventScroll = new Event('scroll-to-top');
         setTimeout(() => {
           document.dispatchEvent(eventScroll);
+          this.setState({
+            showLoading: false,
+          });
         }, 0);
       };
+
+      if (/^[0-9a-zA-Z]+$/.test(value) === false) {
+        history.push(`/search-notfound?searchId=${value}`);
+        scrollToTop();
+        return;
+      }
+
       if (filterValue === 0) {
         try {
           const { code, result } = (await superagent.get(`/proxy/fetchHashType/${value}`)).body;
@@ -208,11 +218,13 @@ class SearchBox extends Component {
           </div>
         </FilterSelector>
         <Input
-          onChange={(e) => {
-            this.setState({ searchKey: e.target.value });
+          onKeyUp={(e) => {
             if (e.which === 13) {
               this.handleSearch(e.target.value);
             }
+          }}
+          onChange={(e) => {
+            this.setState({ searchKey: e.target.value });
           }}
           type="text"
           placeholder={intl.formatMessage({ id: 'app.comp.searchbox.placeholder' })}
