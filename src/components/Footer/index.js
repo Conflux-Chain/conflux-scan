@@ -1,53 +1,166 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import sina from '../../assets/images/footImg/sina.png';
-import twitter from '../../assets/images/footImg/twitter.png';
-import hownet from '../../assets/images/footImg/hownet.png';
-import wechat from '../../assets/images/footImg/wechat.png';
-import github from '../../assets/images/footImg/github.png';
-import medium from '../../assets/images/footImg/medium.png';
-import telegram from '../../assets/images/footImg/telegram.png';
-import email from '../../assets/images/footImg/email.png';
+import styled from 'styled-components';
+import { FormattedMessage } from 'react-intl';
+import media from '../../globalStyles/media';
+
+const Wrapper = styled.footer`
+  width: calc(100% - 20px);
+  margin: 30px auto 0;
+  padding: 28px 0 20px;
+  display: flex;
+  justify-content: space-around;
+  text-align: left;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+
+  .copyright {
+    display: none;
+    margin-top: 20px;
+    margin-bottom: 12px;
+  }
+
+  ${media.pad` 
+    width: calc(100% - 32px);
+    flex-direction: column;
+    
+    .copyright {
+      display: block;
+    }
+  `}
+`;
+
+const Content = styled.div`
+  width: 100%;
+  line-height: 1;
+
+  ${media.pad`
+    .copyright-in {
+      display: none;
+    }
+  `}
+`;
+
+const Title = styled.div`
+  font-size: 16px;
+  font-weight: 700;
+  color: rgba(0, 0, 0, 0.56);
+  margin-bottom: 13px;
+`;
+
+const Info = styled.div`
+  color: rgba(0, 0, 0, 0.87);
+
+  span {
+    display: inline-block;
+    margin-right: 14px;
+    margin-bottom: 16px;
+
+    ${media.pad`
+      display: block;
+      margin-bottom: 8px;
+    `}
+  }
+
+  .icon {
+    display: inline-block;
+    width: 12px;
+    height: 14px;
+    fill: rgba(0, 0, 0, 0.38);
+    overflow: hidden;
+    margin-right: 10px;
+  }
+
+  .copyright-in {
+    display: block;
+  }
+`;
+
+const Copyright = styled.div`
+  color: rgba(0, 0, 0, 0.38);
+`;
+
+const Links = styled.div`
+  width: 140px;
+  a {
+    margin-left: 8px;
+    margin-right: 8px;
+
+    &:first-child {
+      margin-left: 0;
+    }
+
+    &:last-child {
+      margin-right: 0;
+    }
+    .icon {
+      width: 24px;
+      height: 24px;
+      fill: #727272;
+      overflow: hidden;
+      transition: 0.3s fill;
+
+      &:hover {
+        fill: #000;
+      }
+    }
+  }
+
+  ${media.pad`
+    margin-top: 16px;
+  `}
+`;
 
 function Footer() {
   return (
-    <div className="foot">
-      <div className="link">
-        <img className="code" alt="" />
-        <div className="linkIcon">
-          <a target="_blank" href="https://weibo.com/confluxchain">
-            <img src={sina} />
-          </a>
-          <a target="_blank" href="https://twitter.com/ConfluxChain">
-            <img src={twitter} />
-          </a>
-          <a target="_blank" href="https://www.zhihu.com/org/confluxzhong-wen-she-qu/">
-            <img src={hownet} />
-          </a>
-          <a target="_blank" href="javascript:;">
-            <img src={wechat} />
-          </a>
-          <a target="_blank" href="https://github.com/conflux-chain">
-            <img src={github} />
-          </a>
-          <a target="_blank" href="https://medium.com/@Confluxchain">
-            <img src={medium} />
-          </a>
-          <a target="_blank" href="http://t.me/Conflux_English">
-            <img src={telegram} />
-          </a>
-          <a target="_blank" href="mailto:contact@conflux-chain.org">
-            <img src={email} />
-          </a>
-        </div>
-        <div className="Copyright">Copyright©2019 Conflux. All Rights Reserved</div>
-        <div className="clause">
-          <Link to="/privacy">Privacy Policy</Link>
-          <Link to="/terms">Terms</Link>
-          <Link to="/faqs">FAQs</Link>
-        </div>
-      </div>
-    </div>
+    <Wrapper>
+      <Content>
+        <Title>
+          <FormattedMessage id="app.footer.title" />
+        </Title>
+        <Info>
+          <span>
+            <svg className="icon" aria-hidden="true">
+              <use xlinkHref="#iconcall" />
+            </svg>
+            010-62662688
+          </span>
+          <span>
+            <svg className="icon" aria-hidden="true">
+              <use xlinkHref="#iconemail" />
+            </svg>
+            <a href="mailto:feedbacks@conflux-chain.org" target="_blank">
+              feedbacks@conflux-chain.org
+            </a>
+          </span>
+          {/* <span> */}
+          {/*  <svg className="icon" aria-hidden="true"> */}
+          {/*    <use xlinkHref="#iconiclocationonpx" /> */}
+          {/*  </svg> */}
+          {/*  <FormattedMessage id="app.footer.address" /> */}
+          {/* </span> */}
+        </Info>
+        <Copyright className="copyright-in">Copyright © 2019 Conflux. All Rights Reserved</Copyright>
+      </Content>
+      <Links>
+        <a href="https://twitter.com/ConfluxChain" target="_blank" title="Twitter">
+          <svg className="icon" aria-hidden="true">
+            <use xlinkHref="#icontuite" />
+          </svg>
+        </a>
+        <a href="https://github.com/conflux-chain" target="_blank" title="Github">
+          <svg className="icon" aria-hidden="true">
+            <use xlinkHref="#icongithub" />
+          </svg>
+        </a>
+        <a href="https://medium.com/@Confluxchain" target="_blank" title="Blog">
+          <svg className="icon" aria-hidden="true">
+            <use xlinkHref="#iconmedium" />
+          </svg>
+        </a>
+      </Links>
+      <Copyright className="copyright">Copyright©2019 Conflux. All Rights Reserved</Copyright>
+    </Wrapper>
   );
 }
+
 export default Footer;

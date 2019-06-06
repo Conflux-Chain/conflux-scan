@@ -1,10 +1,12 @@
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const merge = require('webpack-merge');
+const WebpackCdnPlugin = require('webpack-cdn-plugin');
 const commom = require('./webpack.config.js');
 
 module.exports = merge(commom, {
   mode: 'production',
   devtool: 'source-map',
+  plugins: [],
   optimization: {
     minimizer: [
       new UglifyJsPlugin({
