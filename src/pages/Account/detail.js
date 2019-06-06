@@ -454,7 +454,7 @@ class Detail extends Component {
               {text !== params.accountid ? (
                 <EllipsisLine textInout="In" linkTo={`/accountdetail/${text}`} text={text} />
               ) : (
-                <EllipsisLine linkTo={`/accountdetail/${text}`} text={text} />
+                <EllipsisLine text={text} />
               )}
             </PCell>
           </div>
@@ -471,7 +471,7 @@ class Detail extends Component {
               {text !== params.accountid ? (
                 <EllipsisLine textInout="Out" linkTo={`/accountdetail/${text}`} text={text} />
               ) : (
-                <EllipsisLine linkTo={`/accountdetail/${text}`} text={text} />
+                <EllipsisLine text={text} />
               )}
             </PCell>
           </div>
