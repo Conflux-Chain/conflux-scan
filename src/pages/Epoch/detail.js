@@ -76,10 +76,10 @@ const columns = [
     dataIndex: 'hash',
     title: 'Hash',
     className: 'two wide aligned',
-    render: (text) => (
+    render: (text, row) => (
       <div>
         <PCell>
-          <EllipsisLine linkTo={`/blocksdetail/${text}`} isPivot isLong text={text} />
+          <EllipsisLine linkTo={`/blocksdetail/${text}`} isPivot={row.isPivot} isLong text={text} />
         </PCell>
       </div>
     ),
