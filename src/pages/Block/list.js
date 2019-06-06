@@ -93,14 +93,14 @@ const columns = [
     key: 1,
     dataIndex: 'epochNumber',
     title: i18n('Epoch'),
-    className: 'one wide aligned plain_th',
+    className: 'one wide aligned',
     render: (text) => <EllipsisLine linkTo={`/epochsdetail/${text}`} text={text} />,
   },
   {
     key: 2,
     dataIndex: 'position',
     title: i18n('Position'),
-    className: 'one wide aligned plain_th',
+    className: 'one wide aligned',
     render: (text, row) => (
       <div>
         <PCell>{text}</PCell>
@@ -111,7 +111,7 @@ const columns = [
     key: 3,
     dataIndex: 'hash',
     title: i18n('Hash'),
-    className: 'two wide aligned plain_th',
+    className: 'two wide aligned',
     render: (text, row) => (
       <div>
         <EllipsisLine isLong linkTo={`/blocksdetail/${text}`} isPivot={row.isPivot} text={text} />
@@ -121,34 +121,34 @@ const columns = [
   {
     key: 4,
     dataIndex: 'difficulty',
-    className: 'one wide aligned plain_th',
+    className: 'one wide aligned',
     title: i18n('Difficulty'),
     render: (text) => <PCell>{text}</PCell>,
   },
   {
     key: 5,
-    className: 'one wide aligned plain_th',
+    className: 'one wide aligned',
     dataIndex: 'miner',
     title: i18n('Miner'),
     render: (text) => <EllipsisLine linkTo={`/accountdetail/${text}`} text={text} />,
   },
   {
     key: 6,
-    className: 'one wide aligned plain_th',
+    className: 'one wide aligned',
     dataIndex: 'gasLimit',
     title: i18n('Gas Limit'),
     render: (text) => <PCell>{text}</PCell>,
   },
   {
     key: 7,
-    className: 'three wide aligned plain_th',
+    className: 'three wide aligned',
     dataIndex: 'timestamp',
     title: i18n('Age'),
     render: (text) => <Countdown timestamp={text * 1000} />,
   },
   {
     key: 8,
-    className: 'one wide aligned plain_th',
+    className: 'one wide aligned',
     dataIndex: 'transactionCount',
     title: i18n('Tx Count'),
     render: (text) => <PCell>{text}</PCell>,
