@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { Pagination } from 'semantic-ui-react';
 import superagent from 'superagent';
 import DataList from '../../components/DataList';
+import TableLoading from '../../components/TableLoading';
 import EllipsisLine from '../../components/EllipsisLine';
 import Countdown from '../../components/Countdown';
 import media from '../../globalStyles/media';
@@ -149,6 +150,7 @@ class Detail extends Component {
       BlockList: [],
       curPage: 1,
       totalCount: 0,
+      isLoading: false,
     };
   }
 
@@ -165,22 +167,31 @@ class Detail extends Component {
 
   async fetchInitList({ epochid, curPage }) {
     const { history } = this.props;
+    this.setState({ isLoading: true });
     const { code, result } = (await superagent.get(`/proxy/fetchEpochList?pageNum=${curPage}&pageSize=10&epochNum=${epochid}`)).body;
     if (!code) {
-      this.setState({
-        BlockList: result.find((item) => Object.keys(item)[0] === 'block/list')['block/list'],
-        totalCount: result.find((item) => {
-          return item['total_block/list'];
-        })['total_block/list'],
-        curPage,
-      });
+      this.setState(
+        {
+          BlockList: result.find((item) => Object.keys(item)[0] === 'block/list')['block/list'],
+          totalCount: result.find((item) => {
+            return item['total_block/list'];
+          })['total_block/list'],
+          curPage,
+        },
+        () => {
+          this.setState({
+            isLoading: false,
+          });
+        }
+      );
     } else if (code === 1) {
       history.push(`/search-notfound?searchId=${epochid}`);
     }
+    this.setState({ isLoading: false });
   }
 
   render() {
-    const { BlockList, curPage, totalCount } = this.state;
+    const { BlockList, curPage, totalCount, isLoading } = this.state;
     const {
       match: { params },
     } = this.props;
@@ -191,6 +202,7 @@ class Detail extends Component {
             <h1>{i18n('Epoch')}</h1>
             <p>{params.epochid}</p>
           </HeadBar>
+          {isLoading && <TableLoading />}
           <StyledTabel>
             <div className="ui fluid card">
               <div className="content">

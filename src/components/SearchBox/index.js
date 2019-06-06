@@ -117,7 +117,6 @@ class SearchBox extends Component {
           document.dispatchEvent(eventScroll);
         }, 0);
       };
-
       if (filterValue === 0) {
         try {
           const { code, result } = (await superagent.get(`/proxy/fetchHashType/${value}`)).body;
@@ -148,19 +147,25 @@ class SearchBox extends Component {
           }
         } catch (e) {
           console.log(e);
+        } finally {
+          this.setState({
+            showLoading: false,
+          });
         }
-      } else if (filterValue === 1) {
-        history.push(`/epochsdetail/${value}`);
-      } else if (filterValue === 2) {
-        history.push(`/blocksdetail/${value}`);
-      } else if (filterValue === 3) {
-        history.push(`/transactionsdetail/${value}`);
-      } else if (filterValue === 4) {
-        history.push(`/accountdetail/${value}`);
+      } else {
+        this.setState({
+          showLoading: false,
+        });
+        if (filterValue === 1) {
+          history.push(`/epochsdetail/${value}`);
+        } else if (filterValue === 2) {
+          history.push(`/blocksdetail/${value}`);
+        } else if (filterValue === 3) {
+          history.push(`/transactionsdetail/${value}`);
+        } else if (filterValue === 4) {
+          history.push(`/accountdetail/${value}`);
+        }
       }
-      this.setState({
-        showLoading: false,
-      });
     }
   }
 

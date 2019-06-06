@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import superagent from 'superagent';
 import { Pagination } from 'semantic-ui-react';
 import DataList from '../../components/DataList';
 import Countdown from '../../components/Countdown';
