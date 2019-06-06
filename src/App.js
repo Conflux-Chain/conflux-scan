@@ -37,7 +37,8 @@ const Wrapper = styled.div`
 const Container = styled.div`
   position: relative;
   padding: 20px 20px 0;
-  margin-left: 120px;
+  padding-left: 120px;
+  margin: 0;
   max-height: calc(100vh - 72px);
   overflow-x: hidden;
   overflow-y: auto;
@@ -85,9 +86,17 @@ document.addEventListener('scroll-to-top', (event) => {
   }
 });
 
+let setShowNavbarGlobal;
+document.addEventListener('hide-nav-bar', () => {
+  if (setShowNavbarGlobal) {
+    setShowNavbarGlobal(false);
+  }
+});
+
 function App() {
   const [lang, setLang] = useState('en');
   const [showNavbar, setShowNavbar] = useState(false);
+  setShowNavbarGlobal = setShowNavbar;
 
   return (
     <IntlProvider locale={lang} messages={messages[lang]}>

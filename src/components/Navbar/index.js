@@ -17,7 +17,7 @@ const Wrapper = styled.div`
   padding: 0;
   text-align: center;
   background-color: #1f204c;
-  z-index: 999;
+  z-index: 99;
   overflow-x: hidden;
   overflow-y: auto;
 
@@ -97,8 +97,12 @@ const Menu = styled.ul`
 
 function cleanState() {
   const event = new Event('clean_state');
+  const eventScroll = new Event('scroll-to-top');
+  const eventHideNavBar = new Event('hide-nav-bar');
   setTimeout(() => {
     document.dispatchEvent(event);
+    document.dispatchEvent(eventScroll);
+    document.dispatchEvent(eventHideNavBar);
   }, 0);
 }
 
