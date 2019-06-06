@@ -146,8 +146,7 @@ const Statistic = styled.div`
     ${fullWidthMobile}
     ${media.pad`border-bottom: 1px solid rgba(0, 0, 0, 0.08);`}
   }
-  .miner,
-  .balance {
+  .miner {
     width: 20%;
     border-left: 1px solid rgba(0, 0, 0, 0.08);
     ${fullWidthMobile}
@@ -158,8 +157,10 @@ const Statistic = styled.div`
     .wrap svg {
       opacity: 1;
     }
+    border-left: 1px solid rgba(0, 0, 0, 0.08);
+    ${fullWidthMobile}
+    ${media.pad`border-bottom: 1px solid rgba(0, 0, 0, 0.08);`}
   }
-
   .seen {
     width: 36%;
     border-left: 1px solid rgba(0, 0, 0, 0.08);
@@ -589,7 +590,7 @@ class Detail extends Component {
             <div className="balance">
               <div className="wrap">
                 <svg className="icon" aria-hidden="true">
-                  <use xlinkHref="#iconEquilibrium-type" className="iconEquilibrium" />
+                  <use xlinkHref="#iconEquilibrium-type" />
                 </svg>
                 <div>
                   <h2>{i18n('Balance')}</h2>
@@ -647,8 +648,8 @@ class Detail extends Component {
               >
                 <RangePicker
                   className="date-picker"
-                  showTime={{ format: 'HH:00' }}
-                  format="YYYY-MM-DD HH:00"
+                  showTime={{ format: 'HH:ss' }}
+                  format="YYYY-MM-DD HH:ss"
                   placeholder={[
                     intl.formatMessage({
                       id: 'StartTime',

@@ -55,7 +55,7 @@ export default {
   'app.pages.notFoundTx.concatus': ' contact us',
   'app.pages.searchNotFound.title': 'Search not found',
   'app.pages.searchNotFound.row2': 'Oops! The search string you entered was:',
-  'app.pages.searchNotFound.row4': 'not found',
+  'app.pages.searchNotFound.row4': 'Sorry! This is an invalid search string',
   'app.pages.dashboard.tps': 'TPS',
   'app.pages.dashboard.difficulty': 'Difficulty',
   'app.pages.dashboard.blockTime': 'Block Time',
