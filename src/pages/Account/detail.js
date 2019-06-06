@@ -449,7 +449,7 @@ class Detail extends Component {
         dataIndex: 'hash',
         className: 'two wide aligned',
         title: i18n('Hash'),
-        render: (text, row) => <EllipsisLine linkTo={`/transactions/${text}`} isPivot text={text} />,
+        render: (text, row) => <EllipsisLine linkTo={`/transactions/${text}`} text={text} />,
       },
       {
         key: 2,
