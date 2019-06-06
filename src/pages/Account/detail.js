@@ -155,7 +155,11 @@ const Statistic = styled.div`
   }
   .balance {
     width: 24%;
+    .wrap svg {
+      opacity: 1;
+    }
   }
+
   .seen {
     width: 36%;
     border-left: 1px solid rgba(0, 0, 0, 0.08);
@@ -270,13 +274,13 @@ const CtrlPanel = styled.div`
     ${media.pad`width: 250px!important; display: inline-block;`}
   }
   .drop-btn {
+    svg {
+      transform: rotate(90deg);
+    }
     ${media.pad`
       position: absolute;
       right: 10px;
       top: 18px;
-      svg {
-        transform: rotate(90deg);
-      }
     `}
   }
 `;
@@ -291,6 +295,13 @@ const TabPanel = styled.div`
       width: auto;
     `}
   }
+`;
+
+const MinedWrap = styled.div`
+  display: flex;
+  margin-top: 24px;
+  justify-content: flex-end;
+  ${commonCss.paginatorMixin}
 `;
 
 const minedColumns = [
@@ -381,6 +392,8 @@ class Detail extends Component {
         pageSize: 10,
         txnType: 'all',
       },
+      minedTotalCount: 0,
+      curMinedPage: 1,
     };
   }
 
@@ -412,15 +425,20 @@ class Detail extends Component {
             `total_account/${accountid}/transactionList`,
             []
           ),
+          minedTotalCount:
+            get(result.find((item) => Object.keys(item)[0] === `account/${accountid}`), [`account/${accountid}`, 'minedBlocks']) || 0,
         },
-        () => this.setState({ isLoading: false, queries })
+        () => {
+          this.setState({ isLoading: false, queries });
+        }
       );
     }
     return {};
   }
 
-  async fetchMinedBlockList(accountid) {
-    const { code, result } = (await superagent.get(`/proxy/fetchMinedBlockList/${accountid}?pageNum=1&pageSize=20`)).body;
+  async fetchMinedBlockList(accountid, curMinedPage) {
+    this.setState({ isLoading: true });
+    const { code, result } = (await superagent.get(`/proxy/fetchMinedBlockList/${accountid}?pageNum=${curMinedPage}&pageSize=5`)).body;
     if (!code) {
       this.setState(
         {
@@ -428,14 +446,31 @@ class Detail extends Component {
             `account/${accountid}/minedBlockList`
           ],
         },
-        () => this.setState({ isLoading: false })
+        () => {
+          this.setState({
+            isLoading: false,
+            curMinedPage,
+          });
+        }
       );
     }
+    this.setState({ isLoading: false });
     return {};
   }
 
   render() {
-    const { accountDetail, queries, currentTab, isLoading, minedBlockList, TxList, TxTotalCount, accountid } = this.state;
+    const {
+      accountDetail,
+      queries,
+      currentTab,
+      isLoading,
+      minedBlockList,
+      TxList,
+      TxTotalCount,
+      accountid,
+      minedTotalCount,
+      curMinedPage,
+    } = this.state;
     const {
       intl,
       match: { params },
@@ -533,7 +568,7 @@ class Detail extends Component {
                   <use xlinkHref="#iconshiliangzhinengduixiang" />
                 </svg>
                 <div>
-                  <h2>{i18n('Transactions')}</h2>
+                  <h2>{i18n('app.pages.account.detail.transactions')}</h2>
                   <p>
                     <span>{accountDetail.transactions}</span>
                   </p>
@@ -554,7 +589,7 @@ class Detail extends Component {
             <div className="balance">
               <div className="wrap">
                 <svg className="icon" aria-hidden="true">
-                  <use xlinkHref="#iconEquilibrium-type" />
+                  <use xlinkHref="#iconEquilibrium-type" className="iconEquilibrium" />
                 </svg>
                 <div>
                   <h2>{i18n('Balance')}</h2>
@@ -590,7 +625,7 @@ class Detail extends Component {
                 onKeyUp={() => {}}
                 onClick={() => this.setState({ currentTab: 1 })}
               >
-                {i18n('Transactions')}
+                {i18n('app.pages.account.detail.transactions')}
               </button>
               <button
                 type="button"
@@ -598,14 +633,18 @@ class Detail extends Component {
                 onKeyUp={() => {}}
                 onClick={() => {
                   this.setState({ currentTab: 2 });
-                  this.fetchMinedBlockList(params.accountid);
+                  this.fetchMinedBlockList(params.accountid, curMinedPage);
                 }}
               >
                 {i18n('Mined Blocks')}
               </button>
             </div>
             <div className="ctrlpanel-wrap">
-              <CtrlPanel>
+              <CtrlPanel
+                style={{
+                  display: currentTab === 1 ? 'flex' : 'none',
+                }}
+              >
                 <RangePicker
                   className="date-picker"
                   showTime={{ format: 'HH:00' }}
@@ -629,7 +668,7 @@ class Detail extends Component {
                     if (value.length) {
                       const startTime = value[0].unix();
                       const endTime = value[1].unix();
-                      this.fetchAccountDetail(params.accountid, { ...queries, startTime, endTime });
+                      this.fetchAccountDetail(params.accountid, { ...queries, startTime, endTime, pageNum: 1 });
                     }
                   }}
                 />
@@ -650,7 +689,7 @@ class Detail extends Component {
                       value="all"
                       onClick={(e, data) => {
                         e.preventDefault();
-                        this.fetchAccountDetail(params.accountid, { ...queries, txnType: data.value });
+                        this.fetchAccountDetail(params.accountid, { ...queries, txnType: data.value, pageNum: 1 });
                       }}
                     />
                     <Dropdown.Item
@@ -658,7 +697,7 @@ class Detail extends Component {
                       value="outgoing"
                       onClick={(e, data) => {
                         e.preventDefault();
-                        this.fetchAccountDetail(params.accountid, { ...queries, txnType: data.value });
+                        this.fetchAccountDetail(params.accountid, { ...queries, txnType: data.value, pageNum: 1 });
                       }}
                     />
                     <Dropdown.Item
@@ -666,7 +705,7 @@ class Detail extends Component {
                       value="incoming"
                       onClick={(e, data) => {
                         e.preventDefault();
-                        this.fetchAccountDetail(params.accountid, { ...queries, txnType: data.value });
+                        this.fetchAccountDetail(params.accountid, { ...queries, txnType: data.value, pageNum: 1 });
                       }}
                     />
                   </Dropdown.Menu>
@@ -695,8 +734,8 @@ class Detail extends Component {
                         e.preventDefault();
                         this.fetchAccountDetail(params.accountid, { ...queries, pageNum: data.activePage });
                       }}
-                      defaultActivePage={1}
-                      totalPages={Math.ceil(TxTotalCount / 10)}
+                      activePage={queries.pageNum}
+                      totalPages={Math.floor(TxTotalCount / 10) + 1}
                     />
                   </div>
                   <div className="page-h5">
@@ -710,13 +749,16 @@ class Detail extends Component {
                         content: i18n('nextPage'),
                       }}
                       boundaryRange={0}
-                      activePage={2}
-                      onPageChange={() => {}}
+                      activePage={queries.pageNum}
+                      onPageChange={(e, data) => {
+                        e.preventDefault();
+                        this.fetchAccountDetail(params.accountid, { ...queries, pageNum: data.activePage });
+                      }}
                       ellipsisItem={null}
                       firstItem={null}
                       lastItem={null}
                       siblingRange={1}
-                      totalPages={Math.ceil(TxTotalCount / 10)}
+                      totalPages={Math.floor(TxTotalCount / 10) + 1}
                     />
                   </div>
                 </TabWrapper>
@@ -729,6 +771,50 @@ class Detail extends Component {
                     </div>
                   </div>
                 </StyledTabel>
+
+                <MinedWrap>
+                  <div className="page-pc">
+                    <Pagination
+                      prevItem={{
+                        'aria-label': 'Previous item',
+                        content: i18n('lastPage'),
+                      }}
+                      nextItem={{
+                        'aria-label': 'Next item',
+                        content: i18n('nextPage'),
+                      }}
+                      onPageChange={(e, data) => {
+                        e.preventDefault();
+                        this.fetchMinedBlockList(params.accountid, data.activePage);
+                      }}
+                      activePage={curMinedPage}
+                      totalPages={Math.floor(minedTotalCount / 5) + 1}
+                    />
+                  </div>
+                  <div className="page-h5">
+                    <Pagination
+                      prevItem={{
+                        'aria-label': 'Previous item',
+                        content: i18n('lastPage'),
+                      }}
+                      nextItem={{
+                        'aria-label': 'Next item',
+                        content: i18n('nextPage'),
+                      }}
+                      boundaryRange={0}
+                      activePage={curMinedPage}
+                      onPageChange={(e, data) => {
+                        e.preventDefault();
+                        this.fetchMinedBlockList(params.accountid, data.activePage);
+                      }}
+                      ellipsisItem={null}
+                      firstItem={null}
+                      lastItem={null}
+                      siblingRange={1}
+                      totalPages={Math.floor(minedTotalCount / 5) + 1}
+                    />
+                  </div>
+                </MinedWrap>
               </TabPanel>
             </div>
           </TabZone>

@@ -35,6 +35,7 @@ export default {
   'app.pages.blocks.packTime': 'Time',
 
   // blocks & txns
+  'app.pages.account.detail.transactions': 'Transactions',
   'app.pages.blockAndTx.blocks': 'Blocks',
   'app.pages.blockAndTx.viewAllBlocks': 'View All Blocks',
   'app.pages.blockAndTx.viewAllTransactions': 'View All Transactions',

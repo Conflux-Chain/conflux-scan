@@ -13,6 +13,7 @@ import EllipsisLine from '../../components/EllipsisLine';
 import { convertToValueorFee, converToGasPrice, i18n } from '../../utils';
 import '../../assets/semantic-ui/semantic.css';
 import media from '../../globalStyles/media';
+import * as commonCss from '../../globalStyles/common';
 
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -156,6 +157,7 @@ const TabWrapper = styled.div`
   ${media.mobile`
     justify-content: center;
   `}
+  ${commonCss.paginatorMixin}
 `;
 const TabContent = styled.div`
   margin-top: -1px;
@@ -305,6 +307,7 @@ class Detail extends Component {
       blockDetail: {},
       TxList: [],
       isLoading: true,
+      curPage: 1,
     };
   }
 
@@ -329,7 +332,7 @@ class Detail extends Component {
             `total_block/${blockHash}/transactionList`
           ],
         },
-        () => this.setState({ isLoading: false })
+        () => this.setState({ isLoading: false, curPage: activePage })
       );
     }
     return {};
@@ -352,10 +355,11 @@ class Detail extends Component {
   }
 
   render() {
-    const { blockDetail, TxList, TxTotalCount, isLoading, currentTab, refereeBlockList, blockhash } = this.state;
+    const { blockDetail, TxList, TxTotalCount, isLoading, currentTab, refereeBlockList, curPage, blockhash } = this.state;
     const {
       match: { params },
     } = this.props;
+
     if (blockhash !== params.blockhash) {
       this.fetchTxDetail(params.blockhash, { activePage: 1 });
     }
@@ -453,22 +457,47 @@ class Detail extends Component {
                   </div>
                 </StyledTabelWrapper>
                 <TabWrapper>
-                  <Pagination
-                    prevItem={{
-                      'aria-label': 'Previous item',
-                      content: i18n('lastPage'),
-                    }}
-                    nextItem={{
-                      'aria-label': 'Next item',
-                      content: i18n('nextPage'),
-                    }}
-                    onPageChange={(e, data) => {
-                      e.preventDefault();
-                      this.fetchTxDetail(params.blockhash, data);
-                    }}
-                    defaultActivePage={1}
-                    totalPages={Math.ceil(TxTotalCount / 10)}
-                  />
+                  <div className="page-pc">
+                    <Pagination
+                      prevItem={{
+                        'aria-label': 'Previous item',
+                        content: i18n('lastPage'),
+                      }}
+                      nextItem={{
+                        'aria-label': 'Next item',
+                        content: i18n('nextPage'),
+                      }}
+                      onPageChange={(e, data) => {
+                        e.preventDefault();
+                        this.fetchTxDetail(params.blockhash, data);
+                      }}
+                      activePage={curPage}
+                      totalPages={Math.floor(TxTotalCount / 10) + 1}
+                    />
+                  </div>
+                  <div className="page-h5">
+                    <Pagination
+                      prevItem={{
+                        'aria-label': 'Previous item',
+                        content: i18n('lastPage'),
+                      }}
+                      nextItem={{
+                        'aria-label': 'Next item',
+                        content: i18n('nextPage'),
+                      }}
+                      boundaryRange={0}
+                      activePage={curPage}
+                      onPageChange={(e, data) => {
+                        e.preventDefault();
+                        this.fetchTxDetail(params.blockhash, data);
+                      }}
+                      ellipsisItem={null}
+                      firstItem={null}
+                      lastItem={null}
+                      siblingRange={1}
+                      totalPages={Math.floor(TxTotalCount / 10) + 1}
+                    />
+                  </div>
                 </TabWrapper>
               </div>
               <div className={currentTab === 2 ? 'ui bottom attached segment active tab' : 'ui bottom attached segment tab'}>

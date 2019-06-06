@@ -64,6 +64,7 @@ export default {
   'app.comp.searchbox.filter.address': '地址',
   'app.comp.searchbox.placeholder': '纪元 / 区块哈希 / 交易哈希 / 地址',
 
+  'app.pages.account.detail.transactions': '交易数',
   'app.pages.account.detail.viewAll': '查看所有交易',
   'app.pages.account.detail.viewOutGoing': '查看发送交易',
   'app.pages.account.detail.viewIncoming': '查看接收交易',

@@ -11,6 +11,7 @@ import '../../assets/semantic-ui/semantic.css';
 import media from '../../globalStyles/media';
 import { i18n } from '../../utils/index';
 import ConfirmSimple from '../../components/ConfirmSimple';
+import * as commonCss from '../../globalStyles/common';
 
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -45,6 +46,7 @@ const StyledTabel = styled.div`
   &.right {
     margin-left: 16px;
   }
+  ${commonCss.paginatorMixin}
 `;
 
 const PCell = styled.div`
@@ -185,12 +187,6 @@ class List extends Component {
   }
 
   async fetchBlockList({ activePage }) {
-    if (activePage > 10000) {
-      this.setState({
-        confirmOpen: true,
-      });
-      return;
-    }
     this.setState({ isLoading: true });
     const { code, result } = (await superagent.get(`/proxy/fetchInitBlockandTxList?pageNum=${activePage}&pageSize=10`)).body;
     if (!code) {
@@ -228,23 +224,48 @@ class List extends Component {
                   <DataList isMobile showHeader columns={columns} dataSource={BlockList} />
                 </div>
               </div>
-              <Pagination
-                style={{ float: 'right' }}
-                prevItem={{
-                  'aria-label': 'Previous item',
-                  content: 'Previous',
-                }}
-                nextItem={{
-                  'aria-label': 'Next item',
-                  content: 'Next',
-                }}
-                onPageChange={(e, data) => {
-                  e.preventDefault();
-                  this.fetchBlockList(data);
-                }}
-                activePage={curPage}
-                totalPages={Math.ceil(TotalCount / 10)}
-              />
+              <div className="page-pc">
+                <Pagination
+                  style={{ float: 'right' }}
+                  prevItem={{
+                    'aria-label': 'Previous item',
+                    content: i18n('lastPage'),
+                  }}
+                  nextItem={{
+                    'aria-label': 'Next item',
+                    content: i18n('nextPage'),
+                  }}
+                  onPageChange={(e, data) => {
+                    e.preventDefault();
+                    this.fetchBlockList(data);
+                  }}
+                  activePage={curPage}
+                  totalPages={Math.floor(TotalCount / 10) + 1}
+                />
+              </div>
+              <div className="page-h5">
+                <Pagination
+                  prevItem={{
+                    'aria-label': 'Previous item',
+                    content: i18n('lastPage'),
+                  }}
+                  nextItem={{
+                    'aria-label': 'Next item',
+                    content: i18n('nextPage'),
+                  }}
+                  boundaryRange={0}
+                  activePage={curPage}
+                  onPageChange={(e, data) => {
+                    e.preventDefault();
+                    this.fetchBlockList(data);
+                  }}
+                  ellipsisItem={null}
+                  firstItem={null}
+                  lastItem={null}
+                  siblingRange={1}
+                  totalPages={Math.floor(TotalCount / 10) + 1}
+                />
+              </div>
             </StyledTabel>
           </TabWrapper>
         </Wrapper>
