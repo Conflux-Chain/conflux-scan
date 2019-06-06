@@ -320,7 +320,9 @@ class Detail extends Component {
 
   async fetchTxDetail(blockHash, { activePage }) {
     this.setState({ isLoading: true, blockhash: blockHash });
-    const { code, result } = (await superagent.get(`/proxy/fetchBlockDetail/${blockHash}?pageNum=${activePage}&pageSize=10`)).body;
+    const { code, result } = (await superagent.get(`/proxy/fetchBlockDetail/${blockHash}?pageNum=${activePage}&pageSize=10`).catch((e) => {
+      window.location.href = `/search-notfound?searchId=${blockHash}`;
+    })).body;
     if (!code) {
       this.setState(
         {
