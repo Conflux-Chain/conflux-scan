@@ -2,7 +2,7 @@ export default {
   // common words
   Block: '区块',
   'Block Height': '区块高度',
-  Epoch: 'Epoch',
+  Epoch: '纪元',
   Transaction: '交易',
   Address: '地址',
   Miner: '矿工',
@@ -57,11 +57,11 @@ export default {
   'app.comp.toast.error.2': '数据库异常',
   'app.comp.toast.error.3': 'full-node 异常',
   'app.comp.searchbox.filter.all': '全部筛选',
-  'app.comp.searchbox.filter.epoch': 'Epoch',
+  'app.comp.searchbox.filter.epoch': '纪元',
   'app.comp.searchbox.filter.block': '区块',
   'app.comp.searchbox.filter.transaction': '交易',
   'app.comp.searchbox.filter.address': '地址',
-  'app.comp.searchbox.placeholder': 'Epoch / 区块哈希 / 交易哈希 / 地址',
+  'app.comp.searchbox.placeholder': '纪元 / 区块哈希 / 交易哈希 / 地址',
 
   'app.pages.account.detail.viewAll': '查看所有交易',
   'app.pages.account.detail.viewOutGoing': '查看发送交易',

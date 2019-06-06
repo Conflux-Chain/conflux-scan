@@ -16,6 +16,9 @@ const Input = styled.input`
   padding-left: 0;
   margin-left: 10px;
   margin-left: 16px;
+  ${media.pad`
+    font-size: 14px;
+  `}
 `;
 
 const Wrapper = styled.div`
@@ -46,6 +49,7 @@ const FilterSelector = styled.div.attrs({
   border: none !important;
   box-shadow: none !important;
   padding-bottom: 10px !important;
+  background: transparent !important;
   ${media.mobile`
     display: none!important;
   `}
