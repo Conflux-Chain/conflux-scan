@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import superagent from 'superagent';
@@ -11,7 +11,6 @@ import TableLoading from '../../components/TableLoading';
 import DataList from '../../components/DataList';
 import EllipsisLine from '../../components/EllipsisLine';
 import { convertToValueorFee, converToGasPrice, i18n } from '../../utils';
-import '../../assets/semantic-ui/semantic.css';
 import media from '../../globalStyles/media';
 import * as commonCss from '../../globalStyles/common';
 
@@ -112,28 +111,6 @@ const HeadBar = styled.div`
   }
 `;
 
-const IconFace = styled.div`
-  margin-left: 16px;
-  width: 32px;
-  height: 32px;
-  background: rgba(0, 0, 0, 0.08);
-  border-radius: 20px;
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  svg {
-    width: 16px;
-    height: 16px;
-  }
-  &:hover {
-    cursor: pointer;
-    background: rgba(0, 0, 0, 0.54);
-    svg {
-      color: #fff;
-    }
-  }
-`;
-
 const TabZone = styled.div`
   margin-top: 16px;
   position: relative;
@@ -167,11 +144,6 @@ const TabContent = styled.div`
     box-shadow: none;
   }
 `;
-
-const dataSource = [
-  { key: 1, ein: '80580', zwei: '0xe969a6fc05897123123', drei: 'Alichs' },
-  { key: 2, ein: '80581', zwei: '0xe969a6fc05897124124', drei: 'Schwarz' },
-];
 
 const TxColumns = [
   {
@@ -319,6 +291,7 @@ class Detail extends Component {
   }
 
   async fetchTxDetail(blockHash, { activePage }) {
+    const { history } = this.props;
     this.setState({ isLoading: true, blockhash: blockHash });
     const { code, result } = (await superagent.get(`/proxy/fetchBlockDetail/${blockHash}?pageNum=${activePage}&pageSize=10`).catch((e) => {
       window.location.href = `/search-notfound?searchId=${blockHash}`;
@@ -336,8 +309,9 @@ class Detail extends Component {
         },
         () => this.setState({ isLoading: false, curPage: activePage })
       );
+    } else if (code === 1) {
+      history.push(`/search-notfound?searchId=${blockHash}`);
     }
-    return {};
   }
 
   async fetchReffereBlock(blockHash) {
@@ -520,8 +494,11 @@ class Detail extends Component {
 }
 Detail.propTypes = {
   match: PropTypes.objectOf(PropTypes.string),
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
 };
 Detail.defaultProps = {
   match: {},
 };
-export default Detail;
+export default withRouter(Detail);

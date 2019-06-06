@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import superagent from 'superagent';
@@ -7,17 +8,16 @@ import { Pagination, Dropdown } from 'semantic-ui-react';
 import { DatePicker } from 'antd';
 import { injectIntl } from 'react-intl';
 import get from 'lodash/get';
+import compose from 'lodash/fp/compose';
 import DataList from '../../components/DataList';
 import Countdown from '../../components/Countdown';
 import TableLoading from '../../components/TableLoading';
 import EllipsisLine from '../../components/EllipsisLine';
-import '../../assets/semantic-ui/semantic.css';
 import { convertToValueorFee, converToGasPrice, i18n } from '../../utils';
 import CopyButton from '../../components/CopyButton';
 import QrcodeButton from '../../components/QrcodeButton';
 import * as commonCss from '../../globalStyles/common';
 import media from '../../globalStyles/media';
-import SearchNotFound from '../SearchNotFound';
 
 const { RangePicker } = DatePicker;
 
@@ -238,10 +238,6 @@ const TabZone = styled.div`
   }
 `;
 
-const TabZoneWrapper = styled.div`
-  box-shadow: 0 1px 3px 0;
-`;
-
 const PCell = styled.div`
   margin: 0 !important;
 `;
@@ -385,11 +381,6 @@ const minedColumns = [
   },
 ];
 
-const dataSource = [
-  { key: 1, ein: '80580', zwei: '0xe969a6fc05897123123', drei: 'Alichs' },
-  { key: 2, ein: '80581', zwei: '0xe969a6fc05897124124', drei: 'Schwarz' },
-];
-
 class Detail extends Component {
   constructor(...args) {
     super(...args);
@@ -411,7 +402,6 @@ class Detail extends Component {
       },
       minedTotalCount: 0,
       curMinedPage: 1,
-      showErrorPage: false,
     };
   }
 
@@ -424,38 +414,35 @@ class Detail extends Component {
   }
 
   async fetchAccountDetail(accountid, queries) {
+    const { history } = this.props;
     this.setState({ isLoading: true, accountid });
-    try {
-      const { code, result } = (await superagent.get(`/proxy/fetchAccountDetail/${accountid}`).query(queries)).body;
-      if (!code) {
-        this.setState(
-          {
-            accountDetail: result.find((item) => Object.keys(item)[0] === `account/${accountid}`)[`account/${accountid}`],
-            // TxList: result.find((item) => Object.keys(item)[0] === `account/${accountid}/transactionList`)[
-            //   `account/${accountid}/transactionList`
-            // ],
-            TxList: get(
-              result.find((item) => Object.keys(item)[0] === `account/${accountid}/transactionList`),
-              `account/${accountid}/transactionList`,
-              []
-            ),
-            TxTotalCount: get(
-              result.find((item) => Object.keys(item)[0] === `account/${accountid}/transactionList`),
-              `total_account/${accountid}/transactionList`,
-              []
-            ),
-            minedTotalCount:
-              get(result.find((item) => Object.keys(item)[0] === `account/${accountid}`), [`account/${accountid}`, 'minedBlocks']) || 0,
-          },
-          () => {
-            this.setState({ isLoading: false, queries });
-          }
-        );
-      }
-    } catch (e) {
-      this.setState({
-        showErrorPage: true,
-      });
+    const { code, result } = (await superagent.get(`/proxy/fetchAccountDetail/${accountid}`).query(queries)).body;
+    if (!code) {
+      this.setState(
+        {
+          accountDetail: result.find((item) => Object.keys(item)[0] === `account/${accountid}`)[`account/${accountid}`],
+          // TxList: result.find((item) => Object.keys(item)[0] === `account/${accountid}/transactionList`)[
+          //   `account/${accountid}/transactionList`
+          // ],
+          TxList: get(
+            result.find((item) => Object.keys(item)[0] === `account/${accountid}/transactionList`),
+            `account/${accountid}/transactionList`,
+            []
+          ),
+          TxTotalCount: get(
+            result.find((item) => Object.keys(item)[0] === `account/${accountid}/transactionList`),
+            `total_account/${accountid}/transactionList`,
+            []
+          ),
+          minedTotalCount:
+            get(result.find((item) => Object.keys(item)[0] === `account/${accountid}`), [`account/${accountid}`, 'minedBlocks']) || 0,
+        },
+        () => {
+          this.setState({ isLoading: false, queries });
+        }
+      );
+    } else if (code === 1) {
+      history.push(`/search-notfound?searchId=${accountid}`);
     }
     return {};
   }
@@ -494,18 +481,12 @@ class Detail extends Component {
       accountid,
       minedTotalCount,
       curMinedPage,
-      showErrorPage,
     } = this.state;
     const {
       intl,
       match: { params },
     } = this.props;
-    // if (accountid !== params.accountid) {
-    //   this.fetchAccountDetail(params.accountid, queries);
-    // }
-    if (showErrorPage) {
-      return <SearchNotFound searchId={params.accountid} />;
-    }
+
     const columns = [
       {
         key: 1,
@@ -856,8 +837,15 @@ Detail.propTypes = {
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
   }).isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
 };
 Detail.defaultProps = {
   match: {},
 };
-export default injectIntl(Detail);
+const hoc = compose(
+  injectIntl,
+  withRouter
+);
+export default hoc(Detail);

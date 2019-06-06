@@ -73,6 +73,7 @@ const start = async () => {
                 .then((callback) => {
                   const { code, result, message } = JSON.parse(callback.text);
                   if (code == 0) resolve({ [ids]: result.data, ['total_' + ids]: result.total });
+                  else if (code === 1) resolve({ code });
                   else reject([]);
                 })
                 .catch((e) => {
@@ -81,7 +82,7 @@ const start = async () => {
             });
           });
           const payload = await Promise.all(querys);
-          return h.response({ code: 0, result: payload });
+          return h.response(payload[0].code === 1 ? { code: 1 } : { code: 0, result: payload });
         },
         description: '初始化获取Block&Tx List',
         tags: ['api', 'sse'],
@@ -195,8 +196,9 @@ const start = async () => {
                 .get(`${API_HOST}/${ids}`)
                 .then((callback) => {
                   const { code, result, message } = JSON.parse(callback.text);
-                  console.log(result, message);
-                  if (code == 0) resolve(result.data);
+                  console.log(result, message, code);
+                  if (code === 0) resolve({ code, result: result.data, message });
+                  else if (code === 1 || code === 4) resolve({ code, message });
                   else reject({});
                 })
                 .catch((e) => {
@@ -206,7 +208,7 @@ const start = async () => {
             });
           });
           const payload = await Promise.all(querys);
-          return h.response({ code: 0, result: payload[0] });
+          return h.response(payload[0]);
         },
         description: '获取 tx detail',
         tags: ['api'],
@@ -268,7 +270,8 @@ const start = async () => {
                 .query(request.query)
                 .then((callback) => {
                   const { code, result, message } = JSON.parse(callback.text);
-                  if (code == 0) resolve({ [ids]: result.data, ['total_' + ids]: result.total });
+                  if (code === 0) resolve({ [ids]: result.data, ['total_' + ids]: result.total });
+                  else if (code === 1) resolve({ code });
                   else reject({});
                 })
                 .catch((e) => {
@@ -278,7 +281,7 @@ const start = async () => {
             });
           });
           const payload = await Promise.all(querys);
-          return h.response({ code: 0, result: payload });
+          return h.response(payload[0].code === 1 ? { code: 1 } : { code: 0, result: payload });
         },
         description: '获取 Block detail',
         tags: ['api'],
@@ -309,6 +312,7 @@ const start = async () => {
                 .then((callback) => {
                   const { code, result, message } = JSON.parse(callback.text);
                   if (code == 0) resolve({ [ids]: result.data, ['total_' + ids]: result.total });
+                  else if (code === 1) resolve({ code });
                   else reject({});
                 })
                 .catch((e) => {
@@ -318,7 +322,7 @@ const start = async () => {
             });
           });
           const payload = await Promise.all(querys);
-          return h.response({ code: 0, result: payload });
+          return h.response(payload[0].code === 1 ? { code: 1 } : { code: 0, result: payload });
         },
         description: '获取 account detail',
         tags: ['api'],
