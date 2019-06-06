@@ -9,6 +9,7 @@ import EllipsisLine from '../../components/EllipsisLine';
 import Countdown from '../../components/Countdown';
 import '../../assets/semantic-ui/semantic.css';
 import media from '../../globalStyles/media';
+import { i18n } from '../../utils';
 
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -67,14 +68,14 @@ const columns = [
   {
     key: 1,
     dataIndex: 'position',
-    title: 'Position',
+    title: i18n('Position'),
     className: 'one wide aligned plain_th',
     render: (text) => 1 + text,
   },
   {
     key: 2,
     dataIndex: 'hash',
-    title: 'Hash',
+    title: i18n('Hash'),
     className: 'two wide aligned',
     render: (text, row) => (
       <div>
@@ -87,7 +88,7 @@ const columns = [
   {
     key: 3,
     dataIndex: 'difficulty',
-    title: 'Difficulty',
+    title: i18n('Difficulty'),
     className: 'one wide aligned plain_th',
     render: (text) => (
       <div>
@@ -98,7 +99,7 @@ const columns = [
   {
     key: 4,
     dataIndex: 'miner',
-    title: 'Miner',
+    title: i18n('Miner'),
     className: 'one wide aligned',
     render: (text) => (
       <div>
@@ -111,14 +112,14 @@ const columns = [
   {
     key: 5,
     dataIndex: 'gasLimit',
-    title: 'Gas Limit',
+    title: i18n('Gas Limit'),
     className: 'one wide aligned plain_th',
     render: (text) => text,
   },
   {
     key: 6,
     dataIndex: 'timestamp',
-    title: 'Age',
+    title: i18n('Age'),
     className: 'three wide aligned plain_th',
     render: (text) => (
       <PCell>
@@ -130,7 +131,7 @@ const columns = [
     key: 7,
     className: 'one wide left aligned plain_th',
     dataIndex: 'transactionCount',
-    title: 'Tx Count',
+    title: i18n('Tx Count'),
     render: (text) => text,
   },
 ];
@@ -168,7 +169,7 @@ class Detail extends Component {
       <div className="page-epoch-detail">
         <Wrapper>
           <HeadBar>
-            <h1>Epoch</h1>
+            <h1>{i18n('Epoch')}</h1>
             <p>{params.epochid}</p>
           </HeadBar>
           <StyledTabel>
