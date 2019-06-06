@@ -55,7 +55,6 @@ const HeadBar = styled.div`
   margin-top: 24px;
   width: 100%;
   font-size: 16px;
-  font-family: ProximaNova-Regular;
   font-weight: 400;
   margin-bottom: 24px;
   .sep {
@@ -82,7 +81,6 @@ const HeadBar = styled.div`
   h1 {
     color: #000;
     font-size: 20px;
-    font-family: ProximaNova-Bold;
     font-weight: bold;
     margin-right: 24px;
   }
