@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import superagent from 'superagent';
@@ -130,11 +131,15 @@ class Detail extends Component {
                 </tr>
                 <tr className="">
                   <td className="collapsing">{i18n('From')}</td>
-                  <td className="">{result.from}</td>
+                  <td className="">
+                    <Link to={`/accountdetail/${result.from}`}>{result.from}</Link>
+                  </td>
                 </tr>
                 <tr className="">
                   <td className="collapsing">{i18n('To')}</td>
-                  <td className="">{result.to}</td>
+                  <td className="">
+                    <Link to={`/accountdetail/${result.to}`}>{result.to}</Link>
+                  </td>
                 </tr>
                 <tr className="">
                   <td className="collapsing">{i18n('Gas')}</td>
@@ -154,7 +159,9 @@ class Detail extends Component {
                 </tr>
                 <tr className="">
                   <td className="collapsing">{i18n('Block Hash')}</td>
-                  <td className="">{result.blockHash}</td>
+                  <td className="">
+                    <Link to={`/blocksdetail/${result.blockHash}`}>{result.blockHash}</Link>
+                  </td>
                 </tr>
                 <tr className="">
                   <td className="collapsing">{i18n('Position')}</td>
