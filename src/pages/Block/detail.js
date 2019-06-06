@@ -295,6 +295,7 @@ class Detail extends Component {
   constructor() {
     super();
     this.state = {
+      blockhash: '',
       currentTab: 1,
       TxTotalCount: 100,
       refereeBlockList: [],
@@ -312,7 +313,7 @@ class Detail extends Component {
   }
 
   async fetchTxDetail(blockHash, { activePage }) {
-    this.setState({ isLoading: true });
+    this.setState({ isLoading: true, blockhash: blockHash });
     const { code, result } = (await superagent.get(`/proxy/fetchBlockDetail/${blockHash}?pageNum=${activePage}&pageSize=10`)).body;
     if (!code) {
       this.setState(
@@ -348,12 +349,15 @@ class Detail extends Component {
   }
 
   render() {
-    const { blockDetail, TxList, TxTotalCount, isLoading, currentTab, refereeBlockList } = this.state;
+    const { blockDetail, TxList, TxTotalCount, isLoading, currentTab, refereeBlockList, blockhash } = this.state;
     const {
       match: { params },
     } = this.props;
+    if (blockhash !== params.blockhash) {
+      this.fetchTxDetail(params.blockhash, { activePage: 1 });
+    }
 
-    console.log(refereeBlockList, '===refereeBlockList');
+    // console.log(refereeBlockList, '===refereeBlockList');
     return (
       <div className="page-block-detail">
         <Wrapper>

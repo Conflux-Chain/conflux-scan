@@ -82,6 +82,7 @@ class Detail extends Component {
   constructor() {
     super();
     this.state = {
+      txnhash: '',
       result: {},
       isLoading: true,
     };
@@ -95,7 +96,7 @@ class Detail extends Component {
   }
 
   async fetchTxDetail(txnhash) {
-    this.setState({ isLoading: true });
+    this.setState({ isLoading: true, txnhash });
     const { code, result } = (await superagent.get(`/proxy/fetchTxDetail?transactionHash=${txnhash}`)).body;
     if (!code) {
       this.setState({ result }, () => this.setState({ isLoading: false }));
@@ -104,10 +105,13 @@ class Detail extends Component {
   }
 
   render() {
-    const { result, isLoading } = this.state;
+    const { result, isLoading, txnhash } = this.state;
     const {
       match: { params },
     } = this.props;
+    if (txnhash !== params.txnhash) {
+      this.fetchTxDetail(params.txnhash, { activePage: 1 });
+    }
 
     return (
       <div className="page-transaction-detail">
