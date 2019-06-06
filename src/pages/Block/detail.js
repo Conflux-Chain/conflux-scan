@@ -86,6 +86,9 @@ const StyledTabel = styled.div`
   td.bottom {
     padding-bottom: 2em !important;
   }
+  tr > td > a {
+    font-weight: bold;
+  }
 `;
 
 const HeadBar = styled.div`
