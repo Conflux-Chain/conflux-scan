@@ -362,6 +362,7 @@ class Detail extends Component {
   constructor() {
     super();
     this.state = {
+      accountid: '',
       currentTab: 1,
       isLoading: false,
       accountDetail: {},
@@ -385,7 +386,7 @@ class Detail extends Component {
   }
 
   async fetchAccountDetail(accountid, queries) {
-    this.setState({ isLoading: true });
+    this.setState({ isLoading: true, accountid });
     const { code, result } = (await superagent.get(`/proxy/fetchAccountDetail/${accountid}`).query(queries)).body;
     if (!code) {
       this.setState(
@@ -427,11 +428,14 @@ class Detail extends Component {
   }
 
   render() {
-    const { accountDetail, queries, currentTab, isLoading, minedBlockList, TxList, TxTotalCount } = this.state;
+    const { accountDetail, queries, currentTab, isLoading, minedBlockList, TxList, TxTotalCount, accountid } = this.state;
     const {
       intl,
       match: { params },
     } = this.props;
+    if (accountid !== params.accountid) {
+      this.fetchAccountDetail(params.accountid, queries);
+    }
     const columns = [
       {
         key: 1,
