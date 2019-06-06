@@ -66,7 +66,7 @@ const HeadBar = styled.div`
 const columns = [
   {
     key: 1,
-    dataIndex: 'ein',
+    dataIndex: 'position',
     title: 'Position',
     className: 'one wide aligned',
   },
