@@ -8,7 +8,7 @@ const StyledTable = styled.div`
   th.plain_th {
     font-size: 16px;
     color: rgba(0, 0, 0, 0.87);
-    font-family: ProximaNova-Regular;
+    font-family: 'Proxima Nova', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-style: normal;
     font-weight: 400;
   }

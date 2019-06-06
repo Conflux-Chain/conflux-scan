@@ -9,7 +9,6 @@ const SingleLine = styled.div`
   .wrap {
     display: flex;
     font-size: 16px;
-    font-family: ProximaNova-Regular;
     font-weight: 400;
     color: rgba(0, 0, 0, 0.87);
     line-height: 19px;
@@ -51,7 +50,6 @@ const PivotTag = styled.span`
   padding: 0px 5px;
   height: 14px;
   font-weight: 400;
-  font-family: ProximaNova-Regular;
   line-height: 14px;
 `;
 
@@ -64,7 +62,6 @@ const InOutTag = styled.span`
   height: 14px;
   padding: 0px 5px;
   font-weight: 400;
-  font-family: ProximaNova-Regular;
   line-height: 14px;
 `;
 
@@ -72,7 +69,6 @@ const UnitTag = styled.i`
   font-style: normal;
   margin-left: 5px;
   font-size: 16px;
-  font-family: ProximaNova-Regular;
   font-weight: 400;
   color: rgba(0, 0, 0, 0.87);
 `;
@@ -81,7 +77,6 @@ const PrefixTag = styled.i`
   font-style: normal;
   margin-right: 5px;
   font-size: 14px !important;
-  font-family: ProximaNova-Regular;
   font-weight: 400;
   color: rgba(0, 0, 0, 0.87);
 `;
