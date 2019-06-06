@@ -186,23 +186,24 @@ class List extends Component {
     curPageBase = this.state.curPage;
   }
 
-  async fetchBlockList({ activePage }) {
+  fetchBlockList({ activePage }) {
     this.setState({ isLoading: true });
-    const { code, result } = (await sendRequest({
-      url: `/proxy/fetchInitBlockandTxList?pageNum=${activePage}&pageSize=10`,
-    })).body;
-    if (!code) {
-      this.setState(
-        {
-          BlockList: result.find((item) => Object.keys(item)[0] === 'block/list')['block/list'],
-          TotalCount: result.find((item) => Object.keys(item)[0] === 'block/list')['total_block/list'],
-        },
-        () => {
-          this.setState({ isLoading: false, curPage: activePage });
-          document.dispatchEvent(new Event('scroll-to-top'));
-        }
-      );
-    }
+    const reqBlockList = sendRequest({
+      url: '/api/block/list',
+      query: {
+        pageNum: activePage,
+        pageSize: 10,
+      },
+    });
+    reqBlockList.then((res) => {
+      const { data } = res.body.result;
+      this.setState({
+        isLoading: false,
+        curPage: activePage,
+        BlockList: data,
+        TotalCount: res.body.result.total,
+      });
+    });
   }
 
   render() {
