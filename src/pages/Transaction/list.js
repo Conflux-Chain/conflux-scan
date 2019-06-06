@@ -138,8 +138,11 @@ const dataSource = [
   { key: 2, ein: '80581', zwei: '0xe969a6fc05897124124', drei: 'Schwarz' },
 ];
 
-let curPageBase = 1;
 /* eslint react/destructuring-assignment: 0 */
+let curPageBase = 1;
+document.addEventListener('clean_state', () => {
+  curPageBase = 1;
+});
 class List extends Component {
   constructor() {
     super();
@@ -175,13 +178,16 @@ class List extends Component {
           TxList: result.find((item) => Object.keys(item)[0] === 'transaction/list')['transaction/list'],
           TotalCount: result.find((item) => Object.keys(item)[0] === 'transaction/list')['total_transaction/list'],
         },
-        () => this.setState({ isLoading: false, curPage: activePage })
+        () => {
+          this.setState({ isLoading: false, curPage: activePage });
+          document.dispatchEvent(new Event('scroll-to-top'));
+        }
       );
     }
   }
 
   render() {
-    const { TxList, TotalCount, isLoading, confirmOpen } = this.state;
+    const { TxList, TotalCount, isLoading, confirmOpen, curPage } = this.state;
     return (
       <div className="page-transaction-list">
         <Wrapper>
@@ -215,7 +221,7 @@ class List extends Component {
                   e.preventDefault();
                   this.fetchTxList(data);
                 }}
-                defaultActivePage={1}
+                activePage={curPage}
                 totalPages={Math.ceil(TotalCount / 10)}
               />
             </StyledTabel>

@@ -27,6 +27,10 @@ const Wrapper = styled.div`
     margin-left: 12px !important;
     margin-right: 12px !important;
 
+    > .content {
+      padding: 1.5em 1.5em 2.5em;
+    }
+
     &:hover {
       box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.4) !important;
       border-radius: 4px;

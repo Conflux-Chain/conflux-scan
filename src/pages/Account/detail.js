@@ -55,7 +55,6 @@ const HeadBar = styled.div`
   margin-top: 24px;
   width: 100%;
   font-size: 16px;
-  font-family: ProximaNova;
   font-weight: 400;
   margin-bottom: 24px;
   .sep {
@@ -82,7 +81,6 @@ const HeadBar = styled.div`
   h1 {
     color: #000;
     font-size: 20px;
-    font-family: ProximaNova;
     font-weight: 700;
     margin-right: 24px;
   }
@@ -364,6 +362,7 @@ class Detail extends Component {
   constructor() {
     super();
     this.state = {
+      accountid: '',
       currentTab: 1,
       isLoading: false,
       accountDetail: {},
@@ -383,12 +382,11 @@ class Detail extends Component {
     const {
       match: { params },
     } = this.props;
-
     this.fetchAccountDetail(params.accountid, queries);
   }
 
   async fetchAccountDetail(accountid, queries) {
-    this.setState({ isLoading: true });
+    this.setState({ isLoading: true, accountid });
     const { code, result } = (await superagent.get(`/proxy/fetchAccountDetail/${accountid}`).query(queries)).body;
     if (!code) {
       this.setState(
@@ -430,11 +428,14 @@ class Detail extends Component {
   }
 
   render() {
-    const { accountDetail, queries, currentTab, isLoading, minedBlockList, TxList, TxTotalCount } = this.state;
+    const { accountDetail, queries, currentTab, isLoading, minedBlockList, TxList, TxTotalCount, accountid } = this.state;
     const {
       intl,
       match: { params },
     } = this.props;
+    if (accountid !== params.accountid) {
+      this.fetchAccountDetail(params.accountid, queries);
+    }
     const columns = [
       {
         key: 1,
@@ -454,7 +455,7 @@ class Detail extends Component {
               {text !== params.accountid ? (
                 <EllipsisLine textInout="In" linkTo={`/accountdetail/${text}`} text={text} />
               ) : (
-                <EllipsisLine linkTo={`/accountdetail/${text}`} text={text} />
+                <EllipsisLine text={text} />
               )}
             </PCell>
           </div>
@@ -471,7 +472,7 @@ class Detail extends Component {
               {text !== params.accountid ? (
                 <EllipsisLine textInout="Out" linkTo={`/accountdetail/${text}`} text={text} />
               ) : (
-                <EllipsisLine linkTo={`/accountdetail/${text}`} text={text} />
+                <EllipsisLine text={text} />
               )}
             </PCell>
           </div>

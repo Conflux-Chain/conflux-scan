@@ -95,6 +95,13 @@ const Menu = styled.ul`
   }
 `;
 
+function cleanState() {
+  const event = new Event('clean_state');
+  setTimeout(() => {
+    document.dispatchEvent(event);
+  }, 0);
+}
+
 function Navbar(props) {
   const { location, showNavbar } = props;
   const blocktxnPaths = ['blocktxn', 'blocks', 'blocksdetail', 'transactions', 'transactionsdetail', 'accountdetail', 'epochsdetail'];
@@ -104,7 +111,7 @@ function Navbar(props) {
     <Wrapper className={showNavbar ? 'show' : ''}>
       <Menu>
         <li>
-          <NavLink exact to="/" activeClassName="actived">
+          <NavLink exact to="/" activeClassName="actived" onClick={cleanState}>
             <svg className="icon" aria-hidden="true">
               <use xlinkHref="#icondashboard" />
             </svg>
@@ -115,6 +122,7 @@ function Navbar(props) {
           <NavLink
             to="/blocktxn"
             activeClassName="actived"
+            onClick={cleanState}
             isActive={() => !!blocktxnPaths.find((v) => location.pathname.indexOf('/' + v) === 0)}
           >
             <svg className="icon" aria-hidden="true">
@@ -127,6 +135,7 @@ function Navbar(props) {
           <NavLink
             to="/directory"
             activeClassName="actived"
+            onClick={cleanState}
             isActive={() => !!directoryPaths.find((v) => location.pathname.indexOf('/' + v) === 0)}
           >
             <svg className="icon" aria-hidden="true">

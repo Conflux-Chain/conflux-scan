@@ -159,8 +159,11 @@ const dataSource = [
   { key: 2, ein: '80581', zwei: '0xe969a6fc05897124124', drei: 'Schwarz' },
 ];
 
-let curPageBase = 1;
 /* eslint react/destructuring-assignment: 0 */
+let curPageBase = 1;
+document.addEventListener('clean_state', function(event) {
+  curPageBase = 1;
+});
 
 class List extends Component {
   constructor() {
@@ -196,7 +199,10 @@ class List extends Component {
           BlockList: result.find((item) => Object.keys(item)[0] === 'block/list')['block/list'],
           TotalCount: result.find((item) => Object.keys(item)[0] === 'block/list')['total_block/list'],
         },
-        () => this.setState({ isLoading: false, curPage: activePage })
+        () => {
+          this.setState({ isLoading: false, curPage: activePage });
+          document.dispatchEvent(new Event('scroll-to-top'));
+        }
       );
     }
   }

@@ -60,7 +60,6 @@ const IconFace = styled.div`
 const PCell = styled.div`
   margin: 0 !important;
   font-size: 14px;
-  font-family: ProximaNova-Regular;
   color: rgba(0, 0, 0, 0.87);
   font-weight: 400;
   height: 17px;
@@ -71,7 +70,7 @@ const StyledButton = styled.button`
   color: rgba(0, 0, 0, 0.87) !important;
   background: #e3eef9 !important;
   font-size: 14px !important;
-  font-family: ProximaNova-Bold !important;
+  font-family: 'Proxima Nova', 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
   font-weight: bold !important;
   &:hover {
     color: #fff !important;
@@ -82,7 +81,7 @@ const StyledLabel = styled.div.attrs({
   className: 'ui label',
 })`
   font-size: 12px;
-  font-family: ProximaNova-Semibold;
+  font-family: 'Proxima Nova', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-weight: bolder !important;
   color: rgba(0, 0, 0, 0.56);
   max-width: 100px;

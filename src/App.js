@@ -78,6 +78,13 @@ const Content = styled.div`
   `}
 `;
 
+let containerDom;
+document.addEventListener('scroll-to-top', (event) => {
+  if (containerDom) {
+    containerDom.scrollTop = event.scrollTop || 0;
+  }
+});
+
 function App() {
   const [lang, setLang] = useState('en');
   const [showNavbar, setShowNavbar] = useState(false);
@@ -95,7 +102,11 @@ function App() {
           />
           <Navbar showNavbar={showNavbar} />
           <ContainerMask className={showNavbar ? 'show' : ''} onClick={() => setShowNavbar(!showNavbar)} />
-          <Container>
+          <Container
+            ref={(c) => {
+              containerDom = c;
+            }}
+          >
             <Content>
               <Router />
             </Content>
