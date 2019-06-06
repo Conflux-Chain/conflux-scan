@@ -158,7 +158,7 @@ class BlockAndTxn extends Component {
               <EllipsisLine linkTo={`/accountdetail/${text}`} text={'Miner ' + text} />
               <FloatGas>
                 <PCell>
-                  {row.transactionCount} {row.transactionCount <= 1 ? 'txn' : 'txns'}
+                  {row.transactionCount} {row.transactionCount <= 1 ? i18n('txn') : i18n('txns')}
                 </PCell>
               </FloatGas>
             </div>
@@ -201,7 +201,7 @@ class BlockAndTxn extends Component {
               }}
             />
             <PCell>
-              {row.transactionCount} {row.transactionCount <= 1 ? 'txn' : 'txns'}
+              {row.transactionCount} {row.transactionCount <= 1 ? i18n('txn') : i18n('txns')}
             </PCell>
           </div>
         ),
