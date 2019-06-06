@@ -111,6 +111,18 @@ const IconFace = styled.div`
       color: #fff;
     }
   }
+
+  &.iconmore1 {
+    svg {
+      color: #000;
+    }
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+  }
+  &.iconmore1:hover {
+    cursor: pointer;
+    background: rgba(0, 0, 0, 0.05);
+  }
 `;
 
 const fullWidthMobile = media.pad`
@@ -379,10 +391,13 @@ const dataSource = [
 ];
 
 class Detail extends Component {
-  constructor() {
-    super();
+  constructor(...args) {
+    super(...args);
+    const {
+      match: { params },
+    } = this.props;
     this.state = {
-      accountid: '',
+      accountid: params.accountid,
       currentTab: 1,
       isLoading: false,
       accountDetail: {},
@@ -485,9 +500,9 @@ class Detail extends Component {
       intl,
       match: { params },
     } = this.props;
-    if (accountid !== params.accountid) {
-      this.fetchAccountDetail(params.accountid, queries);
-    }
+    // if (accountid !== params.accountid) {
+    //   this.fetchAccountDetail(params.accountid, queries);
+    // }
     if (showErrorPage) {
       return <SearchNotFound searchId={params.accountid} />;
     }
@@ -660,8 +675,8 @@ class Detail extends Component {
               >
                 <RangePicker
                   className="date-picker"
-                  showTime={{ format: 'HH:ss' }}
-                  format="YYYY-MM-DD HH:ss"
+                  showTime={{ format: 'HH:mm' }}
+                  format="YYYY-MM-DD HH:mm"
                   placeholder={[
                     intl.formatMessage({
                       id: 'StartTime',
@@ -689,7 +704,7 @@ class Detail extends Component {
                   className="drop-btn"
                   direction="left"
                   icon={
-                    <IconFace style={{ borderRadius: '4px' }}>
+                    <IconFace className="iconmore1" style={{ borderRadius: '4px' }}>
                       <svg className="icon" aria-hidden="true">
                         <use xlinkHref="#iconmore1" />
                       </svg>
