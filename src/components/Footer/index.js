@@ -128,8 +128,8 @@ function Footer() {
             <svg className="icon" aria-hidden="true">
               <use xlinkHref="#iconemail" />
             </svg>
-            <a href="mailto:conflux-dev@conflux-chain.org" target="_blank">
-              conflux-dev@conflux-chain.org
+            <a href="mailto:feedbacks@conflux-chain.org" target="_blank">
+              feedbacks@conflux-chain.org
             </a>
           </span>
           {/* <span> */}
