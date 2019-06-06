@@ -81,7 +81,7 @@ class SearchNotFound extends PureComponent {
           <FormattedMessage id="app.pages.notFoundTx.ask" />
           <FormattedMessage id="app.pages.notFoundTx.concatus">
             {(txt) => (
-              <a target="_blank" href="mailto:conflux-dev@conflux-chain.org">
+              <a target="_blank" href="mailto:feedbacks@conflux-chain.org">
                 {txt}
               </a>
             )}

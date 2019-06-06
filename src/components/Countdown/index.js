@@ -4,6 +4,10 @@ import styled from 'styled-components';
 import moment from 'moment';
 import { injectIntl, FormattedMessage } from 'react-intl';
 
+const Text = styled.span`
+  font-weight: 400;
+`;
+
 function Countdown(props) {
   const {
     timestamp,
@@ -31,7 +35,7 @@ function Countdown(props) {
             secondUnit <= 1 ? 'sec' : 'secs'
           } ago`;
 
-  return <span>{labelStr}</span>;
+  return <Text>{labelStr}</Text>;
 }
 Countdown.propTypes = {
   timestamp: PropTypes.number,
