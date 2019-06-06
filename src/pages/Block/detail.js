@@ -24,10 +24,14 @@ const Wrapper = styled.div`
 
 const StyledTabelWrapper = styled.div`
   overflow: hidden;
-  /* .content {
+  .ui.fluid.card {
+    box-shadow: none;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+  }
+  .content {
     padding: 0 !important;
-  } */
-  /* thead tr th {
+  }
+  thead tr th {
     background: rgba(0, 0, 0, 0.05) !important;
   }
   tr th {
@@ -43,7 +47,7 @@ const StyledTabelWrapper = styled.div`
   }
   &.right {
     margin-left: 16px;
-  } */
+  }
 `;
 
 const StyledTabel = styled.div`
@@ -148,6 +152,14 @@ const TabWrapper = styled.div`
   ${media.mobile`
     justify-content: center;
   `}
+`;
+const TabContent = styled.div`
+  margin-top: -1px;
+  margin-left: 1px;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px 1px;
+  .ui.segment[class*='bottom attached'] {
+    box-shadow: none;
+  }
 `;
 
 const dataSource = [
@@ -414,42 +426,45 @@ class Detail extends Component {
                 {i18n('Reference Blocks')}
               </button>
             </div>
-            <div className={currentTab === 1 ? 'ui bottom attached segment active tab' : 'ui bottom attached segment tab'}>
-              <StyledTabelWrapper>
-                <div className="ui fluid card">
-                  <div className="content">
-                    <DataList isMobile showHeader columns={TxColumns} dataSource={TxList} />
+
+            <TabContent>
+              <div className={currentTab === 1 ? 'ui bottom attached segment active tab' : 'ui bottom attached segment tab'}>
+                <StyledTabelWrapper>
+                  <div className="ui fluid card">
+                    <div className="content">
+                      <DataList isMobile showHeader columns={TxColumns} dataSource={TxList} />
+                    </div>
                   </div>
-                </div>
-              </StyledTabelWrapper>
-              <TabWrapper>
-                <Pagination
-                  prevItem={{
-                    'aria-label': 'Previous item',
-                    content: i18n('lastPage'),
-                  }}
-                  nextItem={{
-                    'aria-label': 'Next item',
-                    content: i18n('nextPage'),
-                  }}
-                  onPageChange={(e, data) => {
-                    e.preventDefault();
-                    this.fetchTxDetail(params.blockhash, data);
-                  }}
-                  defaultActivePage={1}
-                  totalPages={Math.ceil(TxTotalCount / 10)}
-                />
-              </TabWrapper>
-            </div>
-            <div className={currentTab === 2 ? 'ui bottom attached segment active tab' : 'ui bottom attached segment tab'}>
-              <StyledTabelWrapper>
-                <div className="ui fluid card">
-                  <div className="content">
-                    <DataList isMobile showHeader columns={RefColumns} dataSource={refereeBlockList} />
+                </StyledTabelWrapper>
+                <TabWrapper>
+                  <Pagination
+                    prevItem={{
+                      'aria-label': 'Previous item',
+                      content: i18n('lastPage'),
+                    }}
+                    nextItem={{
+                      'aria-label': 'Next item',
+                      content: i18n('nextPage'),
+                    }}
+                    onPageChange={(e, data) => {
+                      e.preventDefault();
+                      this.fetchTxDetail(params.blockhash, data);
+                    }}
+                    defaultActivePage={1}
+                    totalPages={Math.ceil(TxTotalCount / 10)}
+                  />
+                </TabWrapper>
+              </div>
+              <div className={currentTab === 2 ? 'ui bottom attached segment active tab' : 'ui bottom attached segment tab'}>
+                <StyledTabelWrapper>
+                  <div className="ui fluid card">
+                    <div className="content">
+                      <DataList isMobile showHeader columns={RefColumns} dataSource={refereeBlockList} />
+                    </div>
                   </div>
-                </div>
-              </StyledTabelWrapper>
-            </div>
+                </StyledTabelWrapper>
+              </div>
+            </TabContent>
           </TabZone>
         </Wrapper>
       </div>

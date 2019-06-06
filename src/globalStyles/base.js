@@ -72,6 +72,14 @@ const BaseStyle = css`
     -webkit-overflow-scrolling: touch;
   }
 
+  button,
+  input,
+  optgroup,
+  select,
+  textarea {
+    font-family: 'Proxima Nova', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  }
+
   .icon {
     width: 1em;
     height: 1em;

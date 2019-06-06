@@ -49,6 +49,10 @@ const StyledTabel = styled.div`
   &.right {
     margin-left: 16px;
   }
+  .ui.fluid.card {
+    box-shadow: none;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+  }
 `;
 
 const HeadBar = styled.div`
@@ -279,8 +283,8 @@ const TabPanel = styled.div`
     border: 0;
     margin-left: 0px;
     margin-right: 0px;
+    box-shadow: none;
     ${media.pad`
-      box-shadow: none;
       width: auto;
     `}
   }

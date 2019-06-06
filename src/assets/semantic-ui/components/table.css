@@ -947,8 +947,7 @@
 
 .ui.basic.table {
   background: transparent;
-  box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
-  -webkit-box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px 1px;
   border-radius: 4px;
 }
 .ui.basic.table thead,
