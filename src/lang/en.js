@@ -51,8 +51,12 @@ export default {
   'app.pages.notFoundTx.title': 'Sorry your <strong>Transaction</strong>',
   'app.pages.notFoundTx.tooltip': 'Copy to clipboard',
   'app.pages.notFoundTx.packing': 'is packing, please wait',
-  'app.pages.notFoundTx.ask': 'If you think there is someting wrong, please',
-  'app.pages.notFoundTx.concatus': ' contact us',
+  'app.pages.notFoundTx.ask': 'If you think there is someting wrong, please ',
+  'app.pages.notFoundTx.concatus': 'contact us',
+
+  'app.pages.pageNotFound.title': 'Page Not Found',
+  'app.pages.pageNotFound.row2': 'this url you entered is not available',
+
   'app.pages.searchNotFound.title': 'Search not found',
   'app.pages.searchNotFound.row2': 'Oops! The search string you entered was:',
   'app.pages.searchNotFound.row4': 'Sorry! This is an invalid search string',

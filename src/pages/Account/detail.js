@@ -17,6 +17,7 @@ import CopyButton from '../../components/CopyButton';
 import QrcodeButton from '../../components/QrcodeButton';
 import * as commonCss from '../../globalStyles/common';
 import media from '../../globalStyles/media';
+import SearchNotFound from '../SearchNotFound';
 
 const { RangePicker } = DatePicker;
 
@@ -395,6 +396,7 @@ class Detail extends Component {
       },
       minedTotalCount: 0,
       curMinedPage: 1,
+      showErrorPage: false,
     };
   }
 
@@ -408,31 +410,37 @@ class Detail extends Component {
 
   async fetchAccountDetail(accountid, queries) {
     this.setState({ isLoading: true, accountid });
-    const { code, result } = (await superagent.get(`/proxy/fetchAccountDetail/${accountid}`).query(queries)).body;
-    if (!code) {
-      this.setState(
-        {
-          accountDetail: result.find((item) => Object.keys(item)[0] === `account/${accountid}`)[`account/${accountid}`],
-          // TxList: result.find((item) => Object.keys(item)[0] === `account/${accountid}/transactionList`)[
-          //   `account/${accountid}/transactionList`
-          // ],
-          TxList: get(
-            result.find((item) => Object.keys(item)[0] === `account/${accountid}/transactionList`),
-            `account/${accountid}/transactionList`,
-            []
-          ),
-          TxTotalCount: get(
-            result.find((item) => Object.keys(item)[0] === `account/${accountid}/transactionList`),
-            `total_account/${accountid}/transactionList`,
-            []
-          ),
-          minedTotalCount:
-            get(result.find((item) => Object.keys(item)[0] === `account/${accountid}`), [`account/${accountid}`, 'minedBlocks']) || 0,
-        },
-        () => {
-          this.setState({ isLoading: false, queries });
-        }
-      );
+    try {
+      const { code, result } = (await superagent.get(`/proxy/fetchAccountDetail/${accountid}`).query(queries)).body;
+      if (!code) {
+        this.setState(
+          {
+            accountDetail: result.find((item) => Object.keys(item)[0] === `account/${accountid}`)[`account/${accountid}`],
+            // TxList: result.find((item) => Object.keys(item)[0] === `account/${accountid}/transactionList`)[
+            //   `account/${accountid}/transactionList`
+            // ],
+            TxList: get(
+              result.find((item) => Object.keys(item)[0] === `account/${accountid}/transactionList`),
+              `account/${accountid}/transactionList`,
+              []
+            ),
+            TxTotalCount: get(
+              result.find((item) => Object.keys(item)[0] === `account/${accountid}/transactionList`),
+              `total_account/${accountid}/transactionList`,
+              []
+            ),
+            minedTotalCount:
+              get(result.find((item) => Object.keys(item)[0] === `account/${accountid}`), [`account/${accountid}`, 'minedBlocks']) || 0,
+          },
+          () => {
+            this.setState({ isLoading: false, queries });
+          }
+        );
+      }
+    } catch (e) {
+      this.setState({
+        showErrorPage: true,
+      });
     }
     return {};
   }
@@ -471,6 +479,7 @@ class Detail extends Component {
       accountid,
       minedTotalCount,
       curMinedPage,
+      showErrorPage,
     } = this.state;
     const {
       intl,
@@ -478,6 +487,9 @@ class Detail extends Component {
     } = this.props;
     if (accountid !== params.accountid) {
       this.fetchAccountDetail(params.accountid, queries);
+    }
+    if (showErrorPage) {
+      return <SearchNotFound searchId={params.accountid} />;
     }
     const columns = [
       {
