@@ -486,6 +486,9 @@ class Detail extends Component {
       intl,
       match: { params },
     } = this.props;
+    if (accountid !== params.accountid) {
+      this.fetchAccountDetail(params.accountid, queries);
+    }
 
     const columns = [
       {
