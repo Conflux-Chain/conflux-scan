@@ -438,7 +438,7 @@ class Detail extends Component {
 
   async fetchMinedBlockList(accountid, curMinedPage) {
     this.setState({ isLoading: true });
-    const { code, result } = (await superagent.get(`/proxy/fetchMinedBlockList/${accountid}?pageNum=${curMinedPage}&pageSize=5`)).body;
+    const { code, result } = (await superagent.get(`/proxy/fetchMinedBlockList/${accountid}?pageNum=${curMinedPage}&pageSize=10`)).body;
     if (!code) {
       this.setState(
         {
@@ -735,7 +735,7 @@ class Detail extends Component {
                         this.fetchAccountDetail(params.accountid, { ...queries, pageNum: data.activePage });
                       }}
                       activePage={queries.pageNum}
-                      totalPages={Math.floor(TxTotalCount / 10) + 1}
+                      totalPages={Math.ceil(TxTotalCount / 10)}
                     />
                   </div>
                   <div className="page-h5">
@@ -758,7 +758,7 @@ class Detail extends Component {
                       firstItem={null}
                       lastItem={null}
                       siblingRange={1}
-                      totalPages={Math.floor(TxTotalCount / 10) + 1}
+                      totalPages={Math.ceil(TxTotalCount / 10)}
                     />
                   </div>
                 </TabWrapper>
@@ -788,7 +788,7 @@ class Detail extends Component {
                         this.fetchMinedBlockList(params.accountid, data.activePage);
                       }}
                       activePage={curMinedPage}
-                      totalPages={Math.floor(minedTotalCount / 5) + 1}
+                      totalPages={Math.ceil(minedTotalCount / 10)}
                     />
                   </div>
                   <div className="page-h5">
@@ -811,7 +811,7 @@ class Detail extends Component {
                       firstItem={null}
                       lastItem={null}
                       siblingRange={1}
-                      totalPages={Math.floor(minedTotalCount / 5) + 1}
+                      totalPages={Math.ceil(minedTotalCount / 10)}
                     />
                   </div>
                 </MinedWrap>

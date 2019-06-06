@@ -9,6 +9,7 @@ import EllipsisLine from '../../components/EllipsisLine';
 import Countdown from '../../components/Countdown';
 import '../../assets/semantic-ui/semantic.css';
 import media from '../../globalStyles/media';
+import * as commonCss from '../../globalStyles/common';
 import { i18n } from '../../utils';
 
 const Wrapper = styled.div`
@@ -62,6 +63,12 @@ const HeadBar = styled.div`
     font-size: 20px;
     margin-right: 24px;
   }
+`;
+const PagerWrap = styled.div`
+  display: flex;
+  margin-top: 24px;
+  justify-content: flex-end;
+  ${commonCss.paginatorMixin}
 `;
 
 const columns = [
@@ -141,6 +148,8 @@ class Detail extends Component {
     super();
     this.state = {
       BlockList: [],
+      curPage: 1,
+      totalCount: 0,
     };
   }
 
@@ -148,20 +157,28 @@ class Detail extends Component {
     const {
       match: { params },
     } = this.props;
-    this.fetchInitList({ epochid: params.epochid });
+    const { curPage } = this.state;
+    this.fetchInitList({
+      epochid: params.epochid,
+      curPage,
+    });
   }
 
-  async fetchInitList({ epochid }) {
-    const { code, result } = (await superagent.get(`/proxy/fetchEpochList?pageNum=1&pageSize=20&epochNum=${epochid}`)).body;
+  async fetchInitList({ epochid, curPage }) {
+    const { code, result } = (await superagent.get(`/proxy/fetchEpochList?pageNum=${curPage}&pageSize=10&epochNum=${epochid}`)).body;
     if (!code) {
       this.setState({
         BlockList: result.find((item) => Object.keys(item)[0] === 'block/list')['block/list'],
+        totalCount: result.find((item) => {
+          return item['total_block/list'];
+        })['total_block/list'],
+        curPage,
       });
     }
   }
 
   render() {
-    const { BlockList } = this.state;
+    const { BlockList, curPage, totalCount } = this.state;
     const {
       match: { params },
     } = this.props;
@@ -179,6 +196,56 @@ class Detail extends Component {
               </div>
             </div>
           </StyledTabel>
+
+          <PagerWrap>
+            <div className="page-pc">
+              <Pagination
+                prevItem={{
+                  'aria-label': 'Previous item',
+                  content: i18n('lastPage'),
+                }}
+                nextItem={{
+                  'aria-label': 'Next item',
+                  content: i18n('nextPage'),
+                }}
+                onPageChange={(e, data) => {
+                  e.preventDefault();
+                  this.fetchInitList({
+                    curPage: data.activePage,
+                    epochid: params.epochid,
+                  });
+                }}
+                activePage={curPage}
+                totalPages={Math.ceil(totalCount / 10)}
+              />
+            </div>
+            <div className="page-h5">
+              <Pagination
+                prevItem={{
+                  'aria-label': 'Previous item',
+                  content: i18n('lastPage'),
+                }}
+                nextItem={{
+                  'aria-label': 'Next item',
+                  content: i18n('nextPage'),
+                }}
+                boundaryRange={0}
+                activePage={curPage}
+                onPageChange={(e, data) => {
+                  e.preventDefault();
+                  this.fetchInitList({
+                    curPage: data.activePage,
+                    epochid: params.epochid,
+                  });
+                }}
+                ellipsisItem={null}
+                firstItem={null}
+                lastItem={null}
+                siblingRange={1}
+                totalPages={Math.ceil(totalCount / 10)}
+              />
+            </div>
+          </PagerWrap>
         </Wrapper>
       </div>
     );

@@ -9,7 +9,7 @@ import TableLoading from '../../components/TableLoading';
 import EllipsisLine from '../../components/EllipsisLine';
 import '../../assets/semantic-ui/semantic.css';
 import media from '../../globalStyles/media';
-import { i18n } from '../../utils/index';
+import { i18n, sendRequest } from '../../utils/index';
 import ConfirmSimple from '../../components/ConfirmSimple';
 import * as commonCss from '../../globalStyles/common';
 
@@ -188,7 +188,9 @@ class List extends Component {
 
   async fetchBlockList({ activePage }) {
     this.setState({ isLoading: true });
-    const { code, result } = (await superagent.get(`/proxy/fetchInitBlockandTxList?pageNum=${activePage}&pageSize=10`)).body;
+    const { code, result } = (await sendRequest({
+      url: `/proxy/fetchInitBlockandTxList?pageNum=${activePage}&pageSize=10`,
+    })).body;
     if (!code) {
       this.setState(
         {
@@ -240,7 +242,7 @@ class List extends Component {
                     this.fetchBlockList(data);
                   }}
                   activePage={curPage}
-                  totalPages={Math.floor(TotalCount / 10) + 1}
+                  totalPages={Math.ceil(TotalCount / 10)}
                 />
               </div>
               <div className="page-h5">
@@ -263,7 +265,7 @@ class List extends Component {
                   firstItem={null}
                   lastItem={null}
                   siblingRange={1}
-                  totalPages={Math.floor(TotalCount / 10) + 1}
+                  totalPages={Math.ceil(TotalCount / 10)}
                 />
               </div>
             </StyledTabel>
