@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import superagent from 'superagent';
@@ -7,11 +8,11 @@ import { Pagination, Dropdown } from 'semantic-ui-react';
 import { DatePicker } from 'antd';
 import { injectIntl } from 'react-intl';
 import get from 'lodash/get';
+import compose from 'lodash/fp/compose';
 import DataList from '../../components/DataList';
 import Countdown from '../../components/Countdown';
 import TableLoading from '../../components/TableLoading';
 import EllipsisLine from '../../components/EllipsisLine';
-import '../../assets/semantic-ui/semantic.css';
 import { convertToValueorFee, converToGasPrice, i18n } from '../../utils';
 import CopyButton from '../../components/CopyButton';
 import QrcodeButton from '../../components/QrcodeButton';
@@ -224,10 +225,6 @@ const TabZone = styled.div`
   }
 `;
 
-const TabZoneWrapper = styled.div`
-  box-shadow: 0 1px 3px 0;
-`;
-
 const PCell = styled.div`
   margin: 0 !important;
 `;
@@ -371,11 +368,6 @@ const minedColumns = [
   },
 ];
 
-const dataSource = [
-  { key: 1, ein: '80580', zwei: '0xe969a6fc05897123123', drei: 'Alichs' },
-  { key: 2, ein: '80581', zwei: '0xe969a6fc05897124124', drei: 'Schwarz' },
-];
-
 class Detail extends Component {
   constructor() {
     super();
@@ -406,6 +398,7 @@ class Detail extends Component {
   }
 
   async fetchAccountDetail(accountid, queries) {
+    const { history } = this.props;
     this.setState({ isLoading: true, accountid });
     const { code, result } = (await superagent.get(`/proxy/fetchAccountDetail/${accountid}`).query(queries)).body;
     if (!code) {
@@ -432,6 +425,8 @@ class Detail extends Component {
           this.setState({ isLoading: false, queries });
         }
       );
+    } else if (code === 1) {
+      history.push(`/search-notfound?searchId=${accountid}`);
     }
     return {};
   }
@@ -828,8 +823,15 @@ Detail.propTypes = {
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
   }).isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
 };
 Detail.defaultProps = {
   match: {},
 };
-export default injectIntl(Detail);
+const hoc = compose(
+  injectIntl,
+  withRouter
+);
+export default hoc(Detail);

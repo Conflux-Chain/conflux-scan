@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import superagent from 'superagent';
-import { Pagination } from 'semantic-ui-react';
 import DataList from '../../components/DataList';
 import EllipsisLine from '../../components/EllipsisLine';
 import Countdown from '../../components/Countdown';
-import '../../assets/semantic-ui/semantic.css';
 import media from '../../globalStyles/media';
 import { i18n } from '../../utils';
 
@@ -152,11 +150,14 @@ class Detail extends Component {
   }
 
   async fetchInitList({ epochid }) {
+    const { history } = this.props;
     const { code, result } = (await superagent.get(`/proxy/fetchEpochList?pageNum=1&pageSize=20&epochNum=${epochid}`)).body;
     if (!code) {
       this.setState({
         BlockList: result.find((item) => Object.keys(item)[0] === 'block/list')['block/list'],
       });
+    } else if (code === 1) {
+      history.push(`/search-notfound?searchId=${epochid}`);
     }
   }
 
@@ -186,8 +187,11 @@ class Detail extends Component {
 }
 Detail.propTypes = {
   match: PropTypes.objectOf(PropTypes.string),
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
 };
 Detail.defaultProps = {
   match: {},
 };
-export default Detail;
+export default withRouter(Detail);

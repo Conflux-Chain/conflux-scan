@@ -1,14 +1,10 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import superagent from 'superagent';
-import { injectIntl, FormattedMessage } from 'react-intl';
 import DataList from '../../components/DataList';
 import Countdown from '../../components/Countdown';
 import EllipsisLine from '../../components/EllipsisLine';
 import TableLoading from '../../components/TableLoading';
-import '../../assets/semantic-ui/semantic.css';
 import media from '../../globalStyles/media';
 import { converToGasPrice3Fixed, initSse, closeSource, sendRequest, i18n } from '../../utils';
 
@@ -133,9 +129,6 @@ class BlockAndTxn extends Component {
   }
 
   render() {
-    const {
-      intl: { locale },
-    } = this.props;
     const { BlockList, TxList } = this.state;
     const MBlockColumns = [
       {
@@ -321,15 +314,5 @@ class BlockAndTxn extends Component {
     );
   }
 }
-BlockAndTxn.propTypes = {
-  intl: PropTypes.shape({
-    lang: PropTypes.string,
-  }),
-};
-BlockAndTxn.defaultProps = {
-  intl: {
-    lang: 'zh',
-  },
-};
 
-export default injectIntl(BlockAndTxn);
+export default BlockAndTxn;

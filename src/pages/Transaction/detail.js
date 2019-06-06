@@ -1,14 +1,10 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import superagent from 'superagent';
 import moment from 'moment';
-import { Pagination } from 'semantic-ui-react';
 import TableLoading from '../../components/TableLoading';
-import DataList from '../../components/DataList';
-import EllipsisLine from '../../components/EllipsisLine';
-import '../../assets/semantic-ui/semantic.css';
 import media from '../../globalStyles/media';
 import { i18n } from '../../utils';
 
@@ -99,10 +95,15 @@ class Detail extends Component {
   }
 
   async fetchTxDetail(txnhash) {
+    const { history } = this.props;
     this.setState({ isLoading: true, txnhash });
     const { code, result } = (await superagent.get(`/proxy/fetchTxDetail?transactionHash=${txnhash}`)).body;
     if (!code) {
       this.setState({ result }, () => this.setState({ isLoading: false }));
+    } else if (code === 4) {
+      history.push(`/notfoundtx?searchId=${txnhash}`);
+    } else if (code === 1) {
+      history.push(`/search-notfound?searchId=${txnhash}`);
     }
     return {};
   }
@@ -188,8 +189,11 @@ class Detail extends Component {
 }
 Detail.propTypes = {
   match: PropTypes.objectOf(PropTypes.string),
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
 };
 Detail.defaultProps = {
   match: {},
 };
-export default Detail;
+export default withRouter(Detail);

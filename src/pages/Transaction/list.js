@@ -7,7 +7,6 @@ import Countdown from '../../components/Countdown';
 import TableLoading from '../../components/TableLoading';
 import EllipsisLine from '../../components/EllipsisLine';
 import { convertToValueorFee, converToGasPrice, i18n } from '../../utils';
-import '../../assets/semantic-ui/semantic.css';
 import media from '../../globalStyles/media';
 import ConfirmSimple from '../../components/ConfirmSimple';
 import * as commonCss from '../../globalStyles/common';

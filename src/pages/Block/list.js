@@ -7,7 +7,6 @@ import DataList from '../../components/DataList';
 import Countdown from '../../components/Countdown';
 import TableLoading from '../../components/TableLoading';
 import EllipsisLine from '../../components/EllipsisLine';
-import '../../assets/semantic-ui/semantic.css';
 import media from '../../globalStyles/media';
 import { i18n } from '../../utils/index';
 import ConfirmSimple from '../../components/ConfirmSimple';
@@ -156,14 +155,10 @@ const columns = [
     render: (text) => <PCell>{text}</PCell>,
   },
 ];
-const dataSource = [
-  { key: 1, ein: '80580', zwei: '0xe969a6fc05897123123', drei: 'Alichs' },
-  { key: 2, ein: '80581', zwei: '0xe969a6fc05897124124', drei: 'Schwarz' },
-];
 
 /* eslint react/destructuring-assignment: 0 */
 let curPageBase = 1;
-document.addEventListener('clean_state', function(event) {
+document.addEventListener('clean_state', (event) => {
   curPageBase = 1;
 });
 
