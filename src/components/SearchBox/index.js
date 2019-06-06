@@ -4,6 +4,8 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { injectIntl, FormattedMessage } from 'react-intl';
+import { Dimmer, Loader, Image, Segment } from 'semantic-ui-react';
+
 import compose from 'lodash/fp/compose';
 import media from '../../globalStyles/media';
 
@@ -105,36 +107,67 @@ class SearchBox extends Component {
   async handleSearch(value) {
     const { history } = this.props;
     if (value) {
-      const { code, result, message } = (await superagent.get(`/proxy/fetchHashType/${value}`)).body;
-      if (code !== 0) {
-        history.push(`/search-notfound?searchId=${value}&errMsg=${message}`);
-        return;
-      }
-      if (result) {
-        switch (result) {
-          case 0:
-            history.push(`/blocksdetail/${value}`);
-            break;
-          case 1:
-            history.push(`/transactionsdetail/${value}`);
-            break;
-          case 2:
-            history.push(`/accountdetail/${value}`);
-            break;
-          default:
-            console.log('unknow case');
-            break;
+      this.setState({
+        showLoading: true,
+      });
+      const scrollToTop = () => {
+        const eventScroll = new Event('scroll-to-top');
+        setTimeout(() => {
+          document.dispatchEvent(eventScroll);
+        }, 0);
+      };
+      try {
+        const { code, result, message } = (await superagent.get(`/proxy/fetchHashType/${value}`)).body;
+        if (code !== 0) {
+          history.push(`/search-notfound?searchId=${value}&errMsg=${message}`);
+          scrollToTop();
+          return;
         }
+        if (typeof result !== 'undefined') {
+          switch (result) {
+            case 0:
+              history.push(`/blocksdetail/${value}`);
+              break;
+            case 1:
+              history.push(`/transactionsdetail/${value}`);
+              break;
+            case 2:
+              history.push(`/accountdetail/${value}`);
+              break;
+            default:
+              console.log('unknow case');
+              break;
+          }
+          scrollToTop();
+        }
+      } catch (e) {
+        console.log(e);
+      } finally {
+        this.setState({
+          showLoading: false,
+        });
       }
     }
   }
 
   render() {
-    const { searchKey, filterName } = this.state;
+    const { searchKey, filterName, showLoading } = this.state;
     const { intl } = this.props;
 
     return (
       <Wrapper>
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            display: showLoading ? 'block' : 'none',
+          }}
+        >
+          <Loader size="medium" active={showLoading} />
+        </div>
         <FilterSelector>
           <div className="ui dropdown link item">
             <FormattedMessage id={filterName}>{(s) => <span className="text">{s}</span>}</FormattedMessage>

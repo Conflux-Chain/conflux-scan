@@ -142,7 +142,7 @@ const Statistic = styled.div`
   border-radius: 4px;
 
   .transaction {
-    width: 28%;
+    width: 22%;
     ${fullWidthMobile}
     ${media.pad`border-bottom: 1px solid rgba(0, 0, 0, 0.08);`}
   }
@@ -152,6 +152,9 @@ const Statistic = styled.div`
     border-left: 1px solid rgba(0, 0, 0, 0.08);
     ${fullWidthMobile}
     ${media.pad`border-bottom: 1px solid rgba(0, 0, 0, 0.08);`}
+  }
+  .balance {
+    width: 24%;
   }
   .seen {
     width: 36%;
@@ -555,7 +558,9 @@ class Detail extends Component {
                 </svg>
                 <div>
                   <h2>{i18n('Balance')}</h2>
-                  <EllipsisLine unit="CFX" text={convertToValueorFee(accountDetail.balance)} />
+                  {convertToValueorFee(accountDetail.balance)}
+                  <span style={{ marginLeft: 5 }}>CFX</span>
+                  {/* <EllipsisLine unit="CFX" text={} /> */}
                 </div>
               </div>
             </div>
