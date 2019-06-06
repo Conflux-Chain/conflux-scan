@@ -115,51 +115,66 @@ class SearchBox extends Component {
         const eventScroll = new Event('scroll-to-top');
         setTimeout(() => {
           document.dispatchEvent(eventScroll);
+          this.setState({
+            showLoading: false,
+          });
         }, 0);
       };
-      try {
-        const { code, result, message } = (await superagent.get(`/proxy/fetchHashType/${value}`)).body;
-        if (code !== 0) {
-          history.push(`/search-notfound?searchId=${value}&errMsg=${message}`);
-          scrollToTop();
-          return;
-        }
-        if (typeof result !== 'undefined') {
-          switch (result) {
-            case 0:
-              if (filterValue === 0 || filterValue === 2) history.push(`/blocksdetail/${value}`);
-              else history.push(`/search-notfound?searchId=${value}&errMsg=${message}`);
-              break;
-            case 1:
-              if (filterValue === 0 || filterValue === 3) history.push(`/transactionsdetail/${value}`);
-              else history.push(`/search-notfound?searchId=${value}&errMsg=${message}`);
-              break;
-            case 2:
-              if (filterValue === 0 || filterValue === 4) history.push(`/accountdetail/${value}`);
-              else history.push(`/search-notfound?searchId=${value}&errMsg=${message}`);
-              break;
-            case 3:
-              if (filterValue === 0 || filterValue === 1) history.push(`/epochsdetail/${value}`);
-              else history.push(`/search-notfound?searchId=${value}&errMsg=${message}`);
-              break;
-            default:
-              console.log('unknow case');
-              break;
-          }
-          scrollToTop();
-        }
-      } catch (e) {
-        console.log(e);
-      } finally {
-        this.setState({
-          showLoading: false,
-        });
+
+      if (/^[0-9a-zA-Z]+$/.test(value) === false) {
+        history.push(`/search-notfound?searchId=${value}`);
+        scrollToTop();
+        return;
       }
+
+      if (filterValue === 0) {
+        try {
+          const { code, result } = (await superagent.get(`/proxy/fetchHashType/${value}`)).body;
+          if (code !== 0) {
+            history.push(`/search-notfound?searchId=${value}`);
+            scrollToTop();
+            return;
+          }
+          if (typeof result !== 'undefined') {
+            switch (result) {
+              case 0:
+                history.push(`/blocksdetail/${value}`);
+                break;
+              case 1:
+                history.push(`/transactionsdetail/${value}`);
+                break;
+              case 2:
+                history.push(`/accountdetail/${value}`);
+                break;
+              case 3:
+                history.push(`/epochsdetail/${value}`);
+                break;
+              default:
+                console.log('unknow case');
+                break;
+            }
+            scrollToTop();
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      } else if (filterValue === 1) {
+        history.push(`/epochsdetail/${value}`);
+      } else if (filterValue === 2) {
+        history.push(`/blocksdetail/${value}`);
+      } else if (filterValue === 3) {
+        history.push(`/transactionsdetail/${value}`);
+      } else if (filterValue === 4) {
+        history.push(`/accountdetail/${value}`);
+      }
+      this.setState({
+        showLoading: false,
+      });
     }
   }
 
   render() {
-    const { searchKey, filterName, showLoading, filterValue } = this.state;
+    const { searchKey, filterName, showLoading } = this.state;
     const { intl } = this.props;
 
     return (
@@ -197,11 +212,13 @@ class SearchBox extends Component {
           </div>
         </FilterSelector>
         <Input
-          onKeyPress={(e) => {
-            this.setState({ searchKey: e.target.value });
+          onKeyUp={(e) => {
             if (e.which === 13) {
               this.handleSearch(e.target.value);
             }
+          }}
+          onChange={(e) => {
+            this.setState({ searchKey: e.target.value });
           }}
           type="text"
           placeholder={intl.formatMessage({ id: 'app.comp.searchbox.placeholder' })}
