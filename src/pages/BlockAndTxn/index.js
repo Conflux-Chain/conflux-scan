@@ -194,9 +194,10 @@ class BlockAndTxn extends Component {
         render: (text, row) => (
           <div>
             <EllipsisLine
+              prefix={i18n('Miner')}
               linkTo={`/accountdetail/${text}`}
               text={(fmt) => {
-                return fmt('Miner') + ' ' + text;
+                return ' ' + text;
               }}
             />
             <PCell>
