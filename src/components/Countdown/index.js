@@ -6,6 +6,7 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 
 const Text = styled.span`
   font-weight: 400;
+  white-space: nowrap;
 `;
 
 function Countdown(props) {

@@ -293,7 +293,9 @@ class Detail extends Component {
   async fetchTxDetail(blockHash, { activePage }) {
     const { history } = this.props;
     this.setState({ isLoading: true, blockhash: blockHash });
-    const { code, result } = (await superagent.get(`/proxy/fetchBlockDetail/${blockHash}?pageNum=${activePage}&pageSize=10`)).body;
+    const { code, result } = (await superagent.get(`/proxy/fetchBlockDetail/${blockHash}?pageNum=${activePage}&pageSize=10`).catch((e) => {
+      window.location.href = `/search-notfound?searchId=${blockHash}`;
+    })).body;
     if (!code) {
       this.setState(
         {
@@ -314,7 +316,7 @@ class Detail extends Component {
 
   async fetchReffereBlock(blockHash) {
     this.setState({ isLoading: true });
-    const { code, result } = (await superagent.get(`/proxy/fetchRefereeBlockList/${blockHash}?pageNum=1&pageSize=10`)).body;
+    const { code, result } = (await superagent.get(`/proxy/fetchRefereeBlockList/${blockHash}?pageNum=1&pageSize=20`)).body;
     if (!code) {
       this.setState(
         {
@@ -446,7 +448,7 @@ class Detail extends Component {
                         this.fetchTxDetail(params.blockhash, data);
                       }}
                       activePage={curPage}
-                      totalPages={Math.floor(TxTotalCount / 10) + 1}
+                      totalPages={Math.ceil(TxTotalCount / 10)}
                     />
                   </div>
                   <div className="page-h5">
@@ -469,7 +471,7 @@ class Detail extends Component {
                       firstItem={null}
                       lastItem={null}
                       siblingRange={1}
-                      totalPages={Math.floor(TxTotalCount / 10) + 1}
+                      totalPages={Math.ceil(TxTotalCount / 10)}
                     />
                   </div>
                 </TabWrapper>

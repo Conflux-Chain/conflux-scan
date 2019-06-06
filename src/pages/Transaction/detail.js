@@ -97,7 +97,9 @@ class Detail extends Component {
   async fetchTxDetail(txnhash) {
     const { history } = this.props;
     this.setState({ isLoading: true, txnhash });
-    const { code, result } = (await superagent.get(`/proxy/fetchTxDetail?transactionHash=${txnhash}`)).body;
+    const { code, result } = (await superagent.get(`/proxy/fetchTxDetail?transactionHash=${txnhash}`).catch((e) => {
+      window.location.href = `/notfoundtx?searchId=${txnhash}`;
+    })).body;
     if (!code) {
       this.setState({ result }, () => this.setState({ isLoading: false }));
     } else if (code === 4) {

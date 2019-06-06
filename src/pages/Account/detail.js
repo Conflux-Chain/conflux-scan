@@ -18,6 +18,7 @@ import CopyButton from '../../components/CopyButton';
 import QrcodeButton from '../../components/QrcodeButton';
 import * as commonCss from '../../globalStyles/common';
 import media from '../../globalStyles/media';
+import SearchNotFound from '../SearchNotFound';
 
 const { RangePicker } = DatePicker;
 
@@ -147,8 +148,7 @@ const Statistic = styled.div`
     ${fullWidthMobile}
     ${media.pad`border-bottom: 1px solid rgba(0, 0, 0, 0.08);`}
   }
-  .miner,
-  .balance {
+  .miner {
     width: 20%;
     border-left: 1px solid rgba(0, 0, 0, 0.08);
     ${fullWidthMobile}
@@ -159,8 +159,10 @@ const Statistic = styled.div`
     .wrap svg {
       opacity: 1;
     }
+    border-left: 1px solid rgba(0, 0, 0, 0.08);
+    ${fullWidthMobile}
+    ${media.pad`border-bottom: 1px solid rgba(0, 0, 0, 0.08);`}
   }
-
   .seen {
     width: 36%;
     border-left: 1px solid rgba(0, 0, 0, 0.08);
@@ -433,7 +435,7 @@ class Detail extends Component {
 
   async fetchMinedBlockList(accountid, curMinedPage) {
     this.setState({ isLoading: true });
-    const { code, result } = (await superagent.get(`/proxy/fetchMinedBlockList/${accountid}?pageNum=${curMinedPage}&pageSize=5`)).body;
+    const { code, result } = (await superagent.get(`/proxy/fetchMinedBlockList/${accountid}?pageNum=${curMinedPage}&pageSize=10`)).body;
     if (!code) {
       this.setState(
         {
@@ -584,7 +586,7 @@ class Detail extends Component {
             <div className="balance">
               <div className="wrap">
                 <svg className="icon" aria-hidden="true">
-                  <use xlinkHref="#iconEquilibrium-type" className="iconEquilibrium" />
+                  <use xlinkHref="#iconEquilibrium-type" />
                 </svg>
                 <div>
                   <h2>{i18n('Balance')}</h2>
@@ -642,8 +644,8 @@ class Detail extends Component {
               >
                 <RangePicker
                   className="date-picker"
-                  showTime={{ format: 'HH:00' }}
-                  format="YYYY-MM-DD HH:00"
+                  showTime={{ format: 'HH:ss' }}
+                  format="YYYY-MM-DD HH:ss"
                   placeholder={[
                     intl.formatMessage({
                       id: 'StartTime',
@@ -730,7 +732,7 @@ class Detail extends Component {
                         this.fetchAccountDetail(params.accountid, { ...queries, pageNum: data.activePage });
                       }}
                       activePage={queries.pageNum}
-                      totalPages={Math.floor(TxTotalCount / 10) + 1}
+                      totalPages={Math.ceil(TxTotalCount / 10)}
                     />
                   </div>
                   <div className="page-h5">
@@ -753,7 +755,7 @@ class Detail extends Component {
                       firstItem={null}
                       lastItem={null}
                       siblingRange={1}
-                      totalPages={Math.floor(TxTotalCount / 10) + 1}
+                      totalPages={Math.ceil(TxTotalCount / 10)}
                     />
                   </div>
                 </TabWrapper>
@@ -783,7 +785,7 @@ class Detail extends Component {
                         this.fetchMinedBlockList(params.accountid, data.activePage);
                       }}
                       activePage={curMinedPage}
-                      totalPages={Math.floor(minedTotalCount / 5) + 1}
+                      totalPages={Math.ceil(minedTotalCount / 10)}
                     />
                   </div>
                   <div className="page-h5">
@@ -806,7 +808,7 @@ class Detail extends Component {
                       firstItem={null}
                       lastItem={null}
                       siblingRange={1}
-                      totalPages={Math.floor(minedTotalCount / 5) + 1}
+                      totalPages={Math.ceil(minedTotalCount / 10)}
                     />
                   </div>
                 </MinedWrap>

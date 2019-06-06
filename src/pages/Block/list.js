@@ -8,7 +8,7 @@ import Countdown from '../../components/Countdown';
 import TableLoading from '../../components/TableLoading';
 import EllipsisLine from '../../components/EllipsisLine';
 import media from '../../globalStyles/media';
-import { i18n } from '../../utils/index';
+import { i18n, sendRequest } from '../../utils/index';
 import ConfirmSimple from '../../components/ConfirmSimple';
 import * as commonCss from '../../globalStyles/common';
 
@@ -181,21 +181,24 @@ class List extends Component {
     curPageBase = this.state.curPage;
   }
 
-  async fetchBlockList({ activePage }) {
+  fetchBlockList({ activePage }) {
     this.setState({ isLoading: true });
-    const { code, result } = (await superagent.get(`/proxy/fetchInitBlockandTxList?pageNum=${activePage}&pageSize=10`)).body;
-    if (!code) {
-      this.setState(
-        {
-          BlockList: result.find((item) => Object.keys(item)[0] === 'block/list')['block/list'],
-          TotalCount: result.find((item) => Object.keys(item)[0] === 'block/list')['total_block/list'],
-        },
-        () => {
-          this.setState({ isLoading: false, curPage: activePage });
-          document.dispatchEvent(new Event('scroll-to-top'));
-        }
-      );
-    }
+    const reqBlockList = sendRequest({
+      url: '/api/block/list',
+      query: {
+        pageNum: activePage,
+        pageSize: 10,
+      },
+    });
+    reqBlockList.then((res) => {
+      const { data } = res.body.result;
+      this.setState({
+        isLoading: false,
+        curPage: activePage,
+        BlockList: data,
+        TotalCount: res.body.result.total,
+      });
+    });
   }
 
   render() {
@@ -235,7 +238,7 @@ class List extends Component {
                     this.fetchBlockList(data);
                   }}
                   activePage={curPage}
-                  totalPages={Math.floor(TotalCount / 10) + 1}
+                  totalPages={Math.ceil(TotalCount / 10)}
                 />
               </div>
               <div className="page-h5">
@@ -258,7 +261,7 @@ class List extends Component {
                   firstItem={null}
                   lastItem={null}
                   siblingRange={1}
-                  totalPages={Math.floor(TotalCount / 10) + 1}
+                  totalPages={Math.ceil(TotalCount / 10)}
                 />
               </div>
             </StyledTabel>

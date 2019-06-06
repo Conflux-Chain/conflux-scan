@@ -84,18 +84,22 @@ export default {
   'app.pages.txns.age': '打包时间',
   'app.pages.txns.time': '打包时间',
 
-  'app.pages.block.confirm.title': '<div class="header">请确认</div>',
-  'app.pages.block.confirm.pageWarning': '<div class="content">暂不支持>10000分页</div>',
+  'app.pages.block.confirm.title': '请确认',
+  'app.pages.block.confirm.pageWarning': '暂不支持10000分页',
   'app.pages.block.confirm.done': '确定',
 
   'app.pages.notFoundTx.title': '对不起，你的交易',
   'app.pages.notFoundTx.tooltip': '复制到剪切板',
   'app.pages.notFoundTx.packing': '正在被打包, 请稍等一下',
-  'app.pages.notFoundTx.ask': '如果你认为出问题了，请',
-  'app.pages.notFoundTx.concatus': ' 联系我们',
+  'app.pages.notFoundTx.ask': '如果你认为出问题了，请 ',
+  'app.pages.notFoundTx.concatus': '联系我们',
   'app.pages.searchNotFound.title': '无法查找到有用信息',
   'app.pages.searchNotFound.row2': '额，您搜索的字符串为:',
   'app.pages.searchNotFound.row4': '该字符串无法被查询到',
+
+  'app.pages.pageNotFound.title': '没找到页面',
+  'app.pages.pageNotFound.row2': '没有可用的页面',
+
   'app.pages.dashboard.tps': '吞吐率',
   'app.pages.dashboard.difficulty': '难度',
   'app.pages.dashboard.blockTime': '出块间隔',

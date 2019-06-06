@@ -140,7 +140,7 @@ const dataSource = [
 ];
 
 function max10k(n) {
-  return Math.max(10000, n);
+  return Math.min(10000, n);
 }
 
 /* eslint react/destructuring-assignment: 0 */
@@ -228,7 +228,7 @@ class List extends Component {
                     this.fetchTxList(data);
                   }}
                   activePage={curPage}
-                  totalPages={max10k(Math.floor(TotalCount / 10) + 1)}
+                  totalPages={max10k(Math.ceil(TotalCount / 10))}
                 />
               </div>
               <div className="page-h5">
@@ -251,7 +251,7 @@ class List extends Component {
                   firstItem={null}
                   lastItem={null}
                   siblingRange={1}
-                  totalPages={max10k(Math.floor(TotalCount / 10) + 1)}
+                  totalPages={max10k(Math.ceil(TotalCount / 10))}
                 />
               </div>
             </StyledTabel>
