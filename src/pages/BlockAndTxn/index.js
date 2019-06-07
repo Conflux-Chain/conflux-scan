@@ -100,6 +100,7 @@ class BlockAndTxn extends Component {
     this.state = {
       BlockList: [],
       TxList: [],
+      showLoading: true,
     };
   }
 
@@ -122,14 +123,15 @@ class BlockAndTxn extends Component {
     })).body;
     if (!code) {
       this.setState({
-        BlockList: result.find((item) => Object.keys(item)[0] === 'block/list')['block/list'],
-        TxList: result.find((item) => Object.keys(item)[0] === 'transaction/list')['transaction/list'],
+        showLoading: false,
+        BlockList: result.find((item) => Object.keys(item)[0] === 'block/list')['block/list'] || [],
+        TxList: result.find((item) => Object.keys(item)[0] === 'transaction/list')['transaction/list'] || [],
       });
     }
   }
 
   render() {
-    const { BlockList, TxList } = this.state;
+    const { BlockList, TxList, showLoading } = this.state;
     const MBlockColumns = [
       {
         key: 2,
@@ -283,7 +285,7 @@ class BlockAndTxn extends Component {
                 <div className="header">{i18n('app.pages.blockAndTx.blocks')}</div>
               </div>
               <div className="content">
-                {!BlockList.length && <TableLoading />}
+                {showLoading && <TableLoading />}
                 <DataList columns={window.innerWidth > 576 ? BlockColumns : MBlockColumns} dataSource={BlockList} />
               </div>
               <div className="extra content">
@@ -307,7 +309,7 @@ class BlockAndTxn extends Component {
                 <div className="header">{i18n('Transactions')}</div>
               </div>
               <div className="content">
-                {!TxList.length && <TableLoading />}
+                {showLoading && <TableLoading />}
                 <DataList columns={window.innerWidth > 576 ? TxColumns : MTxColumns} dataSource={TxList} />
               </div>
               <div className="extra content">
