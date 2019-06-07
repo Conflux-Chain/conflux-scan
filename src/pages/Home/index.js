@@ -261,6 +261,9 @@ class Home extends Component {
             title={intl.formatMessage({ id: 'app.pages.dashboard.difficulty' })}
             data={data.get('difficulty').toJS()}
             duration={duration.get('difficulty')}
+            echartOpt={{
+              'grid.left': '75px',
+            }}
             onChangeDuration={(value) => this.onChangeDuration('difficulty', value)}
           />
           <LineChart
@@ -273,6 +276,9 @@ class Home extends Component {
             title={intl.formatMessage({ id: 'app.pages.dashboard.hashRate' })}
             data={data.get('hashRate').toJS()}
             duration={duration.get('hashRate')}
+            echartOpt={{
+              'grid.left': '75px',
+            }}
             onChangeDuration={(value) => this.onChangeDuration('hashRate', value)}
           />
         </LineContainer>

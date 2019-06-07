@@ -139,21 +139,24 @@ const start = async () => {
         handler: async (request, h) => {
           const { Readable } = require('stream');
           const rs = Readable();
-          const querys = ['block/list', 'transaction/list'].map((ids) => {
-            return new Promise((resolve, reject) => {
-              superagent
-                .get(`${API_HOST}/${ids}`)
-                .query(request.query)
-                .then((callback) => {
-                  const { code, result, message } = JSON.parse(callback.text);
-                  if (code == 0) resolve({ [ids]: result.data });
-                  else reject([]);
-                })
-                .catch((e) => {
-                  reject([]);
-                });
+          function getData() {
+            const querys = ['block/list', 'transaction/list'].map((ids) => {
+              return new Promise((resolve, reject) => {
+                superagent
+                  .get(`${API_HOST}/${ids}`)
+                  .query(request.query)
+                  .then((callback) => {
+                    const { code, result, message } = JSON.parse(callback.text);
+                    if (code == 0) resolve({ [ids]: result.data });
+                    else reject([]);
+                  })
+                  .catch((e) => {
+                    reject([]);
+                  });
+              });
             });
-          });
+            return querys;
+          }
           console.log('start');
 
           rs._read = function() {
@@ -162,10 +165,11 @@ const start = async () => {
               rs.resume();
               if (!request.active()) {
                 console.log('end');
+                rs.destroy();
                 return h.close;
               }
               // 业务逻辑
-              const payload = await Promise.all(querys);
+              const payload = await Promise.all(getData());
               rs.push(JSON.stringify(payload));
             }, 1000);
           };

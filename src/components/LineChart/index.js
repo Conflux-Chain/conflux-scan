@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import moment from 'moment';
 import echarts from 'echarts';
+import set from 'lodash/set';
 import { toFixed } from '../../utils';
 import media from '../../globalStyles/media';
 
@@ -75,7 +76,7 @@ class LineChart extends Component {
   }
 
   renderChart(data) {
-    const { title } = this.props;
+    const { title, echartOpt } = this.props;
     const myChart = echarts.init(document.getElementById(title + 'chart'));
     const option = {
       tooltip: {
@@ -98,6 +99,9 @@ class LineChart extends Component {
         formatter: (params) => {
           return moment(params[0].data.time * 1000).format('YYYY/M/D kk:mm') + '<br />' + toFixed(params[0].data.value, 3);
         },
+      },
+      grid: {
+        left: '10%',
       },
       xAxis: {
         type: 'category',
@@ -154,6 +158,12 @@ class LineChart extends Component {
         },
       ],
     };
+    if (echartOpt) {
+      Object.keys(echartOpt).forEach((key) => {
+        const val = echartOpt[key];
+        set(option, key, val);
+      });
+    }
     myChart.setOption(option);
   }
 
@@ -207,9 +217,11 @@ LineChart.propTypes = {
   data: PropTypes.arrayOf(PropTypes.object).isRequired,
   duration: PropTypes.string,
   onChangeDuration: PropTypes.func.isRequired,
+  echartOpt: PropTypes.shape({}),
 };
 LineChart.defaultProps = {
   duration: 'day',
+  echartOpt: {},
 };
 
 export default LineChart;
