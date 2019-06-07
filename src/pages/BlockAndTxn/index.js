@@ -146,11 +146,11 @@ class BlockAndTxn extends Component {
               </svg>
             </IconFace>
             <div>
-              <EllipsisLine isLong linkTo={`/blocksdetail/${text}`} isPivot={row.isPivot} text={text} />
+              <EllipsisLine isLong linkTo={`/blocksdetail/${row.hash}`} isPivot={row.isPivot} text={row.hash} />
               <PCell>
                 <Countdown timestamp={row.timestamp * 1000} />
               </PCell>
-              <EllipsisLine linkTo={`/accountdetail/${text}`} text={'Miner ' + text} />
+              <EllipsisLine prefix={i18n('Miner')} linkTo={`/accountdetail/${row.miner}`} text={row.miner} />
               <FloatGas>
                 <PCell>
                   {row.transactionCount} {row.transactionCount <= 1 ? i18n('txn') : i18n('txns')}
@@ -222,11 +222,11 @@ class BlockAndTxn extends Component {
               </svg>
             </IconFace>
             <div>
-              <EllipsisLine linkTo={`/transactionsdetail/${text}`} isPivot={row.isPivot} text={text} />
+              <EllipsisLine linkTo={`/transactionsdetail/${row.hash}`} isPivot={row.isPivot} text={row.hash} />
               <PCell>
                 <Countdown timestamp={row.timestamp * 1000} />
               </PCell>
-              <EllipsisLine prefix={i18n('From')} linkTo={`/accountdetail/${text}`} text={text} />
+              <EllipsisLine prefix={i18n('From')} linkTo={`/accountdetail/${row.from}`} text={row.from} />
               <EllipsisLine is2ndLine prefix={i18n('To')} linkTo={`/accountdetail/${row.to}`} text={row.to} />
               <FloatGas>
                 <StyledLabel>{converToGasPrice3Fixed(row.gasPrice) + ' CFX'}</StyledLabel>
