@@ -71,17 +71,17 @@ export default {
   'app.pages.blocks.position': '位置',
   'app.pages.blocks.hash': '哈希',
   'app.pages.blocks.gasLimit': '燃料上限',
-  'app.pages.blocks.age': '打包时间',
+  'app.pages.blocks.age': '块龄',
   'app.pages.blocks.txCount': '交易笔数',
-  'app.pages.blocks.packTime': '打包时间',
+  'app.pages.blocks.packTime': '时间戳',
 
   'app.pages.blockAndTx.blocks': '区块',
   'app.pages.blockAndTx.viewAllBlocks': '查看所有区块',
   'app.pages.blockAndTx.viewAllTransactions': '查看所有交易',
 
   // Age
-  'app.pages.txns.age': '打包时间',
-  'app.pages.txns.time': '打包时间',
+  'app.pages.txns.age': '块龄',
+  'app.pages.txns.time': '时间戳',
 
   'app.pages.block.confirm.title': '请确认',
   'app.pages.block.confirm.pageWarning': '暂不支持10000分页',

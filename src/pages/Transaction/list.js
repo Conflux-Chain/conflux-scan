@@ -134,10 +134,6 @@ const columns = [
     render: (text) => <Countdown timestamp={text * 1000} />,
   },
 ];
-const dataSource = [
-  { key: 1, ein: '80580', zwei: '0xe969a6fc05897123123', drei: 'Alichs' },
-  { key: 2, ein: '80581', zwei: '0xe969a6fc05897124124', drei: 'Schwarz' },
-];
 
 function max10k(n) {
   return Math.min(10000, n);
