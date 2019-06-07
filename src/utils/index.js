@@ -96,8 +96,9 @@ export const initSse = (tthis, uri = '/proxy/fetch_random_time') => {
     const result = JSON.parse(data.data);
     console.log(result);
     tthis.setState({
-      BlockList: result.find((item) => Object.keys(item)[0] === 'block/list')['block/list'],
-      TxList: result.find((item) => Object.keys(item)[0] === 'transaction/list')['transaction/list'],
+      showLoading: false,
+      BlockList: result.find((item) => Object.keys(item)[0] === 'block/list')['block/list'] || [],
+      TxList: result.find((item) => Object.keys(item)[0] === 'transaction/list')['transaction/list'] || [],
     });
     // console.log(data);
     // $('body').append(`<p>${data.data}</p>`);
