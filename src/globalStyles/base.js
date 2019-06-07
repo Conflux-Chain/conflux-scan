@@ -15,6 +15,8 @@ const BaseStyle = css`
     overflow-y: auto;
     -ms-text-size-adjust: 100%;
     -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    font-size: 16px;
   }
 
   * {
@@ -58,7 +60,7 @@ const BaseStyle = css`
 
   body {
     font-family: 'Proxima Nova', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-size: 14px;
+    font-size: 16px;
     line-height: 1.6;
     font-weight: 400;
     word-wrap: break-word;
@@ -67,6 +69,15 @@ const BaseStyle = css`
     -moz-osx-font-smoothing: grayscale;
     background-color: #f9f9f9;
     overflow: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  button,
+  input,
+  optgroup,
+  select,
+  textarea {
+    font-family: 'Proxima Nova', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   }
 
   .icon {

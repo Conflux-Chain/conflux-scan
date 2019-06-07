@@ -1,5 +1,7 @@
+import React from 'react';
 import BigNumber from 'bignumber.js';
 import superagent from 'superagent';
+import { injectIntl, FormattedMessage, FormattedHTMLMessage } from 'react-intl';
 import { toast } from '../components/Toast';
 
 let errorId = null;
@@ -15,6 +17,14 @@ export const converToGasPrice = (bigNumber) => {
   const result = new BigNumber(bigNumber).dividedBy(10 ** 9);
   if (result.toFixed() < 0.00001) return `< 0.00001`;
   return `${result.toFixed(4)}`;
+};
+
+export const converToGasPrice3Fixed = (bigNumber) => {
+  const result = new BigNumber(bigNumber).dividedBy(10 ** 18);
+  console.log(result.toNumber());
+  if (result.toFixed() < 0.001) return 0;
+  if (result.toFixed(3) >= 1) return result.toFixed();
+  return result.toFixed(3);
 };
 
 export const getXmlHttpRequest = () => {
@@ -191,3 +201,22 @@ export const sendRequest = (config) => {
 
   return reqPromise;
 };
+
+/* eslint react/prop-types: 0 */
+function I18nComp({ id, html }) {
+  if (html) {
+    return (
+      <FormattedHTMLMessage id={id}>
+        {(s) => {
+          return <div />;
+        }}
+      </FormattedHTMLMessage>
+    );
+  }
+  return <FormattedMessage id={id} />;
+}
+const I18nComp1 = injectIntl(I18nComp);
+
+export function i18n(id, config = {}) {
+  return <I18nComp1 id={id} html={config.html} />;
+}

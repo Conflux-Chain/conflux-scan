@@ -6,8 +6,10 @@ import DataList from '../../components/DataList';
 import Countdown from '../../components/Countdown';
 import TableLoading from '../../components/TableLoading';
 import EllipsisLine from '../../components/EllipsisLine';
-import { convertToValueorFee, converToGasPrice } from '../../utils';
-import '../../assets/semantic-ui/semantic.css';
+import { convertToValueorFee, converToGasPrice, i18n } from '../../utils';
+import media from '../../globalStyles/media';
+import ConfirmSimple from '../../components/ConfirmSimple';
+import * as commonCss from '../../globalStyles/common';
 
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -21,12 +23,30 @@ const TabWrapper = styled.div`
 `;
 
 const StyledTabel = styled.div`
-  // margin-top: 20px;
   width: 100%;
+  ${media.mobile`
+    width: 95%;
+    margin: 0 auto;
+  `}
+
+  .content {
+    padding: 0 !important;
+  }
+  thead tr th {
+    background: rgba(0, 0, 0, 0.05) !important;
+  }
+  tr th {
+    padding: 16px 20px !important;
+    padding-right: 0 !important;
+    &:last-of-type {
+      padding: 16px 0 16px 20px !important;
+    }
+  }
 
   &.right {
     margin-left: 16px;
   }
+  ${commonCss.paginatorMixin}
 `;
 
 const PCell = styled.div`
@@ -36,6 +56,11 @@ const PCell = styled.div`
 const HeadBar = styled.div`
   width: 100%;
   font-size: 16px;
+  ${media.mobile`
+    width: 95%;
+    margin: 0 auto;
+    margin-bottom: 24px;
+  `}
   margin-bottom: 24px;
   display: flex;
   justify-content: flex-start;
@@ -70,42 +95,42 @@ const columns = [
     key: 1,
     className: 'two wide aligned',
     dataIndex: 'hash',
-    title: 'Hash',
+    title: i18n('Hash'),
     render: (text) => <EllipsisLine isLong linkTo={`/transactionsdetail/${text}`} text={text} />,
   },
   {
     key: 2,
     className: 'two wide aligned',
     dataIndex: 'from',
-    title: 'From',
+    title: i18n('From'),
     render: (text) => <EllipsisLine linkTo={`/accountdetail/${text}`} text={text} />,
   },
   {
     key: 3,
     className: 'two wide aligned',
     dataIndex: 'to',
-    title: 'To',
+    title: i18n('To'),
     render: (text) => <EllipsisLine linkTo={`/accountdetail/${text}`} text={text} />,
   },
   {
     key: 4,
     className: 'two wide aligned',
     dataIndex: 'value',
-    title: 'Value',
+    title: i18n('Value'),
     render: (text) => <EllipsisLine unit="CFX" text={convertToValueorFee(text)} />,
   },
   {
     key: 5,
     className: 'two wide aligned',
     dataIndex: 'gasPrice',
-    title: 'Gas Price',
+    title: i18n('Gas Price'),
     render: (text) => <EllipsisLine unit="Gdip" text={converToGasPrice(text)} />,
   },
   {
     key: 6,
-    className: 'three wide aligned plain_th',
+    className: 'three wide aligned',
     dataIndex: 'timestamp',
-    title: 'Age',
+    title: i18n('app.pages.txns.age'),
     render: (text) => <Countdown timestamp={text * 1000} />,
   },
 ];
@@ -114,6 +139,15 @@ const dataSource = [
   { key: 2, ein: '80581', zwei: '0xe969a6fc05897124124', drei: 'Schwarz' },
 ];
 
+function max10k(n) {
+  return Math.min(10000, n);
+}
+
+/* eslint react/destructuring-assignment: 0 */
+let curPageBase = 1;
+document.addEventListener('clean_state', () => {
+  curPageBase = 1;
+});
 class List extends Component {
   constructor() {
     super();
@@ -121,14 +155,26 @@ class List extends Component {
       isLoading: true,
       TxList: [],
       TotalCount: 100,
+      curPage: curPageBase,
     };
   }
 
   componentDidMount() {
-    this.fetchTxList({ activePage: 1 });
+    const { curPage } = this.state;
+    this.fetchTxList({ activePage: curPage });
+  }
+
+  componentWillUnmount() {
+    curPageBase = this.state.curPage;
   }
 
   async fetchTxList({ activePage }) {
+    if (activePage > 10000) {
+      this.setState({
+        confirmOpen: true,
+      });
+      return;
+    }
     this.setState({ isLoading: true });
     const { code, result } = (await superagent.get(`/proxy/fetchInitBlockandTxList?pageNum=${activePage}&pageSize=10`)).body;
     if (!code) {
@@ -137,13 +183,16 @@ class List extends Component {
           TxList: result.find((item) => Object.keys(item)[0] === 'transaction/list')['transaction/list'],
           TotalCount: result.find((item) => Object.keys(item)[0] === 'transaction/list')['total_transaction/list'],
         },
-        () => this.setState({ isLoading: false })
+        () => {
+          this.setState({ isLoading: false, curPage: activePage });
+          document.dispatchEvent(new Event('scroll-to-top'));
+        }
       );
     }
   }
 
   render() {
-    const { TxList, TotalCount, isLoading } = this.state;
+    const { TxList, TotalCount, isLoading, confirmOpen, curPage } = this.state;
     return (
       <div className="page-transaction-list">
         <Wrapper>
@@ -153,36 +202,69 @@ class List extends Component {
                 <use xlinkHref="#iconjinrijiaoyiliang" />
               </svg>
             </IconFace>
-            <h1>Transactions</h1>
+            <h1>{i18n('Transactions')}</h1>
           </HeadBar>
           <TabWrapper>
             <StyledTabel>
               <div className="ui fluid card">
                 <div className="content">
                   {isLoading && <TableLoading />}
-                  <DataList showHeader columns={columns} dataSource={TxList} />
+                  <DataList isMobile showHeader columns={columns} dataSource={TxList} />
                 </div>
               </div>
-              <Pagination
-                style={{ float: 'right' }}
-                prevItem={{
-                  'aria-label': 'Previous item',
-                  content: 'Previous',
-                }}
-                nextItem={{
-                  'aria-label': 'Next item',
-                  content: 'Next',
-                }}
-                onPageChange={(e, data) => {
-                  e.preventDefault();
-                  this.fetchTxList(data);
-                }}
-                defaultActivePage={1}
-                totalPages={Math.ceil(TotalCount / 10)}
-              />
+              <div className="page-pc">
+                <Pagination
+                  style={{ float: 'right' }}
+                  prevItem={{
+                    'aria-label': 'Previous item',
+                    content: i18n('lastPage'),
+                  }}
+                  nextItem={{
+                    'aria-label': 'Next item',
+                    content: i18n('nextPage'),
+                  }}
+                  onPageChange={(e, data) => {
+                    e.preventDefault();
+                    this.fetchTxList(data);
+                  }}
+                  activePage={curPage}
+                  totalPages={max10k(Math.ceil(TotalCount / 10))}
+                />
+              </div>
+              <div className="page-h5">
+                <Pagination
+                  prevItem={{
+                    'aria-label': 'Previous item',
+                    content: i18n('lastPage'),
+                  }}
+                  nextItem={{
+                    'aria-label': 'Next item',
+                    content: i18n('nextPage'),
+                  }}
+                  boundaryRange={0}
+                  activePage={curPage}
+                  onPageChange={(e, data) => {
+                    e.preventDefault();
+                    this.fetchTxList(data);
+                  }}
+                  ellipsisItem={null}
+                  firstItem={null}
+                  lastItem={null}
+                  siblingRange={1}
+                  totalPages={max10k(Math.ceil(TotalCount / 10))}
+                />
+              </div>
             </StyledTabel>
           </TabWrapper>
         </Wrapper>
+        <ConfirmSimple
+          open={confirmOpen}
+          onConfirm={() => {
+            this.setState({
+              confirmOpen: false,
+            });
+          }}
+        />
       </div>
     );
   }

@@ -88,8 +88,7 @@ class NotFoundTx extends PureComponent {
         <img src={nfImg} className="img" />
         <div className="right">
           <div className="title">
-            <FormattedMessage id="app.pages.notFoundTx.title1" />
-            <FormattedMessage id="app.pages.notFoundTx.title2">{(txt) => <strong>{txt}</strong>}</FormattedMessage>
+            <FormattedHTMLMessage id="app.pages.notFoundTx.title" />
           </div>
 
           <div className="row2">
@@ -103,7 +102,11 @@ class NotFoundTx extends PureComponent {
           <div className="row3">
             <FormattedMessage id="app.pages.notFoundTx.ask" />
             <FormattedMessage id="app.pages.notFoundTx.concatus">
-              {(txt) => <a href="mailto:hr@conflux-chain.org">{txt}</a>}
+              {(txt) => (
+                <a target="_blank" href="mailto:feedbacks@conflux-chain.org">
+                  {txt}
+                </a>
+              )}
             </FormattedMessage>
           </div>
         </div>

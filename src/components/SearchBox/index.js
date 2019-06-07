@@ -1,19 +1,32 @@
 import React, { Component } from 'react';
 import superagent from 'superagent';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
+import { injectIntl, FormattedMessage } from 'react-intl';
+import { Dimmer, Loader, Image, Segment } from 'semantic-ui-react';
+
+import compose from 'lodash/fp/compose';
+import media from '../../globalStyles/media';
 
 const Input = styled.input`
-  width: calc(100% - 120px);
   height: 100%;
   border: none;
   outline: 0;
-  padding-left: 16px;
+  flex: 1;
+  width: auto;
+  padding-left: 0;
+  margin-left: 10px;
+  margin-left: 16px;
+  ${media.pad`
+    font-size: 14px;
+  `}
 `;
 
 const Wrapper = styled.div`
-  width: 1050px;
   height: 40px;
   margin: 0 auto;
+  margin-right: 24px;
   display: flex;
   align-items: center;
   border: 1px solid #ccc;
@@ -23,17 +36,25 @@ const Wrapper = styled.div`
   border-top-right-radius: 40px;
   /* overflow: hidden; */
   border-bottom-right-radius: 40px;
+  ${media.mobile`
+  border: 1px solid #ccc;
+  margin-right: 7px;
+  `}
 `;
 
 const FilterSelector = styled.div.attrs({
   className: 'ui menu compact',
 })`
   margin-top: 10px !important;
-  width: 120px;
+  width: 128px;
   height: 50px;
   border: none !important;
   box-shadow: none !important;
   padding-bottom: 10px !important;
+  background: transparent !important;
+  ${media.mobile`
+    display: none!important;
+  `}
 
   .ui.dropdown {
     width: 100%;
@@ -74,71 +95,139 @@ const SearchButton = styled.div`
   }
 `;
 
+const baseId = 'app.comp.searchbox.filter.';
+const filterKeys = ['all', 'epoch', 'block', 'transaction', 'address'].map((s) => baseId + s);
+
 class SearchBox extends Component {
   constructor(props) {
     super(props);
-    this.state = { searchKey: '', filterName: 'All Filters' };
+    this.state = { searchKey: '', filterName: 'app.comp.searchbox.filter.all', filterValue: 0 };
   }
 
   async handleSearch(value) {
+    const { filterValue } = this.state;
+    const { history } = this.props;
     if (value) {
-      const { code, result } = (await superagent.get(`http://127.0.0.1:3000/proxy/fetchHashType/${value}`)).body;
-      if (code) {
-        window.location.href = '/notfound';
+      this.setState({
+        showLoading: true,
+      });
+      const scrollToTop = () => {
+        const eventScroll = new Event('scroll-to-top');
+        setTimeout(() => {
+          document.dispatchEvent(eventScroll);
+          this.setState({
+            showLoading: false,
+          });
+        }, 0);
+      };
+
+      if (/^[0-9a-zA-Z]+$/.test(value) === false) {
+        history.push(`/search-notfound?searchId=${value}`);
+        scrollToTop();
+        return;
       }
-      if (result) {
-        switch (result) {
-          case 0:
-            window.location.href = `/blocksdetail/${value}`;
-            break;
-          case 1:
-            window.location.href = `/transactionsdetail/${value}`;
-            break;
-          case 2:
-            window.location.href = `/accountdetail/${value}`;
-            break;
-          default:
-            console.log('unknow case');
-            break;
+
+      if (filterValue === 0) {
+        try {
+          const { code, result } = (await superagent.get(`/proxy/fetchHashType/${value}`)).body;
+          if (code !== 0) {
+            history.push(`/search-notfound?searchId=${value}`);
+            scrollToTop();
+            return;
+          }
+          if (typeof result !== 'undefined') {
+            switch (result) {
+              case 0:
+                history.push(`/blocksdetail/${value}`);
+                break;
+              case 1:
+                history.push(`/transactionsdetail/${value}`);
+                break;
+              case 2:
+                history.push(`/accountdetail/${value}`);
+                break;
+              case 3:
+                history.push(`/epochsdetail/${value}`);
+                break;
+              default:
+                console.log('unknow case');
+                break;
+            }
+            scrollToTop();
+          }
+        } catch (e) {
+          console.log(e);
+        } finally {
+          this.setState({
+            showLoading: false,
+          });
+        }
+      } else {
+        this.setState({
+          showLoading: false,
+        });
+        if (filterValue === 1) {
+          history.push(`/epochsdetail/${value}`);
+        } else if (filterValue === 2) {
+          history.push(`/blocksdetail/${value}`);
+        } else if (filterValue === 3) {
+          history.push(`/transactionsdetail/${value}`);
+        } else if (filterValue === 4) {
+          history.push(`/accountdetail/${value}`);
         }
       }
     }
   }
 
   render() {
-    const { searchKey, filterName } = this.state;
-    const filters = ['All Filters', 'Epoch', 'Block', 'Transactions', 'Address'];
+    const { searchKey, filterName, showLoading } = this.state;
+    const { intl } = this.props;
+
     return (
       <Wrapper>
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            display: showLoading ? 'block' : 'none',
+          }}
+        >
+          <Loader size="medium" active={showLoading} />
+        </div>
         <FilterSelector>
           <div className="ui dropdown link item">
-            <span className="text">{filterName}</span>
+            <FormattedMessage id={filterName}>{(s) => <span className="text">{s}</span>}</FormattedMessage>
             <i className="dropdown icon" />
             <div className="menu transition visible">
-              {filters.map((name, index) => (
+              {filterKeys.map((name, index) => (
                 <div
                   key={name}
                   className="item"
                   role="button"
                   tabIndex={index}
-                  onClick={() => this.setState({ filterName: name })}
-                  onKeyPress={() => this.setState({ filterName: name })}
+                  onClick={() => this.setState({ filterName: name, filterValue: index })}
+                  onKeyPress={() => this.setState({ filterName: name, filterValue: index })}
                 >
-                  {name}
+                  <FormattedMessage id={name} />
                 </div>
               ))}
             </div>
           </div>
         </FilterSelector>
         <Input
-          onKeyPress={(e) => {
-            this.setState({ searchKey: e.target.value });
+          onKeyUp={(e) => {
             if (e.which === 13) {
               this.handleSearch(e.target.value);
             }
           }}
+          onChange={(e) => {
+            this.setState({ searchKey: e.target.value });
+          }}
           type="text"
-          placeholder="Search by Address / Block Hash / Txn Hash / Epoch Number"
+          placeholder={intl.formatMessage({ id: 'app.comp.searchbox.placeholder' })}
         />
         <SearchButton onClick={(e) => this.handleSearch(searchKey)}>
           <svg className="icon" aria-hidden="true">
@@ -149,5 +238,18 @@ class SearchBox extends Component {
     );
   }
 }
+SearchBox.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
+  intl: PropTypes.shape({
+    formatMessage: PropTypes.func,
+  }).isRequired,
+};
 
-export default SearchBox;
+const hoc = compose(
+  injectIntl,
+  withRouter
+);
+
+export default hoc(SearchBox);

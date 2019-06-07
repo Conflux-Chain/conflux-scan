@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import moment from 'moment';
 import echarts from 'echarts';
+import set from 'lodash/set';
 import { toFixed } from '../../utils';
+import media from '../../globalStyles/media';
 
 const Duration = styled.div`
   width: 56px;
@@ -40,7 +42,10 @@ DurationButton.defaultProps = {
 };
 
 const Container = styled.div`
-  width: 592px !important;
+  width: calc((100% - 16px) / 2) !important;
+  ${media.pad`
+    width: 100% !important;
+  `}
 `;
 
 const DurationContainer = styled.div`
@@ -71,7 +76,7 @@ class LineChart extends Component {
   }
 
   renderChart(data) {
-    const { title } = this.props;
+    const { title, echartOpt } = this.props;
     const myChart = echarts.init(document.getElementById(title + 'chart'));
     const option = {
       tooltip: {
@@ -95,18 +100,22 @@ class LineChart extends Component {
           return moment(params[0].data.time * 1000).format('YYYY/M/D kk:mm') + '<br />' + toFixed(params[0].data.value, 3);
         },
       },
+      grid: {
+        left: '10%',
+      },
       xAxis: {
         type: 'category',
         data: this.formatTime(data),
         axisLabel: {
           interval: (index, value) => {
+            const tickNum = window.innerWidth < 992 ? 3 : 5;
             const length = data.length;
-            const interval = Math.floor(length / 6) + 1;
+            const interval = Math.floor(length / tickNum);
 
             if (interval === 1) {
               return true;
             }
-            if (index % interval === 0) {
+            if (index % interval === 0 || index === length) {
               return true;
             }
             return false;
@@ -125,7 +134,7 @@ class LineChart extends Component {
       },
       yAxis: {
         type: 'value',
-        boundaryGap: [0, '100%'],
+        boundaryGap: false,
         axisLabel: {
           color: 'rgba(0, 0, 0, 0.87)',
         },
@@ -149,6 +158,12 @@ class LineChart extends Component {
         },
       ],
     };
+    if (echartOpt) {
+      Object.keys(echartOpt).forEach((key) => {
+        const val = echartOpt[key];
+        set(option, key, val);
+      });
+    }
     myChart.setOption(option);
   }
 
@@ -191,7 +206,7 @@ class LineChart extends Component {
               );
             })}
           </DurationContainer>
-          <div id={title + 'chart'} style={{ width: '540px', height: '250px' }} />
+          <div id={title + 'chart'} style={{ width: '100%', height: '250px' }} />
         </div>
       </Container>
     );
@@ -202,9 +217,11 @@ LineChart.propTypes = {
   data: PropTypes.arrayOf(PropTypes.object).isRequired,
   duration: PropTypes.string,
   onChangeDuration: PropTypes.func.isRequired,
+  echartOpt: PropTypes.shape({}),
 };
 LineChart.defaultProps = {
   duration: 'day',
+  echartOpt: {},
 };
 
 export default LineChart;

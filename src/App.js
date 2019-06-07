@@ -1,9 +1,10 @@
-import React, { Component, useState } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { addLocaleData, IntlProvider } from 'react-intl';
 import enLocaleData from 'react-intl/locale-data/en';
 import zhLocaleData from 'react-intl/locale-data/zh';
 import styled from 'styled-components';
+import media from './globalStyles/media';
 
 // components
 import Router from './route/router';
@@ -16,9 +17,6 @@ import { ToastComp } from './components/Toast';
 import './assets/semantic-ui/semantic.css';
 import GlobalStyle from './globalStyles';
 
-import JnoodleEn from './lang/jnoodle.en';
-import JnoodleZh from './lang/jnoodle.zh';
-
 import zhTranslationMessages from './lang/zh';
 import enTranslationMessages from './lang/en';
 
@@ -28,8 +26,8 @@ require('./assets/iconfont/iconfont.js');
 addLocaleData([...enLocaleData, ...zhLocaleData]);
 
 const messages = {
-  en: Object.assign({}, enTranslationMessages, JnoodleEn),
-  zh: Object.assign({}, zhTranslationMessages, JnoodleZh),
+  en: enTranslationMessages,
+  zh: zhTranslationMessages,
 };
 
 const Wrapper = styled.div`
@@ -38,29 +36,86 @@ const Wrapper = styled.div`
 
 const Container = styled.div`
   position: relative;
-  padding: 20px;
-  margin-left: 120px;
+  padding: 20px 20px 0;
+  padding-left: 120px;
+  margin: 0;
   max-height: calc(100vh - 72px);
   overflow-x: hidden;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+
+  ${media.pad`
+    margin-left: 0;
+    max-height: calc(100vh - 56px);
+    padding: 20px 0 70px;
+  `}
+`;
+
+const ContainerMask = styled.div`
+  display: none;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 20;
+
+  ${media.pad`
+    &.show {
+      display: block;
+    }
+  `}
 `;
 
 const Content = styled.div`
   position: relative;
   max-width: calc(100vw - 160px);
-  min-height: 200px;
+  min-height: calc(100vh - 245px);
+
+  ${media.pad`
+    max-width: 100%;
+    min-height: calc(100vh - 330px);
+  `}
 `;
+
+let containerDom;
+document.addEventListener('scroll-to-top', (event) => {
+  if (containerDom) {
+    containerDom.scrollTop = event.scrollTop || 0;
+  }
+});
+
+let setShowNavbarGlobal;
+document.addEventListener('hide-nav-bar', () => {
+  if (setShowNavbarGlobal) {
+    setShowNavbarGlobal(false);
+  }
+});
 
 function App() {
   const [lang, setLang] = useState('en');
+  const [showNavbar, setShowNavbar] = useState(false);
+  setShowNavbarGlobal = setShowNavbar;
 
   return (
     <IntlProvider locale={lang} messages={messages[lang]}>
       <BrowserRouter>
         <Wrapper>
-          <Header changeLanguage={(l) => setLang(l)} />
-          <Navbar />
-          <Container>
+          <Header
+            changeLanguage={(l) => {
+              document.title = l === 'en' ? 'Conflux Blockchain Explorer' : 'Conflux 区块链浏览器';
+              setLang(l);
+            }}
+            toggleNavbar={() => setShowNavbar(!showNavbar)}
+          />
+          <Navbar showNavbar={showNavbar} />
+          <ContainerMask className={showNavbar ? 'show' : ''} onClick={() => setShowNavbar(!showNavbar)} />
+          <Container
+            ref={(c) => {
+              containerDom = c;
+            }}
+          >
             <Content>
               <Router />
             </Content>

@@ -4,6 +4,11 @@ import styled from 'styled-components';
 import moment from 'moment';
 import { injectIntl, FormattedMessage } from 'react-intl';
 
+const Text = styled.span`
+  font-weight: 400;
+  white-space: nowrap;
+`;
+
 function Countdown(props) {
   const {
     timestamp,
@@ -20,14 +25,18 @@ function Countdown(props) {
   let secondUnit = beforeTime.subtract(minuteUnit, 'minutes').diff(nowTime, 'seconds');
 
   let labelStr = '';
-  if (yearUnit > 1) labelStr = locale === 'zh' ? `${yearUnit}年前` : `${yearUnit} years ago`;
-  else if (monthUnit > 1) labelStr = locale === 'zh' ? `${monthUnit}月前` : `${monthUnit} monthes ago`;
-  else if (dayUnit > 1) labelStr = locale === 'zh' ? `${dayUnit}天前` : `${dayUnit} days ago`;
+  if (yearUnit > 1) labelStr = locale === 'zh' ? `${yearUnit} 年前` : `${yearUnit} ${yearUnit === 1 ? 'year' : 'years'} ago`;
+  else if (monthUnit > 1) labelStr = locale === 'zh' ? `${monthUnit} 月前` : `${monthUnit} ${monthUnit === 1 ? 'month' : 'monthes'} ago`;
+  else if (dayUnit > 1) labelStr = locale === 'zh' ? `${dayUnit} 天前` : `${dayUnit} ${dayUnit === 1 ? 'day' : 'days'} ago`;
   else
     labelStr =
-      locale === 'zh' ? `${hourUnit}小时${minuteUnit}分钟${secondUnit}秒前` : `${hourUnit} hrs ${minuteUnit} min ${secondUnit} secs ago`;
+      locale === 'zh'
+        ? `${hourUnit} 小时 ${minuteUnit} 分钟 ${secondUnit} 秒前`
+        : `${hourUnit} ${hourUnit <= 1 ? 'hr' : 'hrs'} ${minuteUnit} ${minuteUnit <= 1 ? 'min' : 'mins'} ${secondUnit} ${
+            secondUnit <= 1 ? 'sec' : 'secs'
+          } ago`;
 
-  return <span>{labelStr}</span>;
+  return <Text>{labelStr}</Text>;
 }
 Countdown.propTypes = {
   timestamp: PropTypes.number,

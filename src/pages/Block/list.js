@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import superagent from 'superagent';
 import { Pagination } from 'semantic-ui-react';
 import DataList from '../../components/DataList';
 import Countdown from '../../components/Countdown';
 import TableLoading from '../../components/TableLoading';
 import EllipsisLine from '../../components/EllipsisLine';
-import '../../assets/semantic-ui/semantic.css';
+import media from '../../globalStyles/media';
+import { i18n, sendRequest } from '../../utils/index';
+import ConfirmSimple from '../../components/ConfirmSimple';
+import * as commonCss from '../../globalStyles/common';
 
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -21,10 +22,28 @@ const TabWrapper = styled.div`
 
 const StyledTabel = styled.div`
   width: 100%;
+  ${media.mobile`
+    width: 95%;
+    margin: 0 auto;
+  `}
+  .content {
+    padding: 0 !important;
+  }
+  thead tr th {
+    background: rgba(0, 0, 0, 0.05) !important;
+  }
+  tr th {
+    padding: 16px 20px !important;
+    padding-right: 0 !important;
+    &:last-of-type {
+      padding: 16px 0 !important;
+    }
+  }
 
   &.right {
     margin-left: 16px;
   }
+  ${commonCss.paginatorMixin}
 `;
 
 const PCell = styled.div`
@@ -34,6 +53,11 @@ const PCell = styled.div`
 const HeadBar = styled.div`
   width: 100%;
   font-size: 16px;
+  ${media.mobile`
+    width: 95%;
+    margin: 0 auto;
+    margin-bottom: 24px;
+  `}
   margin-bottom: 24px;
   display: flex;
   justify-content: flex-start;
@@ -67,26 +91,26 @@ const columns = [
   {
     key: 1,
     dataIndex: 'epochNumber',
+    title: i18n('Epoch'),
     className: 'one wide aligned',
-    title: 'Epoch',
     render: (text) => <EllipsisLine linkTo={`/epochsdetail/${text}`} text={text} />,
   },
   {
     key: 2,
-    dataIndex: 'drei',
-    className: 'one wide aligned',
-    title: 'Position',
+    dataIndex: 'position',
+    title: i18n('Position'),
+    className: 'one wide aligned plain_th',
     render: (text, row) => (
       <div>
-        <PCell>{row.drei}</PCell>
+        <PCell>{1 + text}</PCell>
       </div>
     ),
   },
   {
     key: 3,
     dataIndex: 'hash',
+    title: i18n('Hash'),
     className: 'two wide aligned',
-    title: 'Hash',
     render: (text, row) => (
       <div>
         <EllipsisLine isLong linkTo={`/blocksdetail/${text}`} isPivot={row.isPivot} text={text} />
@@ -97,42 +121,44 @@ const columns = [
     key: 4,
     dataIndex: 'difficulty',
     className: 'one wide aligned plain_th',
-    title: 'Difficulty',
+    title: i18n('Difficulty'),
     render: (text) => <PCell>{text}</PCell>,
   },
   {
     key: 5,
     className: 'one wide aligned',
     dataIndex: 'miner',
-    title: 'Miner',
+    title: i18n('Miner'),
     render: (text) => <EllipsisLine linkTo={`/accountdetail/${text}`} text={text} />,
   },
   {
     key: 6,
     className: 'one wide aligned plain_th',
     dataIndex: 'gasLimit',
-    title: 'Gas Limit',
+    title: i18n('Gas Limit'),
     render: (text) => <PCell>{text}</PCell>,
   },
   {
     key: 7,
-    className: 'two wide aligned plain_th',
+    className: 'three wide aligned',
     dataIndex: 'timestamp',
-    title: 'Age',
+    title: i18n('Age'),
     render: (text) => <Countdown timestamp={text * 1000} />,
   },
   {
     key: 8,
     className: 'one wide aligned plain_th',
     dataIndex: 'transactionCount',
-    title: 'Tx Count',
+    title: i18n('Tx Count'),
     render: (text) => <PCell>{text}</PCell>,
   },
 ];
-const dataSource = [
-  { key: 1, ein: '80580', zwei: '0xe969a6fc05897123123', drei: 'Alichs' },
-  { key: 2, ein: '80581', zwei: '0xe969a6fc05897124124', drei: 'Schwarz' },
-];
+
+/* eslint react/destructuring-assignment: 0 */
+let curPageBase = 1;
+document.addEventListener('clean_state', (event) => {
+  curPageBase = 1;
+});
 
 class List extends Component {
   constructor() {
@@ -141,29 +167,40 @@ class List extends Component {
       isLoading: true,
       BlockList: [],
       TotalCount: 100,
+      curPage: curPageBase,
     };
   }
 
   componentDidMount() {
-    this.fetchBlockList({ activePage: 1 });
+    this.fetchBlockList({ activePage: this.state.curPage });
   }
 
-  async fetchBlockList({ activePage }) {
+  componentWillUnmount() {
+    curPageBase = this.state.curPage;
+  }
+
+  fetchBlockList({ activePage }) {
     this.setState({ isLoading: true });
-    const { code, result } = (await superagent.get(`/proxy/fetchInitBlockandTxList?pageNum=${activePage}&pageSize=10`)).body;
-    if (!code) {
-      this.setState(
-        {
-          BlockList: result.find((item) => Object.keys(item)[0] === 'block/list')['block/list'],
-          TotalCount: result.find((item) => Object.keys(item)[0] === 'block/list')['total_block/list'],
-        },
-        () => this.setState({ isLoading: false })
-      );
-    }
+    const reqBlockList = sendRequest({
+      url: '/api/block/list',
+      query: {
+        pageNum: activePage,
+        pageSize: 10,
+      },
+    });
+    reqBlockList.then((res) => {
+      const { data } = res.body.result;
+      this.setState({
+        isLoading: false,
+        curPage: activePage,
+        BlockList: data,
+        TotalCount: res.body.result.total,
+      });
+    });
   }
 
   render() {
-    const { BlockList, TotalCount, isLoading } = this.state;
+    const { BlockList, TotalCount, isLoading, confirmOpen, curPage } = this.state;
     return (
       <div className="page-block-list">
         <Wrapper>
@@ -173,36 +210,70 @@ class List extends Component {
                 <use xlinkHref="#iconqukuaigaoduxuanzhong" />
               </svg>
             </IconFace>
-            <h1>Blocks</h1>
+            <h1>{i18n('app.pages.blockAndTx.blocks')}</h1>
           </HeadBar>
           <TabWrapper>
             <StyledTabel>
               <div className="ui fluid card">
                 <div className="content">
                   {isLoading && <TableLoading />}
-                  <DataList showHeader columns={columns} dataSource={BlockList} />
+                  <DataList isMobile showHeader columns={columns} dataSource={BlockList} />
                 </div>
               </div>
-              <Pagination
-                style={{ float: 'right' }}
-                prevItem={{
-                  'aria-label': 'Previous item',
-                  content: 'Previous',
-                }}
-                nextItem={{
-                  'aria-label': 'Next item',
-                  content: 'Next',
-                }}
-                onPageChange={(e, data) => {
-                  e.preventDefault();
-                  this.fetchBlockList(data);
-                }}
-                defaultActivePage={1}
-                totalPages={Math.ceil(TotalCount / 10)}
-              />
+              <div className="page-pc">
+                <Pagination
+                  style={{ float: 'right' }}
+                  prevItem={{
+                    'aria-label': 'Previous item',
+                    content: i18n('lastPage'),
+                  }}
+                  nextItem={{
+                    'aria-label': 'Next item',
+                    content: i18n('nextPage'),
+                  }}
+                  onPageChange={(e, data) => {
+                    e.preventDefault();
+                    this.fetchBlockList(data);
+                  }}
+                  activePage={curPage}
+                  totalPages={Math.ceil(TotalCount / 10)}
+                />
+              </div>
+              <div className="page-h5">
+                <Pagination
+                  prevItem={{
+                    'aria-label': 'Previous item',
+                    content: i18n('lastPage'),
+                  }}
+                  nextItem={{
+                    'aria-label': 'Next item',
+                    content: i18n('nextPage'),
+                  }}
+                  boundaryRange={0}
+                  activePage={curPage}
+                  onPageChange={(e, data) => {
+                    e.preventDefault();
+                    this.fetchBlockList(data);
+                  }}
+                  ellipsisItem={null}
+                  firstItem={null}
+                  lastItem={null}
+                  siblingRange={1}
+                  totalPages={Math.ceil(TotalCount / 10)}
+                />
+              </div>
             </StyledTabel>
           </TabWrapper>
         </Wrapper>
+
+        <ConfirmSimple
+          open={confirmOpen}
+          onConfirm={() => {
+            this.setState({
+              confirmOpen: false,
+            });
+          }}
+        />
       </div>
     );
   }

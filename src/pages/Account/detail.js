@@ -1,16 +1,19 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import superagent from 'superagent';
 import moment from 'moment';
 import { Pagination, Dropdown } from 'semantic-ui-react';
 import { DatePicker } from 'antd';
+import { injectIntl } from 'react-intl';
+import get from 'lodash/get';
+import compose from 'lodash/fp/compose';
 import DataList from '../../components/DataList';
 import Countdown from '../../components/Countdown';
 import TableLoading from '../../components/TableLoading';
 import EllipsisLine from '../../components/EllipsisLine';
-import '../../assets/semantic-ui/semantic.css';
-import { convertToValueorFee, converToGasPrice } from '../../utils';
+import { convertToValueorFee, converToGasPrice, i18n } from '../../utils';
 import CopyButton from '../../components/CopyButton';
 import QrcodeButton from '../../components/QrcodeButton';
 import * as commonCss from '../../globalStyles/common';
@@ -23,17 +26,59 @@ const Wrapper = styled.div`
   margin: 0 auto;
   .ctrlpanel-wrap {
     box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px 1px;
-    ${media.mobile`
+    ${media.pad`
       margin-top: -1px;
       box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px 1px;
     `}
   }
 `;
 
+const StyledTabel = styled.div`
+  .content {
+    padding: 0 !important;
+  }
+  thead tr th {
+    background: rgba(0, 0, 0, 0.05) !important;
+  }
+  tr th {
+    padding: 16px 20px !important;
+    padding-right: 0 !important;
+    &:last-of-type {
+      padding: 16px 0 16px 20px !important;
+    }
+  }
+  &.right {
+    margin-left: 16px;
+  }
+  .ui.fluid.card {
+    box-shadow: none;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+  }
+`;
+
 const HeadBar = styled.div`
+  margin-top: 24px;
   width: 100%;
   font-size: 16px;
+  font-weight: 400;
   margin-bottom: 24px;
+  .sep {
+    display: none;
+  }
+  .sep + div {
+    margin-left: 10px;
+  }
+  ${media.pad`
+    padding-left: 16px;
+    .sep{display: block;}
+    .sep + div {
+      margin-left: 0;
+    }
+    p {
+      padding-top: 5px;
+      padding-bottom: 5px;
+    }
+  `}
   * {
     display: inline-block;
     margin: 0;
@@ -41,6 +86,7 @@ const HeadBar = styled.div`
   h1 {
     color: #000;
     font-size: 20px;
+    font-weight: 700;
     margin-right: 24px;
   }
 `;
@@ -65,25 +111,42 @@ const IconFace = styled.div`
       color: #fff;
     }
   }
+
+  &.iconmore1 {
+    svg {
+      color: #000;
+    }
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+  }
+  &.iconmore1:hover {
+    cursor: pointer;
+    background: rgba(0, 0, 0, 0.05);
+  }
 `;
 
-const fullWidthMobile = media.mobile`
+const fullWidthMobile = media.pad`
   width: auto;
-  margin-left: 24px;
+  margin-left: 0px;
   margin-right: 24px;
-  padding-top: 24px;
+  padding-top: 16px;
   padding-bottom: 24px;
   border-left: 0;
 `;
 
 const Statistic = styled.div`
-  background: #fff;
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+  border-radius: 4px;
   width: 100%;
   height: 100px;
   display: flex;
-  ${media.mobile`
+  ${media.pad`
     display: block;
     height: auto;
+    margin-left: 16px;
+    margin-right: 16px;
+    width: auto;
   `}
   justify-content: flex-start;
   align-items: center;
@@ -92,16 +155,24 @@ const Statistic = styled.div`
   border-radius: 4px;
 
   .transaction {
-    width: 28%;
+    width: 22%;
     ${fullWidthMobile}
-    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    ${media.pad`border-bottom: 1px solid rgba(0, 0, 0, 0.08);`}
   }
-  .miner,
-  .balance {
+  .miner {
     width: 20%;
     border-left: 1px solid rgba(0, 0, 0, 0.08);
     ${fullWidthMobile}
-    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    ${media.pad`border-bottom: 1px solid rgba(0, 0, 0, 0.08);`}
+  }
+  .balance {
+    width: 24%;
+    .wrap svg {
+      opacity: 1;
+    }
+    border-left: 1px solid rgba(0, 0, 0, 0.08);
+    ${fullWidthMobile}
+    ${media.pad`border-bottom: 1px solid rgba(0, 0, 0, 0.08);`}
   }
   .seen {
     width: 36%;
@@ -130,18 +201,15 @@ const Statistic = styled.div`
   .sectionWrap {
     width: 100%;
     display: flex;
-    ${media.mobile`
-      display: block;
-    `}
-    justify-content: space-between;
+    ${media.pad`display: block;`}
     section {
-      width: 180px;
+      flex: 1;
       p {
         font-size: 16px;
         color: rgba(0, 0, 0, 0.87);
       }
       &:nth-child(2) {
-        padding-top: 24px;
+        ${media.pad`padding-top: 24px;`}
       }
     }
   }
@@ -150,6 +218,11 @@ const Statistic = styled.div`
 const TabZone = styled.div`
   position: relative;
   width: 100%;
+  ${media.pad`
+    margin-left: 16px;
+    margin-right: 16px;
+    width: auto;
+  `}
   button {
     outline: none;
     border: none;
@@ -165,28 +238,35 @@ const TabZone = styled.div`
   }
 `;
 
-const TabZoneWrapper = styled.div`
-  box-shadow: 0 1px 3px 0;
-`;
-
 const PCell = styled.div`
   margin: 0 !important;
 `;
 
 const TabWrapper = styled.div`
+  margin-top: 24px;
   display: flex;
   justify-content: flex-end;
+  .page-pc {
+    display: inline-flex !important;
+  }
+  .page-h5 {
+    ${commonCss.hide}
+  }
+  ${media.pad`
+    justify-content: center;
+    .page-pc { ${commonCss.hide} }
+    .page-h5 { display: inline-flex!important; }
+  `}
 `;
 
 const CtrlPanel = styled.div`
   position: absolute;
   right: 0;
   top: 0px;
-  width: 43%;
   display: flex;
   justify-content: space-around;
   align-items: center;
-  ${media.mobile`
+  ${media.pad`
     display: block;
     position: relative;
     width: auto;
@@ -196,20 +276,21 @@ const CtrlPanel = styled.div`
     z-inde: 10;
   `}
   .screentime {
-    ${media.mobile`display: block; margin-bottom: 8px;`}
+    ${media.pad`display: block; margin-bottom: 8px; margin-right: 0;`}
     font-size: 16px;
+    margin-right: 5px;
   }
   .date-picker {
-    ${media.mobile`width: 250px!important; display: inline-block;`}
+    ${media.pad`width: 250px!important; display: inline-block;`}
   }
   .drop-btn {
-    ${media.mobile`
+    svg {
+      transform: rotate(90deg);
+    }
+    ${media.pad`
       position: absolute;
       right: 10px;
-      top: 55px;
-      svg {
-        transform: rotate(90deg);
-      }
+      top: 18px;
     `}
   }
 `;
@@ -219,121 +300,108 @@ const TabPanel = styled.div`
     border: 0;
     margin-left: 0px;
     margin-right: 0px;
-    ${media.mobile`
-      box-shadow: none;
+    box-shadow: none;
+    ${media.pad`
       width: auto;
     `}
   }
 `;
 
-const columns = [
-  {
-    key: 1,
-    dataIndex: 'ein',
-    title: 'Blocks',
-    // className: 'two wide',
-    render: (text, row) => (
-      <IconFace>
-        <svg className="icon" aria-hidden="true">
-          <use xlinkHref="#iconjinrijiaoyiliang" />
-        </svg>
-      </IconFace>
-    ),
-  },
-  {
-    key: 2,
-    dataIndex: 'drei',
-    title: 'Blocks',
-    render: (text, row) => (
-      <div>
-        <PCell>
-          <EllipsisLine isPivot text={row.zwei} />
-        </PCell>
-      </div>
-    ),
-  },
-  {
-    key: 3,
-    dataIndex: 'drei',
-    title: 'Blocks',
-    render: (text, row) => (
-      <div>
-        <PCell>{row.drei}</PCell>
-      </div>
-    ),
-  },
-  {
-    key: 4,
-    className: 'two wide aligned',
-    dataIndex: 'drei',
-    title: 'Blocks',
-    render: (text) => <div className="ui label">{text}</div>,
-  },
-];
+const MinedWrap = styled.div`
+  display: flex;
+  margin-top: 24px;
+  justify-content: flex-end;
+  ${commonCss.paginatorMixin}
+`;
 
 const minedColumns = [
   {
     key: 1,
-    dataIndex: 'ein',
-    title: 'Blocks',
-    // className: 'two wide',
-    render: (text, row) => (
-      <IconFace>
-        <svg className="icon" aria-hidden="true">
-          <use xlinkHref="#iconjinrijiaoyiliang" />
-        </svg>
-      </IconFace>
-    ),
+    dataIndex: 'epochNumber',
+    className: 'one wide aligned',
+    title: i18n('Epoch'),
+    render: (text) => <EllipsisLine linkTo={`/epochsdetail/${text}`} text={text} />,
   },
   {
     key: 2,
-    dataIndex: 'drei',
-    title: 'Blocks',
+    dataIndex: 'position',
+    className: 'one wide aligned plain_th',
+    title: i18n('Position'),
     render: (text, row) => (
       <div>
-        <PCell>
-          <EllipsisLine isPivot text={row.zwei} />
-        </PCell>
+        <PCell>{1 + text}</PCell>
       </div>
     ),
   },
   {
     key: 3,
-    dataIndex: 'drei',
-    title: 'Blocks',
+    dataIndex: 'hash',
+    className: 'two wide aligned',
+    title: i18n('Hash'),
     render: (text, row) => (
       <div>
-        <PCell>{row.drei}</PCell>
+        <EllipsisLine isLong linkTo={`/blocksdetail/${text}`} isPivot={row.isPivot} text={text} />
       </div>
     ),
   },
   {
     key: 4,
-    className: 'two wide aligned',
-    dataIndex: 'drei',
-    title: 'Blocks',
-    render: (text) => <div className="ui label">{text}</div>,
+    dataIndex: 'difficulty',
+    className: 'one wide aligned plain_th',
+    title: i18n('Difficulty'),
+    render: (text) => <PCell>{text}</PCell>,
+  },
+  {
+    key: 5,
+    className: 'one wide aligned',
+    dataIndex: 'miner',
+    title: i18n('Miner'),
+    render: (text) => <EllipsisLine linkTo={`/accountdetail/${text}`} text={text} />,
+  },
+  {
+    key: 6,
+    className: 'one wide aligned plain_th',
+    dataIndex: 'gasLimit',
+    title: i18n('Gas Limit'),
+    render: (text) => <PCell>{text}</PCell>,
+  },
+  {
+    key: 7,
+    className: 'three wide aligned',
+    dataIndex: 'timestamp',
+    title: i18n('Age'),
+    render: (text) => <Countdown timestamp={text * 1000} />,
+  },
+  {
+    key: 8,
+    className: 'two wide aligned plain_th',
+    dataIndex: 'transactionCount',
+    title: i18n('Tx Count'),
+    render: (text) => <PCell>{text}</PCell>,
   },
 ];
 
-const dataSource = [
-  { key: 1, ein: '80580', zwei: '0xe969a6fc05897123123', drei: 'Alichs' },
-  { key: 2, ein: '80581', zwei: '0xe969a6fc05897124124', drei: 'Schwarz' },
-];
-
 class Detail extends Component {
-  constructor() {
-    super();
+  constructor(...args) {
+    super(...args);
+    const {
+      match: { params },
+    } = this.props;
     this.state = {
+      accountid: params.accountid,
       currentTab: 1,
       isLoading: false,
       accountDetail: {},
       minedBlockList: [],
+      TxList: [],
+      TxTotalCount: 100,
       queries: {
         pageNum: 1,
-        pageSize: 100,
-        txnType: 'All',
+        pageSize: 10,
+        txnType: 'all',
       },
+      minedTotalCount: 0,
+      curMinedPage: 1,
     };
   }
 
@@ -342,28 +410,46 @@ class Detail extends Component {
     const {
       match: { params },
     } = this.props;
-
     this.fetchAccountDetail(params.accountid, queries);
   }
 
   async fetchAccountDetail(accountid, queries) {
-    this.setState({ isLoading: true });
+    const { history } = this.props;
+    this.setState({ isLoading: true, accountid });
     const { code, result } = (await superagent.get(`/proxy/fetchAccountDetail/${accountid}`).query(queries)).body;
     if (!code) {
       this.setState(
         {
           accountDetail: result.find((item) => Object.keys(item)[0] === `account/${accountid}`)[`account/${accountid}`],
-          // TxList: result.find((item) => Object.keys(item)[0] === `block/${blockHash}/transactionList`)[`block/${blockHash}/transactionList`],
-          // TxTotalCount: result.find((item) => Object.keys(item)[0] === `block/${blockHash}/transactionList`)[`total_block/${blockHash}/transactionList`],
+          // TxList: result.find((item) => Object.keys(item)[0] === `account/${accountid}/transactionList`)[
+          //   `account/${accountid}/transactionList`
+          // ],
+          TxList: get(
+            result.find((item) => Object.keys(item)[0] === `account/${accountid}/transactionList`),
+            `account/${accountid}/transactionList`,
+            []
+          ),
+          TxTotalCount: get(
+            result.find((item) => Object.keys(item)[0] === `account/${accountid}/transactionList`),
+            `total_account/${accountid}/transactionList`,
+            []
+          ),
+          minedTotalCount:
+            get(result.find((item) => Object.keys(item)[0] === `account/${accountid}`), [`account/${accountid}`, 'minedBlocks']) || 0,
         },
-        () => this.setState({ isLoading: false, queries })
+        () => {
+          this.setState({ isLoading: false, queries });
+        }
       );
+    } else if (code === 1) {
+      history.push(`/search-notfound?searchId=${accountid}`);
     }
     return {};
   }
 
-  async fetchMinedBlockList(accountid) {
-    const { code, result } = (await superagent.get(`/proxy/fetchMinedBlockList/${accountid}?pageNum=1&pageSize=20`)).body;
+  async fetchMinedBlockList(accountid, curMinedPage) {
+    this.setState({ isLoading: true });
+    const { code, result } = (await superagent.get(`/proxy/fetchMinedBlockList/${accountid}?pageNum=${curMinedPage}&pageSize=10`)).body;
     if (!code) {
       this.setState(
         {
@@ -371,25 +457,120 @@ class Detail extends Component {
             `account/${accountid}/minedBlockList`
           ],
         },
-        () => this.setState({ isLoading: false })
+        () => {
+          this.setState({
+            isLoading: false,
+            curMinedPage,
+          });
+        }
       );
     }
+    this.setState({ isLoading: false });
     return {};
   }
 
   render() {
-    const { accountDetail, queries, currentTab, isLoading, minedBlockList } = this.state;
     const {
+      accountDetail,
+      queries,
+      currentTab,
+      isLoading,
+      minedBlockList,
+      TxList,
+      TxTotalCount,
+      accountid,
+      minedTotalCount,
+      curMinedPage,
+    } = this.state;
+    const {
+      intl,
       match: { params },
     } = this.props;
+    if (accountid !== params.accountid) {
+      this.fetchAccountDetail(params.accountid, queries);
+    }
+
+    const columns = [
+      {
+        key: 1,
+        dataIndex: 'hash',
+        className: 'two wide aligned',
+        title: i18n('Hash'),
+        render: (text, row) => <EllipsisLine linkTo={`/transactionsdetail/${text}`} text={text} />,
+      },
+      {
+        key: 2,
+        dataIndex: 'from',
+        className: 'two wide aligned',
+        title: i18n('From'),
+        render: (text, row) => (
+          <div>
+            <PCell>
+              {text !== params.accountid ? (
+                <EllipsisLine textInout="In" linkTo={`/accountdetail/${text}`} text={text} />
+              ) : (
+                <EllipsisLine text={text} />
+              )}
+            </PCell>
+          </div>
+        ),
+      },
+      {
+        key: 3,
+        className: 'two wide aligned',
+        dataIndex: 'to',
+        title: i18n('To'),
+        render: (text) => (
+          <div>
+            <PCell>
+              {text !== params.accountid ? (
+                <EllipsisLine textInout="Out" linkTo={`/accountdetail/${text}`} text={text} />
+              ) : (
+                <EllipsisLine text={text} />
+              )}
+            </PCell>
+          </div>
+        ),
+      },
+      {
+        key: 4,
+        className: 'two wide aligned',
+        dataIndex: 'value',
+        title: i18n('Value'),
+        render: (text) => <EllipsisLine unit="CFX" text={convertToValueorFee(text)} />,
+      },
+      {
+        key: 5,
+        className: 'two wide aligned',
+        dataIndex: 'drei',
+        title: i18n('Fee'),
+        render: (text, row) => <EllipsisLine unit="CFX" text={convertToValueorFee(row.value * row.gasPrice)} />,
+      },
+      {
+        key: 6,
+        className: 'two wide aligned',
+        dataIndex: 'gasPrice',
+        title: i18n('Gas Price'),
+        render: (text) => <EllipsisLine unit="Gdip" text={converToGasPrice(text)} />,
+      },
+      {
+        key: 7,
+        className: 'three wide aligned',
+        dataIndex: 'timestamp',
+        title: i18n('Age'),
+        render: (text) => <Countdown timestamp={text * 1000} />,
+      },
+    ];
+
     return (
       <div className="page-address-detail">
         <Wrapper>
           <HeadBar>
-            <h1>Conflux Account</h1>
-            <p>{params.accountid || '0x413957876f8239dd9246fefabc4e7d6d86d4f9b6'}</p>
-            <CopyButton style={{ marginLeft: 10 }} txtToCopy={params.accountid} toolTipId="app.pages.account.detail.tooltip" />
-            <QrcodeButton titleTxt={params.accountid} qrTxt={params.accountid} tooltipId="app.pages.account.detail.qr" />
+            <h1>{i18n('Account')}</h1>
+            <p>{params.accountid}</p>
+            <br className="sep" />
+            <CopyButton txtToCopy={params.accountid} toolTipId="Copy address to clipboard" />
+            <QrcodeButton titleTxt={params.accountid} qrTxt={params.accountid} tooltipId="Click to view QR Code" />
           </HeadBar>
           {isLoading && <TableLoading />}
           <Statistic>
@@ -399,9 +580,9 @@ class Detail extends Component {
                   <use xlinkHref="#iconshiliangzhinengduixiang" />
                 </svg>
                 <div>
-                  <h2>Transactions</h2>
+                  <h2>{i18n('app.pages.account.detail.transactions')}</h2>
                   <p>
-                    Sent {accountDetail.sentTransactions} & Received {accountDetail.receivedTransactions}
+                    <span>{accountDetail.transactions}</span>
                   </p>
                 </div>
               </div>
@@ -412,8 +593,8 @@ class Detail extends Component {
                   <use xlinkHref="#iconwakuang" />
                 </svg>
                 <div>
-                  <h2>Mined Blocks</h2>
-                  <p>{accountDetail.minedBlocks} block</p>
+                  <h2>{i18n('Mined Blocks')}</h2>
+                  <p>{accountDetail.minedBlocks}</p>
                 </div>
               </div>
             </div>
@@ -423,8 +604,10 @@ class Detail extends Component {
                   <use xlinkHref="#iconEquilibrium-type" />
                 </svg>
                 <div>
-                  <h2>Belance</h2>
-                  <EllipsisLine unit="CFX" text={convertToValueorFee(accountDetail.balance)} />
+                  <h2>{i18n('Balance')}</h2>
+                  {convertToValueorFee(accountDetail.balance)}
+                  <span style={{ marginLeft: 5 }}>CFX</span>
+                  {/* <EllipsisLine unit="CFX" text={} /> */}
                 </div>
               </div>
             </div>
@@ -435,11 +618,11 @@ class Detail extends Component {
                 </svg>
                 <div className="sectionWrap">
                   <section>
-                    <h2>First Seen</h2>
+                    <h2>{i18n('First Seen')}</h2>
                     <p>{moment(accountDetail.firstSeen * 1000).format('YYYY-MM-DD HH:mm:ss')}</p>
                   </section>
                   <section>
-                    <h2>Last Seen</h2>
+                    <h2>{i18n('Last Seen')}</h2>
                     <p>{moment(accountDetail.lastSeen * 1000).format('YYYY-MM-DD HH:mm:ss')}</p>
                   </section>
                 </div>
@@ -454,7 +637,7 @@ class Detail extends Component {
                 onKeyUp={() => {}}
                 onClick={() => this.setState({ currentTab: 1 })}
               >
-                Transactions
+                {i18n('app.pages.account.detail.transactions')}
               </button>
               <button
                 type="button"
@@ -462,20 +645,30 @@ class Detail extends Component {
                 onKeyUp={() => {}}
                 onClick={() => {
                   this.setState({ currentTab: 2 });
-                  this.fetchMinedBlockList(params.accountid);
+                  this.fetchMinedBlockList(params.accountid, curMinedPage);
                 }}
               >
-                Miner Block
+                {i18n('Mined Blocks')}
               </button>
             </div>
             <div className="ctrlpanel-wrap">
-              <CtrlPanel>
-                <span className="screentime">Screening Time</span>
+              <CtrlPanel
+                style={{
+                  display: currentTab === 1 ? 'flex' : 'none',
+                }}
+              >
                 <RangePicker
                   className="date-picker"
-                  showTime={{ format: 'HH:00' }}
-                  format="YYYY-MM-DD HH:00"
-                  placeholder={['Start Time', 'End Time']}
+                  showTime={{ format: 'HH:mm' }}
+                  format="YYYY-MM-DD HH:mm"
+                  placeholder={[
+                    intl.formatMessage({
+                      id: 'StartTime',
+                    }),
+                    intl.formatMessage({
+                      id: 'EndTime',
+                    }),
+                  ]}
                   onChange={(value) => {
                     if (!value.length) {
                       delete queries.startTime;
@@ -487,7 +680,7 @@ class Detail extends Component {
                     if (value.length) {
                       const startTime = value[0].unix();
                       const endTime = value[1].unix();
-                      this.fetchAccountDetail(params.accountid, { ...queries, startTime, endTime });
+                      this.fetchAccountDetail(params.accountid, { ...queries, startTime, endTime, pageNum: 1 });
                     }
                   }}
                 />
@@ -495,7 +688,7 @@ class Detail extends Component {
                   className="drop-btn"
                   direction="left"
                   icon={
-                    <IconFace style={{ borderRadius: '4px' }}>
+                    <IconFace className="iconmore1" style={{ borderRadius: '4px' }}>
                       <svg className="icon" aria-hidden="true">
                         <use xlinkHref="#iconmore1" />
                       </svg>
@@ -504,60 +697,136 @@ class Detail extends Component {
                 >
                   <Dropdown.Menu>
                     <Dropdown.Item
-                      text="View All"
-                      value="All"
+                      text={i18n('app.pages.account.detail.viewAll')}
+                      value="all"
                       onClick={(e, data) => {
                         e.preventDefault();
-                        this.fetchAccountDetail(params.accountid, { ...queries, txnType: data.value });
+                        this.fetchAccountDetail(params.accountid, { ...queries, txnType: data.value, pageNum: 1 });
                       }}
                     />
                     <Dropdown.Item
-                      text="View Outgoing Txns"
-                      value="Outgoing"
+                      text={i18n('app.pages.account.detail.viewOutGoing')}
+                      value="outgoing"
                       onClick={(e, data) => {
                         e.preventDefault();
-                        this.fetchAccountDetail(params.accountid, { ...queries, txnType: data.value });
+                        this.fetchAccountDetail(params.accountid, { ...queries, txnType: data.value, pageNum: 1 });
                       }}
                     />
                     <Dropdown.Item
-                      text="View Incoming Txns"
-                      value="Incoming"
+                      text={i18n('app.pages.account.detail.viewIncoming')}
+                      value="incoming"
                       onClick={(e, data) => {
                         e.preventDefault();
-                        this.fetchAccountDetail(params.accountid, { ...queries, txnType: data.value });
+                        this.fetchAccountDetail(params.accountid, { ...queries, txnType: data.value, pageNum: 1 });
                       }}
                     />
                   </Dropdown.Menu>
                 </Dropdown>
               </CtrlPanel>
               <TabPanel className={currentTab === 1 ? 'ui bottom attached segment active tab' : 'ui bottom attached segment tab'}>
-                <div className="ui fluid card">
-                  <div className="content">
-                    <DataList showHeader columns={columns} dataSource={dataSource} />
+                <StyledTabel>
+                  <div className="ui fluid card">
+                    <div className="content">
+                      <DataList showHeader columns={columns} dataSource={TxList} />
+                    </div>
                   </div>
-                </div>
+                </StyledTabel>
                 <TabWrapper>
-                  <Pagination
-                    prevItem={{
-                      'aria-label': 'Previous item',
-                      content: 'Previous',
-                    }}
-                    nextItem={{
-                      'aria-label': 'Next item',
-                      content: 'Next',
-                    }}
-                    defaultActivePage={5}
-                    totalPages={10}
-                  />
+                  <div className="page-pc">
+                    <Pagination
+                      prevItem={{
+                        'aria-label': 'Previous item',
+                        content: i18n('lastPage'),
+                      }}
+                      nextItem={{
+                        'aria-label': 'Next item',
+                        content: i18n('nextPage'),
+                      }}
+                      onPageChange={(e, data) => {
+                        e.preventDefault();
+                        this.fetchAccountDetail(params.accountid, { ...queries, pageNum: data.activePage });
+                      }}
+                      activePage={queries.pageNum}
+                      totalPages={Math.ceil(TxTotalCount / 10)}
+                    />
+                  </div>
+                  <div className="page-h5">
+                    <Pagination
+                      prevItem={{
+                        'aria-label': 'Previous item',
+                        content: i18n('lastPage'),
+                      }}
+                      nextItem={{
+                        'aria-label': 'Next item',
+                        content: i18n('nextPage'),
+                      }}
+                      boundaryRange={0}
+                      activePage={queries.pageNum}
+                      onPageChange={(e, data) => {
+                        e.preventDefault();
+                        this.fetchAccountDetail(params.accountid, { ...queries, pageNum: data.activePage });
+                      }}
+                      ellipsisItem={null}
+                      firstItem={null}
+                      lastItem={null}
+                      siblingRange={1}
+                      totalPages={Math.ceil(TxTotalCount / 10)}
+                    />
+                  </div>
                 </TabWrapper>
               </TabPanel>
-
               <TabPanel className={currentTab === 2 ? 'ui bottom attached segment active tab' : 'ui bottom attached segment tab'}>
-                <div className="ui fluid card">
-                  <div className="content">
-                    <DataList showHeader columns={minedColumns} dataSource={minedBlockList} />
+                <StyledTabel>
+                  <div className="ui fluid card">
+                    <div className="content">
+                      <DataList showHeader columns={minedColumns} dataSource={minedBlockList} />
+                    </div>
                   </div>
-                </div>
+                </StyledTabel>
+
+                <MinedWrap>
+                  <div className="page-pc">
+                    <Pagination
+                      prevItem={{
+                        'aria-label': 'Previous item',
+                        content: i18n('lastPage'),
+                      }}
+                      nextItem={{
+                        'aria-label': 'Next item',
+                        content: i18n('nextPage'),
+                      }}
+                      onPageChange={(e, data) => {
+                        e.preventDefault();
+                        this.fetchMinedBlockList(params.accountid, data.activePage);
+                      }}
+                      activePage={curMinedPage}
+                      totalPages={Math.ceil(minedTotalCount / 10)}
+                    />
+                  </div>
+                  <div className="page-h5">
+                    <Pagination
+                      prevItem={{
+                        'aria-label': 'Previous item',
+                        content: i18n('lastPage'),
+                      }}
+                      nextItem={{
+                        'aria-label': 'Next item',
+                        content: i18n('nextPage'),
+                      }}
+                      boundaryRange={0}
+                      activePage={curMinedPage}
+                      onPageChange={(e, data) => {
+                        e.preventDefault();
+                        this.fetchMinedBlockList(params.accountid, data.activePage);
+                      }}
+                      ellipsisItem={null}
+                      firstItem={null}
+                      lastItem={null}
+                      siblingRange={1}
+                      totalPages={Math.ceil(minedTotalCount / 10)}
+                    />
+                  </div>
+                </MinedWrap>
               </TabPanel>
             </div>
           </TabZone>
@@ -568,8 +837,18 @@ class Detail extends Component {
 }
 Detail.propTypes = {
   match: PropTypes.objectOf(PropTypes.string),
+  intl: PropTypes.shape({
+    formatMessage: PropTypes.func,
+  }).isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
 };
 Detail.defaultProps = {
   match: {},
 };
-export default Detail;
+const hoc = compose(
+  injectIntl,
+  withRouter
+);
+export default hoc(Detail);

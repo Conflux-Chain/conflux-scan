@@ -1,11 +1,17 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import ToastMessage from './ToastMessage';
+import media from '../../globalStyles/media';
 
 const Wrap = styled.div`
   position: fixed;
   top: 10px;
   right: 10px;
+  z-index: 1001;
+
+  ${media.pad`
+    top: 66px;
+  `}
 `;
 
 let toastRef;

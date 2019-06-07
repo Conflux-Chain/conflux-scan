@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { NavLink, withRouter } from 'react-router-dom';
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 import styled from 'styled-components';
+import media from '../../globalStyles/media';
 
 const Wrapper = styled.div`
   position: fixed;
@@ -16,9 +17,40 @@ const Wrapper = styled.div`
   padding: 0;
   text-align: center;
   background-color: #1f204c;
-  z-index: 999;
+  z-index: 99;
   overflow-x: hidden;
   overflow-y: auto;
+
+  ${media.pad`
+    top: 56px;
+    left: -120px;
+    max-height: calc(100vh - 56px);
+    transition: 0.1s all ease-out;
+    
+    &.show {
+      left: 0;
+      animation: bounce-in-left 0.5s forwards;
+    }
+  `}
+
+  @keyframes bounce-in-left {
+    0% {
+      transform: translateX(-600px);
+      animation-timing-function: ease-in;
+    }
+    30% {
+      transform: translateX(0);
+      animation-timing-function: ease-out;
+    }
+    45% {
+      transform: translateX(-40px);
+      animation-timing-function: ease-in;
+    }
+    60% {
+      transform: translateX(0);
+      animation-timing-function: ease-out;
+    }
+  }
 `;
 
 const Menu = styled.ul`
@@ -63,16 +95,27 @@ const Menu = styled.ul`
   }
 `;
 
+function cleanState() {
+  const event = new Event('clean_state');
+  const eventScroll = new Event('scroll-to-top');
+  const eventHideNavBar = new Event('hide-nav-bar');
+  setTimeout(() => {
+    document.dispatchEvent(event);
+    document.dispatchEvent(eventScroll);
+    document.dispatchEvent(eventHideNavBar);
+  }, 0);
+}
+
 function Navbar(props) {
-  const { location } = props;
+  const { location, showNavbar } = props;
   const blocktxnPaths = ['blocktxn', 'blocks', 'blocksdetail', 'transactions', 'transactionsdetail', 'accountdetail', 'epochsdetail'];
   const directoryPaths = ['directory', 'topholders'];
 
   return (
-    <Wrapper>
+    <Wrapper className={showNavbar ? 'show' : ''}>
       <Menu>
         <li>
-          <NavLink exact to="/" activeClassName="actived">
+          <NavLink exact to="/" activeClassName="actived" onClick={cleanState}>
             <svg className="icon" aria-hidden="true">
               <use xlinkHref="#icondashboard" />
             </svg>
@@ -83,6 +126,7 @@ function Navbar(props) {
           <NavLink
             to="/blocktxn"
             activeClassName="actived"
+            onClick={cleanState}
             isActive={() => !!blocktxnPaths.find((v) => location.pathname.indexOf('/' + v) === 0)}
           >
             <svg className="icon" aria-hidden="true">
@@ -95,6 +139,7 @@ function Navbar(props) {
           <NavLink
             to="/directory"
             activeClassName="actived"
+            onClick={cleanState}
             isActive={() => !!directoryPaths.find((v) => location.pathname.indexOf('/' + v) === 0)}
           >
             <svg className="icon" aria-hidden="true">
@@ -112,6 +157,7 @@ Navbar.propTypes = {
   location: PropTypes.shape({
     pathname: PropTypes.string.isRequired,
   }),
+  showNavbar: PropTypes.bool.isRequired,
 };
 
 Navbar.defaultProps = {
