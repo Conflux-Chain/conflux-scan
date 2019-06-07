@@ -32,7 +32,7 @@ export default {
   'app.pages.blocks.gasLimit': 'Gas Limit',
   'app.pages.blocks.age': 'Age',
   'app.pages.blocks.txCount': 'Tx Count',
-  'app.pages.blocks.packTime': 'Time',
+  'app.pages.blocks.packTime': 'Timestamp',
 
   // blocks & txns
   'app.pages.account.detail.transactions': 'Transactions',
@@ -42,7 +42,7 @@ export default {
 
   // age
   'app.pages.txns.age': 'Age',
-  'app.pages.txns.time': 'Age',
+  'app.pages.txns.time': 'Timestamp',
 
   'app.pages.block.confirm.title': 'Please Confirm',
   'app.pages.block.confirm.pageWarning': 'page > 10000 is not supported',
@@ -63,6 +63,7 @@ export default {
   'app.pages.dashboard.tps': 'TPS',
   'app.pages.dashboard.difficulty': 'Difficulty',
   'app.pages.dashboard.blockTime': 'Block Time',
+  'app.pages.dashboard.blockTimeUnit': 's',
   'app.pages.dashboard.hashRate': 'Hash Rate',
 
   // Header Components
@@ -87,10 +88,10 @@ export default {
   'app.directory.exchange.desc': 'Blockchain & Crypto Asset Exchange',
   'app.directory.wallet.title': 'Wallet',
   'app.directory.wallet.desc': 'Crypto Asset Management & Protection',
-  'app.directory.website.title': 'Office Website',
-  'app.directory.website.desc': 'Follow-up Official Announcement & Development',
+  'app.directory.website.title': 'Official Website',
+  'app.directory.website.desc': 'Official Announcement & Development',
   'app.directory.news.title': 'News',
-  'app.directory.news.desc': 'Follow-up Latest Updates',
+  'app.directory.news.desc': 'Latest Updates',
   'app.directory.topholders.title': 'Top Token Holders',
   'app.directory.topholders.desc': 'Publicity & Transparency for the Community',
   'app.directory.community.title': 'Community',

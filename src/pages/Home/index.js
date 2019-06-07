@@ -61,12 +61,12 @@ const Block = styled.div`
       font-weight: 700;
     }
     .block-unit {
-      font-size: 14px;
+      font-size: 15px;
       line-height: 18px;
       margin-left: 8px;
       color: rgba(0, 0, 0, 0.87);
     }
-    .block-rate {
+    .block-value-unit {
       display: flex;
       align-items: baseline;
     }
@@ -218,9 +218,9 @@ class Home extends Component {
               <FormattedMessage id="app.pages.dashboard.difficulty" />
             </span>
             <div className="block-content">
-              <span className="block-value">{toFixed(summary.getIn(['difficulty', 'val']), 2)}</span>
+              <span className="block-value">{toThousands(toFixed(summary.getIn(['difficulty', 'val']), 0))}</span>
               <span className={summary.getIn(['difficulty', 'trend']) >= 0 ? 'block-diff-up' : 'block-diff-down'}>
-                {this.formatTrend(toThousands(summary.getIn(['difficulty', 'trend']), 2))}
+                {this.formatTrend(toFixed(summary.getIn(['difficulty', 'trend']), 2))}
                 <span className={summary.getIn(['difficulty', 'trend']) >= 0 ? 'icon-arrow-up' : 'icon-arrow-down'} />
               </span>
             </div>
@@ -230,7 +230,12 @@ class Home extends Component {
               <FormattedMessage id="app.pages.dashboard.blockTime" />
             </span>
             <div className="block-content">
-              <span className="block-value">{toFixed(summary.getIn(['blockTime', 'val']), 2)}</span>
+              <span className="block-value-unit">
+                <span className="block-value">{toFixed(summary.getIn(['blockTime', 'val']), 2)}</span>
+                <span className="block-unit">
+                  <FormattedMessage id="app.pages.dashboard.blockTimeUnit" />
+                </span>
+              </span>
               <span className={summary.getIn(['blockTime', 'trend']) >= 0 ? 'block-diff-up' : 'block-diff-down'}>
                 {this.formatTrend(toFixed(summary.getIn(['blockTime', 'trend']), 2))}
                 <span className={summary.getIn(['blockTime', 'trend']) >= 0 ? 'icon-arrow-up' : 'icon-arrow-down'} />

@@ -13,7 +13,6 @@ export default {
   Position: '位置',
   Hash: '哈希',
   'Gas Limit': '燃料上限',
-  // 'Age': '打包时间',
   'Tx Count': '交易笔数',
   Value: '价值',
   'Gas Price': '燃料价格',
@@ -42,7 +41,7 @@ export default {
   EndTime: '结束时间',
   lastPage: '上一页',
   nextPage: '下一页',
-  Age: '打包时间',
+  Age: '块龄',
 
   'app.head.menu.home': '首页',
   'app.head.menu.dashboard': 'Dashboard',
@@ -103,7 +102,8 @@ export default {
   'app.pages.dashboard.tps': '吞吐率',
   'app.pages.dashboard.difficulty': '难度',
   'app.pages.dashboard.blockTime': '出块间隔',
-  'app.pages.dashboard.hashRate': '哈希率',
+  'app.pages.dashboard.blockTimeUnit': '秒',
+  'app.pages.dashboard.hashRate': '哈希算力',
 
   // Header Components
   'app.header.lang.en': 'English',

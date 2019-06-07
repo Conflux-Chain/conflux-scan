@@ -129,6 +129,9 @@ export const toFixed = (num, decimal) => {
   if (isNaN(num)) {
     return 0;
   }
+  if (decimal === 0) {
+    return parseInt(num, 0);
+  }
   const p = 10 ** decimal;
   return Math.round(num * p) / p;
 };
