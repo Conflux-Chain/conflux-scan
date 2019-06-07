@@ -148,7 +148,7 @@ const start = async () => {
                   .then((callback) => {
                     const { code, result, message } = JSON.parse(callback.text);
                     if (code == 0) resolve({ [ids]: result.data });
-                    else reject([]);
+                    else resolve({ [ids]: [], code, message });
                   })
                   .catch((e) => {
                     reject([]);
