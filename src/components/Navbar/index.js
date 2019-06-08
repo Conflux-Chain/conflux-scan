@@ -25,11 +25,11 @@ const Wrapper = styled.div`
     top: 56px;
     left: -120px;
     max-height: calc(100vh - 56px);
-    transition: 0.1s all ease-out;
+    transition: 0.2s all ease-out;
     
     &.show {
       left: 0;
-      animation: bounce-in-left 0.5s forwards;
+      // animation: bounce-in-left 0.5s forwards;
     }
   `}
 
