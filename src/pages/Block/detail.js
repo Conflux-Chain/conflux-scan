@@ -180,8 +180,7 @@ const TxColumns = [
     dataIndex: 'gasPrice',
     title: i18n('Fee'),
     render: (text, row) => {
-      const result = new BigNumber(text).multipliedBy(row.value);
-      console.log(convertToValueorFee(result.toFixed()));
+      const result = new BigNumber(row.gas).multipliedBy(row.gasPrice);
       return <EllipsisLine unit="CFX" text={convertToValueorFee(result.toFixed())} />;
     },
   },

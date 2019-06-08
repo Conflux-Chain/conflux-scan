@@ -6,6 +6,7 @@ import superagent from 'superagent';
 import moment from 'moment';
 import { Pagination, Dropdown } from 'semantic-ui-react';
 import { DatePicker } from 'antd';
+import BigNumber from 'bignumber.js';
 import { injectIntl } from 'react-intl';
 import get from 'lodash/get';
 import compose from 'lodash/fp/compose';
@@ -544,7 +545,10 @@ class Detail extends Component {
         className: 'two wide aligned',
         dataIndex: 'drei',
         title: i18n('Fee'),
-        render: (text, row) => <EllipsisLine unit="CFX" text={convertToValueorFee(row.value * row.gasPrice)} />,
+        render: (text, row) => {
+          const result = new BigNumber(row.gas).multipliedBy(row.gasPrice);
+          return <EllipsisLine unit="CFX" text={convertToValueorFee(result.toFixed())} />;
+        },
       },
       {
         key: 6,
