@@ -75,6 +75,7 @@ const HeadBar = styled.div`
       margin-left: 0;
     }
     p {
+      word-break: break-all;
       padding-top: 5px;
       padding-bottom: 5px;
     }
@@ -267,13 +268,15 @@ const CtrlPanel = styled.div`
   justify-content: space-around;
   align-items: center;
   ${media.pad`
-    display: block;
     position: relative;
     width: auto;
     padding-top: 20px;
     padding-left: 16px;
     background: #fff;
     z-inde: 10;
+    align-items: flex-end;
+    justify-content: flex-end;
+    padding-right: 10px;
   `}
   .screentime {
     ${media.pad`display: block; margin-bottom: 8px; margin-right: 0;`}
@@ -288,9 +291,6 @@ const CtrlPanel = styled.div`
       transform: rotate(90deg);
     }
     ${media.pad`
-      position: absolute;
-      right: 10px;
-      top: 18px;
     `}
   }
 `;
