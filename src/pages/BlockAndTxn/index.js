@@ -289,15 +289,7 @@ class BlockAndTxn extends Component {
                 <DataList columns={window.innerWidth > 576 ? BlockColumns : MBlockColumns} dataSource={BlockList} />
               </div>
               <div className="extra content">
-                <Link
-                  to="/blocks"
-                  onClick={() => {
-                    const eventScroll = new Event('scroll-to-top');
-                    setTimeout(() => {
-                      document.dispatchEvent(eventScroll);
-                    }, 0);
-                  }}
-                >
+                <Link to="/blocks">
                   <StyledButton className="ui fluid violet button ">{i18n('app.pages.blockAndTx.viewAllBlocks')}</StyledButton>
                 </Link>
               </div>
@@ -313,15 +305,7 @@ class BlockAndTxn extends Component {
                 <DataList columns={window.innerWidth > 576 ? TxColumns : MTxColumns} dataSource={TxList} />
               </div>
               <div className="extra content">
-                <Link
-                  to="/transactions"
-                  onClick={() => {
-                    const eventScroll = new Event('scroll-to-top');
-                    setTimeout(() => {
-                      document.dispatchEvent(eventScroll);
-                    }, 0);
-                  }}
-                >
+                <Link to="/transactions">
                   <StyledButton className="ui fluid violet button ">{i18n('app.pages.blockAndTx.viewAllTransactions')}</StyledButton>
                 </Link>
               </div>

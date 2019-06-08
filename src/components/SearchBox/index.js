@@ -102,6 +102,15 @@ class SearchBox extends Component {
   constructor(props) {
     super(props);
     this.state = { searchKey: '', filterName: 'app.comp.searchbox.filter.all', filterValue: 0 };
+    const { history } = this.props;
+    history.listen((location, action) => {
+      if (action === 'PUSH') {
+        const eventScroll = new Event('scroll-to-top');
+        setTimeout(() => {
+          document.dispatchEvent(eventScroll);
+        }, 0);
+      }
+    });
   }
 
   async handleSearch(value) {
@@ -111,19 +120,15 @@ class SearchBox extends Component {
       this.setState({
         showLoading: true,
       });
-      const scrollToTop = () => {
-        const eventScroll = new Event('scroll-to-top');
-        setTimeout(() => {
-          document.dispatchEvent(eventScroll);
-          this.setState({
-            showLoading: false,
-          });
-        }, 0);
+      const hideLoading = () => {
+        this.setState({
+          showLoading: false,
+        });
       };
 
       if (/^[0-9a-zA-Z]+$/.test(value) === false) {
         history.push(`/search-notfound?searchId=${value}`);
-        scrollToTop();
+        hideLoading();
         return;
       }
 
@@ -132,7 +137,7 @@ class SearchBox extends Component {
           const { code, result } = (await superagent.get(`/proxy/fetchHashType/${value}`)).body;
           if (code !== 0) {
             history.push(`/search-notfound?searchId=${value}`);
-            scrollToTop();
+            hideLoading();
             return;
           }
           if (typeof result !== 'undefined') {
@@ -153,7 +158,6 @@ class SearchBox extends Component {
                 console.log('unknow case');
                 break;
             }
-            scrollToTop();
           }
         } catch (e) {
           console.log(e);

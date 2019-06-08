@@ -97,11 +97,9 @@ const Menu = styled.ul`
 
 function cleanState() {
   const event = new Event('clean_state');
-  const eventScroll = new Event('scroll-to-top');
   const eventHideNavBar = new Event('hide-nav-bar');
   setTimeout(() => {
     document.dispatchEvent(event);
-    document.dispatchEvent(eventScroll);
     document.dispatchEvent(eventHideNavBar);
   }, 0);
 }
