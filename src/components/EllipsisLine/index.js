@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
+import { Popup } from 'semantic-ui-react';
 import media from '../../globalStyles/media';
 
 const SingleLine = styled.div`
@@ -93,8 +94,9 @@ function EllipsisLine({ intl, prefix, unit, is2ndLine, isPivot, isLong, linkTo, 
   } else {
     tooltip = text;
   }
-  return (
-    <div style={baseStyle} data-tooltip={tooltip} data-position="top center">
+
+  const elem = (
+    <div style={baseStyle}>
       <SingleLine>
         <div className="wrap">
           {prefix && <PrefixTag>{prefix}</PrefixTag>}
@@ -112,6 +114,9 @@ function EllipsisLine({ intl, prefix, unit, is2ndLine, isPivot, isLong, linkTo, 
       </SingleLine>
     </div>
   );
+  const pop = <Popup trigger={elem} content={tooltip} position="top center" hoverable />;
+
+  return pop;
 }
 EllipsisLine.propTypes = {
   prefix: PropTypes.string,

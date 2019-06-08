@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import media from '../../globalStyles/media';
 
 const StyledTable = styled.div`
+  overflow: auto;
   th.plain_th {
     font-size: 16px;
     color: rgba(0, 0, 0, 0.87);
