@@ -36,7 +36,7 @@ const Wrapper = styled.div`
 
 const Container = styled.div`
   position: relative;
-  padding: 20px 20px 0;
+  padding: 20px 0 0;
   padding-left: 120px;
   margin: 0;
   max-height: calc(100vh - 72px);
@@ -47,7 +47,7 @@ const Container = styled.div`
   ${media.pad`
     margin-left: 0;
     max-height: calc(100vh - 56px);
-    padding: 20px 0 70px;
+    padding: 20px 0 70px 0;
   `}
 `;
 
@@ -70,12 +70,17 @@ const ContainerMask = styled.div`
 
 const Content = styled.div`
   position: relative;
-  max-width: calc(100vw - 160px);
   min-height: calc(100vh - 245px);
+  margin-left: 20px;
+  margin-right: 20px;
 
   ${media.pad`
     max-width: 100%;
     min-height: calc(100vh - 330px);
+  `}
+  ${media.mobile`
+    margin-left: 0;
+    margin-right: 0;
   `}
 `;
 
