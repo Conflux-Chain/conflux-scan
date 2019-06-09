@@ -206,7 +206,7 @@ class Home extends Component {
               <FormattedMessage id="app.pages.dashboard.tps" />
             </span>
             <div className="block-content">
-              <span className="block-value">{toFixed(summary.getIn(['tps', 'val']), 2)}</span>
+              <span className="block-value">{toFixed(summary.getIn(['tps', 'val']), summary.getIn(['tps', 'val']) > 10 ? 2 : 6)}</span>
               <span className={summary.getIn(['tps', 'trend']) >= 0 ? 'block-diff-up' : 'block-diff-down'}>
                 {this.formatTrend(toFixed(summary.getIn(['tps', 'trend']), 2))}
                 <span className={summary.getIn(['tps', 'trend']) >= 0 ? 'icon-arrow-up' : 'icon-arrow-down'} />
