@@ -97,7 +97,11 @@ class LineChart extends Component {
           },
         },
         formatter: (params) => {
-          return moment(params[0].data.time * 1000).format('YYYY/M/D kk:mm') + '<br />' + toFixed(params[0].data.value, 3);
+          return (
+            moment(params[0].data.time * 1000).format('YYYY/M/D kk:mm') +
+            '<br />' +
+            toFixed(params[0].data.value, params[0].data.value > 1 ? 3 : 6)
+          );
         },
       },
       grid: {
