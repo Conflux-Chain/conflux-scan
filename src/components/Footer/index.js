@@ -5,7 +5,7 @@ import { FormattedMessage } from 'react-intl';
 import media from '../../globalStyles/media';
 
 const Wrapper = styled.footer`
-  width: calc(100% - 20px);
+  width: calc(100% - 40px);
   margin: 30px auto 0;
   padding: 28px 0 20px;
   display: flex;
