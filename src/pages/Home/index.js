@@ -260,6 +260,9 @@ class Home extends Component {
             title={intl.formatMessage({ id: 'app.pages.dashboard.tps' })}
             data={data.get('tps').toJS()}
             duration={duration.get('tps')}
+            echartOpt={{
+              'grid.left': '50px',
+            }}
             onChangeDuration={(value) => this.onChangeDuration('tps', value)}
           />
           <LineChart
@@ -267,7 +270,7 @@ class Home extends Component {
             data={data.get('difficulty').toJS()}
             duration={duration.get('difficulty')}
             echartOpt={{
-              'grid.left': '75px',
+              'grid.left': '80px',
             }}
             onChangeDuration={(value) => this.onChangeDuration('difficulty', value)}
           />
