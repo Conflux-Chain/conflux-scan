@@ -555,7 +555,7 @@ class Detail extends Component {
         className: 'two wide aligned',
         dataIndex: 'gasPrice',
         title: i18n('Gas Price'),
-        render: (text) => <EllipsisLine unit="Gdip" text={converToGasPrice(text)} />,
+        render: (text) => <EllipsisLine unit="Gdrip" text={converToGasPrice(text)} />,
       },
       {
         key: 7,
