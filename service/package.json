@@ -1,0 +1,21 @@
+{
+  "name": "conflux-scan-service",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "serve": "SERVER_PORT=3000 SERVER_HOST=localhost SERVER_PREFIX=/proxy node ./index.js",
+    "serve-test": "SERVER_PORT=3000 SERVER_HOST=localhost SERVER_PREFIX= API_HOST=http://testnet-jsonrpc.conflux-chain.org:18084 node ./index.js",
+    "serve-prod": "SERVER_PORT=3000 SERVER_HOST=localhost SERVER_PREFIX= API_HOST=http://testnet-jsonrpc.conflux-chain.org:18084 node ./index.js",
+    "start-test": "pm2 start npm --name conflux-scan-node-proxy -- run serve-test",
+    "stop-test": "pm2 delete conflux-scan-node-proxy",
+    "start": "pm2 start npm --name conflux-scan-node-proxy-prod -- run serve-prod -i max -e err-prod.log -o out-prod.log",
+    "stop": "pm2 delete conflux-scan-node-proxy-prod"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@hapi/hapi": "^18.3.1",
+    "joi": "^14.3.1",
+    "superagent": "^5.0.5",
+    "susie": "^3.0.0"
+  }
+}
