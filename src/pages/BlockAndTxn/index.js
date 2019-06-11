@@ -273,7 +273,9 @@ class BlockAndTxn extends Component {
         className: 'two wide center aligned',
         dataIndex: 'gasPrice',
         title: 'Blocks',
-        render: (text) => <StyledLabel>{converToGasPrice3Fixed(text) + ' CFX'}</StyledLabel>,
+        render: (text, row) => {
+          return <StyledLabel>{converToGasPrice3Fixed(row.value) + ' CFX'}</StyledLabel>;
+        },
       },
     ];
     return (
