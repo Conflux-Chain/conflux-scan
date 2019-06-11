@@ -60,6 +60,7 @@ const PCell = styled.div`
   font-weight: 400;
   height: 17px;
   line-height: 19px;
+  white-space: nowrap;
 `;
 
 const StyledButton = styled.button`
