@@ -224,3 +224,7 @@ const I18nComp1 = injectIntl(I18nComp);
 export function i18n(id, config = {}) {
   return <I18nComp1 id={id} html={config.html} />;
 }
+
+export function renderAny(cb) {
+  return cb();
+}
