@@ -102,6 +102,22 @@ class BlockAndTxn extends Component {
       BlockList: [],
       TxList: [],
       showLoading: true,
+      plusTimeCount: 0,
+    };
+
+    this.timerId = null;
+    let executed = false;
+    this.beginCountOnce = () => {
+      if (executed) {
+        return;
+      }
+      executed = true;
+      this.timerId = setInterval(() => {
+        const { plusTimeCount } = this.state;
+        this.setState({
+          plusTimeCount: plusTimeCount + 1,
+        });
+      }, 1000);
     };
   }
 
@@ -112,6 +128,7 @@ class BlockAndTxn extends Component {
 
   componentWillUnmount() {
     closeSource();
+    clearInterval(this.timerId);
   }
 
   async fetchInitList() {
@@ -127,12 +144,13 @@ class BlockAndTxn extends Component {
         showLoading: false,
         BlockList: result.find((item) => Object.keys(item)[0] === 'block/list')['block/list'] || [],
         TxList: result.find((item) => Object.keys(item)[0] === 'transaction/list')['transaction/list'] || [],
+        plusTimeCount: 0,
       });
     }
   }
 
   render() {
-    const { BlockList, TxList, showLoading } = this.state;
+    const { BlockList, TxList, showLoading, plusTimeCount } = this.state;
     const MBlockColumns = [
       {
         key: 2,
@@ -225,7 +243,7 @@ class BlockAndTxn extends Component {
             <div>
               <EllipsisLine linkTo={`/transactionsdetail/${row.hash}`} isPivot={row.isPivot} text={row.hash} />
               <PCell>
-                <Countdown timestamp={row.timestamp * 1000} />
+                <Countdown timestamp={row.timestamp * 1000 + plusTimeCount * 1000} />
               </PCell>
               <EllipsisLine prefix={i18n('From')} linkTo={`/accountdetail/${row.from}`} text={row.from} />
               <EllipsisLine is2ndLine prefix={i18n('To')} linkTo={`/accountdetail/${row.to}`} text={row.to} />
