@@ -51,7 +51,7 @@ export default {
   'app.pages.notFoundTx.title': 'Sorry your <strong>Transaction</strong>',
   'app.pages.notFoundTx.tooltip': 'Copy to clipboard',
   'app.pages.notFoundTx.packing': 'is packing, please wait',
-  'app.pages.notFoundTx.ask': 'If you think there is someting wrong, please ',
+  'app.pages.notFoundTx.ask': 'If you think there is something wrong, please ',
   'app.pages.notFoundTx.concatus': 'contact us',
 
   'app.pages.pageNotFound.title': 'Page Not Found',
