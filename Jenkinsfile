@@ -17,7 +17,7 @@ yarn
 yarn build
 cd service
 yarn
-npm run stop-test
+npm run stop-test || true
 npm run start-test
 ''',
           label: "yarn build"
@@ -35,7 +35,7 @@ yarn
 yarn build
 cd service
 yarn
-npm run stop
+npm run stop || true
 npm run start
 ''',
           label: "yarn build"
