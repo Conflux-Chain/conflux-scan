@@ -15,7 +15,7 @@ pipeline {
           script: '''
 yarn
 yarn build
-cd /service
+cd service
 npm run stop-test
 npm run start-test
 ''',
@@ -32,7 +32,7 @@ npm run start-test
           script: '''
 yarn
 yarn build
-cd /service
+cd service
 npm run stop
 npm run start
 ''',
