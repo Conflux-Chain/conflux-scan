@@ -21,7 +21,7 @@ export const converToGasPrice = (bigNumber) => {
 
 export const converToGasPrice3Fixed = (bigNumber) => {
   const result = new BigNumber(bigNumber).dividedBy(10 ** 18);
-  console.log(result.toNumber());
+  // console.log(result.toNumber());
   if (result.toFixed() < 0.001) return 0;
   if (result.toFixed(3) >= 1) return result.toFixed();
   return result.toFixed(3);
@@ -99,7 +99,9 @@ export const initSse = (tthis, uri = '/proxy/fetch_random_time') => {
       showLoading: false,
       BlockList: result.find((item) => Object.keys(item)[0] === 'block/list')['block/list'] || [],
       TxList: result.find((item) => Object.keys(item)[0] === 'transaction/list')['transaction/list'] || [],
+      plusTimeCount: 0,
     });
+    tthis.beginCountOnce();
     // console.log(data);
     // $('body').append(`<p>${data.data}</p>`);
   });
@@ -223,4 +225,8 @@ const I18nComp1 = injectIntl(I18nComp);
 
 export function i18n(id, config = {}) {
   return <I18nComp1 id={id} html={config.html} />;
+}
+
+export function renderAny(cb) {
+  return cb();
 }

@@ -6,7 +6,7 @@ import superagent from 'superagent';
 import moment from 'moment';
 import TableLoading from '../../components/TableLoading';
 import media from '../../globalStyles/media';
-import { i18n } from '../../utils';
+import { i18n, renderAny } from '../../utils';
 
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -148,7 +148,21 @@ class Detail extends Component {
                 <tr className="">
                   <td className="collapsing">{i18n('To')}</td>
                   <td className="">
-                    <Link to={`/accountdetail/${result.to}`}>{result.to}</Link>
+                    {renderAny(() => {
+                      if (result.to) {
+                        return <Link to={`/accountdetail/${result.to}`}>{result.to}</Link>;
+                      }
+                      if (result.contractCreated) {
+                        return (
+                          <span>
+                            [{i18n('Contract')} &nbsp;
+                            <Link to={`/accountdetail/${result.contractCreated}`}>{result.contractCreated}</Link>
+                            &nbsp; {i18n('Created')}]
+                          </span>
+                        );
+                      }
+                      return null;
+                    })}
                   </td>
                 </tr>
                 <tr className="">

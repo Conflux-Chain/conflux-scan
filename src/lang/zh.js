@@ -42,6 +42,8 @@ export default {
   lastPage: '上一页',
   nextPage: '下一页',
   Age: '块龄',
+  Contract: '合约',
+  Created: '已创建',
 
   'app.head.menu.home': '首页',
   'app.head.menu.dashboard': 'Dashboard',
