@@ -109,7 +109,7 @@ function EllipsisLine({ intl, prefix, unit, is2ndLine, isPivot, isLong, linkTo, 
           )}
           {isPivot && <PivotTag>Pivot</PivotTag>}
           {textInout && <InOutTag>{textInout}</InOutTag>}
-          <UnitTag>{unit}</UnitTag>
+          {unit && <UnitTag>{unit}</UnitTag>}
         </div>
       </SingleLine>
     </div>

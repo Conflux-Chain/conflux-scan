@@ -137,7 +137,9 @@ class Detail extends Component {
                 </tr>
                 <tr className="">
                   <td className="collapsing">{i18n('Data')}</td>
-                  <td className="">{result.data}</td>
+                  <td className="" style={{ wordBreak: 'break-word' }}>
+                    {result.data}
+                  </td>
                 </tr>
                 <tr className="">
                   <td className="collapsing">{i18n('From')}</td>
