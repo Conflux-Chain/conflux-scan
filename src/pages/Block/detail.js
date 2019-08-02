@@ -273,7 +273,7 @@ class Detail extends Component {
     this.state = {
       blockhash: '',
       currentTab: 1,
-      TxTotalCount: 100,
+      TxTotalCount: 0,
       refereeBlockList: [],
       blockDetail: {},
       TxList: [],
@@ -405,6 +405,7 @@ class Detail extends Component {
             <div className="ui attached tabular menu">
               <button type="button" className={currentTab === 1 ? 'active item' : 'item'} onClick={() => this.setState({ currentTab: 1 })}>
                 {i18n('Transactions')}
+                {`(${TxTotalCount})`}
               </button>
               <button
                 className={currentTab === 2 ? 'active item' : 'item'}
@@ -415,6 +416,7 @@ class Detail extends Component {
                 }}
               >
                 {i18n('Reference Blocks')}
+                {`(${refereeBlockList.length})`}
               </button>
             </div>
 
