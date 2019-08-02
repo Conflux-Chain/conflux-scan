@@ -17,12 +17,13 @@ function Countdown(props) {
   let nowTime = moment(timestamp);
   const beforeTime = moment();
 
-  let yearUnit = beforeTime.diff(nowTime, 'years');
-  let monthUnit = beforeTime.subtract(yearUnit, 'years').diff(nowTime, 'months');
-  let dayUnit = beforeTime.subtract(monthUnit, 'months').diff(nowTime, 'days');
-  let hourUnit = beforeTime.subtract(dayUnit, 'days').diff(nowTime, 'hours');
-  let minuteUnit = beforeTime.subtract(hourUnit, 'hours').diff(nowTime, 'minutes');
-  let secondUnit = beforeTime.subtract(minuteUnit, 'minutes').diff(nowTime, 'seconds');
+  const yearUnit = beforeTime.diff(nowTime, 'years');
+  const monthUnit = beforeTime.diff(nowTime, 'months');
+  const dayUnit = beforeTime.diff(nowTime, 'days');
+
+  const hourUnit = beforeTime.diff(nowTime, 'hours');
+  const minuteUnit = beforeTime.subtract(hourUnit, 'hours').diff(nowTime, 'minutes');
+  const secondUnit = beforeTime.subtract(minuteUnit, 'minutes').diff(nowTime, 'seconds');
 
   let labelStr = '';
   if (yearUnit > 1) labelStr = locale === 'zh' ? `${yearUnit} 年前` : `${yearUnit} ${yearUnit === 1 ? 'year' : 'years'} ago`;
