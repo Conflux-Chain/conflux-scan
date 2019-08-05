@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/browser';
 import React, { Component, useState, useEffect } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { addLocaleData, IntlProvider } from 'react-intl';
@@ -19,6 +20,8 @@ import GlobalStyle from './globalStyles';
 
 import zhTranslationMessages from './lang/zh';
 import enTranslationMessages from './lang/en';
+
+Sentry.init({ dsn: 'https://f9be7624ef1045f98f022fdca9ad1cc5@sentry.conflux-chain.org/2' });
 
 require('./assets/iconfont/iconfont.js');
 
