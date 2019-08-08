@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "@babel/plugin-syntax-dynamic-import": "^7.2.0",
+    "@sentry/browser": "^5.5.0",
     "antd": "^3.19.1",
     "axios": "^0.18.0",
     "bignumber.js": "^9.0.0",
