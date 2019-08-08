@@ -293,7 +293,7 @@ class BlockAndTxn extends Component {
         dataIndex: 'gasPrice',
         title: 'Blocks',
         render: (text, row) => {
-          return <StyledLabel>{converToGasPrice3Fixed(row.value) + 'aaaaaaaaa CFX'}</StyledLabel>;
+          return <StyledLabel>{converToGasPrice3Fixed(row.value) + ' CFX'}</StyledLabel>;
         },
       },
     ];
