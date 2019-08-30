@@ -58,7 +58,7 @@ sudo cp -r .  /www/explorer-v2/conflux-scan/
               sh (label: 'start service', script: """
 cd service
 yarn stop-test || true
-yarn start-test
+JENKINS_NODE_COOKIE=dontKillMe yarn start-test
 """)
             }
           }
@@ -93,7 +93,7 @@ sudo cp -r . /www/explorer-v2/conflux-scan
               sh (label: 'start service', script: """
 cd service
 yarn stop || true
-yarn start
+JENKINS_NODE_COOKIE=dontKillMe yarn start
 """)
             }
           }
