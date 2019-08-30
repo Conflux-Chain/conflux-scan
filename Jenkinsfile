@@ -1,69 +1,103 @@
+/* -*- mode: groovy -*- */
+// dontKillMe
+// jenkins will kill any process spawned during the job
+// https://wiki.jenkins.io/display/JENKINS/ProcessTreeKiller
 pipeline {
-  agent {
-    node {
-      label 'master'
+  options {
+    buildDiscarder logRotator(artifactDaysToKeepStr: '30', artifactNumToKeepStr: '50', daysToKeepStr: '60', numToKeepStr: '50')
+    disableConcurrentBuilds()
+    disableResume()
+    durabilityHint 'PERFORMANCE_OPTIMIZED'
+    timestamps()
+  }
+
+  agent none
+
+  stages {
+    stage('test') {
+      agent {label 'bounty-frontend-test-machine'}
+      steps {
+        script {
+          sh (label: 'pre-build', script: "yarn")
+        }
+        script {
+          sh (label: 'lint', script: "yarn lint:eslint")
+        }
+      }
     }
 
-  }
-  stages {
-    stage('Build Dev') {
-      when {
-        branch 'dev'
-      }
-      steps {
-        sh (
-          script: '''
+    stage('multiple env') {
+      parallel {
+        stage('test env') {
+          when {
+            anyOf {
+              branch 'dev'
+              branch 'jenkins-pipeline'
+            }
+          }
+          agent {label 'bounty-backend-test-machine'}
+          steps {
+            script {
+              sh (label: 'pre-build', script: """
 yarn
-yarn build
 cd service
 yarn
-npm run stop-test || true
-npm run start-test
-''',
-          label: "yarn build"
-        )
-      }
-    }
-    stage('Build Master') {
-      when {
-        branch 'master'
-      }
-      steps {
-        sh (
-          script: '''
-yarn
-yarn build
-cd service
-yarn
-npm run stop || true
-npm run start
-''',
-          label: "yarn build"
-        )
-      }
-    }
-    stage('Deploy to test environment') {
-      when {
-        branch 'dev'
-      }
-      steps {
-        sh (script: '''
+""")
+            }
+            script {
+              sh (label: 'build', script: "yarn build")
+            }
+            script {
+              sh (label: 'move to nginx www', script: """
 sudo rm -rf /www/explorer-v2/conflux-scan
-sudo cp -r /var/lib/jenkins/workspace/conflux-scan_dev /www/explorer-v2/conflux-scan
-''' ,
-            label: 'replace old site with the newly built one')
-      }
-    }
-    stage('Deploy to production environment') {
-      when {
-        branch 'master'
-      }
-      steps {
-        input 'Deploy to production environment? (Click "Proceed" to continue)'
-        sh (
-          script: '''sudo scp /www/explorer-v2/conflux-scan centos@13.57.216.190:/www/explorer-v2/''',
-          label: 'scp test website to prod machine'
-        )
+sudo mkdir -p /www/explorer-v2/conflux-scan
+sudo cp -r .  /www/explorer-v2/conflux-scan/
+""")
+            }
+            script {
+              sh (label: 'start service', script: """
+cd service
+yarn stop-test || true
+yarn start-test
+""")
+            }
+          }
+        }
+
+        stage('prod env') {
+          when {
+            allOf {
+              branch 'master'
+            }
+          }
+          agent {label 'scan-wallet-prod-machine'}
+          steps {
+            script {
+              sh (label: 'pre-build', script: """
+yarn
+cd service
+yarn
+""")
+            }
+            script {
+              sh (label: 'build', script: "yarn build")
+            }
+            script {
+              sh (label: 'move to nginx www', script: """
+sudo rm -rf /www/explorer-v2/conflux-scan
+sudo mkdir /www/explorer-v2/conflux-scan
+sudo cp -r . /www/explorer-v2/conflux-scan
+""")
+            }
+            script {
+              sh (label: 'start service', script: """
+cd service
+yarn stop || true
+yarn start
+""")
+            }
+          }
+        }
       }
     }
   }
