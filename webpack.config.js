@@ -40,7 +40,7 @@ const cdnModules = [
   {
     name: 'moment',
     var: 'moment',
-    path: 'min/moment-with-locales.js',
+    path: 'min/moment-with-locales.min.js',
   },
   {
     name: 'styled-components',
@@ -51,6 +51,11 @@ const cdnModules = [
     name: 'echarts',
     var: 'echarts',
     path: 'dist/echarts.min.js',
+  },
+  {
+    name: 'intl',
+    var: 'Intl',
+    path: 'dist/Intl.min.js',
   },
 ];
 function cpFile(inFilePath, outFilePath) {
