@@ -145,12 +145,19 @@ class Home extends Component {
         hashRate: 'day',
       }),
       summary: Immutable.fromJS({}),
+      showMaintaining: false,
     };
   }
 
   componentDidMount() {
     this.fetchStatistic();
-    this.fetchLineData('tps', 'day');
+    this.fetchLineData('tps', 'day').then((result) => {
+      if (result.data.length === 0) {
+        this.setState({
+          showMaintaining: true,
+        });
+      }
+    });
     this.fetchLineData('difficulty', 'day');
     this.fetchLineData('blockTime', 'day');
     this.fetchLineData('hashRate', 'day');
@@ -183,6 +190,7 @@ class Home extends Component {
         data,
       });
     }
+    return result;
   }
 
   formatTrend(value) {
@@ -196,10 +204,15 @@ class Home extends Component {
   }
 
   render() {
-    const { data, duration, summary } = this.state;
+    const { data, duration, summary, showMaintaining } = this.state;
     const { intl } = this.props;
     return (
       <Container>
+        {showMaintaining && (
+          <div className="message message-important-light">
+            <span>{intl.formatMessage({ id: 'system maintaining, please visit later' })}</span>
+          </div>
+        )}
         <BlockContainer>
           <Block key="tps" width="216px" height="44px" url={dashboard1}>
             <span className="block-title">

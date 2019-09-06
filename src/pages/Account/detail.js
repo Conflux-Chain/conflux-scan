@@ -403,6 +403,7 @@ class Detail extends Component {
       },
       minedTotalCount: 0,
       curMinedPage: 1,
+      showMaintaining: false,
     };
   }
 
@@ -417,33 +418,40 @@ class Detail extends Component {
   async fetchAccountDetail(accountid, queries) {
     const { history } = this.props;
     this.setState({ isLoading: true, accountid });
-    const { code, result } = (await superagent.get(`/proxy/fetchAccountDetail/${accountid}`).query(queries)).body;
-    if (!code) {
-      this.setState(
-        {
-          accountDetail: result.find((item) => Object.keys(item)[0] === `account/${accountid}`)[`account/${accountid}`],
-          // TxList: result.find((item) => Object.keys(item)[0] === `account/${accountid}/transactionList`)[
-          //   `account/${accountid}/transactionList`
-          // ],
-          TxList: get(
-            result.find((item) => Object.keys(item)[0] === `account/${accountid}/transactionList`),
-            `account/${accountid}/transactionList`,
-            []
-          ),
-          TxTotalCount: get(
-            result.find((item) => Object.keys(item)[0] === `account/${accountid}/transactionList`),
-            `total_account/${accountid}/transactionList`,
-            []
-          ),
-          minedTotalCount:
-            get(result.find((item) => Object.keys(item)[0] === `account/${accountid}`), [`account/${accountid}`, 'minedBlocks']) || 0,
-        },
-        () => {
-          this.setState({ isLoading: false, queries });
-        }
-      );
-    } else if (code === 1) {
-      history.push(`/search-notfound?searchId=${accountid}`);
+
+    try {
+      const { code, result } = (await superagent.get(`/proxy/fetchAccountDetail/${accountid}`).query(queries)).body;
+      if (!code) {
+        this.setState(
+          {
+            accountDetail: result.find((item) => Object.keys(item)[0] === `account/${accountid}`)[`account/${accountid}`],
+            // TxList: result.find((item) => Object.keys(item)[0] === `account/${accountid}/transactionList`)[
+            //   `account/${accountid}/transactionList`
+            // ],
+            TxList: get(
+              result.find((item) => Object.keys(item)[0] === `account/${accountid}/transactionList`),
+              `account/${accountid}/transactionList`,
+              []
+            ),
+            TxTotalCount: get(
+              result.find((item) => Object.keys(item)[0] === `account/${accountid}/transactionList`),
+              `total_account/${accountid}/transactionList`,
+              []
+            ),
+            minedTotalCount:
+              get(result.find((item) => Object.keys(item)[0] === `account/${accountid}`), [`account/${accountid}`, 'minedBlocks']) || 0,
+          },
+          () => {
+            this.setState({ isLoading: false, queries });
+          }
+        );
+      } else if (code === 1) {
+        history.push(`/search-notfound?searchId=${accountid}`);
+      }
+    } catch (e) {
+      this.setState({
+        showMaintaining: true,
+      });
     }
     return {};
   }
@@ -482,6 +490,7 @@ class Detail extends Component {
       accountid,
       minedTotalCount,
       curMinedPage,
+      showMaintaining,
     } = this.state;
     const {
       intl,
@@ -568,6 +577,11 @@ class Detail extends Component {
 
     return (
       <div className="page-address-detail">
+        {showMaintaining && (
+          <div className="message message-important-light">
+            <span>{intl.formatMessage({ id: 'system maintaining, please visit after 9/9' })}</span>
+          </div>
+        )}
         <Wrapper>
           <HeadBar>
             <h1>{i18n('Account')}</h1>
