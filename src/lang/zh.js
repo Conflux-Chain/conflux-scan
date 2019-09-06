@@ -137,4 +137,5 @@ export default {
   'app.directory.topholders.desc': '保证社区的公开与透明',
   'app.directory.community.title': '社区',
   'app.directory.community.desc': '成为下一代去中心化社区的一员',
+  'system maintaining, please visit later': '系统维护中，请稍后访问',
 };

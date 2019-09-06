@@ -96,5 +96,19 @@ const BaseStyle = css`
     padding: 5px 10px;
     z-index: 99999;
   }
+
+  .message {
+    padding: 12px;
+    font-size: 16px;
+    line-height: 16px;
+    border-radius: 4px;
+    color: #fff;
+    position: relative;
+    z-index: 9999;
+  }
+  .message-important-light {
+    background: #ffebd4;
+    color: #e76a25;
+  }
 `;
 export default BaseStyle;
