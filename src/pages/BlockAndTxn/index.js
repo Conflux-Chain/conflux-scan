@@ -131,22 +131,36 @@ class BlockAndTxn extends Component {
     clearInterval(this.timerId);
   }
 
-  async fetchInitList() {
-    const { code, result } = (await sendRequest({
-      url: '/proxy/fetchInitBlockandTxList',
+  fetchInitList() {
+    sendRequest({
+      url: '/api/block/list',
       query: {
         pageNum: 1,
         pageSize: 10,
       },
-    })).body;
-    if (!code) {
-      this.setState({
-        showLoading: false,
-        BlockList: result.find((item) => Object.keys(item)[0] === 'block/list')['block/list'] || [],
-        TxList: result.find((item) => Object.keys(item)[0] === 'transaction/list')['transaction/list'] || [],
-        plusTimeCount: 0,
-      });
-    }
+    }).then((res) => {
+      if (res.body.code === 0) {
+        this.setState({
+          showLoading: false,
+          BlockList: res.body.result.data,
+        });
+      }
+    });
+
+    sendRequest({
+      url: '/api/transaction/list',
+      query: {
+        pageNum: 1,
+        pageSize: 10,
+      },
+    }).then((res) => {
+      if (res.body.code === 0) {
+        this.setState({
+          TxList: res.body.result.data,
+          plusTimeCount: 0,
+        });
+      }
+    });
   }
 
   render() {

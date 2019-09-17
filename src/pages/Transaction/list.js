@@ -6,7 +6,7 @@ import DataList from '../../components/DataList';
 import Countdown from '../../components/Countdown';
 import TableLoading from '../../components/TableLoading';
 import EllipsisLine from '../../components/EllipsisLine';
-import { convertToValueorFee, converToGasPrice, i18n } from '../../utils';
+import { convertToValueorFee, converToGasPrice, i18n, sendRequest } from '../../utils';
 import media from '../../globalStyles/media';
 import ConfirmSimple from '../../components/ConfirmSimple';
 import * as commonCss from '../../globalStyles/common';
@@ -164,7 +164,7 @@ class List extends Component {
     curPageBase = this.state.curPage;
   }
 
-  async fetchTxList({ activePage }) {
+  fetchTxList({ activePage }) {
     if (activePage > 10000) {
       this.setState({
         confirmOpen: true,
@@ -172,19 +172,24 @@ class List extends Component {
       return;
     }
     this.setState({ isLoading: true });
-    const { code, result } = (await superagent.get(`/proxy/fetchInitBlockandTxList?pageNum=${activePage}&pageSize=10`)).body;
-    if (!code) {
-      this.setState(
-        {
-          TxList: result.find((item) => Object.keys(item)[0] === 'transaction/list')['transaction/list'],
-          TotalCount: result.find((item) => Object.keys(item)[0] === 'transaction/list')['total_transaction/list'],
-        },
-        () => {
-          this.setState({ isLoading: false, curPage: activePage });
-          document.dispatchEvent(new Event('scroll-to-top'));
-        }
-      );
-    }
+
+    sendRequest({
+      url: '/api/transaction/list',
+      query: {
+        pageNum: activePage,
+        pageSize: 10,
+      },
+    }).then((res) => {
+      if (res.body.code === 0) {
+        this.setState({
+          TxList: res.body.result.data,
+          TotalCount: res.body.result.total,
+          curPage: activePage,
+        });
+        document.dispatchEvent(new Event('scroll-to-top'));
+      }
+      this.setState({ isLoading: false });
+    });
   }
 
   render() {

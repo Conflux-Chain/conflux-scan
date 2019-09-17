@@ -176,7 +176,7 @@ export const sendRequest = (config) => {
     });
 
   reqPromise.then((result) => {
-    if (result.body.code !== 0) {
+    if (result.body.code !== 0 && config.showError !== false) {
       let title;
       switch (result.body.code) {
         case 1:

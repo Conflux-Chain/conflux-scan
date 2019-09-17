@@ -134,30 +134,28 @@ class SearchBox extends Component {
 
       if (filterValue === 0) {
         try {
-          const { code, result } = (await superagent.get(`/proxy/fetchHashType/${value}`)).body;
+          const { code, result } = (await superagent.get(`/api/util/type/${value}`)).body;
           if (code !== 0) {
             history.push(`/search-notfound?searchId=${value}`);
             hideLoading();
             return;
           }
-          if (typeof result !== 'undefined') {
-            switch (result) {
-              case 0:
-                history.push(`/blocksdetail/${value}`);
-                break;
-              case 1:
-                history.push(`/transactionsdetail/${value}`);
-                break;
-              case 2:
-                history.push(`/accountdetail/${value}`);
-                break;
-              case 3:
-                history.push(`/epochsdetail/${value}`);
-                break;
-              default:
-                console.log('unknow case');
-                break;
-            }
+          switch (result.data) {
+            case 0:
+              history.push(`/blocksdetail/${value}`);
+              break;
+            case 1:
+              history.push(`/transactionsdetail/${value}`);
+              break;
+            case 2:
+              history.push(`/accountdetail/${value}`);
+              break;
+            case 3:
+              history.push(`/epochsdetail/${value}`);
+              break;
+            default:
+              console.log('unknow case');
+              break;
           }
         } catch (e) {
           console.log(e);
