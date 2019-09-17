@@ -202,13 +202,7 @@ module.exports = {
       }),
     ],
     splitChunks: {
-      cacheGroups: {
-        commons: {
-          name: 'commons',
-          chunks: 'initial',
-          minChunks: 2,
-        },
-      },
+      chunks: 'all',
     },
   },
 };

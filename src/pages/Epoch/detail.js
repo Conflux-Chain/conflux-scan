@@ -10,7 +10,7 @@ import EllipsisLine from '../../components/EllipsisLine';
 import Countdown from '../../components/Countdown';
 import media from '../../globalStyles/media';
 import * as commonCss from '../../globalStyles/common';
-import { i18n } from '../../utils';
+import { i18n, sendRequest } from '../../utils';
 
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -166,28 +166,23 @@ class Detail extends Component {
   }
 
   async fetchInitList({ epochid, curPage }) {
-    const { history } = this.props;
     this.setState({ isLoading: true });
-    const { code, result } = (await superagent.get(`/proxy/fetchEpochList?pageNum=${curPage}&pageSize=10&epochNum=${epochid}`)).body;
-    if (!code) {
-      this.setState(
-        {
-          BlockList: result.find((item) => Object.keys(item)[0] === 'block/list')['block/list'],
-          totalCount: result.find((item) => {
-            return item['total_block/list'];
-          })['total_block/list'],
-          curPage,
-        },
-        () => {
-          this.setState({
-            isLoading: false,
-          });
-        }
-      );
-    } else if (code === 1) {
-      history.push(`/search-notfound?searchId=${epochid}`);
-    }
-    this.setState({ isLoading: false });
+    const reqBlockList = sendRequest({
+      url: '/api/block/list',
+      query: {
+        pageNum: curPage,
+        pageSize: 10,
+        epochNum: epochid,
+      },
+    });
+    reqBlockList.then((res) => {
+      this.setState({
+        BlockList: res.body.result.data,
+        totalCount: res.body.result.total,
+        isLoading: false,
+        curPage,
+      });
+    });
   }
 
   render() {

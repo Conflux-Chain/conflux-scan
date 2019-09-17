@@ -14,7 +14,7 @@ import DataList from '../../components/DataList';
 import Countdown from '../../components/Countdown';
 import TableLoading from '../../components/TableLoading';
 import EllipsisLine from '../../components/EllipsisLine';
-import { convertToValueorFee, converToGasPrice, i18n } from '../../utils';
+import { convertToValueorFee, converToGasPrice, i18n, sendRequest } from '../../utils';
 import CopyButton from '../../components/CopyButton';
 import QrcodeButton from '../../components/QrcodeButton';
 import * as commonCss from '../../globalStyles/common';
@@ -415,67 +415,60 @@ class Detail extends Component {
     this.fetchAccountDetail(params.accountid, queries);
   }
 
-  async fetchAccountDetail(accountid, queries) {
+  fetchAccountDetail(accountid, queries) {
     const { history } = this.props;
     this.setState({ isLoading: true, accountid });
 
-    try {
-      const { code, result } = (await superagent.get(`/proxy/fetchAccountDetail/${accountid}`).query(queries)).body;
-      if (!code) {
-        this.setState(
-          {
-            accountDetail: result.find((item) => Object.keys(item)[0] === `account/${accountid}`)[`account/${accountid}`],
-            // TxList: result.find((item) => Object.keys(item)[0] === `account/${accountid}/transactionList`)[
-            //   `account/${accountid}/transactionList`
-            // ],
-            TxList: get(
-              result.find((item) => Object.keys(item)[0] === `account/${accountid}/transactionList`),
-              `account/${accountid}/transactionList`,
-              []
-            ),
-            TxTotalCount: get(
-              result.find((item) => Object.keys(item)[0] === `account/${accountid}/transactionList`),
-              `total_account/${accountid}/transactionList`,
-              []
-            ),
-            minedTotalCount:
-              get(result.find((item) => Object.keys(item)[0] === `account/${accountid}`), [`account/${accountid}`, 'minedBlocks']) || 0,
-          },
-          () => {
-            this.setState({ isLoading: false, queries });
-          }
-        );
-      } else if (code === 1) {
+    sendRequest({
+      url: `/api/account/${accountid}`,
+      query: {},
+    }).then((res) => {
+      if (res.body.code === 0) {
+        this.setState({
+          accountDetail: res.body.result.data,
+          minedTotalCount: res.body.result.data.minedBlocks,
+          isLoading: false,
+        });
+      } else if (res.body.code === 1) {
         history.push(`/search-notfound?searchId=${accountid}`);
+      } else {
+        this.setState({
+          showMaintaining: true,
+          isLoading: false,
+        });
       }
-    } catch (e) {
+    });
+
+    sendRequest({
+      url: `/api/account/${accountid}/transactionList`,
+      query: {
+        ...queries,
+      },
+    }).then((res) => {
       this.setState({
-        showMaintaining: true,
+        TxList: res.body.result.data,
+        TxTotalCount: res.body.result.total,
       });
-    }
-    return {};
+    });
   }
 
-  async fetchMinedBlockList(accountid, curMinedPage) {
+  fetchMinedBlockList(accountid, curMinedPage) {
     this.setState({ isLoading: true });
-    const { code, result } = (await superagent.get(`/proxy/fetchMinedBlockList/${accountid}?pageNum=${curMinedPage}&pageSize=10`)).body;
-    if (!code) {
-      this.setState(
-        {
-          minedBlockList: result.find((item) => Object.keys(item)[0] === `account/${accountid}/minedBlockList`)[
-            `account/${accountid}/minedBlockList`
-          ],
-        },
-        () => {
-          this.setState({
-            isLoading: false,
-            curMinedPage,
-          });
-        }
-      );
-    }
-    this.setState({ isLoading: false });
-    return {};
+    sendRequest({
+      url: `/api/account/${accountid}/minedBlockList`,
+      query: {
+        pageNum: curMinedPage,
+        pageSize: 10,
+      },
+    }).then((res) => {
+      if (res.body.code === 0) {
+        this.setState({
+          minedBlockList: res.body.result.data,
+          isLoading: false,
+          curMinedPage,
+        });
+      }
+    });
   }
 
   render() {
@@ -579,7 +572,7 @@ class Detail extends Component {
       <div className="page-address-detail">
         {showMaintaining && (
           <div className="message message-important-light">
-            <span>{intl.formatMessage({ id: 'system maintaining, please visit after 9/9' })}</span>
+            <span>{intl.formatMessage({ id: 'system maintaining, please visit later' })}</span>
           </div>
         )}
         <Wrapper>

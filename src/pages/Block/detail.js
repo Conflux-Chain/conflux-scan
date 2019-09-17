@@ -10,7 +10,7 @@ import Countdown from '../../components/Countdown';
 import TableLoading from '../../components/TableLoading';
 import DataList from '../../components/DataList';
 import EllipsisLine from '../../components/EllipsisLine';
-import { convertToValueorFee, converToGasPrice, i18n } from '../../utils';
+import { convertToValueorFee, converToGasPrice, i18n, sendRequest } from '../../utils';
 import media from '../../globalStyles/media';
 import * as commonCss from '../../globalStyles/common';
 
@@ -268,10 +268,13 @@ const RefColumns = [
 ];
 
 class Detail extends Component {
-  constructor() {
-    super();
+  constructor(...args) {
+    super(...args);
+    const {
+      match: { params },
+    } = this.props;
     this.state = {
-      blockhash: '',
+      blockhash: params.blockhash,
       currentTab: 1,
       TxTotalCount: 0,
       refereeBlockList: [],
@@ -286,45 +289,65 @@ class Detail extends Component {
     const {
       match: { params },
     } = this.props;
-    this.fetchTxDetail(params.blockhash, { activePage: 1 });
+    this.fetchBlockDetail(params.blockhash, { activePage: 1 });
+    this.fetchReffereBlock(params.blockhash);
   }
 
-  async fetchTxDetail(blockHash, { activePage }) {
+  fetchBlockDetail(blockHash, { activePage }) {
     const { history } = this.props;
     this.setState({ isLoading: true, blockhash: blockHash });
-    const { code, result } = (await superagent.get(`/proxy/fetchBlockDetail/${blockHash}?pageNum=${activePage}&pageSize=10`)).body;
-    if (!code) {
-      this.setState(
-        {
-          blockDetail: result.find((item) => Object.keys(item)[0] === `block/${blockHash}`)[`block/${blockHash}`],
-          TxList: result.find((item) => Object.keys(item)[0] === `block/${blockHash}/transactionList`)[
-            `block/${blockHash}/transactionList`
-          ],
-          TxTotalCount: result.find((item) => Object.keys(item)[0] === `block/${blockHash}/transactionList`)[
-            `total_block/${blockHash}/transactionList`
-          ],
-        },
-        () => this.setState({ isLoading: false, curPage: activePage })
-      );
-    } else if (code === 1) {
-      history.push(`/search-notfound?searchId=${blockHash}`);
-    }
+
+    sendRequest({
+      url: `/api/block/${blockHash}`,
+      query: {},
+      showError: false,
+    }).then((res) => {
+      if (res.body.code === 0) {
+        this.setState({
+          blockDetail: res.body.result.data,
+          isLoading: false,
+        });
+      } else if (res.body.code === 1) {
+        history.push(`/search-notfound?searchId=${blockHash}`);
+      }
+    });
+
+    sendRequest({
+      url: `/api/block/${blockHash}/transactionList`,
+      query: {
+        pageNum: activePage,
+        pageSize: 10,
+      },
+      showError: false,
+    }).then((res) => {
+      if (res.body.code === 0) {
+        this.setState({
+          TxList: res.body.result.data,
+          TxTotalCount: res.body.result.total,
+          curPage: activePage,
+        });
+      }
+    });
   }
 
-  async fetchReffereBlock(blockHash) {
+  fetchReffereBlock(blockHash) {
     this.setState({ isLoading: true });
-    const { code, result } = (await superagent.get(`/proxy/fetchRefereeBlockList/${blockHash}?pageNum=1&pageSize=20`)).body;
-    if (!code) {
-      this.setState(
-        {
-          refereeBlockList: result.find((item) => Object.keys(item)[0] === `block/${blockHash}/refereeBlockList`)[
-            `block/${blockHash}/refereeBlockList`
-          ],
-        },
-        () => this.setState({ isLoading: false })
-      );
-    }
-    return {};
+
+    sendRequest({
+      url: `/api/block/${blockHash}/refereeBlockList`,
+      query: {
+        pageNum: 1,
+        pageSize: 20,
+      },
+      showError: false,
+    }).then((res) => {
+      if (res.body.code === 0) {
+        this.setState({
+          refereeBlockList: res.body.result.data,
+          isLoading: false,
+        });
+      }
+    });
   }
 
   render() {
@@ -334,7 +357,7 @@ class Detail extends Component {
     } = this.props;
 
     if (blockhash !== params.blockhash) {
-      this.fetchTxDetail(params.blockhash, { activePage: 1 });
+      this.fetchBlockDetail(params.blockhash, { activePage: 1 });
     }
 
     // console.log(refereeBlockList, '===refereeBlockList');
@@ -411,7 +434,6 @@ class Detail extends Component {
                 className={currentTab === 2 ? 'active item' : 'item'}
                 type="button"
                 onClick={() => {
-                  this.fetchReffereBlock(params.blockhash);
                   this.setState({ currentTab: 2 });
                 }}
               >
@@ -442,7 +464,7 @@ class Detail extends Component {
                       }}
                       onPageChange={(e, data) => {
                         e.preventDefault();
-                        this.fetchTxDetail(params.blockhash, data);
+                        this.fetchBlockDetail(params.blockhash, data);
                       }}
                       activePage={curPage}
                       totalPages={Math.ceil(TxTotalCount / 10)}
@@ -462,7 +484,7 @@ class Detail extends Component {
                       activePage={curPage}
                       onPageChange={(e, data) => {
                         e.preventDefault();
-                        this.fetchTxDetail(params.blockhash, data);
+                        this.fetchBlockDetail(params.blockhash, data);
                       }}
                       ellipsisItem={null}
                       firstItem={null}
