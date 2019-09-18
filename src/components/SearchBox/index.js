@@ -243,6 +243,7 @@ class SearchBox extends Component {
 SearchBox.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func,
+    listen: PropTypes.func,
   }).isRequired,
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,

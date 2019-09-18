@@ -43,6 +43,7 @@ Countdown.propTypes = {
   timestamp: PropTypes.number,
   intl: PropTypes.shape({
     lang: PropTypes.string,
+    locale: PropTypes.string,
   }),
 };
 Countdown.defaultProps = {
