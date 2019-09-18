@@ -1,0 +1,26 @@
+{
+  "name": "conflux-scan",
+  "version": 2,
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@now/static-build"
+    },
+    { "src": "dist/**/*", "use": "@now/static" }
+  ],
+  "routes": [
+    {
+      "src": "/api/(?<req>.*)",
+      "dest": "http://testnet-jsonrpc.conflux-chain.org:18084/$req"
+    },
+    {
+      "src": "/proxy/(?<req>.*)",
+      "dest": "http://47.56.125.214:8002/$req"
+    }
+  ],
+  "github": {
+    "enabled": true,
+    "autoAlias": false,
+    "silent": false
+  }
+}
