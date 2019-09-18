@@ -3,10 +3,33 @@
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>Conflux</title>
+    <title>Conflux Blockchain Explorer</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="icon" type="image/png" href="/logo-icon.png" />
+    <% htmlWebpackPlugin.files.css.forEach((str) => { %>
+    <link href="<%= str %>" rel="stylesheet" />
+    <% }); %>
   </head>
-  <body>
+  <body ontouchstart="">
+  <!--1[if IE]><div class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.<br>您正在使用 <strong>过时的</strong> IE浏览器，请 <a href="https://browsehappy.com/">更新您的浏览器</a> 以获取更加的体验，强烈推荐使用<a href="https://www.google.cn/intl/zh-CN/chrome/">谷歌浏览器</a></div><![endif]-->
     <div id="root"></div>
+    <% htmlWebpackPlugin.files.js.forEach((str) => { %>
+    <script src="<%= str %>"></script>
+    <% if (str.indexOf('cdn.jsdelivr.net') !== -1) { %>
+    <script>window.React || document.write('<script src="./vendor.js"></' + 'script>');</script>
+    <% }
+    }); %>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139857640-2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-139857640-2');
+  </script>
   </body>
 </html>

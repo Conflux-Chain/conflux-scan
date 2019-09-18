@@ -4,6 +4,9 @@
 # production
 /dist
 
+/service/node_modules
+
 # misc
 .DS_Store
-npm-debug.log*
+yarn-error.log
+npm-debug.log

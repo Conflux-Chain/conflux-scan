@@ -1,10 +1,12 @@
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const merge = require('webpack-merge');
+const WebpackCdnPlugin = require('webpack-cdn-plugin');
 const commom = require('./webpack.config.js');
 
 module.exports = merge(commom, {
   mode: 'production',
   devtool: 'source-map',
+  plugins: [],
   optimization: {
     minimizer: [
       new UglifyJsPlugin({
@@ -14,16 +16,16 @@ module.exports = merge(commom, {
           warnings: false,
           parse: {},
           compress: {
-            drop_console: true
+            drop_console: true,
           },
           mangle: true,
           output: null,
           toplevel: false,
           nameCache: null,
           ie8: false,
-          keep_fnames: false
-        }
-      })
-    ]
-  }
+          keep_fnames: false,
+        },
+      }),
+    ],
+  },
 });

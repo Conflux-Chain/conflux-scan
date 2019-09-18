@@ -7,8 +7,9 @@
     "es6": true,
     "mocha": true
   },
+  "parser": "babel-eslint",
   "parserOptions": {
-    "ecmaVersion": 6,
+    "ecmaVersion": 2018,
     "sourceType": "module",
     "ecmaFeatures": {
       "globalReturn": true,
@@ -20,16 +21,24 @@
   "plugins": [
     "react"
   ],
-  "extends": "airbnb",
+  "extends": [
+    "airbnb",
+    "plugin:prettier/recommended",
+    "prettier/flowtype",
+    "prettier/react",
+    "prettier/standard"
+  ],
 
 
   "rules": {
-    "max-len": [1, 200],
     "dot-notation": [0, {
       "allowKeywords": false
     }],
-    "arrow-body-style": [1, "always"],
     "no-console": 0,
+    "no-unused-vars": 1,
+    "no-restricted-globals": 0,
+    "no-plusplus": 0,
+    "class-methods-use-this": 0,
     "no-extra-parens": 0,
     "no-script-url": 0,
     "no-path-concat": 0,
@@ -43,8 +52,6 @@
     "jsx-a11y/alt-text": 0,
     "jsx-a11y/anchor-is-valid": 0,
     "prefer-destructuring": 0,
-    "react/no-array-index-key": 0,
-    "react/jsx-closing-bracket-location": [1, "line-aligned"],
-    "react/jsx-one-expression-per-line": [1, { "allow": "single-child" }]
+    "react/no-array-index-key": 0
   }
 }
