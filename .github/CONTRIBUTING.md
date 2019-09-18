@@ -51,7 +51,7 @@ Please use yarn instead of npm.
 
 ``` bash
 # serve watch and auto re-build the site
-$ yarn dev
+$ yarn start
 
 # watch and auto re-run unit tests
 $ yarn test:watch
@@ -59,8 +59,8 @@ $ yarn test:watch
 # build the site
 $ yarn build
 
-# run the full test suite, including linting
-$ yarn test
+# start a proxy server to compunicate with fullnode
+$ yarn server:dev
 ```
 
 There are some other scripts available in the `scripts` section of the `package.json` file.
@@ -68,8 +68,6 @@ There are some other scripts available in the `scripts` section of the `package.
 The default test script will do the following: lint with ESLint -> unit tests with coverage. **Please make sure to have this pass successfully before submitting a PR.** Although the same tests will be run against your PR on the CI server, it is better to have it working locally.
 
 ## Project Structure
-
-- **`scripts`**: contains build-related scripts and configuration files. Usually, you don't need to touch them.
 
 - **`build`**: contains built files for deploy. Note this directory shouldn't be checked into version control.
 
