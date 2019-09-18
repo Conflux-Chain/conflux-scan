@@ -6,7 +6,7 @@ import superagent from 'superagent';
 import moment from 'moment';
 import TableLoading from '../../components/TableLoading';
 import media from '../../globalStyles/media';
-import { i18n, renderAny } from '../../utils';
+import { i18n, renderAny, sendRequest } from '../../utils';
 
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -94,20 +94,30 @@ class Detail extends Component {
     this.fetchTxDetail(params.txnhash);
   }
 
-  async fetchTxDetail(txnhash) {
+  fetchTxDetail(txnhash) {
     const { history } = this.props;
     this.setState({ isLoading: true, txnhash });
-    const { code, result } = (await superagent.get(`/proxy/fetchTxDetail?transactionHash=${txnhash}`).catch((e) => {
-      window.location.href = `/notfoundtx?searchId=${txnhash}`;
-    })).body;
-    if (!code) {
-      this.setState({ result }, () => this.setState({ isLoading: false }));
-    } else if (code === 4) {
-      history.push(`/notfoundtx?searchId=${txnhash}`);
-    } else if (code === 1) {
-      history.push(`/search-notfound?searchId=${txnhash}`);
-    }
-    return {};
+    return sendRequest({
+      url: `/api/transaction/${txnhash}`,
+      query: {},
+      showError: false,
+    }).then((res) => {
+      switch (res.body.code) {
+        case 1:
+          history.push(`/search-notfound?searchId=${txnhash}`);
+          break;
+        case 4:
+          history.push(`/notfoundtx?searchId=${txnhash}`);
+          break;
+        case 0:
+        default:
+          this.setState({
+            result: res.body.result.data,
+            isLoading: false,
+          });
+          break;
+      }
+    });
   }
 
   render() {
