@@ -101,8 +101,15 @@ document.addEventListener('hide-nav-bar', () => {
   }
 });
 
+let curLang = navigator.language;
+if (curLang.indexOf('zh') === 0) {
+  curLang = 'zh';
+} else {
+  curLang = 'en';
+}
+
 function App() {
-  const [lang, setLang] = useState('en');
+  const [lang, setLang] = useState(curLang);
   const [showNavbar, setShowNavbar] = useState(false);
   setShowNavbarGlobal = setShowNavbar;
 

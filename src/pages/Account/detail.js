@@ -14,7 +14,7 @@ import DataList from '../../components/DataList';
 import Countdown from '../../components/Countdown';
 import TableLoading from '../../components/TableLoading';
 import EllipsisLine from '../../components/EllipsisLine';
-import { convertToValueorFee, converToGasPrice, i18n, sendRequest } from '../../utils';
+import { convertToValueorFee, converToGasPrice, i18n, sendRequest, renderAny } from '../../utils';
 import CopyButton from '../../components/CopyButton';
 import QrcodeButton from '../../components/QrcodeButton';
 import * as commonCss from '../../globalStyles/common';
@@ -415,6 +415,18 @@ class Detail extends Component {
     this.fetchAccountDetail(params.accountid, queries);
   }
 
+  componentDidUpdate(prevProps) {
+    // eslint-disable-next-line react/destructuring-assignment
+    if (this.props.match.params.accountid !== prevProps.match.params.accountid) {
+      // eslint-disable-next-line react/destructuring-assignment
+      this.fetchAccountDetail(this.props.match.params.accountid, {
+        pageNum: 1,
+        pageSize: 10,
+        txnType: 'all',
+      });
+    }
+  }
+
   fetchAccountDetail(accountid, queries) {
     const { history } = this.props;
     this.setState({ isLoading: true, accountid });
@@ -448,7 +460,26 @@ class Detail extends Component {
       this.setState({
         TxList: res.body.result.data,
         TxTotalCount: res.body.result.total,
+        queries,
       });
+    });
+  }
+
+  changePage(accountid, queries) {
+    this.setState({ isLoading: true });
+    sendRequest({
+      url: `/api/account/${accountid}/transactionList`,
+      query: {
+        ...queries,
+      },
+    }).then((res) => {
+      this.setState({
+        TxList: res.body.result.data,
+        TxTotalCount: res.body.result.total,
+        queries,
+      });
+      this.setState({ isLoading: false });
+      document.dispatchEvent(new Event('scroll-to-top'));
     });
   }
 
@@ -489,9 +520,6 @@ class Detail extends Component {
       intl,
       match: { params },
     } = this.props;
-    if (accountid !== params.accountid) {
-      this.fetchAccountDetail(params.accountid, queries);
-    }
 
     const columns = [
       {
@@ -684,14 +712,14 @@ class Detail extends Component {
                     if (!value.length) {
                       delete queries.startTime;
                       delete queries.endTime;
-                      this.fetchAccountDetail(params.accountid, queries);
+                      this.changePage(params.accountid, queries);
                     }
                   }}
                   onOk={(value) => {
                     if (value.length) {
                       const startTime = value[0].unix();
                       const endTime = value[1].unix();
-                      this.fetchAccountDetail(params.accountid, { ...queries, startTime, endTime, pageNum: 1 });
+                      this.changePage(params.accountid, { ...queries, startTime, endTime, pageNum: 1 });
                     }
                   }}
                 />
@@ -712,7 +740,7 @@ class Detail extends Component {
                       value="all"
                       onClick={(e, data) => {
                         e.preventDefault();
-                        this.fetchAccountDetail(params.accountid, { ...queries, txnType: data.value, pageNum: 1 });
+                        this.changePage(params.accountid, { ...queries, txnType: data.value, pageNum: 1 });
                       }}
                     />
                     <Dropdown.Item
@@ -720,7 +748,7 @@ class Detail extends Component {
                       value="outgoing"
                       onClick={(e, data) => {
                         e.preventDefault();
-                        this.fetchAccountDetail(params.accountid, { ...queries, txnType: data.value, pageNum: 1 });
+                        this.changePage(params.accountid, { ...queries, txnType: data.value, pageNum: 1 });
                       }}
                     />
                     <Dropdown.Item
@@ -728,7 +756,7 @@ class Detail extends Component {
                       value="incoming"
                       onClick={(e, data) => {
                         e.preventDefault();
-                        this.fetchAccountDetail(params.accountid, { ...queries, txnType: data.value, pageNum: 1 });
+                        this.changePage(params.accountid, { ...queries, txnType: data.value, pageNum: 1 });
                       }}
                     />
                   </Dropdown.Menu>
@@ -742,49 +770,56 @@ class Detail extends Component {
                     </div>
                   </div>
                 </StyledTabel>
-                <TabWrapper>
-                  <div className="page-pc">
-                    <Pagination
-                      prevItem={{
-                        'aria-label': 'Previous item',
-                        content: i18n('lastPage'),
-                      }}
-                      nextItem={{
-                        'aria-label': 'Next item',
-                        content: i18n('nextPage'),
-                      }}
-                      onPageChange={(e, data) => {
-                        e.preventDefault();
-                        this.fetchAccountDetail(params.accountid, { ...queries, pageNum: data.activePage });
-                      }}
-                      activePage={queries.pageNum}
-                      totalPages={Math.ceil(TxTotalCount / 10)}
-                    />
-                  </div>
-                  <div className="page-h5">
-                    <Pagination
-                      prevItem={{
-                        'aria-label': 'Previous item',
-                        content: i18n('lastPage'),
-                      }}
-                      nextItem={{
-                        'aria-label': 'Next item',
-                        content: i18n('nextPage'),
-                      }}
-                      boundaryRange={0}
-                      activePage={queries.pageNum}
-                      onPageChange={(e, data) => {
-                        e.preventDefault();
-                        this.fetchAccountDetail(params.accountid, { ...queries, pageNum: data.activePage });
-                      }}
-                      ellipsisItem={null}
-                      firstItem={null}
-                      lastItem={null}
-                      siblingRange={1}
-                      totalPages={Math.ceil(TxTotalCount / 10)}
-                    />
-                  </div>
-                </TabWrapper>
+                {renderAny(() => {
+                  if (!TxTotalCount) {
+                    return null;
+                  }
+                  return (
+                    <TabWrapper>
+                      <div className="page-pc">
+                        <Pagination
+                          prevItem={{
+                            'aria-label': 'Previous item',
+                            content: i18n('lastPage'),
+                          }}
+                          nextItem={{
+                            'aria-label': 'Next item',
+                            content: i18n('nextPage'),
+                          }}
+                          onPageChange={(e, data) => {
+                            e.preventDefault();
+                            this.changePage(params.accountid, { ...queries, pageNum: data.activePage });
+                          }}
+                          activePage={queries.pageNum}
+                          totalPages={Math.ceil(TxTotalCount / 10)}
+                        />
+                      </div>
+                      <div className="page-h5">
+                        <Pagination
+                          prevItem={{
+                            'aria-label': 'Previous item',
+                            content: i18n('lastPage'),
+                          }}
+                          nextItem={{
+                            'aria-label': 'Next item',
+                            content: i18n('nextPage'),
+                          }}
+                          boundaryRange={0}
+                          activePage={queries.pageNum}
+                          onPageChange={(e, data) => {
+                            e.preventDefault();
+                            this.changePage(params.accountid, { ...queries, pageNum: data.activePage });
+                          }}
+                          ellipsisItem={null}
+                          firstItem={null}
+                          lastItem={null}
+                          siblingRange={1}
+                          totalPages={Math.ceil(TxTotalCount / 10)}
+                        />
+                      </div>
+                    </TabWrapper>
+                  );
+                })}
               </TabPanel>
               <TabPanel className={currentTab === 2 ? 'ui bottom attached segment active tab' : 'ui bottom attached segment tab'}>
                 <StyledTabel>
@@ -794,50 +829,56 @@ class Detail extends Component {
                     </div>
                   </div>
                 </StyledTabel>
-
-                <MinedWrap>
-                  <div className="page-pc">
-                    <Pagination
-                      prevItem={{
-                        'aria-label': 'Previous item',
-                        content: i18n('lastPage'),
-                      }}
-                      nextItem={{
-                        'aria-label': 'Next item',
-                        content: i18n('nextPage'),
-                      }}
-                      onPageChange={(e, data) => {
-                        e.preventDefault();
-                        this.fetchMinedBlockList(params.accountid, data.activePage);
-                      }}
-                      activePage={curMinedPage}
-                      totalPages={Math.ceil(minedTotalCount / 10)}
-                    />
-                  </div>
-                  <div className="page-h5">
-                    <Pagination
-                      prevItem={{
-                        'aria-label': 'Previous item',
-                        content: i18n('lastPage'),
-                      }}
-                      nextItem={{
-                        'aria-label': 'Next item',
-                        content: i18n('nextPage'),
-                      }}
-                      boundaryRange={0}
-                      activePage={curMinedPage}
-                      onPageChange={(e, data) => {
-                        e.preventDefault();
-                        this.fetchMinedBlockList(params.accountid, data.activePage);
-                      }}
-                      ellipsisItem={null}
-                      firstItem={null}
-                      lastItem={null}
-                      siblingRange={1}
-                      totalPages={Math.ceil(minedTotalCount / 10)}
-                    />
-                  </div>
-                </MinedWrap>
+                {renderAny(() => {
+                  if (!minedTotalCount) {
+                    return null;
+                  }
+                  return (
+                    <MinedWrap>
+                      <div className="page-pc">
+                        <Pagination
+                          prevItem={{
+                            'aria-label': 'Previous item',
+                            content: i18n('lastPage'),
+                          }}
+                          nextItem={{
+                            'aria-label': 'Next item',
+                            content: i18n('nextPage'),
+                          }}
+                          onPageChange={(e, data) => {
+                            e.preventDefault();
+                            this.fetchMinedBlockList(params.accountid, data.activePage);
+                          }}
+                          activePage={curMinedPage}
+                          totalPages={Math.ceil(minedTotalCount / 10)}
+                        />
+                      </div>
+                      <div className="page-h5">
+                        <Pagination
+                          prevItem={{
+                            'aria-label': 'Previous item',
+                            content: i18n('lastPage'),
+                          }}
+                          nextItem={{
+                            'aria-label': 'Next item',
+                            content: i18n('nextPage'),
+                          }}
+                          boundaryRange={0}
+                          activePage={curMinedPage}
+                          onPageChange={(e, data) => {
+                            e.preventDefault();
+                            this.fetchMinedBlockList(params.accountid, data.activePage);
+                          }}
+                          ellipsisItem={null}
+                          firstItem={null}
+                          lastItem={null}
+                          siblingRange={1}
+                          totalPages={Math.ceil(minedTotalCount / 10)}
+                        />
+                      </div>
+                    </MinedWrap>
+                  );
+                })}
               </TabPanel>
             </div>
           </TabZone>
