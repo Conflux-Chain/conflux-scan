@@ -20,5 +20,8 @@
   },
   "devDependencies": {
     "pm2": "^3.5.1"
+  },
+  "resolutions": {
+    "lodash":  "^4.17.14"
   }
 }
