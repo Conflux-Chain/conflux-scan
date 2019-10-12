@@ -7,6 +7,7 @@ import moment from 'moment';
 import TableLoading from '../../components/TableLoading';
 import media from '../../globalStyles/media';
 import { i18n, renderAny, sendRequest } from '../../utils';
+import NotFoundTx from '../NotFoundTx';
 
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -84,6 +85,7 @@ class Detail extends Component {
       txnhash: '',
       result: {},
       isLoading: true,
+      isPacking: false,
     };
   }
 
@@ -107,7 +109,9 @@ class Detail extends Component {
           history.push(`/search-notfound?searchId=${txnhash}`);
           break;
         case 4:
-          history.push(`/notfoundtx?searchId=${txnhash}`);
+          this.setState({
+            isPacking: true,
+          });
           break;
         case 0:
         default:
@@ -121,12 +125,16 @@ class Detail extends Component {
   }
 
   render() {
-    const { result, isLoading, txnhash } = this.state;
+    const { result, isLoading, txnhash, isPacking } = this.state;
     const {
       match: { params },
     } = this.props;
     if (txnhash !== params.txnhash) {
       this.fetchTxDetail(params.txnhash, { activePage: 1 });
+    }
+
+    if (isPacking) {
+      return <NotFoundTx searchId={txnhash} />;
     }
 
     return (
