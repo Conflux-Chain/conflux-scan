@@ -1,6 +1,7 @@
 import React from 'react';
 import BigNumber from 'bignumber.js';
 import superagent from 'superagent';
+import querystring from 'querystring';
 import { injectIntl, FormattedMessage, FormattedHTMLMessage } from 'react-intl';
 import { toast } from '../components/Toast';
 
@@ -229,4 +230,14 @@ export function i18n(id, config = {}) {
 
 export function renderAny(cb) {
   return cb();
+}
+
+export function getQuery(locationSearch) {
+  let query = {};
+  try {
+    query = querystring.parse(locationSearch.replace(/^\?/, ''));
+  } catch (e) {
+    console.log(e);
+  }
+  return query;
 }

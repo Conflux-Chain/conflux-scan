@@ -658,11 +658,21 @@ class Detail extends Component {
                 <div className="sectionWrap">
                   <section>
                     <h2>{i18n('First Seen')}</h2>
-                    <p>{moment(accountDetail.firstSeen * 1000).format('YYYY-MM-DD HH:mm:ss')}</p>
+                    {renderAny(() => {
+                      if (!accountDetail.firstSeen) {
+                        return i18n('no data');
+                      }
+                      return <p>{moment(accountDetail.firstSeen * 1000).format('YYYY-MM-DD HH:mm:ss')}</p>;
+                    })}
                   </section>
                   <section>
                     <h2>{i18n('Last Seen')}</h2>
-                    <p>{moment(accountDetail.lastSeen * 1000).format('YYYY-MM-DD HH:mm:ss')}</p>
+                    {renderAny(() => {
+                      if (!accountDetail.lastSeen) {
+                        return i18n('no data');
+                      }
+                      return <p>{moment(accountDetail.lastSeen * 1000).format('YYYY-MM-DD HH:mm:ss')}</p>;
+                    })}
                   </section>
                 </div>
               </div>
