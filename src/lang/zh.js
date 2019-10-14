@@ -139,5 +139,5 @@ export default {
   'app.directory.community.desc': '成为下一代去中心化社区的一员',
   'system maintaining, please visit later': '系统维护中，请稍后访问',
 
-  'no data': '无数据',
+  'No Record': '无记录',
 };

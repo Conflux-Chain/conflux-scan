@@ -660,7 +660,7 @@ class Detail extends Component {
                     <h2>{i18n('First Seen')}</h2>
                     {renderAny(() => {
                       if (!accountDetail.firstSeen) {
-                        return i18n('no data');
+                        return i18n('No Record');
                       }
                       return <p>{moment(accountDetail.firstSeen * 1000).format('YYYY-MM-DD HH:mm:ss')}</p>;
                     })}
@@ -669,7 +669,7 @@ class Detail extends Component {
                     <h2>{i18n('Last Seen')}</h2>
                     {renderAny(() => {
                       if (!accountDetail.lastSeen) {
-                        return i18n('no data');
+                        return i18n('No Record');
                       }
                       return <p>{moment(accountDetail.lastSeen * 1000).format('YYYY-MM-DD HH:mm:ss')}</p>;
                     })}
