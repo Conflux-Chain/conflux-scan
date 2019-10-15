@@ -2,8 +2,8 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { injectIntl, FormattedMessage, FormattedHTMLMessage } from 'react-intl';
-import querystring from 'querystring';
 import media from '../../globalStyles/media';
+import { getQuery } from '../../utils';
 
 const nfImg = require('../../assets/images/404.gif');
 
@@ -55,7 +55,7 @@ class SearchNotFound extends PureComponent {
   render() {
     let { searchId, location, errMsg = '' } = this.props;
     if (!searchId) {
-      const parsed = querystring.parse(location.search.replace(/^\?/, ''));
+      const parsed = getQuery(location.search);
       if (parsed.searchId) {
         searchId = parsed.searchId;
         errMsg = parsed.errMsg;
