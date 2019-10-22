@@ -494,17 +494,26 @@ class Detail extends Component {
     }).then((res) => {
       if (res.body.code === 0) {
         const { total } = res.body.result;
-        const { accountDetail } = this.state;
         this.setState({
           minedBlockList: res.body.result.data,
           isLoading: false,
           curMinedPage,
-          accountDetail: {
-            ...accountDetail,
-            minedBlocks: total,
-          },
           minedTotalCount: total,
         });
+
+        const { accountDetail } = this.state;
+        if (total !== accountDetail.minedBlocks) {
+          sendRequest({
+            url: `/api/account/${accountid}`,
+            query: {},
+          }).then((res1) => {
+            if (res1.body.code === 0) {
+              this.setState({
+                accountDetail: res1.body.result.data,
+              });
+            }
+          });
+        }
       }
     });
   }
