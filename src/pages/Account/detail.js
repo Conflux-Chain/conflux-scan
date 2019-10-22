@@ -493,10 +493,17 @@ class Detail extends Component {
       },
     }).then((res) => {
       if (res.body.code === 0) {
+        const { total } = res.body.result;
+        const { accountDetail } = this.state;
         this.setState({
           minedBlockList: res.body.result.data,
           isLoading: false,
           curMinedPage,
+          accountDetail: {
+            ...accountDetail,
+            minedBlocks: total,
+          },
+          minedTotalCount: total,
         });
       }
     });
