@@ -7,6 +7,7 @@ const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const WebpackCdnPlugin = require('webpack-cdn-plugin');
 const fs = require('fs');
 const webpack = require('webpack');
+const IconFontPlugin = require('icon-font-loader').Plugin;
 
 const devMode = process.env.NODE_ENV !== 'production';
 /* eslint no-underscore-dangle: 0 */
@@ -134,6 +135,7 @@ module.exports = {
       chunkFilename: devMode ? '[id].css' : '[id].[hash].css',
     }),
     vendorPlugin,
+    new IconFontPlugin(),
     new webpack.NormalModuleReplacementPlugin(
       /node_modules\/antd\/lib\/style\/index\.less/,
       path.resolve(__dirname, './src/globalStyles/ant-pfx.less')
@@ -164,6 +166,12 @@ module.exports = {
           },
           {
             loader: 'css-loader',
+          },
+          {
+            loader: 'icon-font-loader',
+            options: {
+              // fontName: '--iconfont',
+            },
           },
           {
             loader: 'less-loader',

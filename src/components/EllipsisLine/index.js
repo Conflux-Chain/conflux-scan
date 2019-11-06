@@ -84,7 +84,7 @@ const PrefixTag = styled.i`
   flex: none;
 `;
 
-function EllipsisLine({ intl, prefix, unit, is2ndLine, isPivot, isLong, linkTo, text, textInout }) {
+function EllipsisLine({ intl, prefix, unit, is2ndLine, isPivot, isLong, linkTo, text, textInout, ellipsisStyle }) {
   const baseStyle = is2ndLine
     ? { background: 'transparent', margin: 0, marginTop: '2px', padding: 0 }
     : { background: 'transparent', margin: 0, padding: 0 };
@@ -101,9 +101,11 @@ function EllipsisLine({ intl, prefix, unit, is2ndLine, isPivot, isLong, linkTo, 
         <div className="wrap">
           {prefix && <PrefixTag>{prefix}</PrefixTag>}
           {!linkTo ? (
-            <div className={isLong ? 'ellipsis long' : 'ellipsis'}>{text}</div>
+            <div className={isLong ? 'ellipsis long' : 'ellipsis'} style={ellipsisStyle}>
+              {text}
+            </div>
           ) : (
-            <div className={isLong ? 'ellipsis link long' : 'ellipsis link'}>
+            <div className={isLong ? 'ellipsis link long' : 'ellipsis link'} style={ellipsisStyle}>
               <Link to={linkTo}>{tooltip}</Link>
             </div>
           )}
@@ -130,6 +132,9 @@ EllipsisLine.propTypes = {
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
   }).isRequired,
+  ellipsisStyle: PropTypes.objectOf({
+    maxWidth: PropTypes.number,
+  }),
 };
 EllipsisLine.defaultProps = {
   prefix: '',
@@ -140,6 +145,7 @@ EllipsisLine.defaultProps = {
   isPivot: false,
   isLong: false,
   is2ndLine: false,
+  ellipsisStyle: {},
 };
 
 export default injectIntl(EllipsisLine);
