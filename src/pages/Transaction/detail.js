@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import superagent from 'superagent';
 import moment from 'moment';
 import TableLoading from '../../components/TableLoading';
+import EllipsisLine from '../../components/EllipsisLine';
 import media from '../../globalStyles/media';
 import { i18n, renderAny, sendRequest } from '../../utils';
 import NotFoundTx from '../NotFoundTx';
@@ -78,6 +79,23 @@ const HeadBar = styled.div`
   }
 `;
 
+const TokensDiv = styled.div`
+  display: flex;
+  align-items: center;
+  > em {
+    font-style: normal;
+    margin-right: 8px;
+    margin-left: 8px;
+    color: #8f8f8f;
+    &:first-child {
+      margin-left: 0;
+    }
+  }
+  > span {
+    margin-right: 8px;
+  }
+`;
+
 class Detail extends Component {
   constructor() {
     super();
@@ -129,9 +147,6 @@ class Detail extends Component {
     const {
       match: { params },
     } = this.props;
-    if (txnhash !== params.txnhash) {
-      this.fetchTxDetail(params.txnhash, { activePage: 1 });
-    }
 
     if (isPacking) {
       return <NotFoundTx searchId={txnhash} />;
@@ -153,12 +168,69 @@ class Detail extends Component {
                   <td className="collapsing top">{i18n('Transaction Hash')}</td>
                   <td className="top">{result.hash}</td>
                 </tr>
-                <tr className="">
-                  <td className="collapsing">{i18n('Data')}</td>
-                  <td className="" style={{ wordBreak: 'break-word' }}>
-                    {result.data}
-                  </td>
-                </tr>
+
+                {renderAny(() => {
+                  if (result.decodedData) {
+                    const { decodedData = {} } = result;
+                    const fromAddress = '0x959a58254cce5fc2a8765de83ba0001edd7e98e6c9c136babb80eb5cd270097d';
+                    if (decodedData.name === 'mint') {
+                      return (
+                        <tr className="">
+                          <td className="collapsing">{i18n('Tokens Transferred')}</td>
+                          <td className="">
+                            <TokensDiv>
+                              <em>To</em>
+                              <EllipsisLine
+                                ellipsisStyle={{ maxWidth: 152 }}
+                                linkTo={`/transactionsdetail/${fromAddress}`}
+                                text={fromAddress}
+                              />
+                              <em>For</em>
+                              <span>210.23</span>
+
+                              <span>Fans Coin (FC)</span>
+                            </TokensDiv>
+                          </td>
+                        </tr>
+                      );
+                    }
+
+                    return (
+                      <tr className="">
+                        <td className="collapsing">{i18n('Tokens Transferred')}</td>
+                        <td className="">
+                          <TokensDiv>
+                            <em>From</em>
+                            <EllipsisLine
+                              ellipsisStyle={{ maxWidth: 152 }}
+                              linkTo={`/transactionsdetail/${fromAddress}`}
+                              text={fromAddress}
+                            />
+                            <em>To</em>
+                            <EllipsisLine
+                              ellipsisStyle={{ maxWidth: 152 }}
+                              linkTo={`/transactionsdetail/${fromAddress}`}
+                              text={fromAddress}
+                            />
+                            <em>For</em>
+                            <span>210.23</span>
+
+                            <span>Fans Coin (FC)</span>
+                          </TokensDiv>
+                        </td>
+                      </tr>
+                    );
+                  }
+                  return (
+                    <tr className="">
+                      <td className="collapsing">{i18n('Data')}</td>
+                      <td className="" style={{ wordBreak: 'break-word' }}>
+                        {result.data}
+                      </td>
+                    </tr>
+                  );
+                })}
+
                 <tr className="">
                   <td className="collapsing">{i18n('From')}</td>
                   <td className="">

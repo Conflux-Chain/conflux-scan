@@ -43,7 +43,7 @@ export const TabWrapper = styled.div`
   display: flex;
   justify-content: flex-end;
   .page-pc {
-    display: inline-flex !important;
+    display: inline-flex;
   }
   .page-h5 {
     display: none;
@@ -51,8 +51,8 @@ export const TabWrapper = styled.div`
   ${media.pad`
     justify-content: center;
     .page-pc {
-      display: block;
+      display: none;
      }
-    .page-h5 { display: inline-flex!important; }
+    .page-h5 { display: inline-flex; }
   `}
 `;

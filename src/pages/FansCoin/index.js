@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
+
 import { Pagination, Dropdown, Popup } from 'semantic-ui-react';
 import compose from 'lodash/fp/compose';
 import * as styledComp from './styledComp';
@@ -8,9 +10,11 @@ import media from '../../globalStyles/media';
 import EllipsisLine from '../../components/EllipsisLine';
 import DataList from '../../components/DataList';
 import Countdown from '../../components/Countdown';
-import { convertToValueorFee, converToGasPrice, i18n, sendRequest, renderAny } from '../../utils';
+import { convertToValueorFee, converToGasPrice, i18n, sendRequest, renderAny, humanizeNum, getQuery } from '../../utils';
 import iconCloseSmall from '../../assets/images/icons/close-small.svg';
 import iconCloseMd from '../../assets/images/icons/close-md.svg';
+import TableLoading from '../../components/TableLoading';
+import { reqFcList, reqFcStat, reqFcByAddress } from '../../utils/api';
 
 const SummaryDiv = styled.div`
   display: flex;
@@ -60,6 +64,7 @@ const SummaryDiv = styled.div`
 `;
 
 const TransfersDiv = styled.div`
+  position: relative;
   display: flex;
   margin-top: 16px;
    >  .ui.card {
@@ -68,6 +73,9 @@ const TransfersDiv = styled.div`
    .transfer-search {
       display: flex;
       align-items: center;
+      ${media.pad`
+      flex-wrap: wrap;
+     `}
      h6 {
        flex: 1;
        margin: 0;
@@ -78,6 +86,12 @@ const TransfersDiv = styled.div`
      display: flex;
      align-items: center;
      border: 1px solid #fff;
+     ${media.pad`
+     flex: 1;
+     display: flex;
+     margin-top: 10px;
+    `}
+
      &:hover {
       border: 1px solid rgb(204, 204, 204);
      }
@@ -90,6 +104,9 @@ const TransfersDiv = styled.div`
       line-height: 28px;
       border: none;
       text-indent: 5px;
+      ${media.pad`
+      flex: 1;
+    `}
     }
     .search-icon {
       padding-left: 8px;
@@ -108,6 +125,9 @@ const TransfersDiv = styled.div`
     height: 28px;
     margin-right: 16px;
     display: flex;
+    ${media.pad`
+    margin-right: 0px;
+   `}
 
     .icon-close {
       background-image: url("${iconCloseSmall}");
@@ -133,6 +153,40 @@ const TransfersDiv = styled.div`
   }
 `;
 
+const TagWrapper = styled.div`
+display: flex;
+align-items: center;
+
+.tag-out {
+  color: #E66A24;
+  background: #FFEBD4;
+}
+.tag-in {
+  color: #4A9E81;
+  background: #D0F5E7;
+}
+ .tag {
+width: 40px;
+border-radius: 4px;
+font-size: 12px;
+line-height: 22px;
+text-align: center;
+margin-right: 12px;
+margin-left: -50px
+&.tag-arrow {
+  background: #F2F2F2;
+  width: auto;
+  box-sizing: border-box;
+  padding-left: 5px
+  padding-right: 5px;
+  > i {
+    font-size: 12px;
+    color: #59BF9C;
+  }
+}
+  }
+`;
+
 const FilteredDiv = styled.div`
   margin-top: 16px;
   .ui.card {
@@ -141,6 +195,10 @@ const FilteredDiv = styled.div`
   }
   .filter-item-wrap {
     display: flex;
+    position: relative;
+    ${media.pad`
+      display: block;
+    `}
   }
   .filter-item {
     flex: 1;
@@ -176,71 +234,118 @@ const FilteredDiv = styled.div`
   }
   .filter-item-2 {
     display: inline-block;
+    word-break: break-word;
+  }
+  .close-btn {
+    width: 32px;
+    height: 32px;
+    position: absolute;
+    background-color: #F2F2F2;
+    background-image: url("${iconCloseMd}");
+    background-position: center;
+    background-repeat: no-repeat;
+    top: 28px;
+    right: 20px;
+    border-radius: 50%;
+    cursor: pointer;
+    ${media.pad`
+      top: 12px;
+    `}
   }
 `;
+
+/* eslint jsx-a11y/click-events-have-key-events: 0 */
+/* eslint jsx-a11y/no-static-element-interactions: 0 */
 
 class FansCoin extends Component {
   constructor(...args) {
     super(...args);
-    const source = {
-      code: 0,
-      message: '',
-      result: {
-        data: [
-          {
-            firstMinedByBlock: '0x50e20e42ec09475bd950a08fa9715f8eb25fe117762ae2965972204e3485770e',
-            timestamp: 1572941825,
-            transactionIndex: 0,
-            data: '0x',
-            status: '0x0',
-            from: '0xa70ddf9b9750c575db453eea6a041f4c8536785a',
-            blockHash: '0x50e20e42ec09475bd950a08fa9715f8eb25fe117762ae2965972204e3485770e',
-            s: '0x2db14aa7214fbf8468095cb8d5102e68289081bcd6c4b5f3e74998e8b03b68d4',
-            v: 0,
-            to: '0x63f0a574987f6893e068a08a3fb0e63aec3785e6',
-            hash: '0x425b74f056ce53716aa8c091f5cf8781b52af32d2f0b18d18e7a2d2f1656bdeb',
-            r: '0x27638073a2f4d25b92f3b941bcf98f2b634fa109af7154047d1338a535610582',
-            value: '1000000000000000000',
-            nonce: 991,
-            gasPrice: '819',
-            gas: 21000,
-          },
-          {
-            firstMinedByBlock: '0x8f9f188561fe0cd3b223311c60ce305af5449f684c008806014f1b9d5778dbab',
-            transactionIndex: 0,
-            timestamp: 1572940660,
-            data: '0x',
-            from: '0xa70ddf9b9750c575db453eea6a041f4c8536785a',
-            blockHash: '0x8f9f188561fe0cd3b223311c60ce305af5449f684c008806014f1b9d5778dbab',
-            s: '0x2a510f05cbb2d840c223728acf957a63f04f187fc6d244148769c0448629762b',
-            hash: '0xa92a2414a827491c02e1256c3fba529a63d0f5f7a3e4d1ea7fc4509f1774a233',
-            r: '0xd050f4961b4e8b99a5bbd33b9faf83146a2f160b7d84745b20ccfa48bb5eec77',
-            v: 1,
-            to: '0xc9b18e67d28d98366c6e7dd9e37dd41d7c69681a',
-            value: '1000000000000000000',
-            nonce: 990,
-            gasPrice: '819',
-            gas: 21000,
-          },
-        ],
-        total: 996,
+    this.state = {
+      fcTransList: [],
+      fcTransTotal: 0,
+      fcStat: {
+        totalSupply: 0,
+        transactionCount: 0,
+        accountCount: 0,
       },
+      addressData: {
+        balance: '',
+      },
+      searchInput: '',
+      listLoading: false,
     };
 
-    this.state = {
-      fcTransList: source.result.data,
-    };
+    reqFcStat().then((body) => {
+      this.setState({
+        fcStat: body.result.data,
+      });
+    });
+
+    this.getFcList({
+      pageNum: 1,
+    });
+  }
+
+  getFcList({ pageNum }) {
+    const { pageSize, searchInput } = this.state;
+    const query = getQuery(window.location.search);
+    const { address } = query;
+    this.setState({
+      listLoading: true,
+    });
+    const filter = searchInput || address;
+    reqFcList({
+      pageNum,
+      pageSize,
+      filter,
+    }).then(
+      (res) => {
+        this.setState({
+          pageNum,
+          fcTransList: res.result.data,
+          fcTransTotal: res.result.fcTransTotal,
+          listLoading: false,
+        });
+      },
+      () => {
+        this.setState({
+          listLoading: false,
+        });
+      }
+    );
+
+    if (address) {
+      reqFcByAddress({
+        address,
+      }).then((res) => {
+        this.setState({
+          addressData: res.result.data,
+        });
+      });
+    }
   }
 
   render() {
-    const { fcTransList } = this.state;
+    const { fcTransList, fcStat, pageNum, pageSize, fcTransTotal, listLoading, addressData } = this.state;
+    const { history } = this.props;
+    const query = getQuery(window.location.search);
+
+    const resetSearch = () => {
+      history.replace('/fansCoin');
+      this.setState({
+        searchInput: '',
+      });
+      this.getFcList({
+        pageNum: 1,
+      });
+    };
 
     return (
       <styledComp.Wrapper>
         <styledComp.HeadBar>
           <h1>{i18n('FC')}</h1>
           <p>
-            <a>
+            <a href="https://wallet.confluxscan.io/about" target="_blank">
               Fans Coin
               <i className="link-open" />
             </a>
@@ -255,16 +360,16 @@ class FansCoin extends Component {
               </div>
               <div className="content summary-content">
                 <div className="summary-line">
-                  <h6>Total Supply:</h6>
-                  <div className="summary-line-content">qweqwe</div>
+                  <h6>{i18n('Total Supply')}:</h6>
+                  <div className="summary-line-content">{fcStat.totalSupply}</div>
                 </div>
                 <div className="summary-line">
-                  <h6>Holders:</h6>
-                  <div className="summary-line-content">20,000 addresses</div>
+                  <h6>{i18n('Holders')}:</h6>
+                  <div className="summary-line-content">{humanizeNum(fcStat.accountCount)} addresses</div>
                 </div>
                 <div className="summary-line">
-                  <h6>Transfers:</h6>
-                  <div className="summary-line-content">2,345</div>
+                  <h6>{i18n('Transfers')}:</h6>
+                  <div className="summary-line-content">{humanizeNum(fcStat.transactionCount)}</div>
                 </div>
               </div>
             </div>
@@ -277,21 +382,21 @@ class FansCoin extends Component {
               </div>
               <div className="content summary-content">
                 <div className="summary-line">
-                  <h6>Contract:</h6>
+                  <h6>{i18n('Contract')}:</h6>
                   <div className="summary-line-content">
-                    <a>0x3dc938eklds923kwdu0923s23</a>
+                    <a>{fcStat.address}</a>
                   </div>
                 </div>
                 <div className="summary-line">
-                  <h6>Official Site:</h6>
+                  <h6>{i18n('Official Site')}:</h6>
                   <div className="summary-line-content">
                     <a>
-                      conflux-chian.org <i className="link-open" />
+                      conflux-chain.org <i className="link-open" />
                     </a>
                   </div>
                 </div>
                 <div className="summary-line">
-                  <h6>Social Profiles::</h6>
+                  <h6>{i18n('Social Profiles')}:</h6>
                   <div className="summary-line-content" />
                 </div>
               </div>
@@ -299,48 +404,90 @@ class FansCoin extends Component {
           </div>
         </SummaryDiv>
 
-        <FilteredDiv>
-          <div className="ui card">
-            <div className="filter-item-wrap">
-              <div className="filter-item">
-                <h5>
-                  <i className="icon-filter" />
-                  <span>Filtered by Token Holder</span>
-                </h5>
+        {renderAny(() => {
+          if (query.address) {
+            return (
+              <FilteredDiv>
+                <div className="ui card">
+                  <div className="filter-item-wrap">
+                    <div className="filter-item">
+                      <h5>
+                        <i className="icon-filter" />
+                        <span>{i18n('Filtered by Token Holder')}</span>
+                      </h5>
 
-                <div className="filter-item-2">
-                  <a>0xa92a2414a827491c02e1256c3fba529a63d0f5f7a3e4d1ea7fc4509f1774a233</a>
-                  {/* <EllipsisLine ellipsisStyle={{ maxWidth: '100%' }} text={'0xa92a2414a827491c02e1256c3fba529a63d0f5f7a3e4d1ea7fc4509f1774a233'} linkTo={`/transactionsdetail/`} /> */}
+                      <div className="filter-item-2">
+                        <a
+                          onClick={() => {
+                            history.replace(`/fansCoin?address=${query.address}`);
+                            this.setState({
+                              searchInput: '',
+                            });
+                            this.getFcList({
+                              pageNum: 1,
+                            });
+                          }}
+                        >
+                          {query.address}
+                        </a>
+                      </div>
+                    </div>
+
+                    <div className="filter-item">
+                      <div className="filter-item-3">{i18n('BALANCE')}</div>
+                      <div className="filter-item-4">{humanizeNum(addressData.balance)} FC</div>
+                    </div>
+                    <div className="close-btn" onClick={resetSearch} />
+                  </div>
                 </div>
-              </div>
-
-              <div className="filter-item">
-                <div className="filter-item-3">BALANCE</div>
-                <div className="filter-item-4">2131.2100 FC</div>
-              </div>
-            </div>
-          </div>
-        </FilteredDiv>
+              </FilteredDiv>
+            );
+          }
+          return null;
+        })}
 
         <TransfersDiv>
+          {listLoading && <TableLoading />}
           <div className="ui card">
             <div className="content">
               <div className="header">
                 <div className="transfer-search">
                   <h6>{i18n('Transfers')}</h6>
-
-                  <div className="transfer-search-tag">
-                    <Popup
-                      trigger={<div className="transfer-search-tag-inner">0xa70ddf9b9750c575db453eea6a041f4c8536785a</div>}
-                      content="0xa70ddf9b9750c575db453eea6a041f4c8536785a"
-                      position="top center"
-                      hoverable
-                    />
-                    <div className="icon-close" />
-                  </div>
+                  {renderAny(() => {
+                    if (query.address) {
+                      return (
+                        <div className="transfer-search-tag">
+                          <Popup
+                            trigger={<div className="transfer-search-tag-inner">{query.address}</div>}
+                            content={query.address}
+                            position="top center"
+                            hoverable
+                          />
+                          <div className="icon-close" onClick={resetSearch} />
+                        </div>
+                      );
+                    }
+                    return null;
+                  })}
                   <div className="transfer-search-input">
-                    <input type="text" placeholder="Txn Hash/Holder Address" />
-                    <i className="search-icon" />
+                    <input
+                      type="text"
+                      placeholder="Txn Hash/Holder Address"
+                      onChange={(e) => {
+                        this.setState({
+                          searchInput: e.target.value,
+                        });
+                      }}
+                    />
+                    <i
+                      className="search-icon"
+                      onClick={() => {
+                        history.replace(`/fansCoin`);
+                        this.getFcList({
+                          pageNum: 1,
+                        });
+                      }}
+                    />
                   </div>
                 </div>
               </div>
@@ -370,10 +517,19 @@ class FansCoin extends Component {
                     className: 'three wide aligned',
                     title: i18n('From'),
                     render: (text, row) => (
-                      <div>
-                        <styledComp.PCell>
-                          <EllipsisLine ellipsisStyle={{ maxWidth: 152 }} text={text} linkTo={`/transactionsdetail/${text}`} />
-                        </styledComp.PCell>
+                      <div style={{ marginRight: 10 }}>
+                        <EllipsisLine
+                          ellipsisStyle={{ maxWidth: 152 }}
+                          onClick={() => {
+                            setTimeout(() => {
+                              this.getFcList({
+                                pageNum: 1,
+                              });
+                            }, 10);
+                          }}
+                          text={text}
+                          linkTo={`/fansCoin?address=${text}`}
+                        />
                       </div>
                     ),
                   },
@@ -382,18 +538,46 @@ class FansCoin extends Component {
                     dataIndex: 'to',
                     className: 'three wide aligned',
                     title: i18n('To'),
-                    render: (text, row) => (
-                      <div>
-                        <EllipsisLine ellipsisStyle={{ maxWidth: 152 }} text={text} linkTo={`/transactionsdetail/${text}`} />
-                      </div>
-                    ),
+                    render: (text, row) => {
+                      let arrowDiv;
+                      if (!query.address) {
+                        arrowDiv = (
+                          <span className="tag tag-arrow">
+                            <i className="arrow-right" />
+                          </span>
+                        );
+                      } else if (query.address === row.from) {
+                        arrowDiv = <span className="tag-out tag">OUT</span>;
+                      } else if (query.address === row.to) {
+                        arrowDiv = <span className="tag-in tag">IN</span>;
+                      }
+
+                      return (
+                        <TagWrapper>
+                          {/* <span className="tag-out tag">OUT</span> */}
+                          {arrowDiv}
+                          <EllipsisLine
+                            onClick={() => {
+                              setTimeout(() => {
+                                this.getFcList({
+                                  pageNum: 1,
+                                });
+                              }, 10);
+                            }}
+                            ellipsisStyle={{ maxWidth: 152 }}
+                            text={text}
+                            linkTo={`/fansCoin?address=${text}`}
+                          />
+                        </TagWrapper>
+                      );
+                    },
                   },
                   {
                     key: 5,
                     className: 'one wide aligned plain_th',
-                    dataIndex: 'gasLimit',
+                    dataIndex: 'value',
                     title: i18n('Quantity'),
-                    render: (text) => <styledComp.PCell>aaa</styledComp.PCell>,
+                    render: (text) => <styledComp.PCell>{text}</styledComp.PCell>,
                   },
                 ];
 
@@ -418,10 +602,12 @@ class FansCoin extends Component {
                   }}
                   onPageChange={(e, data) => {
                     e.preventDefault();
-                    // this.changePage(params.accountid, { ...queries, pageNum: data.activePage });
+                    this.getFcList({
+                      pageNum: data.activePage,
+                    });
                   }}
-                  activePage={1}
-                  totalPages={100}
+                  activePage={pageNum}
+                  totalPages={Math.ceil(fcTransTotal / pageSize)}
                 />
               </div>
               <div className="page-h5">
@@ -435,15 +621,18 @@ class FansCoin extends Component {
                     content: i18n('nextPage'),
                   }}
                   boundaryRange={0}
-                  activePage={1}
+                  activePage={pageNum}
                   onPageChange={(e, data) => {
                     e.preventDefault();
+                    this.getFcList({
+                      pageNum: data.activePage,
+                    });
                   }}
                   ellipsisItem={null}
                   firstItem={null}
                   lastItem={null}
                   siblingRange={1}
-                  totalPages={10}
+                  totalPages={Math.ceil(fcTransTotal / pageSize)}
                 />
               </div>
             </styledComp.TabWrapper>
@@ -453,6 +642,12 @@ class FansCoin extends Component {
     );
   }
 }
+
+FansCoin.propTypes = {
+  history: PropTypes.shape({
+    replace: PropTypes.func,
+  }).isRequired,
+};
 
 const hoc = compose(withRouter);
 export default hoc(FansCoin);
