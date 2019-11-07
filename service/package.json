@@ -9,6 +9,7 @@
     "start-test": "pm2 start npm --name conflux-scan-node-proxy -- run serve-test",
     "stop-test": "pm2 delete conflux-scan-node-proxy",
     "start": "pm2 start npm --name conflux-scan-node-proxy-prod -- run serve-prod -i max -e err-prod.log -o out-prod.log",
+    "start-without-pm2": "npm run serve-prod -i max -e err-prod.log -o out-prod.log",
     "stop": "pm2 delete conflux-scan-node-proxy-prod"
   },
   "license": "MIT",
