@@ -84,7 +84,7 @@ const PrefixTag = styled.i`
   flex: none;
 `;
 
-function EllipsisLine({ intl, prefix, unit, is2ndLine, isPivot, isLong, linkTo, text, textInout, ellipsisStyle }) {
+function EllipsisLine({ intl, prefix, unit, is2ndLine, isPivot, isLong, linkTo, text, textInout, ellipsisStyle, onClick }) {
   const baseStyle = is2ndLine
     ? { background: 'transparent', margin: 0, marginTop: '2px', padding: 0 }
     : { background: 'transparent', margin: 0, padding: 0 };
@@ -106,7 +106,9 @@ function EllipsisLine({ intl, prefix, unit, is2ndLine, isPivot, isLong, linkTo, 
             </div>
           ) : (
             <div className={isLong ? 'ellipsis link long' : 'ellipsis link'} style={ellipsisStyle}>
-              <Link to={linkTo}>{tooltip}</Link>
+              <Link to={linkTo} onClick={onClick}>
+                {tooltip}
+              </Link>
             </div>
           )}
           {isPivot && <PivotTag>Pivot</PivotTag>}
@@ -135,6 +137,7 @@ EllipsisLine.propTypes = {
   ellipsisStyle: PropTypes.objectOf({
     maxWidth: PropTypes.number,
   }),
+  onClick: PropTypes.func,
 };
 EllipsisLine.defaultProps = {
   prefix: '',
@@ -146,6 +149,7 @@ EllipsisLine.defaultProps = {
   isLong: false,
   is2ndLine: false,
   ellipsisStyle: {},
+  onClick: () => {},
 };
 
 export default injectIntl(EllipsisLine);
