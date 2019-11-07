@@ -48,6 +48,9 @@ yarn
               sh (label: 'build', script: "yarn build")
             }
             script {
+              build 'Conflux-dev/conflux-dag/master'
+              // this will copy dist/*.js in conflux-dag into dist folder in this workspace
+              copyArtifacts(projectName: 'Conflux-dev/conflux-dag/master')
               sh (label: 'move to nginx www', script: """
 sudo rm -rf /www/explorer-v2/conflux-scan
 sudo mkdir -p /www/explorer-v2/conflux-scan
@@ -83,6 +86,8 @@ yarn
               sh (label: 'build', script: "yarn build")
             }
             script {
+              build 'Conflux-dev/conflux-dag/master'
+              copyArtifacts(projectName: 'Conflux-dev/conflux-dag/master')
               sh (label: 'move to nginx www', script: """
 sudo rm -rf /www/explorer-v2/conflux-scan
 sudo mkdir /www/explorer-v2/conflux-scan
