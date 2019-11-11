@@ -818,6 +818,7 @@ class Detail extends Component {
                           }}
                           activePage={queries.pageNum}
                           totalPages={Math.ceil(TxTotalCount / 10)}
+                          ellipsisItem={null}
                         />
                       </div>
                       <div className="page-h5">
@@ -877,6 +878,7 @@ class Detail extends Component {
                           }}
                           activePage={curMinedPage}
                           totalPages={Math.ceil(minedTotalCount / 10)}
+                          ellipsisItem={null}
                         />
                       </div>
                       <div className="page-h5">

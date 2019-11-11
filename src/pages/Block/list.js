@@ -237,6 +237,7 @@ class List extends Component {
                   }}
                   activePage={curPage}
                   totalPages={Math.ceil(TotalCount / 10)}
+                  ellipsisItem={null}
                 />
               </div>
               <div className="page-h5">
