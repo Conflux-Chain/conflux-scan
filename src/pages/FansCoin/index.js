@@ -13,7 +13,9 @@ import Countdown from '../../components/Countdown';
 import { convertToValueorFee, converToGasPrice, i18n, sendRequest, renderAny, humanizeNum, getQuery } from '../../utils';
 import iconCloseSmall from '../../assets/images/icons/close-small.svg';
 import iconCloseMd from '../../assets/images/icons/close-md.svg';
+import iconFcLogo from '../../assets/images/icons/fc-logo.svg';
 import TableLoading from '../../components/TableLoading';
+
 import { reqFcList, reqFcStat, reqFcByAddress } from '../../utils/api';
 
 const SummaryDiv = styled.div`
@@ -343,6 +345,7 @@ class FansCoin extends Component {
     return (
       <styledComp.Wrapper>
         <styledComp.HeadBar>
+          <img className="fc-logo" src={iconFcLogo} />
           <h1>{i18n('FC')}</h1>
           <p>
             <a href="https://wallet.confluxscan.io/about" target="_blank">

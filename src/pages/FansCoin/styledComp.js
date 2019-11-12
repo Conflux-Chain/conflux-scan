@@ -12,7 +12,12 @@ export const HeadBar = styled.div`
 
   .link-open {
     margin-left: 5px;
-    font-size: 14px;
+    font-size: 16px;
+    line-height: 16px;
+    vertical-align: middle;
+  }
+  a {
+    color: #8f8f8f;
   }
   * {
     display: inline-block;
@@ -20,8 +25,12 @@ export const HeadBar = styled.div`
   }
   h1 {
     color: #000;
-    font-size: 20px;
+    font-size: 24px;
     margin-right: 12px;
+  }
+  .fc-logo {
+    margin-right: 8px;
+    width: 24px;
   }
 `;
 
