@@ -17,7 +17,6 @@ export const HeadBar = styled.div`
     vertical-align: middle;
   }
   a {
-    color: #8f8f8f;
   }
   * {
     display: inline-block;

@@ -9,6 +9,7 @@ import EllipsisLine from '../../components/EllipsisLine';
 import media from '../../globalStyles/media';
 import { i18n, renderAny, sendRequest } from '../../utils';
 import NotFoundTx from '../NotFoundTx';
+import iconFcLogo from '../../assets/images/icons/fc-logo.svg';
 
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -94,6 +95,12 @@ const TokensDiv = styled.div`
   > span {
     margin-right: 8px;
   }
+  .fc-logo {
+    width: 16px;
+    vertical-align: middle;
+    margin-top: -1px;
+    margin-right: 5px;
+  }
 `;
 
 class Detail extends Component {
@@ -172,21 +179,30 @@ class Detail extends Component {
                 {renderAny(() => {
                   if (result.decodedData) {
                     const { decodedData = {} } = result;
-                    const fromAddress = '0x959a58254cce5fc2a8765de83ba0001edd7e98e6c9c136babb80eb5cd270097d';
                     if (decodedData.name === 'mint') {
+                      let account = {};
+                      let value = {};
+                      decodedData.params.forEach((v) => {
+                        if (v.name === 'account') {
+                          account = v;
+                        } else if (v.name === 'value') {
+                          value = v;
+                        }
+                      });
                       return (
                         <tr className="">
                           <td className="collapsing">{i18n('Tokens Transferred')}</td>
                           <td className="">
                             <TokensDiv>
-                              <em>To</em>
+                              <em>{i18n('To')}</em>
                               <EllipsisLine
                                 ellipsisStyle={{ maxWidth: 152 }}
-                                linkTo={`/transactionsdetail/${fromAddress}`}
-                                text={fromAddress}
+                                linkTo={`/accountdetail/${account.value}`}
+                                text={account.value}
                               />
-                              <em>For</em>
-                              <span>210.23</span>
+                              <em>{i18n('For')}</em>
+                              <span>{value.value}</span>
+                              <img className="fc-logo" src={iconFcLogo} />
 
                               <span>Fans Coin (FC)</span>
                             </TokensDiv>
@@ -195,26 +211,33 @@ class Detail extends Component {
                       );
                     }
 
+                    let toAccount = {};
+                    let value = {};
+                    decodedData.params.forEach((v) => {
+                      if (v.name === 'recipient') {
+                        toAccount = v;
+                      } else if (v.name === 'value') {
+                        value = v;
+                      }
+                    });
+
                     return (
                       <tr className="">
                         <td className="collapsing">{i18n('Tokens Transferred')}</td>
                         <td className="">
                           <TokensDiv>
-                            <em>From</em>
+                            <em>{i18n('From')}</em>
+                            <EllipsisLine ellipsisStyle={{ maxWidth: 152 }} linkTo={`/accountdetail/${result.from}`} text={result.from} />
+                            <em>{i18n('To')}</em>
                             <EllipsisLine
                               ellipsisStyle={{ maxWidth: 152 }}
-                              linkTo={`/transactionsdetail/${fromAddress}`}
-                              text={fromAddress}
-                            />
-                            <em>To</em>
-                            <EllipsisLine
-                              ellipsisStyle={{ maxWidth: 152 }}
-                              linkTo={`/transactionsdetail/${fromAddress}`}
-                              text={fromAddress}
+                              linkTo={`/accountdetail/${toAccount.value}`}
+                              text={toAccount.value}
                             />
                             <em>For</em>
-                            <span>210.23</span>
+                            <span>{value.value}</span>
 
+                            <img className="fc-logo" src={iconFcLogo} />
                             <span>Fans Coin (FC)</span>
                           </TokensDiv>
                         </td>
