@@ -52,9 +52,11 @@ const SummaryDiv = styled.div`
       width: 120px;
       margin: 0;
       font-size: 16px;
-      line-height: 16px;
       color: #8f8f8f;
       font-weight: normal;
+      > span {
+        vertical-align: middle;
+      }
     }
   }
   .summary-line-content {
@@ -101,7 +103,6 @@ const TransfersDiv = styled.div`
       min-width: 200px;
       outline: none;
       font-size: 16px;
-      color: #8F8F8F;
       height: 28px;
       line-height: 28px;
       border: none;
@@ -275,6 +276,7 @@ class FansCoin extends Component {
       },
       searchInput: '',
       listLoading: false,
+      pageSize: 10,
     };
 
     reqFcStat().then((body) => {
@@ -305,7 +307,7 @@ class FansCoin extends Component {
         this.setState({
           pageNum,
           fcTransList: res.result.data,
-          fcTransTotal: res.result.fcTransTotal,
+          fcTransTotal: res.result.total,
           listLoading: false,
         });
       },
@@ -386,14 +388,12 @@ class FansCoin extends Component {
               <div className="content summary-content">
                 <div className="summary-line">
                   <h6>{i18n('Contract')}:</h6>
-                  <div className="summary-line-content">
-                    <a>{fcStat.address}</a>
-                  </div>
+                  <div className="summary-line-content">{fcStat.address}</div>
                 </div>
                 <div className="summary-line">
                   <h6>{i18n('Official Site')}:</h6>
                   <div className="summary-line-content">
-                    <a>
+                    <a href="https://www.conflux-chain.org" target="_blank">
                       conflux-chain.org <i className="link-open" />
                     </a>
                   </div>
@@ -504,7 +504,15 @@ class FansCoin extends Component {
                     className: 'three wide aligned',
                     title: i18n('Txn Hash'),
                     render: (text, row) => (
-                      <EllipsisLine ellipsisStyle={{ maxWidth: 152 }} linkTo={`/transactionsdetail/${text}`} text={text} />
+                      <EllipsisLine
+                        popUpCfg={{
+                          position: 'top left',
+                          pinned: true,
+                        }}
+                        ellipsisStyle={{ maxWidth: 152 }}
+                        linkTo={`/transactionsdetail/${text}`}
+                        text={text}
+                      />
                     ),
                   },
                   {
@@ -522,6 +530,9 @@ class FansCoin extends Component {
                     render: (text, row) => (
                       <div style={{ marginRight: 10 }}>
                         <EllipsisLine
+                          popUpCfg={{
+                            pinned: true,
+                          }}
                           ellipsisStyle={{ maxWidth: 152 }}
                           onClick={() => {
                             setTimeout(() => {
@@ -560,6 +571,9 @@ class FansCoin extends Component {
                           {/* <span className="tag-out tag">OUT</span> */}
                           {arrowDiv}
                           <EllipsisLine
+                            popUpCfg={{
+                              pinned: true,
+                            }}
                             onClick={() => {
                               setTimeout(() => {
                                 this.getFcList({

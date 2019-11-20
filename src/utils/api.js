@@ -18,7 +18,7 @@ export const reqFcList = (param) => {
 
 export const reqFcByAddress = (param) => {
   return sendRequest({
-    url: '/api/account/:address/fc',
+    url: `/api/account/${param.address}/fc`,
     // url: 'http://yapi.conflux-chain.org/mock/4/account/:address/fc',
     query: param,
   }).then((res) => res.body);
