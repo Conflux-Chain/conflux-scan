@@ -24,3 +24,7 @@ export const reqFcByAddress = (param) => {
     query: param,
   }).then((res) => res.body);
 };
+
+export const reqRecentDagBlock = () => {
+  return sendRequest({ url: '/api/block/recent' }).then((res) => res.body);
+};
