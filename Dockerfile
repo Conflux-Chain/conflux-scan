@@ -1,4 +1,4 @@
-FROM node:alpine
+FROM node:current-slim
 MAINTAINER yqrashawn <namy.19@gmail.com>
 
 WORKDIR /conflux-scan
