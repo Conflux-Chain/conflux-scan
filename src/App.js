@@ -16,6 +16,7 @@ import { ToastComp } from './components/Toast';
 
 // styles
 import './assets/semantic-ui/semantic.css';
+import './globalStyles/icons.less';
 import GlobalStyle from './globalStyles';
 
 import zhTranslationMessages from './lang/zh';
