@@ -7,7 +7,7 @@ import moment from 'moment';
 import TableLoading from '../../components/TableLoading';
 import EllipsisLine from '../../components/EllipsisLine';
 import media from '../../globalStyles/media';
-import { i18n, renderAny, sendRequest } from '../../utils';
+import { i18n, renderAny, sendRequest, dripTocfx, dripToGdrip } from '../../utils';
 import NotFoundTx from '../NotFoundTx';
 import iconFcLogo from '../../assets/images/icons/fc-logo.svg';
 
@@ -286,11 +286,11 @@ class Detail extends Component {
                 </tr>
                 <tr className="">
                   <td className="collapsing">{i18n('Gas Price')}</td>
-                  <td className="">{result.gasPrice}</td>
+                  <td className="">{dripToGdrip(result.gasPrice)} Gdrip</td>
                 </tr>
                 <tr className="">
                   <td className="collapsing">{i18n('Value')}</td>
-                  <td className="">{result.value}</td>
+                  <td className="">{dripTocfx(result.value)} CFX</td>
                 </tr>
                 <tr className="">
                   <td className="collapsing">{i18n('Nonce')}</td>
