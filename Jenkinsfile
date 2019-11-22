@@ -41,6 +41,7 @@ sudo docker build -t conflux-scan .
           steps {
             script {
               sh (label: 'build front', script: """
+mkdir -p `pwd`/dist
 sudo docker run --rm --mount type=bind,src=`pwd`/dist,dst=/conflux-scan/dist conflux-scan build
 """)
             }
@@ -75,6 +76,7 @@ sudo docker run -d --name conflux-scan-service --restart=on-failure -p 127.0.0.1
           steps {
             script {
               sh (label: 'build front', script: """
+mkdir -p `pwd`/dist
 sudo docker run --rm --mount type=bind,src=`pwd`/dist,dst=/conflux-scan/dist conflux-scan build
 """)
             }
