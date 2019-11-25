@@ -10,7 +10,7 @@ import media from '../../globalStyles/media';
 import EllipsisLine from '../../components/EllipsisLine';
 import DataList from '../../components/DataList';
 import Countdown from '../../components/Countdown';
-import { convertToValueorFee, converToGasPrice, i18n, sendRequest, renderAny, humanizeNum, getQuery } from '../../utils';
+import { convertToValueorFee, converToGasPrice, i18n, sendRequest, renderAny, humanizeNum, getQuery, dripTocfx } from '../../utils';
 import iconCloseSmall from '../../assets/images/icons/close-small.svg';
 import iconCloseMd from '../../assets/images/icons/close-md.svg';
 import iconFcLogo from '../../assets/images/icons/fc-logo.svg';
@@ -41,6 +41,9 @@ const SummaryDiv = styled.div`
     ${media.pad`
     margin-bottom: 16px;
     margin-right: 0px;
+    .summary-content {
+      height: auto;
+    }
   `}
   }
 
@@ -56,6 +59,9 @@ const SummaryDiv = styled.div`
       font-weight: normal;
       > span {
         vertical-align: middle;
+      }
+      & + div {
+        word-break: break-word;
       }
     }
   }
@@ -259,7 +265,12 @@ const FilteredDiv = styled.div`
 
 /* eslint jsx-a11y/click-events-have-key-events: 0 */
 /* eslint jsx-a11y/no-static-element-interactions: 0 */
+/* eslint react/destructuring-assignment: 0 */
 
+let curPageBase = 1;
+document.addEventListener('clean_state', () => {
+  curPageBase = 1;
+});
 class FansCoin extends Component {
   constructor(...args) {
     super(...args);
@@ -277,6 +288,7 @@ class FansCoin extends Component {
       searchInput: '',
       listLoading: false,
       pageSize: 10,
+      pageNum: curPageBase,
     };
 
     reqFcStat().then((body) => {
@@ -285,9 +297,15 @@ class FansCoin extends Component {
       });
     });
 
+    const { pageNum } = this.state;
     this.getFcList({
-      pageNum: 1,
+      pageNum,
     });
+  }
+
+  componentWillUnmount() {
+    // eslint-disable-next-line: react/destructuring-assignment
+    curPageBase = this.state.pageNum;
   }
 
   getFcList({ pageNum }) {
@@ -305,11 +323,15 @@ class FansCoin extends Component {
     }).then(
       (res) => {
         this.setState({
-          pageNum,
-          fcTransList: res.result.data,
-          fcTransTotal: res.result.total,
           listLoading: false,
         });
+        if (res.code === 0) {
+          this.setState({
+            pageNum,
+            fcTransList: res.result.data,
+            fcTransTotal: res.result.total,
+          });
+        }
       },
       () => {
         this.setState({
@@ -366,7 +388,7 @@ class FansCoin extends Component {
               <div className="content summary-content">
                 <div className="summary-line">
                   <h6>{i18n('Total Supply')}:</h6>
-                  <div className="summary-line-content">{fcStat.totalSupply}</div>
+                  <div className="summary-line-content">{dripTocfx(fcStat.totalSupply)}</div>
                 </div>
                 <div className="summary-line">
                   <h6>{i18n('Holders')}:</h6>
@@ -594,7 +616,7 @@ class FansCoin extends Component {
                     className: 'one wide aligned plain_th',
                     dataIndex: 'value',
                     title: i18n('Quantity'),
-                    render: (text) => <styledComp.PCell>{text}</styledComp.PCell>,
+                    render: (text) => <styledComp.PCell>{dripTocfx(text)}</styledComp.PCell>,
                   },
                 ];
 
