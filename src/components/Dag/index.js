@@ -47,13 +47,22 @@ function Dag({ id = 'dag-viewer' } = {}) {
     const player = await new Player({
       backgroundColor: '0x222222',
       doc: container,
-      playByDefault: false,
+      playByDefault: true,
       pointSize: 20,
       globalRadius: 100,
       defaultInterval: 500,
       colors: [0x00e7f7, 0xce9ffc, 0xe9e4f0, 0xfe2f57, 0xff9415, 0xc0a4fa, 0xdeddf0, 0xff9966, 0xff0083, 0x2dbde8],
       chain: initialSubChains.pop().reverse(),
-      debug: true,
+      onBlockClick: ({ hash }) => {
+        window.open(`https://confluxscan.io/blocksdetail/${hash}`);
+      },
+      onBlockMouseOver: (_, p) => {
+        p.pause();
+      },
+      onBlockMouseOut: (_, p) => {
+        p.play();
+      },
+      // debug: true,
     });
     appendAllSubChain(player, initialSubChains);
     startFechingDagData.call(player);
