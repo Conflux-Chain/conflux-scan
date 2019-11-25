@@ -88,12 +88,14 @@ const TokensDiv = styled.div`
     margin-right: 8px;
     margin-left: 8px;
     color: #8f8f8f;
+    white-space: nowrap;
     &:first-child {
       margin-left: 0;
     }
   }
   > span {
     margin-right: 8px;
+    white-space: nowrap;
   }
   .fc-logo {
     width: 16px;
@@ -201,7 +203,7 @@ class Detail extends Component {
                                 text={account.value}
                               />
                               <em>{i18n('For')}</em>
-                              <span>{value.value}</span>
+                              <span>{dripTocfx(value.value)}</span>
                               <img className="fc-logo" src={iconFcLogo} />
 
                               <span>Fans Coin (FC)</span>
@@ -235,7 +237,7 @@ class Detail extends Component {
                               text={toAccount.value}
                             />
                             <em>For</em>
-                            <span>{value.value}</span>
+                            <span>{dripTocfx(value.value)}</span>
 
                             <img className="fc-logo" src={iconFcLogo} />
                             <span>Fans Coin (FC)</span>
