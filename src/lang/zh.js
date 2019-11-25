@@ -142,4 +142,15 @@ export default {
   'system maintaining, please visit later': '系统维护中，请稍后访问',
 
   'No Record': '无记录',
+  Overview: '概况',
+  'Total Supply': '总供应量',
+  Holders: '持有人',
+  Transfers: '转移',
+  'Official Site': '官方网站',
+  'Social Profiles': '社交档案',
+  'Txn Hash': '交易哈希值',
+  Quantity: '数量',
+  'Txn Hash/Holder Address': '交易哈希值/持有人地址',
+  'Profile Summary': '资料概要',
+  'Tokens Transferred': '代币转移',
 };

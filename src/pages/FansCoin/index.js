@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { withRouter, Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { injectIntl } from 'react-intl';
 
 import { Pagination, Dropdown, Popup } from 'semantic-ui-react';
 import compose from 'lodash/fp/compose';
@@ -66,10 +67,30 @@ const SummaryDiv = styled.div`
     }
   }
   .summary-line-content {
+    display: flex;
   }
   .link-open {
     margin-left: 3px;
     font-size: 14px;
+  }
+  .iconwrap {
+    flex: 1;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f2f2f2;
+    border-radius: 4px;
+    margin-right: 10px;
+    > .icon {
+      margin: 0;
+      padding: 0;
+      color: #8f8f8f;
+      font-size: 15px;
+      height: 21px;
+      line-height: 24px;
+    }
   }
 `;
 
@@ -353,7 +374,7 @@ class FansCoin extends Component {
 
   render() {
     const { fcTransList, fcStat, pageNum, pageSize, fcTransTotal, listLoading, addressData } = this.state;
-    const { history } = this.props;
+    const { history, intl } = this.props;
     const query = getQuery(window.location.search);
 
     const resetSearch = () => {
@@ -422,7 +443,14 @@ class FansCoin extends Component {
                 </div>
                 <div className="summary-line">
                   <h6>{i18n('Social Profiles')}:</h6>
-                  <div className="summary-line-content" />
+                  <div className="summary-line-content">
+                    {/* <a className="iconwrap" >
+                      <i className="facebook f icon"></i>
+                    </a> */}
+                    <a className="iconwrap" href="https://twitter.com/ConfluxChain" target="_blank">
+                      <i className="twitter icon" />
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
@@ -497,7 +525,9 @@ class FansCoin extends Component {
                   <div className="transfer-search-input">
                     <input
                       type="text"
-                      placeholder="Txn Hash/Holder Address"
+                      placeholder={intl.formatMessage({
+                        id: 'Txn Hash/Holder Address',
+                      })}
                       onChange={(e) => {
                         this.setState({
                           searchInput: e.target.value,
@@ -686,7 +716,13 @@ FansCoin.propTypes = {
   history: PropTypes.shape({
     replace: PropTypes.func,
   }).isRequired,
+  intl: PropTypes.shape({
+    formatMessage: PropTypes.func,
+  }).isRequired,
 };
 
-const hoc = compose(withRouter);
+const hoc = compose(
+  withRouter,
+  injectIntl
+);
 export default hoc(FansCoin);
