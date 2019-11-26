@@ -5,9 +5,11 @@ import PropTypes from 'prop-types';
 import superagent from 'superagent';
 import moment from 'moment';
 import TableLoading from '../../components/TableLoading';
+import EllipsisLine from '../../components/EllipsisLine';
 import media from '../../globalStyles/media';
-import { i18n, renderAny, sendRequest } from '../../utils';
+import { i18n, renderAny, sendRequest, dripTocfx, dripToGdrip } from '../../utils';
 import NotFoundTx from '../NotFoundTx';
+import iconFcLogo from '../../assets/images/icons/fc-logo.svg';
 
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -78,6 +80,31 @@ const HeadBar = styled.div`
   }
 `;
 
+const TokensDiv = styled.div`
+  display: flex;
+  align-items: center;
+  > em {
+    font-style: normal;
+    margin-right: 8px;
+    margin-left: 8px;
+    color: #8f8f8f;
+    white-space: nowrap;
+    &:first-child {
+      margin-left: 0;
+    }
+  }
+  > span {
+    margin-right: 8px;
+    white-space: nowrap;
+  }
+  .fc-logo {
+    width: 16px;
+    vertical-align: middle;
+    margin-top: -1px;
+    margin-right: 5px;
+  }
+`;
+
 class Detail extends Component {
   constructor() {
     super();
@@ -129,9 +156,6 @@ class Detail extends Component {
     const {
       match: { params },
     } = this.props;
-    if (txnhash !== params.txnhash) {
-      this.fetchTxDetail(params.txnhash, { activePage: 1 });
-    }
 
     if (isPacking) {
       return <NotFoundTx searchId={txnhash} />;
@@ -153,12 +177,85 @@ class Detail extends Component {
                   <td className="collapsing top">{i18n('Transaction Hash')}</td>
                   <td className="top">{result.hash}</td>
                 </tr>
-                <tr className="">
-                  <td className="collapsing">{i18n('Data')}</td>
-                  <td className="" style={{ wordBreak: 'break-word' }}>
-                    {result.data}
-                  </td>
-                </tr>
+
+                {renderAny(() => {
+                  if (result.decodedData) {
+                    const { decodedData = {} } = result;
+                    if (decodedData.name === 'mint') {
+                      let account = {};
+                      let value = {};
+                      decodedData.params.forEach((v) => {
+                        if (v.name === 'account') {
+                          account = v;
+                        } else if (v.name === 'value') {
+                          value = v;
+                        }
+                      });
+                      return (
+                        <tr className="">
+                          <td className="collapsing">{i18n('Tokens Transferred')}</td>
+                          <td className="">
+                            <TokensDiv>
+                              <em>{i18n('To')}</em>
+                              <EllipsisLine
+                                ellipsisStyle={{ maxWidth: 152 }}
+                                linkTo={`/accountdetail/${account.value}`}
+                                text={account.value}
+                              />
+                              <em>{i18n('For')}</em>
+                              <span>{dripTocfx(value.value)}</span>
+                              <img className="fc-logo" src={iconFcLogo} />
+
+                              <span>Fans Coin (FC)</span>
+                            </TokensDiv>
+                          </td>
+                        </tr>
+                      );
+                    }
+
+                    let toAccount = {};
+                    let value = {};
+                    decodedData.params.forEach((v) => {
+                      if (v.name === 'recipient') {
+                        toAccount = v;
+                      } else if (v.name === 'value') {
+                        value = v;
+                      }
+                    });
+
+                    return (
+                      <tr className="">
+                        <td className="collapsing">{i18n('Tokens Transferred')}</td>
+                        <td className="">
+                          <TokensDiv>
+                            <em>{i18n('From')}</em>
+                            <EllipsisLine ellipsisStyle={{ maxWidth: 152 }} linkTo={`/accountdetail/${result.from}`} text={result.from} />
+                            <em>{i18n('To')}</em>
+                            <EllipsisLine
+                              ellipsisStyle={{ maxWidth: 152 }}
+                              linkTo={`/accountdetail/${toAccount.value}`}
+                              text={toAccount.value}
+                            />
+                            <em>For</em>
+                            <span>{dripTocfx(value.value)}</span>
+
+                            <img className="fc-logo" src={iconFcLogo} />
+                            <span>Fans Coin (FC)</span>
+                          </TokensDiv>
+                        </td>
+                      </tr>
+                    );
+                  }
+                  return (
+                    <tr className="">
+                      <td className="collapsing">{i18n('Data')}</td>
+                      <td className="" style={{ wordBreak: 'break-word' }}>
+                        {result.data}
+                      </td>
+                    </tr>
+                  );
+                })}
+
                 <tr className="">
                   <td className="collapsing">{i18n('From')}</td>
                   <td className="">
@@ -191,11 +288,11 @@ class Detail extends Component {
                 </tr>
                 <tr className="">
                   <td className="collapsing">{i18n('Gas Price')}</td>
-                  <td className="">{result.gasPrice}</td>
+                  <td className="">{dripToGdrip(result.gasPrice)} Gdrip</td>
                 </tr>
                 <tr className="">
                   <td className="collapsing">{i18n('Value')}</td>
-                  <td className="">{result.value}</td>
+                  <td className="">{dripTocfx(result.value)} CFX</td>
                 </tr>
                 <tr className="">
                   <td className="collapsing">{i18n('Nonce')}</td>

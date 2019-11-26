@@ -2,6 +2,7 @@ import React from 'react';
 import BigNumber from 'bignumber.js';
 import superagent from 'superagent';
 import querystring from 'querystring';
+import huNum from 'humanize-number';
 import { injectIntl, FormattedMessage, FormattedHTMLMessage } from 'react-intl';
 import { toast } from '../components/Toast';
 
@@ -13,11 +14,19 @@ export const convertToValueorFee = (bigNumber) => {
   if (result.toFixed() < 0.00001) return `< 0.00001`;
   return `${result.toFixed(4)}`;
 };
+export const dripTocfx = (bigNumber) => {
+  const result = new BigNumber(bigNumber).dividedBy(10 ** 18);
+  return result.toString(10);
+};
+export const dripToGdrip = (bigNumber) => {
+  const result = new BigNumber(bigNumber).dividedBy(10 ** 9);
+  return result.toString(10);
+};
 
 export const converToGasPrice = (bigNumber) => {
   const result = new BigNumber(bigNumber).dividedBy(10 ** 9);
   if (result.toFixed() < 0.00001) return `< 0.00001`;
-  return `${result.toFixed(4)}`;
+  return `${result.toFixed(5)}`;
 };
 
 export const converToGasPrice3Fixed = (bigNumber) => {
@@ -241,3 +250,7 @@ export function getQuery(locationSearch) {
   }
   return query;
 }
+
+export const humanizeNum = (a) => {
+  return huNum(a);
+};

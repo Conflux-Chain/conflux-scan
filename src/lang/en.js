@@ -95,5 +95,7 @@ export default {
   'app.directory.topholders.title': 'Top Token Holders',
   'app.directory.topholders.desc': 'Publicity & Transparency for the Community',
   'app.directory.community.title': 'Community',
+  'app.directory.fc.title': 'FansCoin',
+  'app.directory.fc.desc': 'TestNet token',
   'app.directory.community.desc': 'Join the Next Generation Decentralized Application Community',
 };
