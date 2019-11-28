@@ -8,11 +8,12 @@ export const reqFcStat = (param) => {
   }).then((res) => res.body);
 };
 
-export const reqFcList = (param) => {
+export const reqFcList = (param, options = {}) => {
   return sendRequest({
     // url: 'http://yapi.conflux-chain.org/mock/4/transaction/fc/list',
     url: '/api/transaction/fc/list',
     query: param,
+    showError: options.showError,
   }).then((res) => res.body);
 };
 

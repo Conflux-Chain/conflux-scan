@@ -193,7 +193,7 @@ class Detail extends Component {
                       });
                       return (
                         <tr className="">
-                          <td className="collapsing">{i18n('Tokens Transferred')}</td>
+                          <td className="collapsing">{i18n('Tokens Minted')}</td>
                           <td className="">
                             <TokensDiv>
                               <em>{i18n('To')}</em>
