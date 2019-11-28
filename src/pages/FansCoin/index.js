@@ -11,7 +11,7 @@ import media from '../../globalStyles/media';
 import EllipsisLine from '../../components/EllipsisLine';
 import DataList from '../../components/DataList';
 import Countdown from '../../components/Countdown';
-import { convertToValueorFee, converToGasPrice, i18n, sendRequest, renderAny, humanizeNum, getQuery, dripTocfx } from '../../utils';
+import { convertToValueorFee, converToGasPrice, i18n, sendRequest, renderAny, humanizeNum, getQuery, dripTocfx, notice } from '../../utils';
 import iconCloseSmall from '../../assets/images/icons/close-small.svg';
 import iconCloseMd from '../../assets/images/icons/close-md.svg';
 import iconFcLogo from '../../assets/images/icons/fc-logo.svg';
@@ -301,7 +301,7 @@ class FansCoin extends Component {
       fcStat: {
         totalSupply: 0,
         transactionCount: 0,
-        accountCount: 0,
+        accountTotal: 0,
       },
       addressData: {
         balance: '',
@@ -329,7 +329,7 @@ class FansCoin extends Component {
     curPageBase = this.state.pageNum;
   }
 
-  getFcList({ pageNum }) {
+  getFcList({ pageNum }, options) {
     const { pageSize, searchInput } = this.state;
     const query = getQuery(window.location.search);
     const { address } = query;
@@ -337,11 +337,14 @@ class FansCoin extends Component {
       listLoading: true,
     });
     const filter = searchInput || address;
-    reqFcList({
-      pageNum,
-      pageSize,
-      filter,
-    }).then(
+    reqFcList(
+      {
+        pageNum,
+        pageSize,
+        filter,
+      },
+      options
+    ).then(
       (res) => {
         this.setState({
           listLoading: false,
@@ -352,11 +355,28 @@ class FansCoin extends Component {
             fcTransList: res.result.data,
             fcTransTotal: res.result.total,
           });
+        } else if (res.code === 1) {
+          notice.show({
+            type: 'message-error-light',
+            content: i18n('Search paremeter incorrect'),
+            timeout: 3000,
+          });
+        } else {
+          notice.show({
+            type: 'message-error-light',
+            content: i18n('server error'),
+            timeout: 3000,
+          });
         }
       },
       () => {
         this.setState({
           listLoading: false,
+        });
+        notice.show({
+          type: 'message-error-light',
+          content: i18n('server error'),
+          timeout: 3000,
         });
       }
     );
@@ -413,7 +433,7 @@ class FansCoin extends Component {
                 </div>
                 <div className="summary-line">
                   <h6>{i18n('Holders')}:</h6>
-                  <div className="summary-line-content">{humanizeNum(fcStat.accountCount)} addresses</div>
+                  <div className="summary-line-content">{humanizeNum(fcStat.accountTotal)} addresses</div>
                 </div>
                 <div className="summary-line">
                   <h6>{i18n('Transfers')}:</h6>
@@ -538,9 +558,14 @@ class FansCoin extends Component {
                       className="search-icon"
                       onClick={() => {
                         history.replace(`/fansCoin`);
-                        this.getFcList({
-                          pageNum: 1,
-                        });
+                        this.getFcList(
+                          {
+                            pageNum: 1,
+                          },
+                          {
+                            showError: false,
+                          }
+                        );
                       }}
                     />
                   </div>

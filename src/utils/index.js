@@ -5,6 +5,7 @@ import querystring from 'querystring';
 import huNum from 'humanize-number';
 import { injectIntl, FormattedMessage, FormattedHTMLMessage } from 'react-intl';
 import { toast } from '../components/Toast';
+import { notice } from '../components/Message/notice';
 
 let errorId = null;
 let source = null;
@@ -254,3 +255,5 @@ export function getQuery(locationSearch) {
 export const humanizeNum = (a) => {
   return huNum(a);
 };
+
+export { notice };

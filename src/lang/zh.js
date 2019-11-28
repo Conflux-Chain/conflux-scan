@@ -153,4 +153,5 @@ export default {
   'Txn Hash/Holder Address': '交易哈希值/持有人地址',
   'Profile Summary': '资料概要',
   'Tokens Transferred': '代币转移',
+  'Search paremeter incorrect': '查询参数有误',
 };
