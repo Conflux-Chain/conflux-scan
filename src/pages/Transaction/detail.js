@@ -123,6 +123,16 @@ class Detail extends Component {
     this.fetchTxDetail(params.txnhash);
   }
 
+  componentDidUpdate() {
+    const {
+      match: { params },
+    } = this.props;
+    const { txnhash } = this.state;
+    if (params.txnhash !== txnhash) {
+      this.fetchTxDetail(params.txnhash);
+    }
+  }
+
   fetchTxDetail(txnhash) {
     const { history } = this.props;
     this.setState({ isLoading: true, txnhash });
@@ -152,7 +162,7 @@ class Detail extends Component {
   }
 
   render() {
-    const { result, isLoading, txnhash, isPacking } = this.state;
+    const { isLoading, txnhash, isPacking } = this.state;
     const {
       match: { params },
     } = this.props;
@@ -160,6 +170,8 @@ class Detail extends Component {
     if (isPacking) {
       return <NotFoundTx searchId={txnhash} />;
     }
+    let { result } = this.state;
+    result = result || {};
 
     return (
       <div className="page-transaction-detail">
