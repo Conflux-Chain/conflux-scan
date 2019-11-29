@@ -8,7 +8,18 @@ import EllipsisLine from '../../components/EllipsisLine';
 import media from '../../globalStyles/media';
 import { i18n, sendRequest } from '../../utils/index';
 import ConfirmSimple from '../../components/ConfirmSimple';
+import Dag from '../../components/Dag';
 import * as commonCss from '../../globalStyles/common';
+
+const DagWrapper = styled.div`
+  #dag-viewer {
+    min-height: 240px;
+    width: 100%;
+    > canvas {
+      border-radius: 4px;
+    }
+  }
+`;
 
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -59,12 +70,7 @@ const HeadBar = styled.div`
     margin-bottom: 24px;
   `}
   margin-bottom: 24px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-
   * {
-    display: inline-block;
     margin: 0;
   }
   h1 {
@@ -74,6 +80,18 @@ const HeadBar = styled.div`
   }
 `;
 
+const TitleWrapper = styled.div`
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  color: white;
+  display: inline-flex;
+  justify-content: flex-start;
+  align-items: center;
+  > h1 {
+    color: white;
+  }
+`;
 const IconFace = styled.div`
   margin-right: 16px;
   width: 32px;
@@ -100,7 +118,7 @@ const columns = [
     dataIndex: 'position',
     title: i18n('Position'),
     className: 'one wide aligned plain_th',
-    render: (text, row) => (
+    render: (text /* , row */) => (
       <div>
         <PCell>{1 + text}</PCell>
       </div>
@@ -156,7 +174,7 @@ const columns = [
 
 /* eslint react/destructuring-assignment: 0 */
 let curPageBase = 1;
-document.addEventListener('clean_state', (event) => {
+document.addEventListener('clean_state', (/* event */) => {
   curPageBase = 1;
 });
 
@@ -205,12 +223,17 @@ class List extends Component {
       <div className="page-block-list">
         <Wrapper>
           <HeadBar>
-            <IconFace>
-              <svg className="icon" aria-hidden="true">
-                <use xlinkHref="#iconqukuaigaoduxuanzhong" />
-              </svg>
-            </IconFace>
-            <h1>{i18n('app.pages.blockAndTx.blocks')}</h1>
+            <DagWrapper>
+              <TitleWrapper>
+                <IconFace>
+                  <svg className="icon" aria-hidden="true">
+                    <use xlinkHref="#iconqukuaigaoduxuanzhong" />
+                  </svg>
+                </IconFace>
+                <h1>{i18n('app.pages.blockAndTx.blocks')}</h1>
+              </TitleWrapper>
+              <Dag />
+            </DagWrapper>
           </HeadBar>
           <TabWrapper>
             <StyledTabel>

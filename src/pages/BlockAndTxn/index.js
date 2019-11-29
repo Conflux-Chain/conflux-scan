@@ -6,6 +6,7 @@ import Countdown from '../../components/Countdown';
 import EllipsisLine from '../../components/EllipsisLine';
 import TableLoading from '../../components/TableLoading';
 import media from '../../globalStyles/media';
+import Dag from '../../components/Dag';
 import { converToGasPrice3Fixed, initSse, closeSource, sendRequest, i18n } from '../../utils';
 
 const Wrapper = styled.div`
@@ -17,6 +18,25 @@ const Wrapper = styled.div`
     flex-wrap: wrap;
     justify-content: center;
   `}
+`;
+
+const DagWrapper = styled.div`
+  > span {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    color: white;
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 20px;
+  }
+  #dag-viewer {
+    min-height: 240px;
+    width: 100%;
+    > canvas {
+      border-radius: 4px;
+    }
+  }
 `;
 
 const StyledTabel = styled.div`
@@ -224,9 +244,11 @@ class BlockAndTxn extends Component {
             <EllipsisLine
               prefix={i18n('Miner')}
               linkTo={`/accountdetail/${text}`}
-              text={(fmt) => {
-                return ' ' + text;
-              }}
+              text={
+                (/* fmt */) => {
+                  return ' ' + text;
+                }
+              }
             />
             <PCell>
               {row.transactionCount} {row.transactionCount <= 1 ? i18n('txn') : i18n('txns')}
@@ -313,6 +335,10 @@ class BlockAndTxn extends Component {
     ];
     return (
       <div className="page-block-txn">
+        <DagWrapper>
+          <span>Block</span>
+          <Dag />
+        </DagWrapper>
         <Wrapper>
           <StyledTabel className="left">
             <div className="ui card" style={{ width: '100%' }}>

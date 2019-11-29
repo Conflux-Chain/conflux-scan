@@ -33,10 +33,7 @@ function startFechingDagData() {
   setInterval(fetchDagData.bind(this), 5000);
 }
 
-const Container = styled.div`
-  min-height: 300px;
-  width: 100%;
-`;
+const Container = styled.div``;
 
 function Dag({ id = 'dag-viewer' } = {}) {
   useMount(async () => {
@@ -45,13 +42,13 @@ function Dag({ id = 'dag-viewer' } = {}) {
     const container = document.getElementById(id);
     const initialSubChains = await fetchDagData();
     const player = await new Player({
-      backgroundColor: '0x222222',
+      backgroundColor: '0x0B3560',
       doc: container,
-      playByDefault: true,
+      playByDefault: 500,
       pointSize: 20,
       globalRadius: 100,
       defaultInterval: 500,
-      colors: [0x00e7f7, 0xce9ffc, 0xe9e4f0, 0xfe2f57, 0xff9415, 0xc0a4fa, 0xdeddf0, 0xff9966, 0xff0083, 0x2dbde8],
+      colors: [0x76e2e0, 0xc79af5, 0xe4dcef, 0xf2a9b7, 0xf2be81, 0xc29af5, 0xdfdcef, 0xeca987, 0xe087ad, 0x85cfe8, 0xe0e0e0],
       chain: initialSubChains.pop().reverse(),
       onBlockClick: ({ hash }) => {
         window.open(`https://confluxscan.io/blocksdetail/${hash}`);
