@@ -9,9 +9,13 @@ import media from '../../globalStyles/media';
 import Dag from '../../components/Dag';
 import { converToGasPrice3Fixed, initSse, closeSource, sendRequest, i18n } from '../../utils';
 
-const Wrapper = styled.div`
+const RowWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
   max-width: 1200px;
   margin: 0 auto;
+`;
+const ColumnWrapper = styled.div`
   display: flex;
   justify-content: flex-start;
   ${media.mobile`
@@ -22,8 +26,8 @@ const Wrapper = styled.div`
 
 const DagWrapper = styled.div`
   > span {
-    position: absolute;
-    top: 20px;
+    position: relative;
+    top: 50px;
     left: 20px;
     color: white;
     font-weight: bold;
@@ -335,44 +339,46 @@ class BlockAndTxn extends Component {
     ];
     return (
       <div className="page-block-txn">
-        <DagWrapper>
-          <span>Block</span>
-          <Dag />
-        </DagWrapper>
-        <Wrapper>
-          <StyledTabel className="left">
-            <div className="ui card" style={{ width: '100%' }}>
-              <div className="content">
-                <div className="header">{i18n('app.pages.blockAndTx.blocks')}</div>
+        <RowWrapper>
+          <DagWrapper>
+            <span>Blocks</span>
+            <Dag />
+          </DagWrapper>
+          <ColumnWrapper>
+            <StyledTabel className="left">
+              <div className="ui card" style={{ width: '100%' }}>
+                <div className="content">
+                  <div className="header">{i18n('app.pages.blockAndTx.blocks')}</div>
+                </div>
+                <div className="content">
+                  {showLoading && <TableLoading />}
+                  <DataList columns={window.innerWidth > 576 ? BlockColumns : MBlockColumns} dataSource={BlockList} />
+                </div>
+                <div className="extra content">
+                  <Link to="/blocks">
+                    <StyledButton className="ui fluid violet button ">{i18n('app.pages.blockAndTx.viewAllBlocks')}</StyledButton>
+                  </Link>
+                </div>
               </div>
-              <div className="content">
-                {showLoading && <TableLoading />}
-                <DataList columns={window.innerWidth > 576 ? BlockColumns : MBlockColumns} dataSource={BlockList} />
+            </StyledTabel>
+            <StyledTabel className="right">
+              <div className="ui card" style={{ width: '100%' }}>
+                <div className="content">
+                  <div className="header">{i18n('Transactions')}</div>
+                </div>
+                <div className="content">
+                  {showLoading && <TableLoading />}
+                  <DataList columns={window.innerWidth > 576 ? TxColumns : MTxColumns} dataSource={TxList} />
+                </div>
+                <div className="extra content">
+                  <Link to="/transactions">
+                    <StyledButton className="ui fluid violet button ">{i18n('app.pages.blockAndTx.viewAllTransactions')}</StyledButton>
+                  </Link>
+                </div>
               </div>
-              <div className="extra content">
-                <Link to="/blocks">
-                  <StyledButton className="ui fluid violet button ">{i18n('app.pages.blockAndTx.viewAllBlocks')}</StyledButton>
-                </Link>
-              </div>
-            </div>
-          </StyledTabel>
-          <StyledTabel className="right">
-            <div className="ui card" style={{ width: '100%' }}>
-              <div className="content">
-                <div className="header">{i18n('Transactions')}</div>
-              </div>
-              <div className="content">
-                {showLoading && <TableLoading />}
-                <DataList columns={window.innerWidth > 576 ? TxColumns : MTxColumns} dataSource={TxList} />
-              </div>
-              <div className="extra content">
-                <Link to="/transactions">
-                  <StyledButton className="ui fluid violet button ">{i18n('app.pages.blockAndTx.viewAllTransactions')}</StyledButton>
-                </Link>
-              </div>
-            </div>
-          </StyledTabel>
-        </Wrapper>
+            </StyledTabel>
+          </ColumnWrapper>
+        </RowWrapper>
       </div>
     );
   }
