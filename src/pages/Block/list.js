@@ -81,8 +81,8 @@ const HeadBar = styled.div`
 `;
 
 const TitleWrapper = styled.div`
-  position: absolute;
-  top: 20px;
+  position: relative;
+  top: 50px;
   left: 20px;
   color: white;
   display: inline-flex;
