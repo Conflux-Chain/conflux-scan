@@ -76,14 +76,12 @@ const HeadBar = styled.div`
   h1 {
     color: #000;
     font-size: 20px;
-    margin-right: 24px;
   }
 `;
 
 const AbsWrapper = styled.div`
   position: relative;
   height: 0;
-  width: 0;
 `;
 const TitleWrapper = styled.div`
   position: absolute;
