@@ -36,7 +36,6 @@ function startFechingDagData() {
 const Container = styled.div``;
 const ToolTipWrapper = styled.div`
   position: relative;
-  width: 0;
   height: 0;
 `;
 const Tooltip = styled.div`
@@ -71,7 +70,7 @@ const ArrowRight = styled.div`
   border-left: 6.5px solid white;
 `;
 
-const pointSize = 40;
+const pointSize = 24;
 
 function Dag({ id = 'dag-viewer', children } = {}) {
   const [tooltipOpt, setTooltipOpt] = useState({

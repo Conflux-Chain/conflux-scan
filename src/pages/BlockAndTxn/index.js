@@ -37,7 +37,6 @@ const DagWrapper = styled.div`
 const AbsWrapper = styled.div`
   position: relative;
   height: 0;
-  width: 0;
 `;
 const TitleWrapper = styled.div`
   position: absolute;
@@ -51,7 +50,6 @@ const TitleWrapper = styled.div`
   > h1 {
     margin: 0;
     font-size: 20px;
-    margin-right: 24px;
     color: white;
   }
 `;
