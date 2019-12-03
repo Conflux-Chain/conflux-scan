@@ -80,9 +80,14 @@ const HeadBar = styled.div`
   }
 `;
 
-const TitleWrapper = styled.div`
+const AbsWrapper = styled.div`
   position: relative;
-  top: 50px;
+  height: 0;
+  width: 0;
+`;
+const TitleWrapper = styled.div`
+  position: absolute;
+  top: 20px;
   left: 20px;
   color: white;
   display: inline-flex;
@@ -224,15 +229,18 @@ class List extends Component {
         <Wrapper>
           <HeadBar>
             <DagWrapper>
-              <TitleWrapper>
-                <IconFace>
-                  <svg className="icon" aria-hidden="true">
-                    <use xlinkHref="#iconqukuaigaoduxuanzhong" />
-                  </svg>
-                </IconFace>
-                <h1>{i18n('app.pages.blockAndTx.blocks')}</h1>
-              </TitleWrapper>
-              <Dag />
+              <Dag>
+                <AbsWrapper>
+                  <TitleWrapper>
+                    <IconFace>
+                      <svg className="icon" aria-hidden="true">
+                        <use xlinkHref="#iconqukuaigaoduxuanzhong" />
+                      </svg>
+                    </IconFace>
+                    <h1>{i18n('app.pages.blockAndTx.blocks')}</h1>
+                  </TitleWrapper>
+                </AbsWrapper>
+              </Dag>
             </DagWrapper>
           </HeadBar>
           <TabWrapper>

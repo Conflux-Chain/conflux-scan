@@ -25,21 +25,47 @@ const ColumnWrapper = styled.div`
 `;
 
 const DagWrapper = styled.div`
-  > span {
-    position: relative;
-    top: 50px;
-    left: 20px;
-    color: white;
-    font-weight: bold;
-    font-size: 20px;
-    line-height: 20px;
-  }
   #dag-viewer {
-    min-height: 240px;
+    height: 240px;
     width: 100%;
     > canvas {
       border-radius: 4px;
     }
+  }
+`;
+
+const AbsWrapper = styled.div`
+  position: relative;
+  height: 0;
+  width: 0;
+`;
+const TitleWrapper = styled.div`
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  color: white;
+  display: inline-flex;
+  justify-content: flex-start;
+  align-items: center;
+  }
+  > h1 {
+    margin: 0;
+    font-size: 20px;
+    margin-right: 24px;
+    color: white;
+  }
+`;
+
+const SmallerIconFace = styled.div`
+  margin-right: 16px;
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  svg {
+    width: 24px;
+    height: 24px;
   }
 `;
 
@@ -341,8 +367,18 @@ class BlockAndTxn extends Component {
       <div className="page-block-txn">
         <RowWrapper>
           <DagWrapper>
-            <span>Blocks</span>
-            <Dag />
+            <Dag>
+              <AbsWrapper>
+                <TitleWrapper>
+                  <SmallerIconFace>
+                    <svg className="icon" aria-hidden="true">
+                      <use xlinkHref="#iconqukuaigaoduxuanzhong" />
+                    </svg>
+                  </SmallerIconFace>
+                  <h1>{i18n('app.pages.blockAndTx.blocks')}</h1>
+                </TitleWrapper>
+              </AbsWrapper>
+            </Dag>
           </DagWrapper>
           <ColumnWrapper>
             <StyledTabel className="left">

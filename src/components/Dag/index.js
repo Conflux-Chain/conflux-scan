@@ -34,7 +34,13 @@ function startFechingDagData() {
 }
 
 const Container = styled.div``;
+const ToolTipWrapper = styled.div`
+  position: relative;
+  width: 0;
+  height: 0;
+`;
 const Tooltip = styled.div`
+  position: absolute;
   padding: 14px 13px;
   border-radius: 4px;
   box-shadow: 1px 2px 8px rgba(0, 0, 0, 0.16);
@@ -65,9 +71,9 @@ const ArrowRight = styled.div`
   border-left: 6.5px solid white;
 `;
 
-const pointSize = 20;
+const pointSize = 40;
 
-function Dag({ id = 'dag-viewer' } = {}) {
+function Dag({ id = 'dag-viewer', children } = {}) {
   const [tooltipOpt, setTooltipOpt] = useState({
     transform: '',
     direction: '',
@@ -103,7 +109,7 @@ function Dag({ id = 'dag-viewer' } = {}) {
             text: refHashes,
             style: {
               transform: useRightArrow ? 'translateX(-100%)' : undefined,
-              left: `${useRightArrow ? meshPosition.x - pointSize * 2 : meshPosition.x + pointSize}px`,
+              left: `${useRightArrow ? meshPosition.x - pointSize : meshPosition.x + pointSize}px`,
               top: `${meshPosition.y - pointSize}px`,
               visibility: 'visible',
             },
@@ -124,16 +130,19 @@ function Dag({ id = 'dag-viewer' } = {}) {
 
   return (
     <Container id={id}>
-      <Tooltip style={style}>
-        {direction === 'left' && <ArrowLeft />}
-        {direction === 'right' && <ArrowRight />}
-        {text}
-      </Tooltip>
+      {[children]}
+      <ToolTipWrapper>
+        <Tooltip style={style}>
+          {direction === 'left' && <ArrowLeft />}
+          {direction === 'right' && <ArrowRight />}
+          {text}
+        </Tooltip>
+      </ToolTipWrapper>
     </Container>
   );
 }
 
-Dag.defaultProps = { id: 'dag-viewer' };
-Dag.propTypes = { id: PropTypes.string };
+Dag.defaultProps = { id: 'dag-viewer', children: undefined };
+Dag.propTypes = { id: PropTypes.string, children: PropTypes.element };
 
 export default memo(Dag);
