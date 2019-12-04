@@ -84,6 +84,12 @@ export default {
   // Age
   'app.pages.txns.age': '块龄',
   'app.pages.txns.time': '时间戳',
+  'app.pages.txns.Status': '状态',
+  'app.pages.txns.Success': '成功',
+  'app.pages.txns.Err': '失败',
+  'app.pages.txns.Skip': '跳过',
+  'app.pages.err-reason.1': 'app.pages.err-reason.1',
+  'app.pages.err-reason.2': 'app.pages.err-reason.2',
 
   'app.pages.block.confirm.title': '请确认',
   'app.pages.block.confirm.pageWarning': '暂不支持10000分页',

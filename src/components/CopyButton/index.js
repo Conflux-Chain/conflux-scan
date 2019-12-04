@@ -2,10 +2,14 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { injectIntl } from 'react-intl';
+import iconCopy from '../../assets/images/icons/icon-copy.svg';
 
 const Wrap = styled.div`
   margin-left: 10px;
   display: inline-block;
+  > img {
+    cursor: pointer;
+  }
 `;
 const IconFace = styled.div`
   margin-left: 16px;
@@ -197,6 +201,9 @@ CopyButton.defaultProps = {
           <i className="i3" />
         </IconCopy>
       );
+    }
+    if (btnType === 'three') {
+      return <img src={iconCopy} />;
     }
     return (
       <IconFace className="iconface">
