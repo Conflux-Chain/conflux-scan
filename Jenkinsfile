@@ -76,6 +76,7 @@ JENKINS_NODE_COOKIE=dontKillMe yarn start-test
           steps {
             script {
               sh (label: 'build front', script: """
+sudo docker build -t conflux-scan .
 mkdir -p `pwd`/dist
 sudo docker run --rm --mount type=bind,src=`pwd`/dist,dst=/conflux-scan/dist conflux-scan build
 """)
