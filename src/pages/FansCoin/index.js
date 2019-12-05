@@ -161,6 +161,13 @@ const TransfersDiv = styled.div`
       cursor: pointer;
     }
    }
+
+ ${media.pad`
+   .transfer-search-tag + .transfer-search-input {
+     margin-top: 10px;
+   }
+ `}
+
    .transfer-search-tag {
     background: #F2F2F2;
     padding-left: 10px;
@@ -722,7 +729,10 @@ class FansCoin extends Component {
                             pinned: true,
                           }}
                           ellipsisStyle={{ maxWidth: 152 }}
-                          onClick={() => {
+                          onClick={(e) => {
+                            e.preventDefault();
+                            history.replace(`/fansCoin?address=${text}`);
+
                             setTimeout(() => {
                               this.getFcList({
                                 pageNum: 1,
@@ -765,7 +775,10 @@ class FansCoin extends Component {
                             popUpCfg={{
                               pinned: true,
                             }}
-                            onClick={() => {
+                            onClick={(e) => {
+                              e.preventDefault();
+                              history.replace(`/fansCoin?address=${text}`);
+
                               setTimeout(() => {
                                 this.getFcList({
                                   pageNum: 1,
