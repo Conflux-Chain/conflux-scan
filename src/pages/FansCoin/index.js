@@ -56,7 +56,11 @@ const SummaryDiv = styled.div`
     margin-bottom: 10px;
     display: flex;
     > h6 {
-      width: 120px;
+      ${media.pad`
+      min-width: 80px;
+      max-width: 120px;
+    `}
+      min-width: 120px;
       margin: 0;
       font-size: 16px;
       color: #8f8f8f;
@@ -130,7 +134,7 @@ const TransfersDiv = styled.div`
      ${media.pad`
      flex: 1;
      display: flex;
-     margin-top: 10px;
+     margin-top: 0px;
     `}
 
      &:hover {
@@ -202,6 +206,7 @@ const TransfersDiv = styled.div`
       margin-left: 4px;
     }
     .txnhash-err-line2 {
+      margin-top: 5px;
       font-size: 14px;
       line-height: 14px;
       color: #8F8F8F;
@@ -683,7 +688,7 @@ class FansCoin extends Component {
                       if (row.status === 1) {
                         errtxt = i18n('app.pages.err-reason.1');
                         errIcon = <img src={iconStatusErr} />;
-                      } else if (row.status === 2) {
+                      } else if (row.status === 2 || row.status === null) {
                         errtxt = i18n('app.pages.err-reason.2');
                         errIcon = <img src={iconStatusSkip} />;
                       }
@@ -721,6 +726,9 @@ class FansCoin extends Component {
                             setTimeout(() => {
                               this.getFcList({
                                 pageNum: 1,
+                              });
+                              this.setState({
+                                searchInput: '',
                               });
                             }, 10);
                           }}
@@ -761,6 +769,9 @@ class FansCoin extends Component {
                               setTimeout(() => {
                                 this.getFcList({
                                   pageNum: 1,
+                                });
+                                this.setState({
+                                  searchInput: '',
                                 });
                               }, 10);
                             }}

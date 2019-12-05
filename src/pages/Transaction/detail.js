@@ -256,19 +256,11 @@ class Detail extends Component {
                           </div>
                         );
                       }
-                      if (result.status === 2) {
+                      if (result.status === 2 || result.status === null) {
                         return (
                           <div className="status-line status-skip">
                             <img src={iconStatusSkip} />
                             <span>{i18n('app.pages.txns.Skip')}</span>
-                          </div>
-                        );
-                      }
-                      if (result.status === null) {
-                        return (
-                          <div className="status-line status-skip">
-                            <img src={iconStatusSkip} />
-                            <span>{i18n('app.pages.txns.Pending')}</span>
                           </div>
                         );
                       }
@@ -324,7 +316,7 @@ class Detail extends Component {
 
                     return (
                       <tr className="">
-                        <td className="collapsing">{i18n('Token Transferred')}</td>
+                        <td className="collapsing">{i18n('Token Transfered')}</td>
                         <td className="">
                           <TokensDiv>
                             <em>{i18n('From')}</em>
