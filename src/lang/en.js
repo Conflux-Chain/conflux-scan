@@ -47,8 +47,9 @@ export default {
   'app.pages.txns.Success': 'Success',
   'app.pages.txns.Err': 'Error',
   'app.pages.txns.Skip': 'Skip',
-  'app.pages.err-reason.1': 'smart contract execution error / insufficient gas fee / incorrect nonce',
-  'app.pages.err-reason.2': 'signature verification error / balance is low',
+
+  'app.pages.err-reason.1': 'Transfer Error: Error encountered during contract exectuion，or out of gas',
+  'app.pages.err-reason.2': 'Transfer Error: Wrong nonce，signature verification failed，or insuffcient funds',
 
   'app.pages.block.confirm.title': 'Please Confirm',
   'app.pages.block.confirm.pageWarning': 'page > 10000 is not supported',

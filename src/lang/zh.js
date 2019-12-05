@@ -88,8 +88,8 @@ export default {
   'app.pages.txns.Success': '成功',
   'app.pages.txns.Err': '失败',
   'app.pages.txns.Skip': '跳过',
-  'app.pages.err-reason.1': '智能合约执行错误 / gas fee不足 / nonce不正确',
-  'app.pages.err-reason.2': '签名验证错误 / 账户余额过少',
+  'app.pages.err-reason.1': '交易错误：智能合约执行错误，或gas fee不足',
+  'app.pages.err-reason.2': '交易错误：nonce错误，签名验证失败，或余额不足',
 
   'app.pages.block.confirm.title': '请确认',
   'app.pages.block.confirm.pageWarning': '暂不支持10000分页',
