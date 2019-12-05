@@ -29,6 +29,7 @@ const TopHolder = lazy(() => import('../pages/TopList/holder'));
 const SearchNotFound = lazy(() => import('../pages/SearchNotFound'));
 const NotFound = lazy(() => import('../pages/404'));
 const NotFoundTx = lazy(() => import('../pages/NotFoundTx'));
+const FansCoin = lazy(() => import('../pages/FansCoin'));
 
 function Router() {
   return (
@@ -48,6 +49,7 @@ function Router() {
         <Route path="/topholders" component={TopHolder} />
         <Route path="/search-notfound" component={SearchNotFound} />
         <Route path="/notfoundtx" component={NotFoundTx} />
+        <Route path="/fansCoin" component={FansCoin} />
         <Route component={NotFound} />
       </Switch>
     </Suspense>

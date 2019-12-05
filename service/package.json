@@ -19,9 +19,9 @@
     "susie": "^3.0.0"
   },
   "devDependencies": {
-    "pm2": "^3.5.1"
+    "pm2": "^4.2.0"
   },
   "resolutions": {
-    "lodash":  "^4.17.14"
+    "lodash": "^4.17.14"
   }
 }

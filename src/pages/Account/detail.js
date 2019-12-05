@@ -19,6 +19,8 @@ import CopyButton from '../../components/CopyButton';
 import QrcodeButton from '../../components/QrcodeButton';
 import * as commonCss from '../../globalStyles/common';
 import media from '../../globalStyles/media';
+import iconStatusErr from '../../assets/images/icons/status-err.svg';
+import iconStatusSkip from '../../assets/images/icons/status-skip.svg';
 
 const { RangePicker } = DatePicker;
 
@@ -54,6 +56,22 @@ const StyledTabel = styled.div`
   .ui.fluid.card {
     box-shadow: none;
     border: 1px solid rgba(0, 0, 0, 0.08);
+  }
+  .txnhash-err {
+    display: flex;
+    > img {
+      align-self: flex-start;
+    }
+    .txnhash-err-line1 {
+      flex: 1;
+      margin-left: 4px;
+    }
+    .txnhash-err-line2 {
+      margin-top: 5px;
+      font-size: 14px;
+      line-height: 14px;
+      color: #8f8f8f;
+    }
   }
 `;
 
@@ -543,7 +561,31 @@ class Detail extends Component {
         dataIndex: 'hash',
         className: 'two wide aligned',
         title: i18n('Hash'),
-        render: (text, row) => <EllipsisLine linkTo={`/transactionsdetail/${text}`} text={text} />,
+        render: (text, row) => {
+          const line = <EllipsisLine linkTo={`/transactionsdetail/${text}`} text={text} />;
+          if (row.status === 0) {
+            return line;
+          }
+          let errtxt;
+          let errIcon;
+          if (row.status === 1) {
+            errtxt = i18n('app.pages.err-reason.1');
+            errIcon = <img src={iconStatusErr} />;
+          } else if (row.status === 2 || row.status === null) {
+            errtxt = i18n('app.pages.err-reason.2');
+            errIcon = <img src={iconStatusSkip} />;
+          }
+
+          return (
+            <div className="txnhash-err">
+              {errIcon}
+              <div className="txnhash-err-line1">
+                {line}
+                <div className="txnhash-err-line2">{errtxt}</div>
+              </div>
+            </div>
+          );
+        },
       },
       {
         key: 2,
@@ -818,6 +860,7 @@ class Detail extends Component {
                           }}
                           activePage={queries.pageNum}
                           totalPages={Math.ceil(TxTotalCount / 10)}
+                          ellipsisItem={null}
                         />
                       </div>
                       <div className="page-h5">
@@ -877,6 +920,7 @@ class Detail extends Component {
                           }}
                           activePage={curMinedPage}
                           totalPages={Math.ceil(minedTotalCount / 10)}
+                          ellipsisItem={null}
                         />
                       </div>
                       <div className="page-h5">

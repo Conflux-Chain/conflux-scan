@@ -21,9 +21,15 @@ module.exports = merge(commom, {
     proxy: {
       '/proxy': 'http://127.0.0.1:3000',
       '/api': {
-        target: 'http://testnet-jsonrpc.conflux-chain.org:18084',
-        pathRewrite: { '^/api': '' },
+        target: 'http://13.75.69.106',
+        // pathRewrite: { '^/api': '' },
       },
+      // for developing dag locally
+      '/conflux-dag.js': 'http://localhost:8081/dist/',
+      '/dist/vendors~pixi.js.conflux-dag.js': 'http://localhost:8081/',
+      '/dist/vendors~@tweenjs/': 'http://localhost:8081/',
+      '/dist/2.conflux-dag.js': 'http://localhost:8081/',
+      '/dist/0.conflux-dag.js': 'http://localhost:8081/',
     },
   },
 });
