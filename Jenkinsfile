@@ -59,8 +59,9 @@ sudo cp -r .  /www/explorer-v2/conflux-scan/
               sh (label: 'build n run backend', script: """
 cd service
 sudo docker build -t conflux-scan-service .
-sudo docker rm -f conflux-scan-service || true
-sudo docker run -d --name conflux-scan-service --restart=on-failure -p 127.0.0.1:3000:3000/tcp conflux-scan-service server-test
+sudo docker stop conflux-scan-service || true
+sudo docker rm conflux-scan-service || true
+sudo docker run -d --name conflux-scan-service --restart=on-failure -p 127.0.0.1:3000:3000/tcp conflux-scan-service start
 """)
             }
           }
@@ -93,8 +94,9 @@ sudo cp -r . /www/explorer-v2/conflux-scan
               sh (label: 'build n run backend', script: """
 cd service
 sudo docker build -t conflux-scan-service .
-sudo docker rm -f conflux-scan-service || true
-sudo docker run -d --name conflux-scan-service --restart=on-failure -p 127.0.0.1:3000:3000/tcp conflux-scan-service start-without-pm2
+sudo docker stop conflux-scan-service || true
+sudo docker rm conflux-scan-service || true
+sudo docker run -d --name conflux-scan-service --restart=on-failure -p 127.0.0.1:3000:3000/tcp conflux-scan-service start
 """)
             }
           }
