@@ -43,6 +43,13 @@ export default {
   // age
   'app.pages.txns.age': 'Age',
   'app.pages.txns.time': 'Timestamp',
+  'app.pages.txns.Status': 'Status',
+  'app.pages.txns.Success': 'Success',
+  'app.pages.txns.Err': 'Error',
+  'app.pages.txns.Skip': 'Skip',
+
+  'app.pages.err-reason.1': 'Transfer Error: Error encountered during contract exectuion，or out of gas',
+  'app.pages.err-reason.2': 'Transfer Error: Wrong nonce，signature verification failed，or insuffcient funds',
 
   'app.pages.block.confirm.title': 'Please Confirm',
   'app.pages.block.confirm.pageWarning': 'page > 10000 is not supported',

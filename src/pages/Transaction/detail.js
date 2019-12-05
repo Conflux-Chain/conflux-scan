@@ -3,6 +3,7 @@ import { Link, withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import superagent from 'superagent';
+
 import moment from 'moment';
 import TableLoading from '../../components/TableLoading';
 import EllipsisLine from '../../components/EllipsisLine';
@@ -10,6 +11,11 @@ import media from '../../globalStyles/media';
 import { i18n, renderAny, sendRequest, dripTocfx, dripToGdrip } from '../../utils';
 import NotFoundTx from '../NotFoundTx';
 import iconFcLogo from '../../assets/images/icons/fc-logo.svg';
+import Countdown from '../../components/Countdown';
+import iconStatusErr from '../../assets/images/icons/status-err.svg';
+import iconStatusSuccess from '../../assets/images/icons/status-success.svg';
+import iconStatusSkip from '../../assets/images/icons/status-skip.svg';
+import CopyButton from '../../components/CopyButton';
 
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -19,6 +25,12 @@ const Wrapper = styled.div`
     margin: 0 auto;
     overflow-x: scroll;
   `}
+  .status-reason-err {
+    color: #ec6057;
+  }
+  .status-reason-skip {
+    color: #f09c3a;
+  }
 `;
 
 const StyledTabel = styled.table`
@@ -55,8 +67,29 @@ const StyledTabel = styled.table`
   td.bottom {
     padding-bottom: 2em !important;
   }
-  tr > td > a {
+  tr > td a {
     font-weight: bold;
+  }
+  .status-line {
+    display: flex;
+    align-items: center;
+    > img {
+      width: 16px;
+      margin-right: 5px;
+    }
+    span {
+      font-size: 16px;
+      line-height: 16px;
+    }
+  }
+  .status-success {
+    color: #59bf9c;
+  }
+  .status-err {
+    color: #ec6057;
+  }
+  .status-skip {
+    color: #f09c3a;
   }
 `;
 
@@ -173,6 +206,11 @@ class Detail extends Component {
     let { result } = this.state;
     result = result || {};
 
+    const copyBtnStyle = {
+      verticalAlign: 'middle',
+      height: 22,
+    };
+
     return (
       <div className="page-transaction-detail">
         <Wrapper>
@@ -190,6 +228,47 @@ class Detail extends Component {
                   <td className="top">{result.hash}</td>
                 </tr>
 
+                <tr className="">
+                  <td className="collapsing">{i18n('app.pages.txns.time')}</td>
+                  <td className="">
+                    <Countdown timestamp={result.timestamp * 1000} />
+                    &nbsp; ({moment(result.timestamp * 1000).format('YYYY-MM-DD HH:mm:ss Z')})
+                  </td>
+                </tr>
+
+                <tr className="">
+                  <td className="collapsing">{i18n('app.pages.txns.Status')}</td>
+                  <td className="">
+                    {renderAny(() => {
+                      if (result.status === 0) {
+                        return (
+                          <div className="status-line status-success">
+                            <img src={iconStatusSuccess} />
+                            <span>{i18n('app.pages.txns.Success')}</span>
+                          </div>
+                        );
+                      }
+                      if (result.status === 1) {
+                        return (
+                          <div className="status-line status-err">
+                            <img src={iconStatusErr} />
+                            <span>{i18n('app.pages.txns.Err')}</span>
+                          </div>
+                        );
+                      }
+                      if (result.status === 2 || result.status === null) {
+                        return (
+                          <div className="status-line status-skip">
+                            <img src={iconStatusSkip} />
+                            <span>{i18n('app.pages.txns.Skip')}</span>
+                          </div>
+                        );
+                      }
+                      return null;
+                    })}
+                  </td>
+                </tr>
+
                 {renderAny(() => {
                   if (result.decodedData) {
                     const { decodedData = {} } = result;
@@ -205,7 +284,7 @@ class Detail extends Component {
                       });
                       return (
                         <tr className="">
-                          <td className="collapsing">{i18n('Tokens Minted')}</td>
+                          <td className="collapsing">{i18n('Token Minted')}</td>
                           <td className="">
                             <TokensDiv>
                               <em>{i18n('To')}</em>
@@ -237,7 +316,7 @@ class Detail extends Component {
 
                     return (
                       <tr className="">
-                        <td className="collapsing">{i18n('Tokens Transferred')}</td>
+                        <td className="collapsing">{i18n('Token Transfered')}</td>
                         <td className="">
                           <TokensDiv>
                             <em>{i18n('From')}</em>
@@ -272,17 +351,23 @@ class Detail extends Component {
                   <td className="collapsing">{i18n('From')}</td>
                   <td className="">
                     <Link to={`/accountdetail/${result.from}`}>{result.from}</Link>
+                    <CopyButton style={copyBtnStyle} txtToCopy={result.from} btnType="three" toolTipId="Copy to clipboard" />
                   </td>
                 </tr>
                 <tr className="">
                   <td className="collapsing">{i18n('To')}</td>
                   <td className="">
                     {renderAny(() => {
+                      let toDiv;
                       if (result.to) {
-                        return <Link to={`/accountdetail/${result.to}`}>{result.to}</Link>;
-                      }
-                      if (result.contractCreated) {
-                        return (
+                        toDiv = (
+                          <span>
+                            <Link to={`/accountdetail/${result.to}`}>{result.to}</Link>
+                            <CopyButton style={copyBtnStyle} txtToCopy={result.to} btnType="three" toolTipId="Copy to clipboard" />
+                          </span>
+                        );
+                      } else if (result.contractCreated) {
+                        toDiv = (
                           <span>
                             [{i18n('Contract')} &nbsp;
                             <Link to={`/accountdetail/${result.contractCreated}`}>{result.contractCreated}</Link>
@@ -290,9 +375,27 @@ class Detail extends Component {
                           </span>
                         );
                       }
-                      return null;
+                      if (result.status === 0) {
+                        return toDiv;
+                      }
+                      let statusReason;
+                      if (result.status === 1) {
+                        statusReason = <div className="status-reason-err">{i18n('app.pages.err-reason.1')}</div>;
+                      } else if (result.status === 2 || result.status === null) {
+                        statusReason = <div className="status-reason-skip">{i18n('app.pages.err-reason.2')}</div>;
+                      }
+                      return (
+                        <div>
+                          {toDiv}
+                          {statusReason}
+                        </div>
+                      );
                     })}
                   </td>
+                </tr>
+                <tr className="">
+                  <td className="collapsing">{i18n('Value')}</td>
+                  <td className="">{dripTocfx(result.value)} CFX</td>
                 </tr>
                 <tr className="">
                   <td className="collapsing">{i18n('Gas')}</td>
@@ -301,10 +404,6 @@ class Detail extends Component {
                 <tr className="">
                   <td className="collapsing">{i18n('Gas Price')}</td>
                   <td className="">{dripToGdrip(result.gasPrice)} Gdrip</td>
-                </tr>
-                <tr className="">
-                  <td className="collapsing">{i18n('Value')}</td>
-                  <td className="">{dripTocfx(result.value)} CFX</td>
                 </tr>
                 <tr className="">
                   <td className="collapsing">{i18n('Nonce')}</td>
@@ -317,12 +416,8 @@ class Detail extends Component {
                   </td>
                 </tr>
                 <tr className="">
-                  <td className="collapsing">{i18n('Position')}</td>
-                  <td className="">{result.transactionIndex}</td>
-                </tr>
-                <tr className="">
-                  <td className="collapsing bottom">{i18n('app.pages.txns.time')}</td>
-                  <td className="bottom">{moment(result.timestamp * 1000).format('YYYY-MM-DD HH:mm:ss')}</td>
+                  <td className="collapsing bottom">{i18n('Position')}</td>
+                  <td className="bottom">{result.transactionIndex}</td>
                 </tr>
               </tbody>
             </StyledTabel>

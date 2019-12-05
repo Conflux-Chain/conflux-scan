@@ -84,6 +84,12 @@ export default {
   // Age
   'app.pages.txns.age': '块龄',
   'app.pages.txns.time': '时间戳',
+  'app.pages.txns.Status': '状态',
+  'app.pages.txns.Success': '成功',
+  'app.pages.txns.Err': '失败',
+  'app.pages.txns.Skip': '跳过',
+  'app.pages.err-reason.1': '交易错误：智能合约执行错误，或gas fee不足',
+  'app.pages.err-reason.2': '交易错误：nonce错误，签名验证失败，或余额不足',
 
   'app.pages.block.confirm.title': '请确认',
   'app.pages.block.confirm.pageWarning': '暂不支持10000分页',
@@ -152,6 +158,8 @@ export default {
   Quantity: '数量',
   'Txn Hash/Holder Address': '交易哈希值/持有人地址',
   'Profile Summary': '资料概要',
-  'Tokens Transferred': '代币转移',
   'Search paremeter incorrect': '查询参数有误',
+  'Token Transfered': '代币转移',
+  'Token Minted': '代币铸造',
+  'Token Burned': '代币承兑',
 };

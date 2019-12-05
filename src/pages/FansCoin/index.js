@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { withRouter, Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -16,8 +16,11 @@ import iconCloseSmall from '../../assets/images/icons/close-small.svg';
 import iconCloseMd from '../../assets/images/icons/close-md.svg';
 import iconFcLogo from '../../assets/images/icons/fc-logo.svg';
 import TableLoading from '../../components/TableLoading';
+import iconStatusErr from '../../assets/images/icons/status-err.svg';
+import iconStatusSkip from '../../assets/images/icons/status-skip.svg';
 
 import { reqFcList, reqFcStat, reqFcByAddress } from '../../utils/api';
+import wechatCode from '../../assets/images/wechat-code.jpg';
 
 const SummaryDiv = styled.div`
   display: flex;
@@ -53,7 +56,11 @@ const SummaryDiv = styled.div`
     margin-bottom: 10px;
     display: flex;
     > h6 {
-      width: 120px;
+      ${media.pad`
+      min-width: 80px;
+      max-width: 120px;
+    `}
+      min-width: 120px;
       margin: 0;
       font-size: 16px;
       color: #8f8f8f;
@@ -92,6 +99,13 @@ const SummaryDiv = styled.div`
       line-height: 24px;
     }
   }
+  .icon-link {
+    color: rgb(143, 143, 143);
+    line-height: 20px;
+    text-align: center;
+    width: 20px;
+    height: 20px;
+  }
 `;
 
 const TransfersDiv = styled.div`
@@ -120,7 +134,7 @@ const TransfersDiv = styled.div`
      ${media.pad`
      flex: 1;
      display: flex;
-     margin-top: 10px;
+     margin-top: 0px;
     `}
 
      &:hover {
@@ -179,6 +193,23 @@ const TransfersDiv = styled.div`
       line-height: 28px;
       color: #5C5C5C;
       overflow: hidden;
+    }
+  }
+
+  .txnhash-err {
+    display: flex;
+    > img {
+      align-self: flex-start;
+    }
+    .txnhash-err-line1 {
+      flex: 1;
+      margin-left: 4px;
+    }
+    .txnhash-err-line2 {
+      margin-top: 5px;
+      font-size: 14px;
+      line-height: 14px;
+      color: #8F8F8F;
     }
   }
 `;
@@ -393,7 +424,7 @@ class FansCoin extends Component {
   }
 
   render() {
-    const { fcTransList, fcStat, pageNum, pageSize, fcTransTotal, listLoading, addressData } = this.state;
+    const { fcTransList, fcStat, pageNum, pageSize, fcTransTotal, listLoading, addressData, searchInput } = this.state;
     const { history, intl } = this.props;
     const query = getQuery(window.location.search);
 
@@ -429,7 +460,7 @@ class FansCoin extends Component {
               <div className="content summary-content">
                 <div className="summary-line">
                   <h6>{i18n('Total Supply')}:</h6>
-                  <div className="summary-line-content">{dripTocfx(fcStat.totalSupply)}</div>
+                  <div className="summary-line-content">{dripTocfx(fcStat.totalSupply)} FC</div>
                 </div>
                 <div className="summary-line">
                   <h6>{i18n('Holders')}:</h6>
@@ -470,6 +501,35 @@ class FansCoin extends Component {
                     <a className="iconwrap" href="https://twitter.com/ConfluxChain" target="_blank">
                       <i className="twitter icon" />
                     </a>
+                    <a className="iconwrap" href="https://github.com/conflux-chain" target="_blank">
+                      <i className="icon-github icon-link" />
+                    </a>
+                    <a className="iconwrap" href="https://www.reddit.com/user/ConfluxChain" target="_blank">
+                      <i className="icon-reddit icon-link" />
+                    </a>
+                    <a className="iconwrap" href="https://medium.com/@Confluxchain" target="_blank">
+                      <i className="icon-medium icon-link" />
+                    </a>
+                    <a className="iconwrap" href="https://t.me/Conflux_English" target="_blank">
+                      <i className="icon-telegram icon-link" />
+                    </a>
+                    <a className="iconwrap" href="https://weibo.com/confluxchain" target="_blank">
+                      <i className="icon-sina icon-link" />
+                    </a>
+                    <Popup
+                      trigger={
+                        <a className="iconwrap">
+                          <i className="icon-wechat icon-link" />
+                        </a>
+                      }
+                      content={
+                        <div>
+                          <img width="100" src={wechatCode} />
+                        </div>
+                      }
+                      position="top left"
+                      hoverable
+                    />
                   </div>
                 </div>
               </div>
@@ -508,7 +568,7 @@ class FansCoin extends Component {
 
                     <div className="filter-item">
                       <div className="filter-item-3">{i18n('BALANCE')}</div>
-                      <div className="filter-item-4">{humanizeNum(addressData.balance)} FC</div>
+                      <div className="filter-item-4">{humanizeNum(dripTocfx(addressData.balance))} FC</div>
                     </div>
                     <div className="close-btn" onClick={resetSearch} />
                   </div>
@@ -543,31 +603,59 @@ class FansCoin extends Component {
                     return null;
                   })}
                   <div className="transfer-search-input">
-                    <input
-                      type="text"
-                      placeholder={intl.formatMessage({
-                        id: 'Txn Hash/Holder Address',
-                      })}
-                      onChange={(e) => {
-                        this.setState({
-                          searchInput: e.target.value,
-                        });
-                      }}
-                    />
-                    <i
-                      className="search-icon"
-                      onClick={() => {
-                        history.replace(`/fansCoin`);
-                        this.getFcList(
-                          {
+                    {renderAny(() => {
+                      const doSearch = () => {
+                        if (searchInput.length === 42) {
+                          history.replace(`/fansCoin?address=${searchInput}`);
+                          this.setState({
+                            searchInput: '',
+                          });
+                          this.getFcList({
                             pageNum: 1,
-                          },
-                          {
-                            showError: false,
-                          }
-                        );
-                      }}
-                    />
+                          });
+                        } else {
+                          history.replace(`/fansCoin`);
+                          this.getFcList(
+                            {
+                              pageNum: 1,
+                            },
+                            {
+                              showError: false,
+                            }
+                          );
+                        }
+                      };
+                      return (
+                        <Fragment>
+                          <input
+                            type="text"
+                            placeholder={intl.formatMessage({
+                              id: 'Txn Hash/Holder Address',
+                            })}
+                            onChange={(e) => {
+                              this.setState({
+                                searchInput: e.target.value,
+                              });
+                            }}
+                            value={searchInput}
+                            onKeyPress={(e) => {
+                              if (e.which === 13) {
+                                doSearch();
+                                e.stopPropagation();
+                                e.preventDefault();
+                                e.target.blur();
+                              }
+                            }}
+                          />
+                          <i
+                            className="search-icon"
+                            onClick={() => {
+                              doSearch();
+                            }}
+                          />
+                        </Fragment>
+                      );
+                    })}
                   </div>
                 </div>
               </div>
@@ -580,17 +668,40 @@ class FansCoin extends Component {
                     dataIndex: 'hash',
                     className: 'three wide aligned',
                     title: i18n('Txn Hash'),
-                    render: (text, row) => (
-                      <EllipsisLine
-                        popUpCfg={{
-                          position: 'top left',
-                          pinned: true,
-                        }}
-                        ellipsisStyle={{ maxWidth: 152 }}
-                        linkTo={`/transactionsdetail/${text}`}
-                        text={text}
-                      />
-                    ),
+                    render: (text, row) => {
+                      const line = (
+                        <EllipsisLine
+                          popUpCfg={{
+                            position: 'top left',
+                            pinned: true,
+                          }}
+                          ellipsisStyle={{ maxWidth: 152 }}
+                          linkTo={`/transactionsdetail/${text}`}
+                          text={text}
+                        />
+                      );
+                      if (row.status === 0) {
+                        return line;
+                      }
+                      let errtxt;
+                      let errIcon;
+                      if (row.status === 1) {
+                        errtxt = i18n('app.pages.err-reason.1');
+                        errIcon = <img src={iconStatusErr} />;
+                      } else if (row.status === 2 || row.status === null) {
+                        errtxt = i18n('app.pages.err-reason.2');
+                        errIcon = <img src={iconStatusSkip} />;
+                      }
+                      return (
+                        <div className="txnhash-err">
+                          {errIcon}
+                          <div className="txnhash-err-line1">
+                            {line}
+                            <div className="txnhash-err-line2">{errtxt}</div>
+                          </div>
+                        </div>
+                      );
+                    },
                   },
                   {
                     key: 2,
@@ -615,6 +726,9 @@ class FansCoin extends Component {
                             setTimeout(() => {
                               this.getFcList({
                                 pageNum: 1,
+                              });
+                              this.setState({
+                                searchInput: '',
                               });
                             }, 10);
                           }}
@@ -656,6 +770,9 @@ class FansCoin extends Component {
                                 this.getFcList({
                                   pageNum: 1,
                                 });
+                                this.setState({
+                                  searchInput: '',
+                                });
                               }, 10);
                             }}
                             ellipsisStyle={{ maxWidth: 152 }}
@@ -670,8 +787,8 @@ class FansCoin extends Component {
                     key: 5,
                     className: 'one wide aligned plain_th',
                     dataIndex: 'value',
-                    title: i18n('Quantity'),
-                    render: (text) => <styledComp.PCell>{dripTocfx(text)}</styledComp.PCell>,
+                    title: i18n('Value'),
+                    render: (text) => <styledComp.PCell>{dripTocfx(text)} FC</styledComp.PCell>,
                   },
                 ];
 
