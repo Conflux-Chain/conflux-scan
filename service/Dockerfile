@@ -7,4 +7,4 @@ RUN yarn
 ADD index.js ./
 EXPOSE 3000
 
-CMD ["yarn"]
+ENTRYPOINT ["yarn"]
