@@ -39,7 +39,12 @@ const StyledTabel = styled.table`
   background: #fff;
   border-radius: 4px !important;
   box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.12) !important;
-
+  .max10row {
+    max-height: 250px;
+    overflow: auto;
+    word-break: break-all;
+    margin-right: 40px;
+  }
   tr > td {
     padding-left: 3.2em !important;
     border: none !important;
@@ -50,6 +55,9 @@ const StyledTabel = styled.table`
     padding: none;
   }
 
+  td.align-top {
+    vertical-align: top;
+  }
   &.right {
     margin-left: 16px;
   }
@@ -61,6 +69,7 @@ const StyledTabel = styled.table`
     `}
     background: #edf2f9 !important;
   }
+
   td.top {
     padding-top: 2em !important;
   }
@@ -339,9 +348,9 @@ class Detail extends Component {
                   }
                   return (
                     <tr className="">
-                      <td className="collapsing">{i18n('Data')}</td>
-                      <td className="" style={{ wordBreak: 'break-word' }}>
-                        {result.data}
+                      <td className="collapsing align-top">{i18n('Data')}</td>
+                      <td>
+                        <div className="max10row">{result.data}</div>
                       </td>
                     </tr>
                   );
