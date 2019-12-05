@@ -61,7 +61,7 @@ cd service
 sudo docker build -t conflux-scan-service .
 sudo docker stop conflux-scan-service || true
 sudo docker rm conflux-scan-service || true
-sudo docker run -d --name conflux-scan-service --restart=on-failure -p 127.0.0.1:3000:3000/tcp conflux-scan-service start
+sudo docker run -d --name conflux-scan-service --restart=on-failure -p 127.0.0.1:3000:3000 conflux-scan-service start
 """)
             }
           }
@@ -96,7 +96,7 @@ cd service
 sudo docker build -t conflux-scan-service .
 sudo docker stop conflux-scan-service || true
 sudo docker rm conflux-scan-service || true
-sudo docker run -d --name conflux-scan-service --restart=on-failure -p 127.0.0.1:3000:3000/tcp conflux-scan-service start
+sudo docker run -d --name conflux-scan-service --restart=on-failure -p 127.0.0.1:3000:3000 conflux-scan-service start
 """)
             }
           }
