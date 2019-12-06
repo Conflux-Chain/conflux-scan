@@ -127,7 +127,10 @@ function Dag({ id = 'dag-viewer', children } = {}) {
       appendAllSubChain(player, initialSubChains);
       startFechingDagData.call(player);
     },
-    () => player.destroy()
+    () => {
+      player.destroy();
+      player = null;
+    }
   );
   const { style, direction, text } = tooltipOpt;
 
