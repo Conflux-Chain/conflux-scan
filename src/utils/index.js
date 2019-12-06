@@ -124,7 +124,7 @@ export const initSse = (tthis, uri = '/proxy/fetch_random_time') => {
   source.addEventListener(
     'error',
     (err) => {
-      console.log('emit here ==== ');
+      // console.log('emit here ==== ');
       damon(errorId, tthis);
     },
     'false'
