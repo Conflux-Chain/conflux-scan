@@ -209,6 +209,7 @@ export const sendRequest = (config) => {
     }
   });
   reqPromise.catch((error) => {
+    if (config && config.url === '/api/block/recent') return;
     console.log(error);
     toast.error({
       content: 'app.comp.toast.error.networkErr',
