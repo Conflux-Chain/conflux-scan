@@ -32,6 +32,7 @@ sudo docker build -t conflux-scan .
       parallel {
         stage('test env') {
           when {
+            beforeAgent true
             anyOf {
               branch 'dev'
               branch 'jenkins-pipeline'
@@ -58,9 +59,9 @@ sudo cp -r .  /www/explorer-v2/conflux-scan/
             script {
               sh (label: 'build n run backend', script: """
 cd service
-sudo docker build -t conflux-scan-service .
-sudo docker rm -f conflux-scan-service || true
-sudo docker run -d --name conflux-scan-service --restart=on-failure -p 127.0.0.1:3000:3000/tcp conflux-scan-service server-test
+yarn
+yarn stop-test || true
+JENKINS_NODE_COOKIE=dontKillMe yarn start-test
 """)
             }
           }
@@ -68,6 +69,7 @@ sudo docker run -d --name conflux-scan-service --restart=on-failure -p 127.0.0.1
 
         stage('prod env') {
           when {
+            beforeAgent true
             allOf {
               branch 'master'
             }
@@ -76,6 +78,7 @@ sudo docker run -d --name conflux-scan-service --restart=on-failure -p 127.0.0.1
           steps {
             script {
               sh (label: 'build front', script: """
+sudo docker build -t conflux-scan .
 mkdir -p `pwd`/dist
 sudo docker run --rm --mount type=bind,src=`pwd`/dist,dst=/conflux-scan/dist conflux-scan build
 """)
@@ -92,9 +95,9 @@ sudo cp -r . /www/explorer-v2/conflux-scan
             script {
               sh (label: 'build n run backend', script: """
 cd service
-sudo docker build -t conflux-scan-service .
-sudo docker rm -f conflux-scan-service || true
-sudo docker run -d --name conflux-scan-service --restart=on-failure -p 127.0.0.1:3000:3000/tcp conflux-scan-service start-without-pm2
+yarn
+yarn stop || true
+JENKINS_NODE_COOKIE=dontKillMe yarn start
 """)
             }
           }

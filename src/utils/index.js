@@ -124,7 +124,7 @@ export const initSse = (tthis, uri = '/proxy/fetch_random_time') => {
   source.addEventListener(
     'error',
     (err) => {
-      console.log('emit here ==== ');
+      // console.log('emit here ==== ');
       damon(errorId, tthis);
     },
     'false'
@@ -209,6 +209,7 @@ export const sendRequest = (config) => {
     }
   });
   reqPromise.catch((error) => {
+    if (config && config.url === '/api/block/recent') return;
     console.log(error);
     toast.error({
       content: 'app.comp.toast.error.networkErr',

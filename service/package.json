@@ -9,7 +9,6 @@
     "start-test": "pm2 start npm --name conflux-scan-node-proxy -- run serve-test",
     "stop-test": "pm2 delete conflux-scan-node-proxy",
     "start": "pm2 start npm --name conflux-scan-node-proxy-prod -- run serve-prod -i max -e err-prod.log -o out-prod.log",
-    "start-without-pm2": "npm run serve-prod -i max -e err-prod.log -o out-prod.log",
     "stop": "pm2 delete conflux-scan-node-proxy-prod"
   },
   "license": "MIT",
@@ -20,9 +19,9 @@
     "susie": "^3.0.0"
   },
   "devDependencies": {
-    "pm2": "^3.5.1"
+    "pm2": "^4.2.0"
   },
   "resolutions": {
-    "lodash":  "^4.17.14"
+    "lodash": "^4.17.14"
   }
 }
