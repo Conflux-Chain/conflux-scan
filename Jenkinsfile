@@ -32,6 +32,7 @@ sudo docker build -t conflux-scan .
       parallel {
         stage('test env') {
           when {
+            beforeAgent true
             anyOf {
               branch 'dev'
               branch 'jenkins-pipeline'
@@ -68,6 +69,7 @@ JENKINS_NODE_COOKIE=dontKillMe yarn start-test
 
         stage('prod env') {
           when {
+            beforeAgent true
             allOf {
               branch 'master'
             }

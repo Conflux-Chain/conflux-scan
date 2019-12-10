@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import superagent from 'superagent';
 import moment from 'moment';
-import { Pagination, Dropdown } from 'semantic-ui-react';
+import { Pagination, Dropdown, Popup } from 'semantic-ui-react';
 import { DatePicker } from 'antd';
 import BigNumber from 'bignumber.js';
 import { injectIntl } from 'react-intl';
@@ -566,14 +566,15 @@ class Detail extends Component {
           if (row.status === 0) {
             return line;
           }
-          let errtxt;
           let errIcon;
           if (row.status === 1) {
-            errtxt = i18n('app.pages.err-reason.1');
-            errIcon = <img src={iconStatusErr} />;
+            errIcon = (
+              <Popup trigger={<img src={iconStatusErr} />} content={i18n('app.pages.err-reason.1')} position="top left" hoverable />
+            );
           } else if (row.status === 2 || row.status === null) {
-            errtxt = i18n('app.pages.err-reason.2');
-            errIcon = <img src={iconStatusSkip} />;
+            errIcon = (
+              <Popup trigger={<img src={iconStatusSkip} />} content={i18n('app.pages.err-reason.2')} position="top left" hoverable />
+            );
           }
 
           return (
@@ -581,7 +582,7 @@ class Detail extends Component {
               {errIcon}
               <div className="txnhash-err-line1">
                 {line}
-                <div className="txnhash-err-line2">{errtxt}</div>
+                {/* <div className="txnhash-err-line2">{errtxt}</div> */}
               </div>
             </div>
           );
