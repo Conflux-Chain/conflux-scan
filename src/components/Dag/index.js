@@ -134,8 +134,10 @@ function Dag({ id = 'dag-viewer', children } = {}) {
       startFechingDagData.call(player);
     },
     () => {
-      player.destroy();
-      player = null;
+      if (player) {
+        player.destroy();
+        player = null;
+      }
     }
   );
 
