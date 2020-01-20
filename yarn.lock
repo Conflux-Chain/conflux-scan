@@ -940,8 +940,8 @@
 
 "@vusion/webfonts-generator@^0.5.3":
   version "0.5.5"
-  resolved "https://registry.yarnpkg.com/@vusion/webfonts-generator/-/@vusion/webfonts-generator-0.5.5.tgz#14ed461b4f130f2649ab1513ff39fea54396b8b3"
-  integrity sha1-FO1GG08TDyZJqxUT/zn+pUOWuLM=
+  resolved "https://registry.yarnpkg.com/@vusion/webfonts-generator/-/webfonts-generator-0.5.5.tgz#14ed461b4f130f2649ab1513ff39fea54396b8b3"
+  integrity sha512-8VzYycg24rcu76XgL18TRCsOh990O22nE/ZPIriWX5gUXXSZE3SBkoswBTvTzlIgvdBiivTWQok4+aC1nGXW3w==
   dependencies:
     handlebars "^4.0.11"
     mkdirp "^0.5.1"
