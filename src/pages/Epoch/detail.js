@@ -165,6 +165,20 @@ class Detail extends Component {
     });
   }
 
+  componentDidUpdate(prevProps) {
+    const { curPage } = this.state;
+    // eslint-disable-next-line react/destructuring-assignment
+    if (this.props.match.params.epochid !== prevProps.match.params.epochid) {
+      const {
+        match: { params },
+      } = this.props;
+      this.fetchInitList({
+        epochid: params.epochid,
+        curPage,
+      });
+    }
+  }
+
   async fetchInitList({ epochid, curPage }) {
     this.setState({ isLoading: true });
     const reqBlockList = sendRequest({
