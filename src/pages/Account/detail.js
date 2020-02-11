@@ -610,17 +610,34 @@ class Detail extends Component {
         className: 'two wide aligned',
         dataIndex: 'to',
         title: i18n('To'),
-        render: (text) => (
-          <div>
-            <PCell>
-              {text !== params.accountid ? (
-                <EllipsisLine textInout="Out" linkTo={`/accountdetail/${text}`} text={text} />
-              ) : (
-                <EllipsisLine text={text} />
-              )}
-            </PCell>
-          </div>
-        ),
+        render: (text, row) => {
+          if (row.contractCreated) {
+            const line = (
+              <div>
+                {i18n('Contract')}
+                {i18n('Created')}
+              </div>
+            );
+            return (
+              <div>
+                <PCell>
+                  <EllipsisLine text={line} />
+                </PCell>
+              </div>
+            );
+          }
+          return (
+            <div>
+              <PCell>
+                {text !== params.accountid ? (
+                  <EllipsisLine textInout="Out" linkTo={`/accountdetail/${text}`} text={text} />
+                ) : (
+                  <EllipsisLine text={text} />
+                )}
+              </PCell>
+            </div>
+          );
+        },
       },
       {
         key: 4,
