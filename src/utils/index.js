@@ -1,8 +1,11 @@
 import React from 'react';
 import BigNumber from 'bignumber.js';
 import superagent from 'superagent';
+import querystring from 'querystring';
+import huNum from 'humanize-number';
 import { injectIntl, FormattedMessage, FormattedHTMLMessage } from 'react-intl';
 import { toast } from '../components/Toast';
+import { notice } from '../components/Message/notice';
 
 let errorId = null;
 let source = null;
@@ -12,11 +15,19 @@ export const convertToValueorFee = (bigNumber) => {
   if (result.toFixed() < 0.00001) return `< 0.00001`;
   return `${result.toFixed(4)}`;
 };
+export const dripTocfx = (bigNumber) => {
+  const result = new BigNumber(bigNumber).dividedBy(10 ** 18);
+  return result.toString(10);
+};
+export const dripToGdrip = (bigNumber) => {
+  const result = new BigNumber(bigNumber).dividedBy(10 ** 9);
+  return result.toString(10);
+};
 
 export const converToGasPrice = (bigNumber) => {
   const result = new BigNumber(bigNumber).dividedBy(10 ** 9);
   if (result.toFixed() < 0.00001) return `< 0.00001`;
-  return `${result.toFixed(4)}`;
+  return `${result.toFixed(5)}`;
 };
 
 export const converToGasPrice3Fixed = (bigNumber) => {
@@ -113,7 +124,7 @@ export const initSse = (tthis, uri = '/proxy/fetch_random_time') => {
   source.addEventListener(
     'error',
     (err) => {
-      console.log('emit here ==== ');
+      // console.log('emit here ==== ');
       damon(errorId, tthis);
     },
     'false'
@@ -198,6 +209,7 @@ export const sendRequest = (config) => {
     }
   });
   reqPromise.catch((error) => {
+    if (config && config.url === '/api/block/recent') return;
     console.log(error);
     toast.error({
       content: 'app.comp.toast.error.networkErr',
@@ -230,3 +242,19 @@ export function i18n(id, config = {}) {
 export function renderAny(cb) {
   return cb();
 }
+
+export function getQuery(locationSearch) {
+  let query = {};
+  try {
+    query = querystring.parse(locationSearch.replace(/^\?/, ''));
+  } catch (e) {
+    console.log(e);
+  }
+  return query;
+}
+
+export const humanizeNum = (a) => {
+  return huNum(a);
+};
+
+export { notice };

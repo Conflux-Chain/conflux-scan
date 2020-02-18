@@ -216,6 +216,7 @@ class List extends Component {
               <div className="page-pc">
                 <Pagination
                   style={{ float: 'right' }}
+                  ellipsisItem={null}
                   prevItem={{
                     'aria-label': 'Previous item',
                     content: i18n('lastPage'),

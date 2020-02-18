@@ -13,9 +13,11 @@ import Header from './components/Header';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import { ToastComp } from './components/Toast';
+import { NoticeComp } from './components/Message/notice';
 
 // styles
 import './assets/semantic-ui/semantic.css';
+import './globalStyles/icons.less';
 import GlobalStyle from './globalStyles';
 
 import zhTranslationMessages from './lang/zh';
@@ -136,6 +138,7 @@ function App() {
             </Content>
             <Footer />
             <ToastComp />
+            <NoticeComp />
           </Container>
           <GlobalStyle />
         </Wrapper>

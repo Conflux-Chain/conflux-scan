@@ -11,7 +11,7 @@
     "lintfix": "eslint . --fix",
     "lint:eslint": "eslint --ignore-path .eslintignore --fix",
     "eslint-check": "eslint --print-config . | eslint-config-prettier-check",
-    "serve:dev": "NODE_ENV=development API_HOST=http://testnet-jsonrpc.conflux-chain.org:18084 SERVER_PORT=3000 SERVER_HOST=127.0.0.1 SERVER_PREFIX=/proxy node ./service/index.js"
+    "serve:dev": "NODE_ENV=development API_HOST=http://testnet-jsonrpc.conflux-chain.org:18084/api SERVER_PORT=3000 SERVER_HOST=127.0.0.1 SERVER_PREFIX=/proxy node ./service/index.js"
   },
   "keywords": [],
   "author": "Angelia",
@@ -36,6 +36,8 @@
     "classnames": "^2.2.6",
     "echarts": "^4.2.1",
     "history": "^4.9.0",
+    "humanize-number": "^0.0.2",
+    "icon-font-loader": "^2.1.0",
     "immutable": "^4.0.0-rc.12",
     "intl": "^1.2.5",
     "moment": "^2.24.0",
@@ -47,6 +49,7 @@
     "react-intl": "^2.8.0",
     "react-redux": "^7.0.2",
     "react-router-dom": "^5.0.0",
+    "react-use": "^13.8.1",
     "redux": "^4.0.1",
     "redux-logger": "^3.0.6",
     "redux-saga": "^1.0.2",

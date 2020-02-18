@@ -3,10 +3,19 @@ import { Link, withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import superagent from 'superagent';
+
 import moment from 'moment';
 import TableLoading from '../../components/TableLoading';
+import EllipsisLine from '../../components/EllipsisLine';
 import media from '../../globalStyles/media';
-import { i18n, renderAny, sendRequest } from '../../utils';
+import { i18n, renderAny, sendRequest, dripTocfx, dripToGdrip } from '../../utils';
+import NotFoundTx from '../NotFoundTx';
+import iconFcLogo from '../../assets/images/icons/fc-logo.svg';
+import Countdown from '../../components/Countdown';
+import iconStatusErr from '../../assets/images/icons/status-err.svg';
+import iconStatusSuccess from '../../assets/images/icons/status-success.svg';
+import iconStatusSkip from '../../assets/images/icons/status-skip.svg';
+import CopyButton from '../../components/CopyButton';
 
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -16,6 +25,12 @@ const Wrapper = styled.div`
     margin: 0 auto;
     overflow-x: scroll;
   `}
+  .status-reason-err {
+    color: #ec6057;
+  }
+  .status-reason-skip {
+    color: #f09c3a;
+  }
 `;
 
 const StyledTabel = styled.table`
@@ -24,7 +39,12 @@ const StyledTabel = styled.table`
   background: #fff;
   border-radius: 4px !important;
   box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.12) !important;
-
+  .max10row {
+    max-height: 250px;
+    overflow: auto;
+    word-break: break-all;
+    margin-right: 40px;
+  }
   tr > td {
     padding-left: 3.2em !important;
     border: none !important;
@@ -35,6 +55,9 @@ const StyledTabel = styled.table`
     padding: none;
   }
 
+  td.align-top {
+    vertical-align: top;
+  }
   &.right {
     margin-left: 16px;
   }
@@ -46,14 +69,36 @@ const StyledTabel = styled.table`
     `}
     background: #edf2f9 !important;
   }
+
   td.top {
     padding-top: 2em !important;
   }
   td.bottom {
     padding-bottom: 2em !important;
   }
-  tr > td > a {
+  tr > td a {
     font-weight: bold;
+  }
+  .status-line {
+    display: flex;
+    align-items: center;
+    > img {
+      width: 16px;
+      margin-right: 5px;
+    }
+    span {
+      font-size: 16px;
+      line-height: 16px;
+    }
+  }
+  .status-success {
+    color: #59bf9c;
+  }
+  .status-err {
+    color: #ec6057;
+  }
+  .status-skip {
+    color: #f09c3a;
   }
 `;
 
@@ -77,6 +122,31 @@ const HeadBar = styled.div`
   }
 `;
 
+const TokensDiv = styled.div`
+  display: flex;
+  align-items: center;
+  > em {
+    font-style: normal;
+    margin-right: 8px;
+    margin-left: 8px;
+    color: #8f8f8f;
+    white-space: nowrap;
+    &:first-child {
+      margin-left: 0;
+    }
+  }
+  > span {
+    margin-right: 8px;
+    white-space: nowrap;
+  }
+  .fc-logo {
+    width: 16px;
+    vertical-align: middle;
+    margin-top: -1px;
+    margin-right: 5px;
+  }
+`;
+
 class Detail extends Component {
   constructor() {
     super();
@@ -84,6 +154,7 @@ class Detail extends Component {
       txnhash: '',
       result: {},
       isLoading: true,
+      isPacking: false,
     };
   }
 
@@ -92,6 +163,16 @@ class Detail extends Component {
       match: { params },
     } = this.props;
     this.fetchTxDetail(params.txnhash);
+  }
+
+  componentDidUpdate() {
+    const {
+      match: { params },
+    } = this.props;
+    const { txnhash } = this.state;
+    if (params.txnhash !== txnhash) {
+      this.fetchTxDetail(params.txnhash);
+    }
   }
 
   fetchTxDetail(txnhash) {
@@ -107,7 +188,9 @@ class Detail extends Component {
           history.push(`/search-notfound?searchId=${txnhash}`);
           break;
         case 4:
-          history.push(`/notfoundtx?searchId=${txnhash}`);
+          this.setState({
+            isPacking: true,
+          });
           break;
         case 0:
         default:
@@ -121,13 +204,21 @@ class Detail extends Component {
   }
 
   render() {
-    const { result, isLoading, txnhash } = this.state;
+    const { isLoading, txnhash, isPacking } = this.state;
     const {
       match: { params },
     } = this.props;
-    if (txnhash !== params.txnhash) {
-      this.fetchTxDetail(params.txnhash, { activePage: 1 });
+
+    if (isPacking) {
+      return <NotFoundTx searchId={txnhash} />;
     }
+    let { result } = this.state;
+    result = result || {};
+
+    const copyBtnStyle = {
+      verticalAlign: 'middle',
+      height: 22,
+    };
 
     return (
       <div className="page-transaction-detail">
@@ -145,27 +236,147 @@ class Detail extends Component {
                   <td className="collapsing top">{i18n('Transaction Hash')}</td>
                   <td className="top">{result.hash}</td>
                 </tr>
+
                 <tr className="">
-                  <td className="collapsing">{i18n('Data')}</td>
-                  <td className="" style={{ wordBreak: 'break-word' }}>
-                    {result.data}
+                  <td className="collapsing">{i18n('app.pages.txns.time')}</td>
+                  <td className="">
+                    <Countdown timestamp={result.timestamp * 1000} />
+                    &nbsp; ({moment(result.timestamp * 1000).format('YYYY-MM-DD HH:mm:ss Z')})
                   </td>
                 </tr>
+
+                <tr className="">
+                  <td className="collapsing">{i18n('app.pages.txns.Status')}</td>
+                  <td className="">
+                    {renderAny(() => {
+                      if (result.status === 0) {
+                        return (
+                          <div className="status-line status-success">
+                            <img src={iconStatusSuccess} />
+                            <span>{i18n('app.pages.txns.Success')}</span>
+                          </div>
+                        );
+                      }
+                      if (result.status === 1) {
+                        return (
+                          <div className="status-line status-err">
+                            <img src={iconStatusErr} />
+                            <span>{i18n('app.pages.txns.Err')}</span>
+                          </div>
+                        );
+                      }
+                      if (result.status === 2 || result.status === null) {
+                        return (
+                          <div className="status-line status-skip">
+                            <img src={iconStatusSkip} />
+                            <span>{i18n('app.pages.txns.Skip')}</span>
+                          </div>
+                        );
+                      }
+                      return null;
+                    })}
+                  </td>
+                </tr>
+
+                {renderAny(() => {
+                  if (result.decodedData) {
+                    const { decodedData = {} } = result;
+                    if (decodedData.name === 'mint') {
+                      let account = {};
+                      let value = {};
+                      decodedData.params.forEach((v) => {
+                        if (v.name === 'account') {
+                          account = v;
+                        } else if (v.name === 'value') {
+                          value = v;
+                        }
+                      });
+                      return (
+                        <tr className="">
+                          <td className="collapsing">{i18n('Token Minted')}</td>
+                          <td className="">
+                            <TokensDiv>
+                              <em>{i18n('To')}</em>
+                              <EllipsisLine
+                                ellipsisStyle={{ maxWidth: 152 }}
+                                linkTo={`/accountdetail/${account.value}`}
+                                text={account.value}
+                              />
+                              <em>{i18n('For')}</em>
+                              <span>{dripTocfx(value.value)}</span>
+                              <img className="fc-logo" src={iconFcLogo} />
+
+                              <span>Fans Coin (FC)</span>
+                            </TokensDiv>
+                          </td>
+                        </tr>
+                      );
+                    }
+
+                    let toAccount = {};
+                    let value = {};
+                    decodedData.params.forEach((v) => {
+                      if (v.name === 'recipient') {
+                        toAccount = v;
+                      } else if (v.name === 'value') {
+                        value = v;
+                      }
+                    });
+
+                    return (
+                      <tr className="">
+                        <td className="collapsing">{i18n('Token Transfered')}</td>
+                        <td className="">
+                          <TokensDiv>
+                            <em>{i18n('From')}</em>
+                            <EllipsisLine ellipsisStyle={{ maxWidth: 152 }} linkTo={`/accountdetail/${result.from}`} text={result.from} />
+                            <em>{i18n('To')}</em>
+                            <EllipsisLine
+                              ellipsisStyle={{ maxWidth: 152 }}
+                              linkTo={`/accountdetail/${toAccount.value}`}
+                              text={toAccount.value}
+                            />
+                            <em>For</em>
+                            <span>{dripTocfx(value.value)}</span>
+
+                            <img className="fc-logo" src={iconFcLogo} />
+                            <span>Fans Coin (FC)</span>
+                          </TokensDiv>
+                        </td>
+                      </tr>
+                    );
+                  }
+                  return (
+                    <tr className="">
+                      <td className="collapsing align-top">{i18n('Data')}</td>
+                      <td>
+                        <div className="max10row">{result.data}</div>
+                      </td>
+                    </tr>
+                  );
+                })}
+
                 <tr className="">
                   <td className="collapsing">{i18n('From')}</td>
                   <td className="">
                     <Link to={`/accountdetail/${result.from}`}>{result.from}</Link>
+                    <CopyButton style={copyBtnStyle} txtToCopy={result.from} btnType="three" toolTipId="Copy to clipboard" />
                   </td>
                 </tr>
                 <tr className="">
                   <td className="collapsing">{i18n('To')}</td>
                   <td className="">
                     {renderAny(() => {
+                      let toDiv;
                       if (result.to) {
-                        return <Link to={`/accountdetail/${result.to}`}>{result.to}</Link>;
-                      }
-                      if (result.contractCreated) {
-                        return (
+                        toDiv = (
+                          <span>
+                            <Link to={`/accountdetail/${result.to}`}>{result.to}</Link>
+                            <CopyButton style={copyBtnStyle} txtToCopy={result.to} btnType="three" toolTipId="Copy to clipboard" />
+                          </span>
+                        );
+                      } else if (result.contractCreated) {
+                        toDiv = (
                           <span>
                             [{i18n('Contract')} &nbsp;
                             <Link to={`/accountdetail/${result.contractCreated}`}>{result.contractCreated}</Link>
@@ -173,9 +384,27 @@ class Detail extends Component {
                           </span>
                         );
                       }
-                      return null;
+                      if (result.status === 0) {
+                        return toDiv;
+                      }
+                      let statusReason;
+                      if (result.status === 1) {
+                        statusReason = <div className="status-reason-err">{i18n('app.pages.err-reason.1')}</div>;
+                      } else if (result.status === 2 || result.status === null) {
+                        statusReason = <div className="status-reason-skip">{i18n('app.pages.err-reason.2')}</div>;
+                      }
+                      return (
+                        <div>
+                          {toDiv}
+                          {statusReason}
+                        </div>
+                      );
                     })}
                   </td>
+                </tr>
+                <tr className="">
+                  <td className="collapsing">{i18n('Value')}</td>
+                  <td className="">{dripTocfx(result.value)} CFX</td>
                 </tr>
                 <tr className="">
                   <td className="collapsing">{i18n('Gas')}</td>
@@ -183,11 +412,7 @@ class Detail extends Component {
                 </tr>
                 <tr className="">
                   <td className="collapsing">{i18n('Gas Price')}</td>
-                  <td className="">{result.gasPrice}</td>
-                </tr>
-                <tr className="">
-                  <td className="collapsing">{i18n('Value')}</td>
-                  <td className="">{result.value}</td>
+                  <td className="">{dripToGdrip(result.gasPrice)} Gdrip</td>
                 </tr>
                 <tr className="">
                   <td className="collapsing">{i18n('Nonce')}</td>
@@ -200,12 +425,8 @@ class Detail extends Component {
                   </td>
                 </tr>
                 <tr className="">
-                  <td className="collapsing">{i18n('Position')}</td>
-                  <td className="">{result.transactionIndex}</td>
-                </tr>
-                <tr className="">
-                  <td className="collapsing bottom">{i18n('app.pages.txns.time')}</td>
-                  <td className="bottom">{moment(result.timestamp * 1000).format('YYYY-MM-DD HH:mm:ss')}</td>
+                  <td className="collapsing bottom">{i18n('Position')}</td>
+                  <td className="bottom">{result.transactionIndex}</td>
                 </tr>
               </tbody>
             </StyledTabel>

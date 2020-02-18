@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import superagent from 'superagent';
 import moment from 'moment';
-import { Pagination, Dropdown } from 'semantic-ui-react';
+import { Pagination, Dropdown, Popup } from 'semantic-ui-react';
 import { DatePicker } from 'antd';
 import BigNumber from 'bignumber.js';
 import { injectIntl } from 'react-intl';
@@ -19,6 +19,8 @@ import CopyButton from '../../components/CopyButton';
 import QrcodeButton from '../../components/QrcodeButton';
 import * as commonCss from '../../globalStyles/common';
 import media from '../../globalStyles/media';
+import iconStatusErr from '../../assets/images/icons/status-err.svg';
+import iconStatusSkip from '../../assets/images/icons/status-skip.svg';
 
 const { RangePicker } = DatePicker;
 
@@ -54,6 +56,22 @@ const StyledTabel = styled.div`
   .ui.fluid.card {
     box-shadow: none;
     border: 1px solid rgba(0, 0, 0, 0.08);
+  }
+  .txnhash-err {
+    display: flex;
+    > img {
+      align-self: flex-start;
+    }
+    .txnhash-err-line1 {
+      flex: 1;
+      margin-left: 4px;
+    }
+    .txnhash-err-line2 {
+      margin-top: 5px;
+      font-size: 14px;
+      line-height: 14px;
+      color: #8f8f8f;
+    }
   }
 `;
 
@@ -493,11 +511,27 @@ class Detail extends Component {
       },
     }).then((res) => {
       if (res.body.code === 0) {
+        const { total } = res.body.result;
         this.setState({
           minedBlockList: res.body.result.data,
           isLoading: false,
           curMinedPage,
+          minedTotalCount: total,
         });
+
+        const { accountDetail } = this.state;
+        if (total !== accountDetail.minedBlocks) {
+          sendRequest({
+            url: `/api/account/${accountid}`,
+            query: {},
+          }).then((res1) => {
+            if (res1.body.code === 0) {
+              this.setState({
+                accountDetail: res1.body.result.data,
+              });
+            }
+          });
+        }
       }
     });
   }
@@ -527,7 +561,32 @@ class Detail extends Component {
         dataIndex: 'hash',
         className: 'two wide aligned',
         title: i18n('Hash'),
-        render: (text, row) => <EllipsisLine linkTo={`/transactionsdetail/${text}`} text={text} />,
+        render: (text, row) => {
+          const line = <EllipsisLine linkTo={`/transactionsdetail/${text}`} text={text} />;
+          if (row.status === 0) {
+            return line;
+          }
+          let errIcon;
+          if (row.status === 1) {
+            errIcon = (
+              <Popup trigger={<img src={iconStatusErr} />} content={i18n('app.pages.err-reason.1')} position="top left" hoverable />
+            );
+          } else if (row.status === 2 || row.status === null) {
+            errIcon = (
+              <Popup trigger={<img src={iconStatusSkip} />} content={i18n('app.pages.err-reason.2')} position="top left" hoverable />
+            );
+          }
+
+          return (
+            <div className="txnhash-err">
+              {errIcon}
+              <div className="txnhash-err-line1">
+                {line}
+                {/* <div className="txnhash-err-line2">{errtxt}</div> */}
+              </div>
+            </div>
+          );
+        },
       },
       {
         key: 2,
@@ -551,17 +610,34 @@ class Detail extends Component {
         className: 'two wide aligned',
         dataIndex: 'to',
         title: i18n('To'),
-        render: (text) => (
-          <div>
-            <PCell>
-              {text !== params.accountid ? (
-                <EllipsisLine textInout="Out" linkTo={`/accountdetail/${text}`} text={text} />
-              ) : (
-                <EllipsisLine text={text} />
-              )}
-            </PCell>
-          </div>
-        ),
+        render: (text, row) => {
+          if (row.contractCreated) {
+            const line = (
+              <div>
+                {i18n('Contract')}
+                {i18n('Created')}
+              </div>
+            );
+            return (
+              <div>
+                <PCell>
+                  <EllipsisLine text={line} />
+                </PCell>
+              </div>
+            );
+          }
+          return (
+            <div>
+              <PCell>
+                {text !== params.accountid ? (
+                  <EllipsisLine textInout="Out" linkTo={`/accountdetail/${text}`} text={text} />
+                ) : (
+                  <EllipsisLine text={text} />
+                )}
+              </PCell>
+            </div>
+          );
+        },
       },
       {
         key: 4,
@@ -658,11 +734,21 @@ class Detail extends Component {
                 <div className="sectionWrap">
                   <section>
                     <h2>{i18n('First Seen')}</h2>
-                    <p>{moment(accountDetail.firstSeen * 1000).format('YYYY-MM-DD HH:mm:ss')}</p>
+                    {renderAny(() => {
+                      if (!accountDetail.firstSeen) {
+                        return i18n('No Record');
+                      }
+                      return <p>{moment(accountDetail.firstSeen * 1000).format('YYYY-MM-DD HH:mm:ss')}</p>;
+                    })}
                   </section>
                   <section>
                     <h2>{i18n('Last Seen')}</h2>
-                    <p>{moment(accountDetail.lastSeen * 1000).format('YYYY-MM-DD HH:mm:ss')}</p>
+                    {renderAny(() => {
+                      if (!accountDetail.lastSeen) {
+                        return i18n('No Record');
+                      }
+                      return <p>{moment(accountDetail.lastSeen * 1000).format('YYYY-MM-DD HH:mm:ss')}</p>;
+                    })}
                   </section>
                 </div>
               </div>
@@ -792,6 +878,7 @@ class Detail extends Component {
                           }}
                           activePage={queries.pageNum}
                           totalPages={Math.ceil(TxTotalCount / 10)}
+                          ellipsisItem={null}
                         />
                       </div>
                       <div className="page-h5">
@@ -851,6 +938,7 @@ class Detail extends Component {
                           }}
                           activePage={curMinedPage}
                           totalPages={Math.ceil(minedTotalCount / 10)}
+                          ellipsisItem={null}
                         />
                       </div>
                       <div className="page-h5">

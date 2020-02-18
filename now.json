@@ -11,7 +11,7 @@
   "routes": [
     {
       "src": "/api/(?<req>.*)",
-      "dest": "http://testnet-jsonrpc.conflux-chain.org:18084/$req"
+      "dest": "http://testnet-jsonrpc.conflux-chain.org:18084/api/$req"
     },
     {
       "src": "/proxy/(?<req>.*)",

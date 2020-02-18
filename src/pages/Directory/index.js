@@ -1,8 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import styled from 'styled-components';
 import media from '../../globalStyles/media';
+import iconFcLogo from '../../assets/images/icons/fc-logo.svg';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -115,14 +117,22 @@ const Wrapper = styled.div`
       }
     }
   }
+  .fc-logo {
+    width: 32px;
+    animation: animate 0.6s ease;
+    animation-iteration-count: 1;
+  }
 `;
 
 const links = [
   {
-    key: 'exchange',
-    icon: 'iconexchange',
+    key: 'fc',
+    icon: <img className="fc-logo" src={iconFcLogo} />,
     href: '',
-    disable: true,
+    disable: false,
+    onClick: (history) => {
+      history.push('/fansCoin');
+    },
   },
   {
     key: 'wallet',
@@ -156,31 +166,56 @@ const links = [
   },
 ];
 
-function Directory() {
+function Directory(props) {
+  const { history } = props;
   return (
     <Wrapper className="page-directory">
       <div className="ui three cards">
-        {links.map((link) => (
-          <a className={`ui card ${link.disable ? 'disabled' : ''}`} href={link.href || 'javascript:void(0)'} key={link.key}>
-            <div className="content">
-              <div className="center aligned icon-circle">
-                <svg className="icon" aria-hidden="true">
-                  <use xlinkHref={'#' + link.icon} />
-                </svg>
+        {links.map((link) => {
+          let iconLink;
+          if (React.isValidElement(link.icon)) {
+            iconLink = link.icon;
+          } else {
+            iconLink = (
+              <svg className="icon" aria-hidden="true">
+                <use xlinkHref={'#' + link.icon} />
+              </svg>
+            );
+          }
+
+          return (
+            <a
+              onClick={() => {
+                if (link.onClick) {
+                  link.onClick(history);
+                }
+              }}
+              className={`ui card ${link.disable ? 'disabled' : ''}`}
+              href={link.href || 'javascript:void(0)'}
+              key={link.key}
+            >
+              <div className="content">
+                <div className="center aligned icon-circle">{iconLink}</div>
+                <div className="center aligned header">
+                  <FormattedMessage id={`app.directory.${link.key}.title`} />
+                </div>
+                <div className="center aligned description">
+                  <p>
+                    <FormattedMessage id={`app.directory.${link.key}.desc`} />
+                  </p>
+                </div>
               </div>
-              <div className="center aligned header">
-                <FormattedMessage id={`app.directory.${link.key}.title`} />
-              </div>
-              <div className="center aligned description">
-                <p>
-                  <FormattedMessage id={`app.directory.${link.key}.desc`} />
-                </p>
-              </div>
-            </div>
-          </a>
-        ))}
+            </a>
+          );
+        })}
       </div>
     </Wrapper>
   );
 }
+
+Directory.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
+};
 export default Directory;
