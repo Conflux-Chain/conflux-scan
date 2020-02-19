@@ -1,10 +1,10 @@
 import React, { Component, Fragment } from 'react';
-import { withRouter, Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { injectIntl } from 'react-intl';
 
-import { Dropdown, Popup } from 'semantic-ui-react';
+import { Popup } from 'semantic-ui-react';
 import compose from 'lodash/fp/compose';
 import * as styledComp from './styledComp';
 import media from '../../globalStyles/media';
@@ -12,7 +12,7 @@ import EllipsisLine from '../../components/EllipsisLine';
 import DataList from '../../components/DataList';
 import Countdown from '../../components/Countdown';
 import Pagination from '../../components/Pagination';
-import { convertToValueorFee, converToGasPrice, i18n, sendRequest, renderAny, humanizeNum, getQuery, dripTocfx, notice } from '../../utils';
+import { i18n, renderAny, humanizeNum, getQuery, dripTocfx, notice } from '../../utils';
 import iconCloseSmall from '../../assets/images/icons/close-small.svg';
 import iconCloseMd from '../../assets/images/icons/close-md.svg';
 import iconFcLogo from '../../assets/images/icons/fc-logo.svg';
@@ -26,8 +26,8 @@ import wechatCode from '../../assets/images/wechat-code.jpg';
 const SummaryDiv = styled.div`
   display: flex;
   ${media.pad`
-  display: block;
-`}
+    display: block;
+  `}
 
   & > .card-wrapper {
     flex: 1;
@@ -44,12 +44,12 @@ const SummaryDiv = styled.div`
       height: 140px;
     }
     ${media.pad`
-    margin-bottom: 16px;
-    margin-right: 0px;
-    .summary-content {
-      height: auto;
-    }
-  `}
+      margin-bottom: 16px;
+      margin-right: 0px;
+      .summary-content {
+        height: auto;
+      }
+    `}
   }
 
   .summary-line {
@@ -113,34 +113,34 @@ const TransfersDiv = styled.div`
   position: relative;
   display: flex;
   margin-top: 16px;
-   >  .ui.card {
+    > .ui.card {
       width: 100%;
     }
-   .transfer-search {
+    .transfer-search {
       display: flex;
       align-items: center;
       ${media.pad`
-      flex-wrap: wrap;
-     `}
-     h6 {
-       flex: 1;
-       margin: 0;
-       font-size: 20px;
-     }
+        flex-wrap: wrap;
+      `}
+      h6 {
+        flex: 1;
+        margin: 0;
+        font-size: 20px;
+      }
     }
-   .transfer-search-input {
-     display: flex;
-     align-items: center;
-     border: 1px solid #fff;
-     ${media.pad`
-     flex: 1;
-     display: flex;
-     margin-top: 0px;
-    `}
+    .transfer-search-input {
+      display: flex;
+      align-items: center;
+      border: 1px solid #fff;
+      ${media.pad`
+        flex: 1;
+        display: flex;
+        margin-top: 0px;
+      `}
 
-     &:hover {
+    &:hover {
       border: 1px solid rgb(204, 204, 204);
-     }
+    }
     input {
       min-width: 200px;
       outline: none;
@@ -150,8 +150,8 @@ const TransfersDiv = styled.div`
       border: none;
       text-indent: 5px;
       ${media.pad`
-      flex: 1;
-    `}
+        flex: 1;
+      `}
     }
     .search-icon {
       padding-left: 8px;
@@ -161,15 +161,14 @@ const TransfersDiv = styled.div`
       height: 26px;
       cursor: pointer;
     }
-   }
+  }
 
- ${media.pad`
-   .transfer-search-tag + .transfer-search-input {
-     margin-top: 10px;
-   }
- `}
-
-   .transfer-search-tag {
+  ${media.pad`
+    .transfer-search-tag + .transfer-search-input {
+      margin-top: 10px;
+    }
+  `}
+  .transfer-search-tag {
     background: #F2F2F2;
     padding-left: 10px;
     padding-right: 5px;
@@ -178,8 +177,8 @@ const TransfersDiv = styled.div`
     margin-right: 16px;
     display: flex;
     ${media.pad`
-    margin-right: 0px;
-   `}
+      margin-right: 0px;
+    `}
 
     .icon-close {
       background-image: url("${iconCloseSmall}");
