@@ -4,13 +4,14 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { injectIntl } from 'react-intl';
 
-import { Pagination, Popup } from 'semantic-ui-react';
+import { Popup } from 'semantic-ui-react';
 import compose from 'lodash/fp/compose';
 import * as styledComp from './styledComp';
 import media from '../../globalStyles/media';
 import EllipsisLine from '../../components/EllipsisLine';
 import DataList from '../../components/DataList';
 import Countdown from '../../components/Countdown';
+import Pagination from '../../components/Pagination';
 import { i18n, renderAny, humanizeNum, getQuery, dripTocfx, notice } from '../../utils';
 import iconCloseSmall from '../../assets/images/icons/close-small.svg';
 import iconCloseMd from '../../assets/images/icons/close-md.svg';
