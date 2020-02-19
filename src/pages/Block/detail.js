@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import superagent from 'superagent';
 import moment from 'moment';
 import BigNumber from 'bignumber.js';
-import { Pagination } from 'semantic-ui-react';
+import Pagination from '../../components/Pagination';
 import Countdown from '../../components/Countdown';
 import TableLoading from '../../components/TableLoading';
 import DataList from '../../components/DataList';
