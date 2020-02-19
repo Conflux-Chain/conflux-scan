@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import superagent from 'superagent';
-import { Pagination } from 'semantic-ui-react';
+import Pagination from '../../components/Pagination';
 import DataList from '../../components/DataList';
 import Countdown from '../../components/Countdown';
 import TableLoading from '../../components/TableLoading';
