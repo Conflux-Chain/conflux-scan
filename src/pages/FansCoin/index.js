@@ -166,7 +166,7 @@ const TransfersDiv = styled.div`
   ${media.pad`
     .transfer-search-tag + .transfer-search-input {
       margin-top: 10px;
-      }
+    }
   `}
   .transfer-search-tag {
     background: #F2F2F2;
