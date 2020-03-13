@@ -380,7 +380,7 @@ class Detail extends Component {
                     {renderAny(() => {
                       let toDiv;
                       if (result.to) {
-                        if (result.to === '0xf8966b6117bab55c8cb164483a1bf3d40e733799') {
+                        if (result.to === '0x595c2bd6098de9f063110abcb50ec55e5f692e1f') {
                           toDiv = (
                             <span>
                               {i18n('Contract')} &nbsp;
