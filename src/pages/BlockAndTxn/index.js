@@ -312,7 +312,7 @@ class BlockAndTxn extends Component {
               <EllipsisLine prefix={i18n('From')} linkTo={`/accountdetail/${row.from}`} text={row.from} />
               <EllipsisLine is2ndLine prefix={i18n('To')} linkTo={`/accountdetail/${row.to}`} text={row.to} />
               <FloatGas>
-                <StyledLabel>{converToGasPrice3Fixed(row.gasPrice) + ' CFX'}</StyledLabel>
+                <StyledLabel>{converToGasPrice3Fixed(row.value) + ' CFX'}</StyledLabel>
               </FloatGas>
             </div>
           </StyledMobile>
