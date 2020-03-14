@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import superagent from 'superagent';
 import moment from 'moment';
-import { Pagination, Dropdown, Popup } from 'semantic-ui-react';
+import { Dropdown, Popup } from 'semantic-ui-react';
 import { DatePicker } from 'antd';
 import BigNumber from 'bignumber.js';
 import { injectIntl } from 'react-intl';
@@ -21,6 +21,7 @@ import * as commonCss from '../../globalStyles/common';
 import media from '../../globalStyles/media';
 import iconStatusErr from '../../assets/images/icons/status-err.svg';
 import iconStatusSkip from '../../assets/images/icons/status-skip.svg';
+import Pagination from '../../components/Pagination';
 
 const { RangePicker } = DatePicker;
 

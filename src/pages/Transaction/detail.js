@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import superagent from 'superagent';
 
 import moment from 'moment';
 import TableLoading from '../../components/TableLoading';
@@ -15,6 +14,7 @@ import Countdown from '../../components/Countdown';
 import iconStatusErr from '../../assets/images/icons/status-err.svg';
 import iconStatusSuccess from '../../assets/images/icons/status-success.svg';
 import iconStatusSkip from '../../assets/images/icons/status-skip.svg';
+import iconWesign from '../../assets/images/icons/wesign-logo.svg';
 import CopyButton from '../../components/CopyButton';
 
 const Wrapper = styled.div`
@@ -75,6 +75,17 @@ const StyledTabel = styled.table`
   }
   td.bottom {
     padding-bottom: 2em !important;
+  }
+  td.to {
+    > span {
+      display: flex;
+      align-items: center;
+    }
+    .logo {
+      width: 16px;
+      margin-right: 5px;
+      margin-left: 10px;
+    }
   }
   tr > td a {
     font-weight: bold;
@@ -365,16 +376,28 @@ class Detail extends Component {
                 </tr>
                 <tr className="">
                   <td className="collapsing">{i18n('To')}</td>
-                  <td className="">
+                  <td className="to">
                     {renderAny(() => {
                       let toDiv;
                       if (result.to) {
-                        toDiv = (
-                          <span>
-                            <Link to={`/accountdetail/${result.to}`}>{result.to}</Link>
-                            <CopyButton style={copyBtnStyle} txtToCopy={result.to} btnType="three" toolTipId="Copy to clipboard" />
-                          </span>
-                        );
+                        if (result.to === '0x595c2bd6098de9f063110abcb50ec55e5f692e1f') {
+                          toDiv = (
+                            <span>
+                              {i18n('Contract')} &nbsp;
+                              <Link to={`/accountdetail/${result.to}`}>{result.to}</Link>
+                              <img src={iconWesign} className="logo" />
+                              {i18n('WeSign')}
+                              <CopyButton style={copyBtnStyle} txtToCopy={result.to} btnType="three" toolTipId="Copy to clipboard" />
+                            </span>
+                          );
+                        } else {
+                          toDiv = (
+                            <span>
+                              <Link to={`/accountdetail/${result.to}`}>{result.to}</Link>
+                              <CopyButton style={copyBtnStyle} txtToCopy={result.to} btnType="three" toolTipId="Copy to clipboard" />
+                            </span>
+                          );
+                        }
                       } else if (result.contractCreated) {
                         toDiv = (
                           <span>
