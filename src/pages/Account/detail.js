@@ -345,7 +345,7 @@ const minedColumns = [
   },
   {
     key: 2,
-    dataIndex: 'position',
+    dataIndex: 'blockIndex',
     className: 'one wide aligned plain_th',
     title: i18n('Position'),
     render: (text, row) => (
@@ -361,7 +361,7 @@ const minedColumns = [
     title: i18n('Hash'),
     render: (text, row) => (
       <div>
-        <EllipsisLine isLong linkTo={`/blocksdetail/${text}`} isPivot={row.isPivot} text={text} />
+        <EllipsisLine isLong linkTo={`/blocksdetail/${text}`} isPivot={row.pivotHash === row.hash} text={text} />
       </div>
     ),
   },
@@ -417,9 +417,9 @@ class Detail extends Component {
       TxList: [],
       TxTotalCount: 100,
       queries: {
-        pageNum: 1,
+        page: 1,
         pageSize: 10,
-        txnType: 'all',
+        txType: 'all',
       },
       minedTotalCount: 0,
       curMinedPage: 1,
@@ -440,9 +440,9 @@ class Detail extends Component {
     if (this.props.match.params.accountid !== prevProps.match.params.accountid) {
       // eslint-disable-next-line react/destructuring-assignment
       this.fetchAccountDetail(this.props.match.params.accountid, {
-        pageNum: 1,
+        page: 1,
         pageSize: 10,
-        txnType: 'all',
+        txType: 'all',
       });
     }
   }
@@ -451,11 +451,11 @@ class Detail extends Component {
     const { history } = this.props;
     this.setState({ isLoading: true, accountid });
 
-    reqAccount({ accountid }).then((body) => {
+    reqAccount({ address: accountid }).then((body) => {
       if (body.code === 0) {
         this.setState({
-          accountDetail: body.result.data,
-          minedTotalCount: body.result.data.minedBlocks,
+          accountDetail: body.result,
+          minedTotalCount: body.result.blockCount,
           isLoading: false,
         });
       } else if (body.code === 1) {
@@ -468,9 +468,14 @@ class Detail extends Component {
       }
     });
 
-    reqAccountTransactionList({ accountid, ...queries }).then((body) => {
+    reqAccountTransactionList({
+      address: accountid,
+      page: queries.page,
+      pageSize: queries.pageSize,
+      txType: queries.txType,
+    }).then((body) => {
       this.setState({
-        TxList: body.result.data,
+        TxList: body.result.list,
         TxTotalCount: body.result.total,
         queries,
       });
@@ -479,9 +484,12 @@ class Detail extends Component {
 
   changePage(accountid, queries) {
     this.setState({ isLoading: true });
-    reqAccountTransactionList({ accountid, ...queries }).then((body) => {
+    reqAccountTransactionList({
+      address: accountid,
+      ...queries,
+    }).then((body) => {
       this.setState({
-        TxList: body.result.data,
+        TxList: body.result.list,
         TxTotalCount: body.result.total,
         queries,
       });
@@ -494,25 +502,25 @@ class Detail extends Component {
     this.setState({ isLoading: true });
 
     reqMinedBlockList({
-      accountid,
-      pageNum: curMinedPage,
+      miner: accountid,
+      page: curMinedPage,
       pageSize: 10,
     }).then((body) => {
       if (body.code === 0) {
         const { total } = body.result;
         this.setState({
-          minedBlockList: body.result.data,
+          minedBlockList: body.result.list,
           isLoading: false,
           curMinedPage,
           minedTotalCount: total,
         });
 
         const { accountDetail } = this.state;
-        if (total !== accountDetail.minedBlocks) {
-          reqAccount({ accountid }).then((body1) => {
+        if (total !== accountDetail.blockCount) {
+          reqAccount({ address: accountid }).then((body1) => {
             if (body1.code === 0) {
               this.setState({
-                accountDetail: body1.result.data,
+                accountDetail: body1.result,
               });
             }
           });
@@ -682,7 +690,7 @@ class Detail extends Component {
                 <div>
                   <h2>{i18n('app.pages.account.detail.transactions')}</h2>
                   <p>
-                    <span>{accountDetail.transactions}</span>
+                    <span>{accountDetail.transactionCount}</span>
                   </p>
                 </div>
               </div>
@@ -694,7 +702,7 @@ class Detail extends Component {
                 </svg>
                 <div>
                   <h2>{i18n('Mined Blocks')}</h2>
-                  <p>{accountDetail.minedBlocks}</p>
+                  <p>{accountDetail.blockCount}</p>
                 </div>
               </div>
             </div>
@@ -720,19 +728,19 @@ class Detail extends Component {
                   <section>
                     <h2>{i18n('First Seen')}</h2>
                     {renderAny(() => {
-                      if (!accountDetail.firstSeen) {
+                      if (!accountDetail.firstTime) {
                         return i18n('No Record');
                       }
-                      return <p>{moment(accountDetail.firstSeen * 1000).format('YYYY-MM-DD HH:mm:ss')}</p>;
+                      return <p>{moment(accountDetail.firstTime * 1000).format('YYYY-MM-DD HH:mm:ss')}</p>;
                     })}
                   </section>
                   <section>
                     <h2>{i18n('Last Seen')}</h2>
                     {renderAny(() => {
-                      if (!accountDetail.lastSeen) {
+                      if (!accountDetail.lastTime) {
                         return i18n('No Record');
                       }
-                      return <p>{moment(accountDetail.lastSeen * 1000).format('YYYY-MM-DD HH:mm:ss')}</p>;
+                      return <p>{moment(accountDetail.lastTime * 1000).format('YYYY-MM-DD HH:mm:ss')}</p>;
                     })}
                   </section>
                 </div>
@@ -790,7 +798,7 @@ class Detail extends Component {
                     if (value.length) {
                       const startTime = value[0].unix();
                       const endTime = value[1].unix();
-                      this.changePage(params.accountid, { ...queries, startTime, endTime, pageNum: 1 });
+                      this.changePage(params.accountid, { ...queries, startTime, endTime, page: 1 });
                     }
                   }}
                 />
@@ -811,7 +819,7 @@ class Detail extends Component {
                       value="all"
                       onClick={(e, data) => {
                         e.preventDefault();
-                        this.changePage(params.accountid, { ...queries, txnType: data.value, pageNum: 1 });
+                        this.changePage(params.accountid, { ...queries, txType: data.value, page: 1 });
                       }}
                     />
                     <Dropdown.Item
@@ -819,7 +827,7 @@ class Detail extends Component {
                       value="outgoing"
                       onClick={(e, data) => {
                         e.preventDefault();
-                        this.changePage(params.accountid, { ...queries, txnType: data.value, pageNum: 1 });
+                        this.changePage(params.accountid, { ...queries, txType: data.value, page: 1 });
                       }}
                     />
                     <Dropdown.Item
@@ -827,7 +835,7 @@ class Detail extends Component {
                       value="incoming"
                       onClick={(e, data) => {
                         e.preventDefault();
-                        this.changePage(params.accountid, { ...queries, txnType: data.value, pageNum: 1 });
+                        this.changePage(params.accountid, { ...queries, txType: data.value, page: 1 });
                       }}
                     />
                   </Dropdown.Menu>
@@ -859,9 +867,9 @@ class Detail extends Component {
                           }}
                           onPageChange={(e, data) => {
                             e.preventDefault();
-                            this.changePage(params.accountid, { ...queries, pageNum: data.activePage });
+                            this.changePage(params.accountid, { ...queries, page: data.activePage });
                           }}
-                          activePage={queries.pageNum}
+                          activePage={queries.page}
                           totalPages={Math.ceil(TxTotalCount / 10)}
                           ellipsisItem={null}
                         />
@@ -877,10 +885,10 @@ class Detail extends Component {
                             content: i18n('nextPage'),
                           }}
                           boundaryRange={0}
-                          activePage={queries.pageNum}
+                          activePage={queries.page}
                           onPageChange={(e, data) => {
                             e.preventDefault();
-                            this.changePage(params.accountid, { ...queries, pageNum: data.activePage });
+                            this.changePage(params.accountid, { ...queries, page: data.activePage });
                           }}
                           ellipsisItem={null}
                           firstItem={null}

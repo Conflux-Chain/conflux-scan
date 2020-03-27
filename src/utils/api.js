@@ -1,5 +1,5 @@
 import { sendRequest } from './index';
-import { apiPrefix } from '../constants';
+import { apiPrefix, futurePrefix } from '../constants';
 
 export const reqFcStat = (param) => {
   return sendRequest({
@@ -27,40 +27,41 @@ export const reqFcByAddress = (param) => {
 };
 
 export const reqRecentDagBlock = () => {
-  return sendRequest({ url: '/api/block/recent' }).then((res) => res.body);
+  return sendRequest({ url: `${futurePrefix}/block/recent` }).then((res) => res.body);
 };
 
 export const reqAccount = (param) => {
   return sendRequest({
-    url: `${apiPrefix}/account/${param.accountid}`,
+    url: `${futurePrefix}/account/query`,
     query: param,
   }).then((res) => res.body);
 };
 
 export const reqAccountTransactionList = (param) => {
   return sendRequest({
-    url: `${apiPrefix}/account/${param.accountid}/transactionList`,
+    url: `${futurePrefix}/transaction/list`,
     query: param,
   }).then((res) => res.body);
 };
 
 export const reqMinedBlockList = (param) => {
   return sendRequest({
-    url: `${apiPrefix}/account/${param.accountid}/minedBlockList`,
+    url: `${futurePrefix}/block/list`,
     query: param,
   }).then((res) => res.body);
 };
 
 export const reqBlock = (param) => {
   return sendRequest({
-    url: `${apiPrefix}/block/${param.blockHash}`,
+    url: `${futurePrefix}/block/query`,
     query: param,
   }).then((res) => res.body);
 };
 
 export const reqBlockTransactionList = (param, extra) => {
   return sendRequest({
-    url: `${apiPrefix}/block/${param.blockHash}/transactionList`,
+    url: `${futurePrefix}/transaction/list`,
+    // url: `${apiPrefix}/block/${param.blockHash}/transactionList`,
     query: param,
     ...extra,
   }).then((res) => res.body);
@@ -68,7 +69,7 @@ export const reqBlockTransactionList = (param, extra) => {
 
 export const reqBlockRefereeBlockList = (param, extra) => {
   return sendRequest({
-    url: `${apiPrefix}/block/${param.blockHash}/refereeBlockList`,
+    url: `${futurePrefix}/block/list`,
     query: param,
     ...extra,
   }).then((res) => res.body);
@@ -76,35 +77,35 @@ export const reqBlockRefereeBlockList = (param, extra) => {
 
 export const reqBlockList = (param) => {
   return sendRequest({
-    url: `${apiPrefix}/block/list`,
+    url: `${futurePrefix}/block/list`,
     query: param,
   }).then((res) => res.body);
 };
 
 export const reqTransactionList = (param) => {
   return sendRequest({
-    url: `${apiPrefix}/transaction/list`,
+    url: `${futurePrefix}/transaction/list`,
     query: param,
   }).then((res) => res.body);
 };
 
 export const reqStatistics = (param) => {
   return sendRequest({
-    url: `${apiPrefix}/dashboard/statistics`,
+    url: `${futurePrefix}/dashboard/trend`,
     query: param,
   }).then((res) => res.body);
 };
 
 export const reqStatisticsItem = (param) => {
   return sendRequest({
-    url: `${apiPrefix}/dashboard/statistics/${param.name}`,
+    url: `${futurePrefix}/dashboard/plot`,
     query: param,
   }).then((res) => res.body);
 };
 
 export const reqTransactionDetail = (param, extra) => {
   return sendRequest({
-    url: `${apiPrefix}/transaction/${param.txnhash}`,
+    url: `${futurePrefix}/transaction/query`,
     query: param,
     ...extra,
   }).then((res) => res.body);

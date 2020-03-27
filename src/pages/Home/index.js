@@ -152,16 +152,7 @@ class Home extends Component {
 
   componentDidMount() {
     this.fetchStatistic();
-    this.fetchLineData('tps', 'day').then((result) => {
-      if (result.data.length === 0) {
-        this.setState({
-          showMaintaining: true,
-        });
-      }
-    });
-    this.fetchLineData('difficulty', 'day');
-    this.fetchLineData('blockTime', 'day');
-    this.fetchLineData('hashRate', 'day');
+    this.fetchLineDataAll();
   }
 
   onChangeDuration(name, value) {
@@ -174,22 +165,64 @@ class Home extends Component {
   }
 
   async fetchStatistic() {
-    const { code, result } = await reqStatistics();
+    const { code, result } = await reqStatistics({
+      span: 24 * 60 * 60,
+    });
     if (!code) {
+      const data = {};
+      Object.keys(result).forEach((key) => {
+        data[key] = {
+          trend: result[key].trend,
+          val: result[key].value,
+        };
+      });
       this.setState({
-        summary: Immutable.fromJS(result.data),
+        summary: Immutable.fromJS(data),
       });
     }
   }
 
+  async fetchLineDataAll(duration = 'day') {
+    const { result } = await reqStatisticsItem({
+      duration,
+    });
+    const tpsList = result.list.map((v) => ({ time: v.timestamp, value: v.tps }));
+    const difficultyList = result.list.map((v) => ({ time: v.timestamp, value: v.difficulty }));
+    const blockTimeList = result.list.map((v) => ({ time: v.timestamp, value: v.blockTime }));
+    const hashRateList = result.list.map((v) => ({ time: v.timestamp, value: v.hashRate }));
+
+    const data = Immutable.fromJS({
+      tps: tpsList,
+      difficulty: difficultyList,
+      blockTime: blockTimeList,
+      hashRate: hashRateList,
+    });
+
+    this.setState({
+      data,
+    });
+
+    if (tpsList.length === 0) {
+      this.setState({
+        showMaintaining: true,
+      });
+    }
+    return result;
+  }
+
   async fetchLineData(name, duration) {
     const { code, result } = await reqStatisticsItem({
-      name,
       duration,
     });
     let { data } = this.state;
     if (!code) {
-      data = data.set(name, Immutable.fromJS(result.data));
+      const list = result.list.map((v) => {
+        return {
+          time: v.timestamp,
+          value: v[name],
+        };
+      });
+      data = data.set(name, Immutable.fromJS(list));
       this.setState({
         data,
       });

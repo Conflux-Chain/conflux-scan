@@ -187,24 +187,24 @@ class BlockAndTxn extends Component {
 
   fetchInitList() {
     const req1 = reqBlockList({
-      pageNum: 1,
+      page: 1,
       pageSize: 10,
     }).then((body) => {
       if (body.code === 0) {
         this.setState({
           showLoading: false,
-          BlockList: body.result.data,
+          BlockList: body.result.list,
         });
       }
     });
 
     const req2 = reqTransactionList({
-      pageNum: 1,
+      page: 1,
       pageSize: 10,
     }).then((body) => {
       if (body.code === 0) {
         this.setState({
-          TxList: body.result.data,
+          TxList: body.result.list,
           plusTimeCount: 0,
         });
       }

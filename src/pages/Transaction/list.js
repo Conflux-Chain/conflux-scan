@@ -150,7 +150,7 @@ class List extends Component {
     this.state = {
       isLoading: true,
       TxList: [],
-      TotalCount: 100,
+      TotalCount: 1,
       curPage: curPageBase,
     };
   }
@@ -173,7 +173,7 @@ class List extends Component {
     }).then((body) => {
       if (body.code === 0) {
         this.setState({
-          TxList: body.result.data,
+          TxList: body.result.list,
           TotalCount: body.result.total,
           curPage: activePage,
         });

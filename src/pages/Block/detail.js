@@ -212,7 +212,7 @@ const RefColumns = [
   {
     key: 2,
     title: i18n('Position'),
-    dataIndex: 'position',
+    dataIndex: 'blockIndex',
     className: 'one wide aligned plain_th',
     render: (text, row) => (
       <div>
@@ -227,7 +227,7 @@ const RefColumns = [
     className: 'one wide aligned',
     render: (text, row) => (
       <div>
-        <EllipsisLine isLong linkTo={`/blocksdetail/${text}`} isPivot={row.isPivot} text={text} />
+        <EllipsisLine isLong linkTo={`/blocksdetail/${text}`} isPivot={row.pivotHash === row.hash} text={text} />
       </div>
     ),
   },
@@ -275,7 +275,6 @@ class Detail extends Component {
       match: { params },
     } = this.props;
     this.state = {
-      blockhash: params.blockhash,
       currentTab: 1,
       TxTotalCount: 0,
       refereeBlockList: [],
@@ -283,6 +282,8 @@ class Detail extends Component {
       TxList: [],
       isLoading: true,
       curPage: 1,
+      refBlockCurPage: 1,
+      refTotal: 0,
     };
   }
 
@@ -291,7 +292,7 @@ class Detail extends Component {
       match: { params },
     } = this.props;
     this.fetchBlockDetail(params.blockhash, { activePage: 1 });
-    this.fetchReffereBlock(params.blockhash);
+    this.fetchReffereBlock(params.blockhash, { refBlockCurPage: 1 });
   }
 
   componentDidUpdate(prevProps) {
@@ -305,12 +306,12 @@ class Detail extends Component {
 
   fetchBlockDetail(blockHash, { activePage }) {
     const { history } = this.props;
-    this.setState({ isLoading: true, blockhash: blockHash });
+    this.setState({ isLoading: true });
 
-    reqBlock({ blockHash }, { showError: false }).then((body) => {
+    reqBlock({ hash: blockHash }, { showError: false }).then((body) => {
       if (body.code === 0) {
         this.setState({
-          blockDetail: body.result.data,
+          blockDetail: body.result,
           isLoading: false,
         });
       } else if (body.code === 1) {
@@ -321,14 +322,14 @@ class Detail extends Component {
     reqBlockTransactionList(
       {
         blockHash,
-        pageNum: activePage,
+        page: activePage,
         pageSize: 10,
       },
       { showError: false }
     ).then((body) => {
       if (body.code === 0) {
         this.setState({
-          TxList: body.result.data,
+          TxList: body.result.list.filter((v) => !!v),
           TxTotalCount: body.result.total,
           curPage: activePage,
         });
@@ -336,33 +337,34 @@ class Detail extends Component {
     });
   }
 
-  fetchReffereBlock(blockHash) {
+  fetchReffereBlock(blockHash, { refBlockCurPage }) {
     this.setState({ isLoading: true });
 
     reqBlockRefereeBlockList(
       {
-        pageNum: 1,
-        pageSize: 20,
-        blockHash,
+        page: refBlockCurPage,
+        pageSize: 10,
+        referredBy: blockHash,
       },
       { showError: false }
     ).then((body) => {
       if (body.code === 0) {
         this.setState({
-          refereeBlockList: body.result.data,
+          refTotal: body.result.total,
+          refereeBlockList: body.result.list.filter((v) => !!v),
           isLoading: false,
+          refBlockCurPage,
         });
       }
     });
   }
 
   render() {
-    const { blockDetail, TxList, TxTotalCount, isLoading, currentTab, refereeBlockList, curPage, blockhash } = this.state;
+    const { blockDetail, TxList, TxTotalCount, isLoading, currentTab, refereeBlockList, curPage, refBlockCurPage, refTotal } = this.state;
     const {
       match: { params },
     } = this.props;
 
-    // console.log(refereeBlockList, '===refereeBlockList');
     return (
       <div className="page-block-detail">
         <Wrapper>
@@ -440,7 +442,7 @@ class Detail extends Component {
                 }}
               >
                 {i18n('Reference Blocks')}
-                {`(${refereeBlockList.length})`}
+                {`(${refTotal})`}
               </button>
             </div>
 
@@ -505,6 +507,49 @@ class Detail extends Component {
                     </div>
                   </div>
                 </StyledTabelWrapper>
+                <TabWrapper>
+                  <div className="page-pc">
+                    <Pagination
+                      prevItem={{
+                        'aria-label': 'Previous item',
+                        content: i18n('lastPage'),
+                      }}
+                      nextItem={{
+                        'aria-label': 'Next item',
+                        content: i18n('nextPage'),
+                      }}
+                      onPageChange={(e, data) => {
+                        e.preventDefault();
+                        this.fetchReffereBlock(params.blockhash, { refBlockCurPage: data.activePage });
+                      }}
+                      activePage={refBlockCurPage}
+                      totalPages={Math.ceil(refTotal / 10)}
+                    />
+                  </div>
+                  <div className="page-h5">
+                    <Pagination
+                      prevItem={{
+                        'aria-label': 'Previous item',
+                        content: i18n('lastPage'),
+                      }}
+                      nextItem={{
+                        'aria-label': 'Next item',
+                        content: i18n('nextPage'),
+                      }}
+                      boundaryRange={0}
+                      activePage={refBlockCurPage}
+                      onPageChange={(e, data) => {
+                        e.preventDefault();
+                        this.fetchReffereBlock(params.blockhash, { refBlockCurPage: data.activePage });
+                      }}
+                      ellipsisItem={null}
+                      firstItem={null}
+                      lastItem={null}
+                      siblingRange={1}
+                      totalPages={Math.ceil(refTotal / 10)}
+                    />
+                  </div>
+                </TabWrapper>
               </div>
             </TabContent>
           </TabZone>

@@ -25,6 +25,9 @@ module.exports = merge(commom, {
         target: 'http://13.75.69.106',
         // pathRewrite: { '^/api': '' },
       },
+      '/future': {
+        target: 'http://13.75.69.106',
+      },
       // for developing dag locally
       '/conflux-dag.js': 'http://localhost:8081/dist/',
       '/dist/vendors~pixi.js.conflux-dag.js': 'http://localhost:8081/',

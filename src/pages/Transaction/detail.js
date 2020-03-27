@@ -192,7 +192,7 @@ class Detail extends Component {
     this.setState({ isLoading: true, txnhash });
     return reqTransactionDetail(
       {
-        txnhash,
+        hash: txnhash,
       },
       { showError: false }
     ).then((body) => {
@@ -208,7 +208,7 @@ class Detail extends Component {
         case 0:
         default:
           this.setState({
-            result: body.result.data,
+            result: body.result,
             isLoading: false,
           });
           break;

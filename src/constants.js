@@ -1,4 +1,5 @@
 export const apiPrefix = '/api';
+export const futurePrefix = '/future';
 
 export const errorCodes = {
   UnexpectedError: 10000,

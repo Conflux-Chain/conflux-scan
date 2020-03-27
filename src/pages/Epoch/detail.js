@@ -75,7 +75,7 @@ const PagerWrap = styled.div`
 const columns = [
   {
     key: 1,
-    dataIndex: 'position',
+    dataIndex: 'blockIndex',
     title: i18n('Position'),
     className: 'one wide aligned plain_th',
     render: (text) => 1 + text,
@@ -88,7 +88,7 @@ const columns = [
     render: (text, row) => (
       <div>
         <PCell>
-          <EllipsisLine linkTo={`/blocksdetail/${text}`} isPivot={row.isPivot} isLong text={text} />
+          <EllipsisLine linkTo={`/blocksdetail/${text}`} isPivot={row.pivotHash === row.hash} isLong text={text} />
         </PCell>
       </div>
     ),
@@ -184,12 +184,12 @@ class Detail extends Component {
   async fetchInitList({ epochid, curPage }) {
     this.setState({ isLoading: true });
     reqBlockList({
-      pageNum: curPage,
+      page: curPage,
       pageSize,
-      epochNum: epochid,
+      epochNumber: epochid,
     }).then((body) => {
       this.setState({
-        BlockList: body.result.data,
+        BlockList: body.result.list,
         totalCount: body.result.total,
         isLoading: false,
         curPage,
