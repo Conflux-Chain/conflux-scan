@@ -258,3 +258,7 @@ export const humanizeNum = (a) => {
 };
 
 export { notice };
+
+export const getTotalPage = (count, limit) => {
+  return Math.ceil(count, limit);
+};

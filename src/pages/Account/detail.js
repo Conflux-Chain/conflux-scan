@@ -22,6 +22,7 @@ import media from '../../globalStyles/media';
 import iconStatusErr from '../../assets/images/icons/status-err.svg';
 import iconStatusSkip from '../../assets/images/icons/status-skip.svg';
 import Pagination from '../../components/Pagination';
+import { reqAccount, reqAccountTransactionList, reqMinedBlockList } from '../../utils/api';
 
 const { RangePicker } = DatePicker;
 
@@ -450,17 +451,14 @@ class Detail extends Component {
     const { history } = this.props;
     this.setState({ isLoading: true, accountid });
 
-    sendRequest({
-      url: `/api/account/${accountid}`,
-      query: {},
-    }).then((res) => {
-      if (res.body.code === 0) {
+    reqAccount({ accountid }).then((body) => {
+      if (body.code === 0) {
         this.setState({
-          accountDetail: res.body.result.data,
-          minedTotalCount: res.body.result.data.minedBlocks,
+          accountDetail: body.result.data,
+          minedTotalCount: body.result.data.minedBlocks,
           isLoading: false,
         });
-      } else if (res.body.code === 1) {
+      } else if (body.code === 1) {
         history.push(`/search-notfound?searchId=${accountid}`);
       } else {
         this.setState({
@@ -470,15 +468,10 @@ class Detail extends Component {
       }
     });
 
-    sendRequest({
-      url: `/api/account/${accountid}/transactionList`,
-      query: {
-        ...queries,
-      },
-    }).then((res) => {
+    reqAccountTransactionList({ accountid, ...queries }).then((body) => {
       this.setState({
-        TxList: res.body.result.data,
-        TxTotalCount: res.body.result.total,
+        TxList: body.result.data,
+        TxTotalCount: body.result.total,
         queries,
       });
     });
@@ -486,15 +479,10 @@ class Detail extends Component {
 
   changePage(accountid, queries) {
     this.setState({ isLoading: true });
-    sendRequest({
-      url: `/api/account/${accountid}/transactionList`,
-      query: {
-        ...queries,
-      },
-    }).then((res) => {
+    reqAccountTransactionList({ accountid, ...queries }).then((body) => {
       this.setState({
-        TxList: res.body.result.data,
-        TxTotalCount: res.body.result.total,
+        TxList: body.result.data,
+        TxTotalCount: body.result.total,
         queries,
       });
       this.setState({ isLoading: false });
@@ -504,17 +492,16 @@ class Detail extends Component {
 
   fetchMinedBlockList(accountid, curMinedPage) {
     this.setState({ isLoading: true });
-    sendRequest({
-      url: `/api/account/${accountid}/minedBlockList`,
-      query: {
-        pageNum: curMinedPage,
-        pageSize: 10,
-      },
-    }).then((res) => {
-      if (res.body.code === 0) {
-        const { total } = res.body.result;
+
+    reqMinedBlockList({
+      accountid,
+      pageNum: curMinedPage,
+      pageSize: 10,
+    }).then((body) => {
+      if (body.code === 0) {
+        const { total } = body.result;
         this.setState({
-          minedBlockList: res.body.result.data,
+          minedBlockList: body.result.data,
           isLoading: false,
           curMinedPage,
           minedTotalCount: total,
@@ -522,13 +509,10 @@ class Detail extends Component {
 
         const { accountDetail } = this.state;
         if (total !== accountDetail.minedBlocks) {
-          sendRequest({
-            url: `/api/account/${accountid}`,
-            query: {},
-          }).then((res1) => {
-            if (res1.body.code === 0) {
+          reqAccount({ accountid }).then((body1) => {
+            if (body1.code === 0) {
               this.setState({
-                accountDetail: res1.body.result.data,
+                accountDetail: body1.result.data,
               });
             }
           });

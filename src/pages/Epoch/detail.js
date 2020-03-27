@@ -10,7 +10,8 @@ import EllipsisLine from '../../components/EllipsisLine';
 import Countdown from '../../components/Countdown';
 import media from '../../globalStyles/media';
 import * as commonCss from '../../globalStyles/common';
-import { i18n, sendRequest } from '../../utils';
+import { i18n, getTotalPage } from '../../utils';
+import { reqBlockList } from '../../utils/api';
 
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -143,6 +144,7 @@ const columns = [
   },
 ];
 
+const pageSize = 10;
 class Detail extends Component {
   constructor() {
     super();
@@ -181,18 +183,14 @@ class Detail extends Component {
 
   async fetchInitList({ epochid, curPage }) {
     this.setState({ isLoading: true });
-    const reqBlockList = sendRequest({
-      url: '/api/block/list',
-      query: {
-        pageNum: curPage,
-        pageSize: 10,
-        epochNum: epochid,
-      },
-    });
-    reqBlockList.then((res) => {
+    reqBlockList({
+      pageNum: curPage,
+      pageSize,
+      epochNum: epochid,
+    }).then((body) => {
       this.setState({
-        BlockList: res.body.result.data,
-        totalCount: res.body.result.total,
+        BlockList: body.result.data,
+        totalCount: body.result.total,
         isLoading: false,
         curPage,
       });
@@ -239,7 +237,7 @@ class Detail extends Component {
                   });
                 }}
                 activePage={curPage}
-                totalPages={Math.ceil(totalCount / 10)}
+                totalPages={getTotalPage(totalCount, pageSize)}
               />
             </div>
             <div className="page-h5">
@@ -265,7 +263,7 @@ class Detail extends Component {
                 firstItem={null}
                 lastItem={null}
                 siblingRange={1}
-                totalPages={Math.ceil(totalCount / 10)}
+                totalPages={getTotalPage(totalCount, pageSize)}
               />
             </div>
           </PagerWrap>

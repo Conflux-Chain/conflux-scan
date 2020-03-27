@@ -10,6 +10,7 @@ import { i18n, sendRequest } from '../../utils/index';
 import ConfirmSimple from '../../components/ConfirmSimple';
 import Dag from '../../components/Dag';
 import * as commonCss from '../../globalStyles/common';
+import { reqBlockList } from '../../utils/api';
 
 const DagWrapper = styled.div`
   #dag-viewer {
@@ -202,20 +203,16 @@ class List extends Component {
 
   fetchBlockList({ activePage }) {
     this.setState({ isLoading: true });
-    const reqBlockList = sendRequest({
-      url: '/api/block/list',
-      query: {
-        pageNum: activePage,
-        pageSize: 10,
-      },
-    });
-    reqBlockList.then((res) => {
-      const { data } = res.body.result;
+    reqBlockList({
+      pageNum: activePage,
+      pageSize: 10,
+    }).then((body) => {
+      const { data } = body.result;
       this.setState({
         isLoading: false,
         curPage: activePage,
         BlockList: data,
-        TotalCount: res.body.result.total,
+        TotalCount: body.result.total,
       });
     });
   }

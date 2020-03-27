@@ -12,6 +12,7 @@ import dashboard2 from '../../assets/images/dashboard2.png';
 import dashboard3 from '../../assets/images/dashboard3.png';
 import dashboard4 from '../../assets/images/dashboard4.png';
 import media from '../../globalStyles/media';
+import { reqStatistics, reqStatisticsItem } from '../../utils/api';
 
 const Container = styled.div`
   width: 100%;
@@ -173,7 +174,7 @@ class Home extends Component {
   }
 
   async fetchStatistic() {
-    const { code, result } = (await superagent.get('/api/dashboard/statistics')).body;
+    const { code, result } = await reqStatistics();
     if (!code) {
       this.setState({
         summary: Immutable.fromJS(result.data),
@@ -182,7 +183,10 @@ class Home extends Component {
   }
 
   async fetchLineData(name, duration) {
-    const { code, result } = (await superagent.get(`/api/dashboard/statistics/${name}?duration=${duration}`)).body;
+    const { code, result } = await reqStatisticsItem({
+      name,
+      duration,
+    });
     let { data } = this.state;
     if (!code) {
       data = data.set(name, Immutable.fromJS(result.data));

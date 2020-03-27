@@ -8,6 +8,7 @@ import TableLoading from '../../components/TableLoading';
 import media from '../../globalStyles/media';
 import Dag from '../../components/Dag';
 import { converToGasPrice3Fixed, initSse, closeSource, sendRequest, i18n } from '../../utils';
+import { reqTransactionList, reqBlockList } from '../../utils/api';
 
 const RowWrapper = styled.div`
   display: flex;
@@ -170,45 +171,46 @@ class BlockAndTxn extends Component {
   }
 
   componentDidMount() {
-    this.fetchInitList();
-    initSse(this, '/proxy/fetchBlockandTxList?pageNum=1&pageSize=10');
+    this.fetchInitList().then(() => {
+      this.beginCountOnce();
+    });
+
+    this.loopFetchTimer = setInterval(() => {
+      this.fetchInitList();
+    }, 10 * 1000);
   }
 
   componentWillUnmount() {
-    closeSource();
     clearInterval(this.timerId);
+    clearInterval(this.loopFetchTimer);
   }
 
   fetchInitList() {
-    sendRequest({
-      url: '/api/block/list',
-      query: {
-        pageNum: 1,
-        pageSize: 10,
-      },
-    }).then((res) => {
-      if (res.body.code === 0) {
+    const req1 = reqBlockList({
+      pageNum: 1,
+      pageSize: 10,
+    }).then((body) => {
+      if (body.code === 0) {
         this.setState({
           showLoading: false,
-          BlockList: res.body.result.data,
+          BlockList: body.result.data,
         });
       }
     });
 
-    sendRequest({
-      url: '/api/transaction/list',
-      query: {
-        pageNum: 1,
-        pageSize: 10,
-      },
-    }).then((res) => {
-      if (res.body.code === 0) {
+    const req2 = reqTransactionList({
+      pageNum: 1,
+      pageSize: 10,
+    }).then((body) => {
+      if (body.code === 0) {
         this.setState({
-          TxList: res.body.result.data,
+          TxList: body.result.data,
           plusTimeCount: 0,
         });
       }
     });
+
+    return Promise.all([req1, req2]);
   }
 
   render() {

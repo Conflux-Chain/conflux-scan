@@ -13,6 +13,7 @@ import EllipsisLine from '../../components/EllipsisLine';
 import { convertToValueorFee, converToGasPrice, i18n, sendRequest } from '../../utils';
 import media from '../../globalStyles/media';
 import * as commonCss from '../../globalStyles/common';
+import { reqBlock, reqBlockTransactionList, reqBlockRefereeBlockList } from '../../utils/api';
 
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -293,37 +294,42 @@ class Detail extends Component {
     this.fetchReffereBlock(params.blockhash);
   }
 
+  componentDidUpdate(prevProps) {
+    // eslint-disable-next-line react/destructuring-assignment
+    const { blockhash } = this.props.match.params;
+    // eslint-disable-next-line react/destructuring-assignment
+    if (blockhash !== prevProps.match.params.blockhash) {
+      this.fetchBlockDetail(blockhash, { activePage: 1 });
+    }
+  }
+
   fetchBlockDetail(blockHash, { activePage }) {
     const { history } = this.props;
     this.setState({ isLoading: true, blockhash: blockHash });
 
-    sendRequest({
-      url: `/api/block/${blockHash}`,
-      query: {},
-      showError: false,
-    }).then((res) => {
-      if (res.body.code === 0) {
+    reqBlock({ blockHash }, { showError: false }).then((body) => {
+      if (body.code === 0) {
         this.setState({
-          blockDetail: res.body.result.data,
+          blockDetail: body.result.data,
           isLoading: false,
         });
-      } else if (res.body.code === 1) {
+      } else if (body.code === 1) {
         history.push(`/search-notfound?searchId=${blockHash}`);
       }
     });
 
-    sendRequest({
-      url: `/api/block/${blockHash}/transactionList`,
-      query: {
+    reqBlockTransactionList(
+      {
+        blockHash,
         pageNum: activePage,
         pageSize: 10,
       },
-      showError: false,
-    }).then((res) => {
-      if (res.body.code === 0) {
+      { showError: false }
+    ).then((body) => {
+      if (body.code === 0) {
         this.setState({
-          TxList: res.body.result.data,
-          TxTotalCount: res.body.result.total,
+          TxList: body.result.data,
+          TxTotalCount: body.result.total,
           curPage: activePage,
         });
       }
@@ -333,17 +339,17 @@ class Detail extends Component {
   fetchReffereBlock(blockHash) {
     this.setState({ isLoading: true });
 
-    sendRequest({
-      url: `/api/block/${blockHash}/refereeBlockList`,
-      query: {
+    reqBlockRefereeBlockList(
+      {
         pageNum: 1,
         pageSize: 20,
+        blockHash,
       },
-      showError: false,
-    }).then((res) => {
-      if (res.body.code === 0) {
+      { showError: false }
+    ).then((body) => {
+      if (body.code === 0) {
         this.setState({
-          refereeBlockList: res.body.result.data,
+          refereeBlockList: body.result.data,
           isLoading: false,
         });
       }
@@ -355,10 +361,6 @@ class Detail extends Component {
     const {
       match: { params },
     } = this.props;
-
-    if (blockhash !== params.blockhash) {
-      this.fetchBlockDetail(params.blockhash, { activePage: 1 });
-    }
 
     // console.log(refereeBlockList, '===refereeBlockList');
     return (

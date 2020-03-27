@@ -8,8 +8,8 @@ import TableLoading from '../../components/TableLoading';
 import EllipsisLine from '../../components/EllipsisLine';
 import { convertToValueorFee, converToGasPrice, i18n, sendRequest } from '../../utils';
 import media from '../../globalStyles/media';
-import ConfirmSimple from '../../components/ConfirmSimple';
 import * as commonCss from '../../globalStyles/common';
+import { reqTransactionList } from '../../utils/api';
 
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -165,25 +165,16 @@ class List extends Component {
   }
 
   fetchTxList({ activePage }) {
-    if (activePage > 10000) {
-      this.setState({
-        confirmOpen: true,
-      });
-      return;
-    }
     this.setState({ isLoading: true });
 
-    sendRequest({
-      url: '/api/transaction/list',
-      query: {
-        pageNum: activePage,
-        pageSize: 10,
-      },
-    }).then((res) => {
-      if (res.body.code === 0) {
+    reqTransactionList({
+      pageNum: activePage,
+      pageSize: 10,
+    }).then((body) => {
+      if (body.code === 0) {
         this.setState({
-          TxList: res.body.result.data,
-          TotalCount: res.body.result.total,
+          TxList: body.result.data,
+          TotalCount: body.result.total,
           curPage: activePage,
         });
         document.dispatchEvent(new Event('scroll-to-top'));
@@ -193,7 +184,7 @@ class List extends Component {
   }
 
   render() {
-    const { TxList, TotalCount, isLoading, confirmOpen, curPage } = this.state;
+    const { TxList, TotalCount, isLoading, curPage } = this.state;
     return (
       <div className="page-transaction-list">
         <Wrapper>
@@ -259,14 +250,6 @@ class List extends Component {
             </StyledTabel>
           </TabWrapper>
         </Wrapper>
-        <ConfirmSimple
-          open={confirmOpen}
-          onConfirm={() => {
-            this.setState({
-              confirmOpen: false,
-            });
-          }}
-        />
       </div>
     );
   }

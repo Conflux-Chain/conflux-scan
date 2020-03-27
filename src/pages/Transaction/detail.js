@@ -16,6 +16,7 @@ import iconStatusSuccess from '../../assets/images/icons/status-success.svg';
 import iconStatusSkip from '../../assets/images/icons/status-skip.svg';
 import iconWesign from '../../assets/images/icons/wesign-logo.svg';
 import CopyButton from '../../components/CopyButton';
+import { reqTransactionDetail } from '../../utils/api';
 
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -189,12 +190,13 @@ class Detail extends Component {
   fetchTxDetail(txnhash) {
     const { history } = this.props;
     this.setState({ isLoading: true, txnhash });
-    return sendRequest({
-      url: `/api/transaction/${txnhash}`,
-      query: {},
-      showError: false,
-    }).then((res) => {
-      switch (res.body.code) {
+    return reqTransactionDetail(
+      {
+        txnhash,
+      },
+      { showError: false }
+    ).then((body) => {
+      switch (body.code) {
         case 1:
           history.push(`/search-notfound?searchId=${txnhash}`);
           break;
@@ -206,7 +208,7 @@ class Detail extends Component {
         case 0:
         default:
           this.setState({
-            result: res.body.result.data,
+            result: body.result.data,
             isLoading: false,
           });
           break;
