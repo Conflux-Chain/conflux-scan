@@ -22,9 +22,9 @@ function appendAllSubChain(player, subChains) {
 }
 
 function fetchDagData() {
-  return reqRecentDagBlock().then(({ code = 0, message = '', result = { epochNumber: null, data: [] } } = {}) => {
+  return reqRecentDagBlock().then(({ code = 0, message = '', result = { epochNumber: null, list: [] } } = {}) => {
     if (code) throw new Error(`Error while fetching dag data:\n${message}`);
-    if (this && this instanceof window.ConfluxDagPlayer) return appendAllSubChain(this, result.data);
+    if (this && this instanceof window.ConfluxDagPlayer) return appendAllSubChain(this, result.list);
     return result.data;
   });
 }

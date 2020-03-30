@@ -8,6 +8,7 @@ import TableLoading from '../../components/TableLoading';
 import media from '../../globalStyles/media';
 import Dag from '../../components/Dag';
 import { converToGasPrice3Fixed, initSse, closeSource, sendRequest, i18n } from '../../utils';
+import { reqTransactionList, reqBlockList } from '../../utils/api';
 
 const RowWrapper = styled.div`
   display: flex;
@@ -46,7 +47,6 @@ const TitleWrapper = styled.div`
   display: inline-flex;
   justify-content: flex-start;
   align-items: center;
-  }
   > h1 {
     margin: 0;
     font-size: 20px;
@@ -154,12 +154,7 @@ class BlockAndTxn extends Component {
     };
 
     this.timerId = null;
-    let executed = false;
-    this.beginCountOnce = () => {
-      if (executed) {
-        return;
-      }
-      executed = true;
+    this.beginCountDown = () => {
       this.timerId = setInterval(() => {
         const { plusTimeCount } = this.state;
         this.setState({
@@ -170,45 +165,46 @@ class BlockAndTxn extends Component {
   }
 
   componentDidMount() {
-    this.fetchInitList();
-    initSse(this, '/proxy/fetchBlockandTxList?pageNum=1&pageSize=10');
+    this.fetchInitList().then(() => {
+      this.beginCountDown();
+    });
+
+    this.loopFetchTimer = setInterval(() => {
+      this.fetchInitList();
+    }, 10 * 1000);
   }
 
   componentWillUnmount() {
-    closeSource();
     clearInterval(this.timerId);
+    clearInterval(this.loopFetchTimer);
   }
 
   fetchInitList() {
-    sendRequest({
-      url: '/api/block/list',
-      query: {
-        pageNum: 1,
-        pageSize: 10,
-      },
-    }).then((res) => {
-      if (res.body.code === 0) {
+    const req1 = reqBlockList({
+      page: 1,
+      pageSize: 10,
+    }).then((body) => {
+      if (body.code === 0) {
         this.setState({
           showLoading: false,
-          BlockList: res.body.result.data,
+          BlockList: body.result.list.filter((v) => !!v),
         });
       }
     });
 
-    sendRequest({
-      url: '/api/transaction/list',
-      query: {
-        pageNum: 1,
-        pageSize: 10,
-      },
-    }).then((res) => {
-      if (res.body.code === 0) {
+    const req2 = reqTransactionList({
+      page: 1,
+      pageSize: 10,
+    }).then((body) => {
+      if (body.code === 0) {
         this.setState({
-          TxList: res.body.result.data,
+          TxList: body.result.list.filter((v) => !!v),
           plusTimeCount: 0,
         });
       }
     });
+
+    return Promise.all([req1, req2]);
   }
 
   render() {
@@ -227,7 +223,7 @@ class BlockAndTxn extends Component {
               </svg>
             </IconFace>
             <div>
-              <EllipsisLine isLong linkTo={`/blocksdetail/${row.hash}`} isPivot={row.isPivot} text={row.hash} />
+              <EllipsisLine isLong linkTo={`/blocksdetail/${row.hash}`} isPivot={row.pivotHash === row.hash} text={row.hash} />
               <PCell>
                 <Countdown timestamp={row.timestamp * 1000} />
               </PCell>
@@ -255,7 +251,7 @@ class BlockAndTxn extends Component {
                 <use xlinkHref="#iconqukuaigaoduxuanzhong" />
               </svg>
             </IconFace>
-            <EllipsisLine isLong linkTo={`/blocksdetail/${text}`} isPivot={row.isPivot} text={text} />
+            <EllipsisLine isLong linkTo={`/blocksdetail/${text}`} isPivot={row.pivotHash === row.hash} text={text} />
             <PCell>
               <Countdown timestamp={row.timestamp * 1000} />
             </PCell>
@@ -305,7 +301,7 @@ class BlockAndTxn extends Component {
               </svg>
             </IconFace>
             <div>
-              <EllipsisLine linkTo={`/transactionsdetail/${row.hash}`} isPivot={row.isPivot} text={row.hash} />
+              <EllipsisLine linkTo={`/transactionsdetail/${row.hash}`} isPivot={row.pivotHash === row.hash} text={row.hash} />
               <PCell>
                 <Countdown timestamp={row.timestamp * 1000 + plusTimeCount * 1000} />
               </PCell>
@@ -332,7 +328,7 @@ class BlockAndTxn extends Component {
                 <use xlinkHref="#iconjinrijiaoyiliang" />
               </svg>
             </IconFace>
-            <EllipsisLine linkTo={`/transactionsdetail/${text}`} isPivot={row.isPivot} text={text} />
+            <EllipsisLine linkTo={`/transactionsdetail/${text}`} isPivot={row.pivotHash === row.hash} text={text} />
             <PCell>
               <Countdown timestamp={row.timestamp * 1000} />
             </PCell>
@@ -344,12 +340,22 @@ class BlockAndTxn extends Component {
         dataIndex: 'from',
         className: 'one wide left aligned',
         title: 'Blocks',
-        render: (text, row) => (
-          <div>
-            <EllipsisLine prefix={i18n('From')} linkTo={`/accountdetail/${text}`} text={text} />
-            <EllipsisLine is2ndLine prefix={i18n('To')} linkTo={`/accountdetail/${row.to}`} text={row.to} />
-          </div>
-        ),
+        render: (text, row) => {
+          let line2;
+          if (row.contractCreated) {
+            line2 = (
+              <EllipsisLine is2ndLine prefix={i18n('To')} linkTo={`/accountdetail/${row.contractCreated}`} text={row.contractCreated} />
+            );
+          } else {
+            line2 = <EllipsisLine is2ndLine prefix={i18n('To')} linkTo={`/accountdetail/${row.to}`} text={row.to} />;
+          }
+          return (
+            <div>
+              <EllipsisLine prefix={i18n('From')} linkTo={`/accountdetail/${text}`} text={text} />
+              {line2}
+            </div>
+          );
+        },
       },
       {
         key: 4,

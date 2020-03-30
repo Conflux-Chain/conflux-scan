@@ -44,6 +44,7 @@ export default {
   Age: '块龄',
   Contract: '合约',
   Created: '已创建',
+  'Contract Creation': '合约创建',
   WeSign: '画押',
 
   'app.head.menu.home': '首页',
