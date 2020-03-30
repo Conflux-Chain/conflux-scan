@@ -10,7 +10,9 @@ import EllipsisLine from '../../components/EllipsisLine';
 import Countdown from '../../components/Countdown';
 import media from '../../globalStyles/media';
 import * as commonCss from '../../globalStyles/common';
-import { i18n, sendRequest } from '../../utils';
+import { i18n, getTotalPage } from '../../utils';
+import { reqBlockList } from '../../utils/api';
+import { errorCodes } from '../../constants';
 
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -74,7 +76,7 @@ const PagerWrap = styled.div`
 const columns = [
   {
     key: 1,
-    dataIndex: 'position',
+    dataIndex: 'blockIndex',
     title: i18n('Position'),
     className: 'one wide aligned plain_th',
     render: (text) => 1 + text,
@@ -87,7 +89,7 @@ const columns = [
     render: (text, row) => (
       <div>
         <PCell>
-          <EllipsisLine linkTo={`/blocksdetail/${text}`} isPivot={row.isPivot} isLong text={text} />
+          <EllipsisLine linkTo={`/blocksdetail/${text}`} isPivot={row.pivotHash === row.hash} isLong text={text} />
         </PCell>
       </div>
     ),
@@ -143,6 +145,7 @@ const columns = [
   },
 ];
 
+const pageSize = 10;
 class Detail extends Component {
   constructor() {
     super();
@@ -180,22 +183,28 @@ class Detail extends Component {
   }
 
   async fetchInitList({ epochid, curPage }) {
+    const { history } = this.props;
     this.setState({ isLoading: true });
-    const reqBlockList = sendRequest({
-      url: '/api/block/list',
-      query: {
-        pageNum: curPage,
-        pageSize: 10,
-        epochNum: epochid,
+    reqBlockList(
+      {
+        page: curPage,
+        pageSize,
+        epochNumber: epochid,
       },
-    });
-    reqBlockList.then((res) => {
-      this.setState({
-        BlockList: res.body.result.data,
-        totalCount: res.body.result.total,
-        isLoading: false,
-        curPage,
-      });
+      {
+        showError: false,
+      }
+    ).then((body) => {
+      if (body.code === 0) {
+        this.setState({
+          BlockList: body.result.list.filter((v) => !!v),
+          totalCount: body.result.total,
+          isLoading: false,
+          curPage,
+        });
+      } else if (body.code === errorCodes.ParameterError) {
+        history.push(`/search-notfound?searchId=${epochid}`);
+      }
     });
   }
 
@@ -239,7 +248,7 @@ class Detail extends Component {
                   });
                 }}
                 activePage={curPage}
-                totalPages={Math.ceil(totalCount / 10)}
+                totalPages={getTotalPage(totalCount, pageSize)}
               />
             </div>
             <div className="page-h5">
@@ -265,7 +274,7 @@ class Detail extends Component {
                 firstItem={null}
                 lastItem={null}
                 siblingRange={1}
-                totalPages={Math.ceil(totalCount / 10)}
+                totalPages={getTotalPage(totalCount, pageSize)}
               />
             </div>
           </PagerWrap>

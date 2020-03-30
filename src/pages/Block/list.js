@@ -7,9 +7,9 @@ import TableLoading from '../../components/TableLoading';
 import EllipsisLine from '../../components/EllipsisLine';
 import media from '../../globalStyles/media';
 import { i18n, sendRequest } from '../../utils/index';
-import ConfirmSimple from '../../components/ConfirmSimple';
 import Dag from '../../components/Dag';
 import * as commonCss from '../../globalStyles/common';
+import { reqBlockList } from '../../utils/api';
 
 const DagWrapper = styled.div`
   #dag-viewer {
@@ -118,7 +118,7 @@ const columns = [
   },
   {
     key: 2,
-    dataIndex: 'position',
+    dataIndex: 'blockIndex',
     title: i18n('Position'),
     className: 'one wide aligned plain_th',
     render: (text /* , row */) => (
@@ -134,7 +134,7 @@ const columns = [
     className: 'two wide aligned',
     render: (text, row) => (
       <div>
-        <EllipsisLine isLong linkTo={`/blocksdetail/${text}`} isPivot={row.isPivot} text={text} />
+        <EllipsisLine isLong linkTo={`/blocksdetail/${text}`} isPivot={row.pivotHash === row.hash} text={text} />
       </div>
     ),
   },
@@ -187,7 +187,7 @@ class List extends Component {
     this.state = {
       isLoading: true,
       BlockList: [],
-      TotalCount: 100,
+      TotalCount: 0,
       curPage: curPageBase,
     };
   }
@@ -202,20 +202,16 @@ class List extends Component {
 
   fetchBlockList({ activePage }) {
     this.setState({ isLoading: true });
-    const reqBlockList = sendRequest({
-      url: '/api/block/list',
-      query: {
-        pageNum: activePage,
-        pageSize: 10,
-      },
-    });
-    reqBlockList.then((res) => {
-      const { data } = res.body.result;
+    reqBlockList({
+      page: activePage,
+      pageSize: 10,
+    }).then((body) => {
+      const { list } = body.result;
       this.setState({
         isLoading: false,
         curPage: activePage,
-        BlockList: data,
-        TotalCount: res.body.result.total,
+        BlockList: list.filter((v) => !!v),
+        TotalCount: body.result.total,
       });
     });
   }
@@ -295,15 +291,6 @@ class List extends Component {
             </StyledTabel>
           </TabWrapper>
         </Wrapper>
-
-        <ConfirmSimple
-          open={confirmOpen}
-          onConfirm={() => {
-            this.setState({
-              confirmOpen: false,
-            });
-          }}
-        />
       </div>
     );
   }
