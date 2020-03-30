@@ -197,7 +197,7 @@ class Detail extends Component {
     ).then((body) => {
       if (body.code === 0) {
         this.setState({
-          BlockList: body.result.list,
+          BlockList: body.result.list.filter((v) => !!v),
           totalCount: body.result.total,
           isLoading: false,
           curPage,

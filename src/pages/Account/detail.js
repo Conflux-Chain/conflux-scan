@@ -516,7 +516,7 @@ class Detail extends Component {
       if (body.code === 0) {
         const { total } = body.result;
         this.setState({
-          minedBlockList: body.result.list,
+          minedBlockList: body.result.list.filter((v) => !!v),
           isLoading: false,
           curMinedPage,
           minedTotalCount: total,

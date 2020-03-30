@@ -163,7 +163,7 @@ class List extends Component {
     this.state = {
       isLoading: true,
       TxList: [],
-      TotalCount: 1,
+      TotalCount: 0,
       curPage: curPageBase,
     };
   }
@@ -181,7 +181,7 @@ class List extends Component {
     this.setState({ isLoading: true });
 
     reqTransactionList({
-      pageNum: activePage,
+      page: activePage,
       pageSize,
     }).then((body) => {
       if (body.code === 0) {
