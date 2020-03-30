@@ -14,6 +14,7 @@ import { convertToValueorFee, converToGasPrice, i18n, sendRequest } from '../../
 import media from '../../globalStyles/media';
 import * as commonCss from '../../globalStyles/common';
 import { reqBlock, reqBlockTransactionList, reqBlockRefereeBlockList } from '../../utils/api';
+import { errorCodes } from '../../constants';
 
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -145,6 +146,11 @@ const TabContent = styled.div`
     box-shadow: none;
   }
 `;
+const ContractCell = styled.div`
+  color: rgba(0, 0, 0, 0.87);
+  font-size: 16px;
+  font-weight: normal;
+`;
 
 const TxColumns = [
   {
@@ -166,7 +172,16 @@ const TxColumns = [
     className: 'two wide aligned',
     dataIndex: 'to',
     title: i18n('To'),
-    render: (text) => <EllipsisLine linkTo={`/accountdetail/${text}`} text={text} />,
+    render: (text, row) => {
+      if (row.contractCreated) {
+        return (
+          <div>
+            <ContractCell>{i18n('Contract Creation')}</ContractCell>
+          </div>
+        );
+      }
+      return <EllipsisLine linkTo={`/accountdetail/${text}`} text={text} />;
+    },
   },
   {
     key: 4,
@@ -268,6 +283,8 @@ const RefColumns = [
   },
 ];
 
+const pageSize = 10;
+
 class Detail extends Component {
   constructor(...args) {
     super(...args);
@@ -301,6 +318,7 @@ class Detail extends Component {
     // eslint-disable-next-line react/destructuring-assignment
     if (blockhash !== prevProps.match.params.blockhash) {
       this.fetchBlockDetail(blockhash, { activePage: 1 });
+      this.fetchReffereBlock(blockhash, { refBlockCurPage: 1 });
     }
   }
 
@@ -314,7 +332,7 @@ class Detail extends Component {
           blockDetail: body.result,
           isLoading: false,
         });
-      } else if (body.code === 1) {
+      } else if (body.code === errorCodes.BlockNotFoundError) {
         history.push(`/search-notfound?searchId=${blockHash}`);
       }
     });
@@ -323,7 +341,7 @@ class Detail extends Component {
       {
         blockHash,
         page: activePage,
-        pageSize: 10,
+        pageSize,
       },
       { showError: false }
     ).then((body) => {
@@ -343,7 +361,7 @@ class Detail extends Component {
     reqBlockRefereeBlockList(
       {
         page: refBlockCurPage,
-        pageSize: 10,
+        pageSize,
         referredBy: blockHash,
       },
       { showError: false }
@@ -471,7 +489,7 @@ class Detail extends Component {
                         this.fetchBlockDetail(params.blockhash, data);
                       }}
                       activePage={curPage}
-                      totalPages={Math.ceil(TxTotalCount / 10)}
+                      totalPages={Math.ceil(TxTotalCount / pageSize)}
                     />
                   </div>
                   <div className="page-h5">
@@ -494,7 +512,7 @@ class Detail extends Component {
                       firstItem={null}
                       lastItem={null}
                       siblingRange={1}
-                      totalPages={Math.ceil(TxTotalCount / 10)}
+                      totalPages={Math.ceil(TxTotalCount / pageSize)}
                     />
                   </div>
                 </TabWrapper>
@@ -523,7 +541,7 @@ class Detail extends Component {
                         this.fetchReffereBlock(params.blockhash, { refBlockCurPage: data.activePage });
                       }}
                       activePage={refBlockCurPage}
-                      totalPages={Math.ceil(refTotal / 10)}
+                      totalPages={Math.ceil(refTotal / pageSize)}
                     />
                   </div>
                   <div className="page-h5">
@@ -546,7 +564,7 @@ class Detail extends Component {
                       firstItem={null}
                       lastItem={null}
                       siblingRange={1}
-                      totalPages={Math.ceil(refTotal / 10)}
+                      totalPages={Math.ceil(refTotal / pageSize)}
                     />
                   </div>
                 </TabWrapper>

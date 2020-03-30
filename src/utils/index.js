@@ -6,6 +6,7 @@ import huNum from 'humanize-number';
 import { injectIntl, FormattedMessage, FormattedHTMLMessage } from 'react-intl';
 import { toast } from '../components/Toast';
 import { notice } from '../components/Message/notice';
+import { errorCodes } from '../constants';
 
 let errorId = null;
 let source = null;
@@ -190,14 +191,11 @@ export const sendRequest = (config) => {
     if (result.body.code !== 0 && config.showError !== false) {
       let title;
       switch (result.body.code) {
-        case 1:
+        case errorCodes.ParameterError:
           title = 'app.comp.toast.error.1';
           break;
-        case 2:
+        case errorCodes.DBError:
           title = 'app.comp.toast.error.2';
-          break;
-        case 3:
-          title = 'app.comp.toast.error.3';
           break;
         default:
           title = 'app.comp.toast.error.other';
@@ -209,7 +207,7 @@ export const sendRequest = (config) => {
     }
   });
   reqPromise.catch((error) => {
-    if (config && config.url === '/api/block/recent') return;
+    if (config && config.url.match(/dashboard\/dag$/)) return;
     console.log(error);
     toast.error({
       content: 'app.comp.toast.error.networkErr',

@@ -155,12 +155,7 @@ class BlockAndTxn extends Component {
     };
 
     this.timerId = null;
-    let executed = false;
-    this.beginCountOnce = () => {
-      if (executed) {
-        return;
-      }
-      executed = true;
+    this.beginCountDown = () => {
       this.timerId = setInterval(() => {
         const { plusTimeCount } = this.state;
         this.setState({
@@ -172,7 +167,7 @@ class BlockAndTxn extends Component {
 
   componentDidMount() {
     this.fetchInitList().then(() => {
-      this.beginCountOnce();
+      this.beginCountDown();
     });
 
     this.loopFetchTimer = setInterval(() => {
@@ -193,7 +188,7 @@ class BlockAndTxn extends Component {
       if (body.code === 0) {
         this.setState({
           showLoading: false,
-          BlockList: body.result.list,
+          BlockList: body.result.list.filter((v) => !!v),
         });
       }
     });
@@ -204,7 +199,7 @@ class BlockAndTxn extends Component {
     }).then((body) => {
       if (body.code === 0) {
         this.setState({
-          TxList: body.result.list,
+          TxList: body.result.list.filter((v) => !!v),
           plusTimeCount: 0,
         });
       }
@@ -229,7 +224,7 @@ class BlockAndTxn extends Component {
               </svg>
             </IconFace>
             <div>
-              <EllipsisLine isLong linkTo={`/blocksdetail/${row.hash}`} isPivot={row.isPivot} text={row.hash} />
+              <EllipsisLine isLong linkTo={`/blocksdetail/${row.hash}`} isPivot={row.pivotHash === row.hash} text={row.hash} />
               <PCell>
                 <Countdown timestamp={row.timestamp * 1000} />
               </PCell>
@@ -257,7 +252,7 @@ class BlockAndTxn extends Component {
                 <use xlinkHref="#iconqukuaigaoduxuanzhong" />
               </svg>
             </IconFace>
-            <EllipsisLine isLong linkTo={`/blocksdetail/${text}`} isPivot={row.isPivot} text={text} />
+            <EllipsisLine isLong linkTo={`/blocksdetail/${text}`} isPivot={row.pivotHash === row.hash} text={text} />
             <PCell>
               <Countdown timestamp={row.timestamp * 1000} />
             </PCell>
@@ -307,7 +302,7 @@ class BlockAndTxn extends Component {
               </svg>
             </IconFace>
             <div>
-              <EllipsisLine linkTo={`/transactionsdetail/${row.hash}`} isPivot={row.isPivot} text={row.hash} />
+              <EllipsisLine linkTo={`/transactionsdetail/${row.hash}`} isPivot={row.pivotHash === row.hash} text={row.hash} />
               <PCell>
                 <Countdown timestamp={row.timestamp * 1000 + plusTimeCount * 1000} />
               </PCell>
@@ -334,7 +329,7 @@ class BlockAndTxn extends Component {
                 <use xlinkHref="#iconjinrijiaoyiliang" />
               </svg>
             </IconFace>
-            <EllipsisLine linkTo={`/transactionsdetail/${text}`} isPivot={row.isPivot} text={text} />
+            <EllipsisLine linkTo={`/transactionsdetail/${text}`} isPivot={row.pivotHash === row.hash} text={text} />
             <PCell>
               <Countdown timestamp={row.timestamp * 1000} />
             </PCell>
@@ -346,12 +341,22 @@ class BlockAndTxn extends Component {
         dataIndex: 'from',
         className: 'one wide left aligned',
         title: 'Blocks',
-        render: (text, row) => (
-          <div>
-            <EllipsisLine prefix={i18n('From')} linkTo={`/accountdetail/${text}`} text={text} />
-            <EllipsisLine is2ndLine prefix={i18n('To')} linkTo={`/accountdetail/${row.to}`} text={row.to} />
-          </div>
-        ),
+        render: (text, row) => {
+          let line2;
+          if (row.contractCreated) {
+            line2 = (
+              <EllipsisLine is2ndLine prefix={i18n('To')} linkTo={`/accountdetail/${row.contractCreated}`} text={row.contractCreated} />
+            );
+          } else {
+            line2 = <EllipsisLine is2ndLine prefix={i18n('To')} linkTo={`/accountdetail/${row.to}`} text={row.to} />;
+          }
+          return (
+            <div>
+              <EllipsisLine prefix={i18n('From')} linkTo={`/accountdetail/${text}`} text={text} />
+              {line2}
+            </div>
+          );
+        },
       },
       {
         key: 4,

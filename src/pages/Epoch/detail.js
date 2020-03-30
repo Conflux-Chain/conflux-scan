@@ -12,6 +12,7 @@ import media from '../../globalStyles/media';
 import * as commonCss from '../../globalStyles/common';
 import { i18n, getTotalPage } from '../../utils';
 import { reqBlockList } from '../../utils/api';
+import { errorCodes } from '../../constants';
 
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -182,18 +183,28 @@ class Detail extends Component {
   }
 
   async fetchInitList({ epochid, curPage }) {
+    const { history } = this.props;
     this.setState({ isLoading: true });
-    reqBlockList({
-      page: curPage,
-      pageSize,
-      epochNumber: epochid,
-    }).then((body) => {
-      this.setState({
-        BlockList: body.result.list,
-        totalCount: body.result.total,
-        isLoading: false,
-        curPage,
-      });
+    reqBlockList(
+      {
+        page: curPage,
+        pageSize,
+        epochNumber: epochid,
+      },
+      {
+        showError: false,
+      }
+    ).then((body) => {
+      if (body.code === 0) {
+        this.setState({
+          BlockList: body.result.list,
+          totalCount: body.result.total,
+          isLoading: false,
+          curPage,
+        });
+      } else if (body.code === errorCodes.ParameterError) {
+        history.push(`/search-notfound?searchId=${epochid}`);
+      }
     });
   }
 

@@ -27,13 +27,14 @@ export const reqFcByAddress = (param) => {
 };
 
 export const reqRecentDagBlock = () => {
-  return sendRequest({ url: `${futurePrefix}/block/recent` }).then((res) => res.body);
+  return sendRequest({ url: `${futurePrefix}/dashboard/dag` }).then((res) => res.body);
 };
 
-export const reqAccount = (param) => {
+export const reqAccount = (param, extra) => {
   return sendRequest({
     url: `${futurePrefix}/account/query`,
     query: param,
+    ...extra,
   }).then((res) => res.body);
 };
 
@@ -44,17 +45,19 @@ export const reqAccountTransactionList = (param) => {
   }).then((res) => res.body);
 };
 
-export const reqMinedBlockList = (param) => {
+export const reqMinedBlockList = (param, extra) => {
   return sendRequest({
     url: `${futurePrefix}/block/list`,
     query: param,
+    ...extra,
   }).then((res) => res.body);
 };
 
-export const reqBlock = (param) => {
+export const reqBlock = (param, extra) => {
   return sendRequest({
     url: `${futurePrefix}/block/query`,
     query: param,
+    ...extra,
   }).then((res) => res.body);
 };
 
@@ -75,10 +78,11 @@ export const reqBlockRefereeBlockList = (param, extra) => {
   }).then((res) => res.body);
 };
 
-export const reqBlockList = (param) => {
+export const reqBlockList = (param, extra) => {
   return sendRequest({
     url: `${futurePrefix}/block/list`,
     query: param,
+    ...extra,
   }).then((res) => res.body);
 };
 
@@ -106,6 +110,14 @@ export const reqStatisticsItem = (param) => {
 export const reqTransactionDetail = (param, extra) => {
   return sendRequest({
     url: `${futurePrefix}/transaction/query`,
+    query: param,
+    ...extra,
+  }).then((res) => res.body);
+};
+
+export const reqUtilType = (param, extra) => {
+  return sendRequest({
+    url: `${futurePrefix}/util/type`,
     query: param,
     ...extra,
   }).then((res) => res.body);

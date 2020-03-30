@@ -23,6 +23,7 @@ import iconStatusErr from '../../assets/images/icons/status-err.svg';
 import iconStatusSkip from '../../assets/images/icons/status-skip.svg';
 import Pagination from '../../components/Pagination';
 import { reqAccount, reqAccountTransactionList, reqMinedBlockList } from '../../utils/api';
+import { errorCodes } from '../../constants';
 
 const { RangePicker } = DatePicker;
 
@@ -335,6 +336,12 @@ const MinedWrap = styled.div`
   ${commonCss.paginatorMixin}
 `;
 
+const ContractCell = styled.div`
+  color: rgba(0, 0, 0, 0.87);
+  font-size: 16px;
+  font-weight: normal;
+`;
+
 const minedColumns = [
   {
     key: 1,
@@ -458,7 +465,7 @@ class Detail extends Component {
           minedTotalCount: body.result.blockCount,
           isLoading: false,
         });
-      } else if (body.code === 1) {
+      } else if (body.code === errorCodes.ParameterError) {
         history.push(`/search-notfound?searchId=${accountid}`);
       } else {
         this.setState({
@@ -605,17 +612,9 @@ class Detail extends Component {
         title: i18n('To'),
         render: (text, row) => {
           if (row.contractCreated) {
-            const line = (
-              <div>
-                {i18n('Contract')}
-                {i18n('Created')}
-              </div>
-            );
             return (
               <div>
-                <PCell>
-                  <EllipsisLine text={line} />
-                </PCell>
+                <ContractCell>{i18n('Contract Creation')}</ContractCell>
               </div>
             );
           }

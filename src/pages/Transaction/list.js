@@ -90,6 +90,12 @@ const IconFace = styled.div`
   }
 `;
 
+const ContractCell = styled.div`
+  color: rgba(0, 0, 0, 0.87);
+  font-size: 16px;
+  font-weight: normal;
+`;
+
 const columns = [
   {
     key: 1,
@@ -110,7 +116,16 @@ const columns = [
     className: 'two wide aligned',
     dataIndex: 'to',
     title: i18n('To'),
-    render: (text) => <EllipsisLine linkTo={`/accountdetail/${text}`} text={text} />,
+    render: (text, row) => {
+      if (row.contractCreated) {
+        return (
+          <div>
+            <ContractCell>{i18n('Contract Creation')}</ContractCell>
+          </div>
+        );
+      }
+      return <EllipsisLine linkTo={`/accountdetail/${text}`} text={text} />;
+    },
   },
   {
     key: 4,
@@ -135,15 +150,13 @@ const columns = [
   },
 ];
 
-function max10k(n) {
-  return Math.min(10000, n);
-}
-
 /* eslint react/destructuring-assignment: 0 */
 let curPageBase = 1;
 document.addEventListener('clean_state', () => {
   curPageBase = 1;
 });
+
+const pageSize = 10;
 class List extends Component {
   constructor() {
     super();
@@ -169,7 +182,7 @@ class List extends Component {
 
     reqTransactionList({
       pageNum: activePage,
-      pageSize: 10,
+      pageSize,
     }).then((body) => {
       if (body.code === 0) {
         this.setState({
@@ -221,7 +234,7 @@ class List extends Component {
                     this.fetchTxList(data);
                   }}
                   activePage={curPage}
-                  totalPages={max10k(Math.ceil(TotalCount / 10))}
+                  totalPages={Math.ceil(TotalCount / pageSize)}
                 />
               </div>
               <div className="page-h5">
@@ -244,7 +257,7 @@ class List extends Component {
                   firstItem={null}
                   lastItem={null}
                   siblingRange={1}
-                  totalPages={max10k(Math.ceil(TotalCount / 10))}
+                  totalPages={Math.ceil(TotalCount / pageSize)}
                 />
               </div>
             </StyledTabel>

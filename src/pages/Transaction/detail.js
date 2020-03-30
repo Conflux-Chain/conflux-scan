@@ -17,6 +17,7 @@ import iconStatusSkip from '../../assets/images/icons/status-skip.svg';
 import iconWesign from '../../assets/images/icons/wesign-logo.svg';
 import CopyButton from '../../components/CopyButton';
 import { reqTransactionDetail } from '../../utils/api';
+import { errorCodes } from '../../constants';
 
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -197,10 +198,10 @@ class Detail extends Component {
       { showError: false }
     ).then((body) => {
       switch (body.code) {
-        case 1:
+        case errorCodes.ParameterError:
           history.push(`/search-notfound?searchId=${txnhash}`);
           break;
-        case 4:
+        case errorCodes.TxNotFoundError:
           this.setState({
             isPacking: true,
           });

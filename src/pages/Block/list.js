@@ -210,7 +210,7 @@ class List extends Component {
       this.setState({
         isLoading: false,
         curPage: activePage,
-        BlockList: list,
+        BlockList: list.filter((v) => !!v),
         TotalCount: body.result.total,
       });
     });
