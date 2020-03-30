@@ -47,7 +47,6 @@ const TitleWrapper = styled.div`
   display: inline-flex;
   justify-content: flex-start;
   align-items: center;
-  }
   > h1 {
     margin: 0;
     font-size: 20px;
