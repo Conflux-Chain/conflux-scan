@@ -25,7 +25,7 @@ function fetchDagData() {
   return reqRecentDagBlock().then(({ code = 0, message = '', result = { epochNumber: null, list: [] } } = {}) => {
     if (code) throw new Error(`Error while fetching dag data:\n${message}`);
     if (this && this instanceof window.ConfluxDagPlayer) return appendAllSubChain(this, result.list);
-    return result.data;
+    return result.list;
   });
 }
 
@@ -91,6 +91,7 @@ function Dag({ id = 'dag-viewer', children } = {}) {
       const Player = window.ConfluxDagPlayer;
       const container = document.getElementById(id);
       const initialSubChains = await fetchDagData();
+
       player = await new Player({
         backgroundColor: '0x0B3560',
         doc: container,
