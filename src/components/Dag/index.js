@@ -91,7 +91,6 @@ function Dag({ id = 'dag-viewer', children } = {}) {
       const Player = window.ConfluxDagPlayer;
       const container = document.getElementById(id);
       const initialSubChains = await fetchDagData();
-      console.log(initialSubChains, 'initialSubChains');
 
       player = await new Player({
         backgroundColor: '0x0B3560',
