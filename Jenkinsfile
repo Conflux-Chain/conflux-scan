@@ -56,14 +56,6 @@ sudo mkdir -p /www/explorer-v2/conflux-scan
 sudo cp -r .  /www/explorer-v2/conflux-scan/
 """)
             }
-            script {
-              sh (label: 'build n run backend', script: """
-cd service
-yarn
-yarn stop-test || true
-JENKINS_NODE_COOKIE=dontKillMe yarn start-test
-""")
-            }
           }
         }
 
