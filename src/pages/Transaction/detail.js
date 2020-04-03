@@ -2,12 +2,14 @@ import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import { injectIntl, FormattedMessage } from 'react-intl';
+import compose from 'lodash/fp/compose';
 
 import moment from 'moment';
 import TableLoading from '../../components/TableLoading';
 import EllipsisLine from '../../components/EllipsisLine';
 import media from '../../globalStyles/media';
-import { i18n, renderAny, sendRequest, dripTocfx, dripToGdrip } from '../../utils';
+import { i18n, renderAny, dripTocfx, dripToGdrip } from '../../utils';
 import NotFoundTx from '../NotFoundTx';
 import iconFcLogo from '../../assets/images/icons/fc-logo.svg';
 import Countdown from '../../components/Countdown';
@@ -18,6 +20,7 @@ import iconWesign from '../../assets/images/icons/wesign-logo.svg';
 import CopyButton from '../../components/CopyButton';
 import { reqTransactionDetail } from '../../utils/api';
 import { errorCodes } from '../../constants';
+import InputData from '../../components/InputData';
 
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -70,6 +73,23 @@ const StyledTabel = styled.table`
       padding: 0.1em 2em 0.1em 2em !important;
     `}
     background: #edf2f9 !important;
+  }
+
+  td.collapsing.init-top {
+    font-weight: bold !important;
+    padding-top: 1em !important;
+    vertical-align: initial !important;
+    ${media.mobile`
+      padding: 0.1em 2em 0.1em 2em !important;
+    `}
+    background: #edf2f9 !important;
+  }
+
+  td.zero-padding-bottom {
+    padding-bottom: 0em !important;
+  }
+  td.zero-padding-top {
+    padding-top: 0em !important;
   }
 
   td.top {
@@ -160,6 +180,49 @@ const TokensDiv = styled.div`
   }
 `;
 
+const FilterSelector = styled.div.attrs({
+  className: 'ui menu compact',
+})`
+  width: 200px;
+  height: 36px;
+  border: none !important;
+  box-shadow: none !important;
+  padding-bottom: 10px !important;
+  background: transparent !important;
+
+  .ui.dropdown {
+    width: 100%;
+    justify-content: space-around;
+    border: 1px solid #e0e1e2;
+    border-radius: 4px !important;
+
+    .menu > .item {
+      outline: none;
+    }
+
+    .menu > .item.priority {
+      &:hover {
+        background: rgba(0, 0, 0, 0.12) !important;
+        font-weight: bold !important;
+        color: #1e3de4 !important;
+      }
+    }
+  }
+
+  .menu.visible {
+    display: none !important;
+    top: calc(100% + 8px);
+  }
+
+  &:hover {
+    .menu.visible {
+      display: block !important;
+    }
+  }
+`;
+
+const baseLangId = 'app.pages.txns.';
+const filterKeys = ['original', 'utf8', 'decodeInputData'];
 class Detail extends Component {
   constructor() {
     super();
@@ -168,6 +231,8 @@ class Detail extends Component {
       result: {},
       isLoading: true,
       isPacking: false,
+      inputDataType: 'original',
+      selectedLangKey: 'app.pages.txns.original',
     };
   }
 
@@ -218,7 +283,7 @@ class Detail extends Component {
   }
 
   render() {
-    const { isLoading, txnhash, isPacking } = this.state;
+    const { isLoading, txnhash, isPacking, selectedLangKey, inputDataType } = this.state;
     const {
       match: { params },
     } = this.props;
@@ -360,14 +425,7 @@ class Detail extends Component {
                       </tr>
                     );
                   }
-                  return (
-                    <tr className="">
-                      <td className="collapsing align-top">{i18n('Data')}</td>
-                      <td>
-                        <div className="max10row">{result.data}</div>
-                      </td>
-                    </tr>
-                  );
+                  return null;
                 })}
 
                 <tr className="">
@@ -451,8 +509,43 @@ class Detail extends Component {
                   </td>
                 </tr>
                 <tr className="">
-                  <td className="collapsing bottom">{i18n('Position')}</td>
-                  <td className="bottom">{result.transactionIndex}</td>
+                  <td className="collapsing">{i18n('Position')}</td>
+                  <td className="">{result.transactionIndex}</td>
+                </tr>
+                {renderAny(() => {
+                  return (
+                    <tr className="">
+                      <td className="collapsing init-top">{i18n('app.pages.txns.inputData')}</td>
+                      <td className="zero-padding-bottom">
+                        <InputData byteCode="0x00" inputType={inputDataType} />
+                      </td>
+                    </tr>
+                  );
+                })}
+                <tr className="">
+                  <td className="collapsing" />
+                  <td className="zero-padding-top">
+                    <FilterSelector>
+                      <div className="ui dropdown link item">
+                        <FormattedMessage id={selectedLangKey}>{(s) => <span className="text">{s}</span>}</FormattedMessage>
+                        <i className="dropdown icon" />
+                        <div className="menu transition visible">
+                          {filterKeys.map((name, index) => (
+                            <div
+                              key={name}
+                              className="item priority"
+                              role="button"
+                              tabIndex={index}
+                              onClick={() => this.setState({ inputDataType: name, selectedLangKey: baseLangId + name })}
+                              onKeyPress={() => this.setState({ inputDataType: name, selectedLangKey: baseLangId + name })}
+                            >
+                              <FormattedMessage id={baseLangId + name} />
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </FilterSelector>
+                  </td>
                 </tr>
               </tbody>
             </StyledTabel>
@@ -471,4 +564,9 @@ Detail.propTypes = {
 Detail.defaultProps = {
   match: {},
 };
-export default withRouter(Detail);
+
+const hoc = compose(
+  injectIntl,
+  withRouter
+);
+export default hoc(Detail);

@@ -90,6 +90,12 @@ export default {
   'app.pages.txns.Success': '成功',
   'app.pages.txns.Err': '失败',
   'app.pages.txns.Skip': '跳过',
+  'app.pages.txns.inputData': '数据输入',
+  'app.pages.txns.original': '原版',
+  'app.pages.txns.utf8': 'UTF-8',
+  'app.pages.txns.decodeInputData': '解码输入数据',
+  'app.pages.txns.inputTips':
+    'The binary data that formed the input to the transaction, either the input data if it was a message call or the contract initialisation if it was a contract creation',
   'app.pages.err-reason.1': '交易错误：智能合约执行错误，或gas fee不足',
   'app.pages.err-reason.2': '交易错误：nonce错误，签名验证失败，或余额不足',
 

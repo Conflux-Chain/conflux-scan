@@ -47,6 +47,12 @@ export default {
   'app.pages.txns.Success': 'Success',
   'app.pages.txns.Err': 'Error',
   'app.pages.txns.Skip': 'Skip',
+  'app.pages.txns.inputData': 'Input Data',
+  'app.pages.txns.original': 'Original',
+  'app.pages.txns.utf8': 'UTF-8',
+  'app.pages.txns.decodeInputData': 'Decode Input Data',
+  'app.pages.txns.inputTips':
+    'The binary data that formed the input to the transaction, either the input data if it was a message call or the contract initialisation if it was a contract creation',
 
   'app.pages.err-reason.1': 'Transfer Error: Error encountered during contract execution, or out of gas',
   'app.pages.err-reason.2': 'Transfer Error: Wrong nonce，signature verification failed, or insufficient funds',

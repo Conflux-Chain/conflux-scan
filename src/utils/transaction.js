@@ -19,22 +19,6 @@ function hex2utf8(pStr) {
   return tempstr;
 }
 
-function convertstr(original, bytecode, strval, type) {
-  let tmpval = '';
-  switch (type) {
-    case 'hex':
-      tmpval = hex2utf8(bytecode || strval);
-      break;
-    case 'default':
-      tmpval = original;
-      break;
-    default:
-      tmpval = bytecode;
-      break;
-  }
-  return tmpval;
-}
-
 function decodeinput(bytecode, functionName, abi) {
   if (functionName && !isEmpty(abi)) {
     let name = functionName.split('(')[0];
@@ -52,4 +36,4 @@ function decodeinput(bytecode, functionName, abi) {
 //   return tempstr;
 // }
 
-export { convertstr, decodeinput };
+export { decodeinput, hex2utf8 };
