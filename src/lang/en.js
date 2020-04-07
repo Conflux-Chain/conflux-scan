@@ -105,4 +105,7 @@ export default {
   'app.directory.fc.title': 'FansCoin',
   'app.directory.fc.desc': 'TestNet token',
   'app.directory.community.desc': 'Join the Next Generation Decentralized Application Community',
+
+  'network.testnet': 'Conflux Testnet',
+  'network.mainnet': 'Conflux Mainnet',
 };

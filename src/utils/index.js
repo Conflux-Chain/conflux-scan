@@ -260,3 +260,12 @@ export { notice };
 export const getTotalPage = (count, limit) => {
   return Math.ceil(count / limit);
 };
+
+let store;
+export const updateStore = (s) => {
+  store = s;
+};
+
+export const getStore = () => {
+  return store;
+};

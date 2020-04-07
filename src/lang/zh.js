@@ -165,4 +165,7 @@ export default {
   'Token Minted': '代币铸造',
   'Token Burned': '代币承兑',
   'Copy to clipboard': '复制到剪切板',
+
+  'network.testnet': 'Conflux测试网',
+  'network.mainnet': 'Conflux主网',
 };

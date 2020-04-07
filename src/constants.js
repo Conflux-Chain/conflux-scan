@@ -9,3 +9,5 @@ export const errorCodes = {
   BlockNotFoundError: 20404,
   TxNotFoundError: 30404,
 };
+
+export const UPDATE_COMMON = 'UPDATE_COMMON';
