@@ -1,6 +1,10 @@
 import { isEmpty } from 'lodash';
 import { decodeConstructorArgs } from 'canoe-solidity';
 
+const { Conflux } = require('js-conflux-sdk');
+
+const cfx = new Conflux();
+
 function hex2asc(pStr) {
   let tempstr = '';
   for (let b = 0; b < pStr.length; b += 2) {
@@ -28,12 +32,9 @@ function decodeinput(bytecode, functionName, abi) {
   return null;
 }
 
-// function _asc2hex(pStr) {
-//   let tempstr = '';
-//   for (a = 0; a < pStr.length; a += 1) {
-//     tempstr += pStr.charCodeAt(a).toString(16);
-//   }
-//   return tempstr;
-// }
+function decodeContract({ abi, bytecode, address, transacionData }) {
+  const contract = cfx.Contract({ abi, code: bytecode, address });
+  return contract.abi.decodeData(transacionData);
+}
 
-export { decodeinput, hex2utf8 };
+export { decodeinput, hex2utf8, decodeContract };

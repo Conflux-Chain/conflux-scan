@@ -260,3 +260,8 @@ export { notice };
 export const getTotalPage = (count, limit) => {
   return Math.ceil(count / limit);
 };
+
+export const devidedByDecimals = (number, decimals) => {
+  const result = new BigNumber(number).dividedBy(10 ** decimals);
+  return result.toString(10);
+};

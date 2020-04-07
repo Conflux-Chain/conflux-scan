@@ -1,6 +1,6 @@
 export const apiPrefix = '/api';
 export const futurePrefix = '/future';
-
+export const contractPrefix = futurePrefix;
 export const errorCodes = {
   UnexpectedError: 10000,
   ParameterError: 10001,

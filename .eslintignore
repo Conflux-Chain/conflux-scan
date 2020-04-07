@@ -7,3 +7,4 @@ yarn-error.log
 npm-debug.log
 /service
 src/components/NodeMap/mapdata
+src/pages/Transaction/detail.js

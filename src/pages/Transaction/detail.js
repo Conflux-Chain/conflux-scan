@@ -18,7 +18,7 @@ import iconStatusSuccess from '../../assets/images/icons/status-success.svg';
 import iconStatusSkip from '../../assets/images/icons/status-skip.svg';
 import iconWesign from '../../assets/images/icons/wesign-logo.svg';
 import CopyButton from '../../components/CopyButton';
-import { reqTransactionDetail } from '../../utils/api';
+import { reqTransactionDetail, reqContractQuery } from '../../utils/api';
 import { errorCodes } from '../../constants';
 import InputData from '../../components/InputData';
 
@@ -222,7 +222,6 @@ const FilterSelector = styled.div.attrs({
 `;
 
 const baseLangId = 'app.pages.txns.';
-const filterKeys = ['original', 'utf8', 'decodeInputData'];
 class Detail extends Component {
   constructor() {
     super();
@@ -233,6 +232,9 @@ class Detail extends Component {
       isPacking: false,
       inputDataType: 'original',
       selectedLangKey: 'app.pages.txns.original',
+      isContract: false,
+      contractInfo: {},
+      filterKeys: ['original', 'utf8'],
     };
   }
 
@@ -273,17 +275,40 @@ class Detail extends Component {
           break;
         case 0:
         default:
-          this.setState({
-            result: body.result,
-            isLoading: false,
-          });
+          const transactionDetails = body.result;
+          let toAddress = transactionDetails.to;
+          if (toAddress.startWith('8')) {
+            this.setState({ isContract: true, filterKeys: ['original', 'utf8', 'decodeInputData'] });
+            reqContractQuery({ address: toAddress }).then((contractResponse) => {
+              switch (contractResponse.code) {
+                case 0:
+                  this.setState({
+                    result: transactionDetails,
+                    isLoading: false,
+                    contractInfo: contractResponse.body,
+                  });
+                  break;
+                default:
+                  this.setState({
+                    isLoading: false,
+                  });
+                  break;
+              }
+            });
+          } else {
+            this.setState({
+              isContract: false,
+              result: transactionDetails,
+              isLoading: false,
+            });
+          }
           break;
       }
     });
   }
 
   render() {
-    const { isLoading, txnhash, isPacking, selectedLangKey, inputDataType } = this.state;
+    const { isLoading, txnhash, isPacking, selectedLangKey, inputDataType, filterKeys } = this.state;
     const {
       match: { params },
     } = this.props;
@@ -418,8 +443,8 @@ class Detail extends Component {
                             <em>For</em>
                             <span>{dripTocfx(value.value)}</span>
 
-                            <img className="fc-logo" src={iconFcLogo} />
-                            <span>Fans Coin (FC)</span>
+                            <img className="fc-logo" src={`data:image/jpeg;base64,${contractInfo.icon}`} />
+                            <span>{`${contractInfo.name} (${contractInfo.symbol})`}</span>
                           </TokensDiv>
                         </td>
                       </tr>

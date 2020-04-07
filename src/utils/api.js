@@ -1,5 +1,5 @@
 import { sendRequest } from './index';
-import { apiPrefix, futurePrefix } from '../constants';
+import { apiPrefix, futurePrefix, contractPrefix } from '../constants';
 
 export const reqFcStat = (param) => {
   return sendRequest({
@@ -118,6 +118,14 @@ export const reqTransactionDetail = (param, extra) => {
 export const reqUtilType = (param, extra) => {
   return sendRequest({
     url: `${futurePrefix}/util/type`,
+    query: param,
+    ...extra,
+  }).then((res) => res.body);
+};
+
+export const reqContractQuery = (param, extra) => {
+  return sendRequest({
+    url: `${contractPrefix}/contract/query`,
     query: param,
     ...extra,
   }).then((res) => res.body);
