@@ -1,3 +1,4 @@
+/* eslint-disable no-case-declarations */
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import styled from 'styled-components';
@@ -9,17 +10,16 @@ import moment from 'moment';
 import TableLoading from '../../components/TableLoading';
 import EllipsisLine from '../../components/EllipsisLine';
 import media from '../../globalStyles/media';
-import { i18n, renderAny, dripTocfx, dripToGdrip } from '../../utils';
+import { i18n, renderAny, dripTocfx, dripToGdrip, getAddressType, devidedByDecimals } from '../../utils';
 import NotFoundTx from '../NotFoundTx';
-import iconFcLogo from '../../assets/images/icons/fc-logo.svg';
 import Countdown from '../../components/Countdown';
 import iconStatusErr from '../../assets/images/icons/status-err.svg';
 import iconStatusSuccess from '../../assets/images/icons/status-success.svg';
 import iconStatusSkip from '../../assets/images/icons/status-skip.svg';
-import iconWesign from '../../assets/images/icons/wesign-logo.svg';
 import CopyButton from '../../components/CopyButton';
 import { reqTransactionDetail, reqContractQuery } from '../../utils/api';
-import { errorCodes } from '../../constants';
+import { decodeContract } from '../../utils/transaction';
+import { errorCodes, addressTypeContract } from '../../constants';
 import InputData from '../../components/InputData';
 
 const Wrapper = styled.div`
@@ -107,6 +107,7 @@ const StyledTabel = styled.table`
       width: 16px;
       margin-right: 5px;
       margin-left: 10px;
+      vertical-align: middle;
     }
   }
   tr > td a {
@@ -221,6 +222,17 @@ const FilterSelector = styled.div.attrs({
   }
 `;
 
+const StatusDelimiter = styled.span`
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background: white;
+  border: 1px solid #989898;
+  border-top: none;
+  border-right: none;
+  margin: 0 3px 0 8px;
+`;
+
 const baseLangId = 'app.pages.txns.';
 class Detail extends Component {
   constructor() {
@@ -235,6 +247,8 @@ class Detail extends Component {
       isContract: false,
       contractInfo: {},
       filterKeys: ['original', 'utf8'],
+      contractType: 0, // 0:general conract, 1:erc20, 2:erc777, 3: fanscoin
+      decodedData: {},
     };
   }
 
@@ -277,15 +291,32 @@ class Detail extends Component {
         default:
           const transactionDetails = body.result;
           let toAddress = transactionDetails.to;
-          if (toAddress.startWith('8')) {
-            this.setState({ isContract: true, filterKeys: ['original', 'utf8', 'decodeInputData'] });
-            reqContractQuery({ address: toAddress }).then((contractResponse) => {
-              switch (contractResponse.code) {
+          if (getAddressType(toAddress) === addressTypeContract) {
+            this.setState({ isContract: true });
+            reqContractQuery({ address: toAddress, fields: ['abi', 'bytecode', 'icon'] }).then((contractResponse) => {
+              const responseBody = contractResponse.body;
+              switch (responseBody.code) {
                 case 0:
+                  const result = responseBody.result;
+                  const contractType = result.type;
+                  let decodedData = {};
+                  let filterKeys = [];
+                  if (contractType !== 0) {
+                    decodedData = decodeContract({
+                      abi: result.abi,
+                      bytecode: result.bytecode,
+                      address: result.address,
+                      transacionData: transactionDetails.data,
+                    }); // decode the data of transaction
+                    filterKeys = ['original', 'utf8', 'decodeInputData'];
+                  }
                   this.setState({
                     result: transactionDetails,
                     isLoading: false,
-                    contractInfo: contractResponse.body,
+                    contractInfo: result,
+                    contractType,
+                    filterKeys,
+                    decodedData,
                   });
                   break;
                 default:
@@ -308,7 +339,18 @@ class Detail extends Component {
   }
 
   render() {
-    const { isLoading, txnhash, isPacking, selectedLangKey, inputDataType, filterKeys } = this.state;
+    const {
+      isLoading,
+      txnhash,
+      isPacking,
+      selectedLangKey,
+      inputDataType,
+      filterKeys,
+      contractInfo,
+      contractType,
+      decodedData,
+      isContract,
+    } = this.state;
     const {
       match: { params },
     } = this.props;
@@ -338,7 +380,10 @@ class Detail extends Component {
               <tbody className="">
                 <tr className="">
                   <td className="collapsing top">{i18n('Transaction Hash')}</td>
-                  <td className="top">{result.hash}</td>
+                  <td className="top">
+                    {result.hash}
+                    <CopyButton style={copyBtnStyle} txtToCopy={result.hash} btnType="three" toolTipId="Copy to clipboard" />
+                  </td>
                 </tr>
 
                 <tr className="">
@@ -366,6 +411,8 @@ class Detail extends Component {
                           <div className="status-line status-err">
                             <img src={iconStatusErr} />
                             <span>{i18n('app.pages.txns.Err')}</span>
+                            <StatusDelimiter />
+                            <span className="status-reason-err">{i18n('app.pages.err-reason.1')}</span>
                           </div>
                         );
                       }
@@ -374,6 +421,8 @@ class Detail extends Component {
                           <div className="status-line status-skip">
                             <img src={iconStatusSkip} />
                             <span>{i18n('app.pages.txns.Skip')}</span>
+                            <StatusDelimiter />
+                            <span className="status-reason-skip">{i18n('app.pages.err-reason.2')}</span>
                           </div>
                         );
                       }
@@ -381,77 +430,6 @@ class Detail extends Component {
                     })}
                   </td>
                 </tr>
-
-                {renderAny(() => {
-                  if (result.decodedData) {
-                    const { decodedData = {} } = result;
-                    if (decodedData.name === 'mint') {
-                      let account = {};
-                      let value = {};
-                      decodedData.params.forEach((v) => {
-                        if (v.name === 'account') {
-                          account = v;
-                        } else if (v.name === 'value') {
-                          value = v;
-                        }
-                      });
-                      return (
-                        <tr className="">
-                          <td className="collapsing">{i18n('Token Minted')}</td>
-                          <td className="">
-                            <TokensDiv>
-                              <em>{i18n('To')}</em>
-                              <EllipsisLine
-                                ellipsisStyle={{ maxWidth: 152 }}
-                                linkTo={`/accountdetail/${account.value}`}
-                                text={account.value}
-                              />
-                              <em>{i18n('For')}</em>
-                              <span>{dripTocfx(value.value)}</span>
-                              <img className="fc-logo" src={iconFcLogo} />
-
-                              <span>Fans Coin (FC)</span>
-                            </TokensDiv>
-                          </td>
-                        </tr>
-                      );
-                    }
-
-                    let toAccount = {};
-                    let value = {};
-                    decodedData.params.forEach((v) => {
-                      if (v.name === 'recipient') {
-                        toAccount = v;
-                      } else if (v.name === 'value') {
-                        value = v;
-                      }
-                    });
-
-                    return (
-                      <tr className="">
-                        <td className="collapsing">{i18n('Token Transfered')}</td>
-                        <td className="">
-                          <TokensDiv>
-                            <em>{i18n('From')}</em>
-                            <EllipsisLine ellipsisStyle={{ maxWidth: 152 }} linkTo={`/accountdetail/${result.from}`} text={result.from} />
-                            <em>{i18n('To')}</em>
-                            <EllipsisLine
-                              ellipsisStyle={{ maxWidth: 152 }}
-                              linkTo={`/accountdetail/${toAccount.value}`}
-                              text={toAccount.value}
-                            />
-                            <em>For</em>
-                            <span>{dripTocfx(value.value)}</span>
-
-                            <img className="fc-logo" src={`data:image/jpeg;base64,${contractInfo.icon}`} />
-                            <span>{`${contractInfo.name} (${contractInfo.symbol})`}</span>
-                          </TokensDiv>
-                        </td>
-                      </tr>
-                    );
-                  }
-                  return null;
-                })}
 
                 <tr className="">
                   <td className="collapsing">{i18n('From')}</td>
@@ -465,52 +443,79 @@ class Detail extends Component {
                   <td className="to">
                     {renderAny(() => {
                       let toDiv;
-                      if (result.to) {
-                        if (result.to === '0x595c2bd6098de9f063110abcb50ec55e5f692e1f') {
-                          toDiv = (
-                            <span>
-                              {i18n('Contract')} &nbsp;
-                              <Link to={`/accountdetail/${result.to}`}>{result.to}</Link>
-                              <img src={iconWesign} className="logo" />
-                              {i18n('WeSign')}
-                              <CopyButton style={copyBtnStyle} txtToCopy={result.to} btnType="three" toolTipId="Copy to clipboard" />
-                            </span>
-                          );
-                        } else {
-                          toDiv = (
-                            <span>
-                              <Link to={`/accountdetail/${result.to}`}>{result.to}</Link>
-                              <CopyButton style={copyBtnStyle} txtToCopy={result.to} btnType="three" toolTipId="Copy to clipboard" />
-                            </span>
-                          );
-                        }
-                      } else if (result.contractCreated) {
+                      if (isContract) {
                         toDiv = (
                           <span>
-                            [{i18n('Contract')} &nbsp;
-                            <Link to={`/accountdetail/${result.contractCreated}`}>{result.contractCreated}</Link>
-                            &nbsp; {i18n('Created')}]
+                            {i18n('Contract')} &nbsp;
+                            <Link to={`/accountdetail/${result.to}`}>{result.to}</Link>
+                            <img className="logo" src={`data:image/png;base64,${contractInfo.icon}`} />
+                            <Link to={`/accountdetail/${result.to}`}>{contractInfo.name}</Link>
+                            <CopyButton style={copyBtnStyle} txtToCopy={result.to} btnType="three" toolTipId="Copy to clipboard" />
+                          </span>
+                        );
+                      } else {
+                        toDiv = (
+                          <span>
+                            <Link to={`/accountdetail/${result.to}`}>{result.to}</Link>
+                            <CopyButton style={copyBtnStyle} txtToCopy={result.to} btnType="three" toolTipId="Copy to clipboard" />
                           </span>
                         );
                       }
-                      if (result.status === 0) {
-                        return toDiv;
-                      }
-                      let statusReason;
-                      if (result.status === 1) {
-                        statusReason = <div className="status-reason-err">{i18n('app.pages.err-reason.1')}</div>;
-                      } else if (result.status === 2 || result.status === null) {
-                        statusReason = <div className="status-reason-skip">{i18n('app.pages.err-reason.2')}</div>;
-                      }
-                      return (
-                        <div>
-                          {toDiv}
-                          {statusReason}
-                        </div>
-                      );
+                      return <div>{toDiv}</div>;
                     })}
                   </td>
                 </tr>
+                {renderAny(() => {
+                  if (contractType === 0) {
+                    return null;
+                  }
+                  let contrctToAddress = decodedData.params[0];
+                  let value = decodedData.params[1];
+                  if (contractType === 3 && decodedData.name === 'mint') {
+                    return (
+                      <tr className="">
+                        <td className="collapsing">{i18n('Token Minted')}</td>
+                        <td className="">
+                          <TokensDiv>
+                            <em>{i18n('To')}</em>
+                            <EllipsisLine
+                              ellipsisStyle={{ maxWidth: 152 }}
+                              linkTo={`/accountdetail/${contrctToAddress}`}
+                              text={contrctToAddress}
+                            />
+                            <em>{i18n('For')}</em>
+                            <span>{devidedByDecimals(value, contractInfo.decimals)}</span>
+                            <img className="fc-logo" src={`data:image/png;base64,${contractInfo.icon}`} />
+
+                            <span>{`${contractInfo.name} (${contractInfo.symbol})`}</span>
+                          </TokensDiv>
+                        </td>
+                      </tr>
+                    );
+                  }
+                  return (
+                    <tr className="">
+                      <td className="collapsing">{i18n('Token Transferred')}</td>
+                      <td className="">
+                        <TokensDiv>
+                          <em>{i18n('From')}</em>
+                          <EllipsisLine ellipsisStyle={{ maxWidth: 152 }} linkTo={`/accountdetail/${result.from}`} text={result.from} />
+                          <em>{i18n('To')}</em>
+                          <EllipsisLine
+                            ellipsisStyle={{ maxWidth: 152 }}
+                            linkTo={`/accountdetail/${contrctToAddress}`}
+                            text={contrctToAddress}
+                          />
+                          <em>For</em>
+                          <span>{devidedByDecimals(value, contractInfo.decimals)}</span>
+
+                          <img className="fc-logo" src={`data:image/png;base64,${contractInfo.icon}`} />
+                          <span>{`${contractInfo.name} (${contractInfo.symbol})`}</span>
+                        </TokensDiv>
+                      </td>
+                    </tr>
+                  );
+                })}
                 <tr className="">
                   <td className="collapsing">{i18n('Value')}</td>
                   <td className="">{dripTocfx(result.value)} CFX</td>
@@ -537,12 +542,24 @@ class Detail extends Component {
                   <td className="collapsing">{i18n('Position')}</td>
                   <td className="">{result.transactionIndex}</td>
                 </tr>
+                <tr className="">
+                  <td className="collapsing">{i18n('app.pages.txns.proposedEpoch')}</td>
+                  <td className="">{result.epochHeight}</td>
+                </tr>
+                <tr className="">
+                  <td className="collapsing">{i18n('app.pages.txns.storageLimit')}</td>
+                  <td className="">{result.storageLimit}</td>
+                </tr>
+                <tr className="">
+                  <td className="collapsing">{i18n('app.pages.txns.chainId')}</td>
+                  <td className="">{result.chainId}</td>
+                </tr>
                 {renderAny(() => {
                   return (
                     <tr className="">
                       <td className="collapsing init-top">{i18n('app.pages.txns.inputData')}</td>
                       <td className="zero-padding-bottom">
-                        <InputData byteCode="0x00" inputType={inputDataType} />
+                        <InputData byteCode={result.data} inputType={inputDataType} decodedDataStr={JSON.stringify(decodedData)} />
                       </td>
                     </tr>
                   );

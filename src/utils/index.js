@@ -6,7 +6,7 @@ import huNum from 'humanize-number';
 import { injectIntl, FormattedMessage, FormattedHTMLMessage } from 'react-intl';
 import { toast } from '../components/Toast';
 import { notice } from '../components/Message/notice';
-import { errorCodes } from '../constants';
+import { errorCodes, addressTypeContract, addressTypeCommon } from '../constants';
 
 let errorId = null;
 let source = null;
@@ -262,6 +262,11 @@ export const getTotalPage = (count, limit) => {
 };
 
 export const devidedByDecimals = (number, decimals) => {
-  const result = new BigNumber(number).dividedBy(10 ** decimals);
+  const bignumber = number instanceof BigNumber ? number : new BigNumber(number);
+  const result = bignumber.dividedBy(10 ** decimals);
   return result.toString(10);
+};
+
+export const getAddressType = (address) => {
+  return address.startsWith('8') ? addressTypeContract : addressTypeCommon;
 };

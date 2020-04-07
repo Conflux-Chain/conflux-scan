@@ -40,17 +40,17 @@ class InputData extends PureComponent {
     this.update();
   }
 
-  getStrByType(byteCode, type) {
+  getStrByType(byteCode, type, decodedDataStr) {
     let str = '';
     switch (type) {
       case 'original':
         str = byteCode;
         break;
       case 'utf8':
-        console.log('utf8 function');
         str = hex2utf8(byteCode);
         break;
       case 'decodeInputData':
+        str = decodedDataStr;
         break;
       default:
         break;
@@ -59,8 +59,8 @@ class InputData extends PureComponent {
   }
 
   update() {
-    const { byteCode, inputType } = this.props;
-    let strDecoded = this.getStrByType(byteCode, inputType);
+    const { byteCode, inputType, decodedDataStr } = this.props;
+    let strDecoded = this.getStrByType(byteCode, inputType, decodedDataStr);
     this.setState({ strDecoded: strDecoded });
   }
 
@@ -82,7 +82,12 @@ class InputData extends PureComponent {
 }
 
 InputData.propTypes = {
-  byteCode: PropTypes.string.isRequired,
+  byteCode: PropTypes.string,
   inputType: PropTypes.string.isRequired,
+  decodedDataStr: PropTypes.string,
+};
+InputData.defaultProps = {
+  byteCode: '',
+  decodedDataStr: '',
 };
 export default injectIntl(InputData);

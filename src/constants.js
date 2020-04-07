@@ -9,3 +9,5 @@ export const errorCodes = {
   BlockNotFoundError: 20404,
   TxNotFoundError: 30404,
 };
+export const addressTypeContract = 'contract';
+export const addressTypeCommon = 'common';

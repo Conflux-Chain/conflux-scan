@@ -1,7 +1,7 @@
 import { isEmpty } from 'lodash';
 import { decodeConstructorArgs } from 'canoe-solidity';
 
-const { Conflux } = require('js-conflux-sdk');
+import { Conflux } from 'js-conflux-sdk';
 
 const cfx = new Conflux();
 

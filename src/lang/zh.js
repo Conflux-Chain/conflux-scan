@@ -94,8 +94,10 @@ export default {
   'app.pages.txns.original': '原版',
   'app.pages.txns.utf8': 'UTF-8',
   'app.pages.txns.decodeInputData': '解码输入数据',
-  'app.pages.txns.inputTips':
-    'The binary data that formed the input to the transaction, either the input data if it was a message call or the contract initialisation if it was a contract creation',
+  'app.pages.txns.inputTips': '构成交易输入数据的二进制数据如果是消息调用，则为输入数据；如果是合同创建，则为合同初始化',
+  'app.pages.txns.proposedEpoch': 'Proposed Epoch',
+  'app.pages.txns.storageLimit': 'Storage Limit',
+  'app.pages.txns.chainId': 'Chain ID',
   'app.pages.err-reason.1': '交易错误：智能合约执行错误，或gas fee不足',
   'app.pages.err-reason.2': '交易错误：nonce错误，签名验证失败，或余额不足',
 
