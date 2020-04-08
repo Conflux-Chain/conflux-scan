@@ -114,4 +114,15 @@ export default {
   'app.directory.fc.title': 'FansCoin',
   'app.directory.fc.desc': 'TestNet token',
   'app.directory.community.desc': 'Join the Next Generation Decentralized Application Community',
+
+  // Contract
+  'app.pages.contract.edit': 'Edit Contract',
+  'app.pages.contract.address': 'Contract Address',
+  'app.pages.contract.uploadIcon': 'Upload Contract Icon',
+  'app.pages.contract.removePhoto': 'Remove photo',
+  'app.pages.contract.contractType': 'Contract Type',
+  'app.pages.contract.tokenName': 'Token Name',
+  'app.pages.contract.tokenSymbol': 'Token Symbol',
+  'app.pages.contract.decimals': 'Decimals of Precision',
+  'app.pages.contract.uploadTokenIcon': 'Upload Token Icon',
 };

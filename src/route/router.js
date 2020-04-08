@@ -30,7 +30,7 @@ const SearchNotFound = lazy(() => import('../pages/SearchNotFound'));
 const NotFound = lazy(() => import('../pages/404'));
 const NotFoundTx = lazy(() => import('../pages/NotFoundTx'));
 const FansCoin = lazy(() => import('../pages/FansCoin'));
-
+const ContractUpdate = lazy(() => import('../pages/Contract/update'));
 function Router() {
   return (
     <Suspense fallback={<div className="ui active loader" />}>
@@ -50,6 +50,7 @@ function Router() {
         <Route path="/search-notfound" component={SearchNotFound} />
         <Route path="/notfoundtx" component={NotFoundTx} />
         <Route path="/fansCoin" component={FansCoin} />
+        <Route path="/contract/update/:address" component={ContractUpdate} />
         <Route component={NotFound} />
       </Switch>
     </Suspense>
