@@ -125,4 +125,11 @@ export default {
   'app.pages.contract.tokenSymbol': 'Token Symbol',
   'app.pages.contract.decimals': 'Decimals of Precision',
   'app.pages.contract.uploadTokenIcon': 'Upload Token Icon',
+  'app.pages.contract.sourceCode': 'Contract Source Code',
+  'app.pages.contract.abi': 'Contract ABI',
+  'app.pages.contract.typeinAdminPassword': 'Please type in administrator password',
+
+  // Common
+  'app.common.submit': 'Submit',
+  'app.common.submitTips': 'Please finish all the tabs before submit',
 };

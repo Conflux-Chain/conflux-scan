@@ -130,3 +130,12 @@ export const reqContractQuery = (param, extra) => {
     ...extra,
   }).then((res) => res.body);
 };
+
+export const reqContractUpdate = (param, extra) => {
+  return sendRequest({
+    type: 'POST',
+    url: `${contractPrefix}/contract/update`,
+    body: param,
+    ...extra,
+  }).then((res) => res.body);
+};

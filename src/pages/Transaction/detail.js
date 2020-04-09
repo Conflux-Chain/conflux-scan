@@ -298,7 +298,7 @@ class Detail extends Component {
               switch (responseBody.code) {
                 case 0:
                   const result = responseBody.result;
-                  const contractType = result.type;
+                  const contractType = result.typeCode;
                   let decodedData = {};
                   let filterKeys = [];
                   if (contractType !== 0) {
