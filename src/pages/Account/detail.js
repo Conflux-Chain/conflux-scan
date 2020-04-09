@@ -63,6 +63,23 @@ class Detail extends Component {
     };
   }
 
+  componentDidMount() {}
+
+  componentDidUpdate(prevProps) {
+    // eslint-disable-next-line react/destructuring-assignment
+    if (this.props.accountid !== prevProps.accountid) {
+      // eslint-disable-next-line react/destructuring-assignment
+      this.switchTabIfNeed();
+    }
+  }
+
+  switchTabIfNeed() {
+    const { location } = this.props;
+    if (location.hash === '#tokentxns') {
+      this.setState({ currentTab: tabEnum.tokenTxns });
+    }
+  }
+
   render() {
     const { currentTab, showMaintaining, blockCount } = this.state;
     const {
@@ -70,10 +87,7 @@ class Detail extends Component {
       match: { params },
     } = this.props;
 
-    let { accountid } = params;
-    accountid = accountid.replace(/^0x3/, '0x8');
-    console.log(accountid, '11');
-
+    const { accountid } = params;
     const isContractAddr = isContract(accountid);
 
     return (
@@ -106,7 +120,7 @@ class Detail extends Component {
                 onKeyUp={() => {}}
                 onClick={() => this.setState({ currentTab: tabEnum.transactions })}
               >
-                {i18n('app.pages.account.detail.transactions')}
+                {i18n('app.pages.account.detail.tab.transactions')}
               </button>
               <button
                 type="button"
@@ -161,6 +175,10 @@ Detail.propTypes = {
   }).isRequired,
   history: PropTypes.shape({
     push: PropTypes.func,
+  }).isRequired,
+  accountid: PropTypes.string.isRequired,
+  location: PropTypes.objectOf({
+    hash: PropTypes.string,
   }).isRequired,
 };
 Detail.defaultProps = {

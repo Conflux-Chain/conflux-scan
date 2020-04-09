@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import moment from 'moment';
 import styled from 'styled-components';
 import BigNumber from 'bignumber.js';
 import { Dropdown, Popup } from 'semantic-ui-react';
@@ -24,6 +25,7 @@ const ContractCell = styled.div`
 `;
 
 const { RangePicker } = DatePicker;
+/* eslint react/destructuring-assignment: 0 */
 
 class Transitions extends Component {
   constructor(...args) {
@@ -37,6 +39,8 @@ class Transitions extends Component {
         txType: 'all',
       },
       listLimit: undefined,
+      startTime: null,
+      endTime: null,
     };
   }
 
@@ -60,10 +64,22 @@ class Transitions extends Component {
         pageSize: 10,
         txType: 'all',
       });
+      // eslint-disable-next-line react/no-did-update-set-state
+      this.setState({
+        startTime: null,
+        endTime: null,
+      });
     }
   }
 
-  changePage(accountid, queries) {
+  changePage(accountid, queriesRaw) {
+    const queries = { ...queriesRaw };
+    if (!queries.startTime) {
+      delete queries.startTime;
+    }
+    if (!queries.endTime) {
+      delete queries.endTime;
+    }
     reqAccountTransactionList({
       address: accountid,
       ...queries,
@@ -81,6 +97,7 @@ class Transitions extends Component {
   render() {
     const { accountid, isActive, intl } = this.props;
     const { TxList, TxTotalCount, queries, listLimit } = this.state;
+    const { startTime, endTime } = this.state;
 
     const columns = [
       {
@@ -89,7 +106,9 @@ class Transitions extends Component {
         className: 'two wide aligned',
         title: i18n('Hash'),
         render: (text, row) => {
-          const line = <EllipsisLine linkTo={`/transactionsdetail/${text}`} text={text} />;
+          const line = (
+            <EllipsisLine popUpCfg={{ position: 'top left', pinned: true }} linkTo={`/transactionsdetail/${text}`} text={text} />
+          );
           if (row.status === 0) {
             return line;
           }
@@ -206,18 +225,60 @@ class Transitions extends Component {
                 id: 'EndTime',
               }),
             ]}
+            value={[startTime, endTime]}
+            disabledDate={(currentDate) => {
+              if (!currentDate) {
+                return false;
+              }
+              const diff = moment()
+                .endOf('day')
+                .diff(currentDate.clone().endOf('day'));
+              if (diff < 0) {
+                return true;
+              }
+              return false;
+            }}
             onChange={(value) => {
               if (!value.length) {
-                delete queries.startTime;
-                delete queries.endTime;
-                this.changePage(accountid, queries);
+                this.setState({
+                  startTime: null,
+                  endTime: null,
+                });
+                this.changePage(accountid, {
+                  ...queries,
+                  startTime: null,
+                  endTime: null,
+                });
+              } else {
+                this.setState({
+                  startTime: value[0].startOf('days'),
+                  endTime: value[1].endOf('days'),
+                });
               }
             }}
             onOk={(value) => {
               if (value.length) {
-                const startTime = value[0].unix();
-                const endTime = value[1].unix();
-                this.changePage(accountid, { ...queries, startTime, endTime, page: 1 });
+                const start = value[0];
+                const end = value[1];
+                this.tempDate1 = start;
+                this.tempDate2 = end;
+                this.changePage(accountid, {
+                  ...queries,
+                  page: 1,
+                  startTime: start.unix(),
+                  endTime: end.unix(),
+                });
+              }
+            }}
+            onOpenChange={(open) => {
+              if (open) {
+                this.tempDate1 = this.state.startTime;
+                this.tempDate2 = this.state.endTime;
+              } else {
+                this.setState({
+                  startTime: this.tempDate1,
+                  endTime: this.tempDate2,
+                });
               }
             }}
           />

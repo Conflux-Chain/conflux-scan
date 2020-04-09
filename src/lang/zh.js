@@ -68,6 +68,7 @@ export default {
   'app.comp.searchbox.placeholder': '纪元 / 区块哈希 / 交易哈希 / 地址',
 
   'app.pages.account.detail.transactions': '交易数',
+  'app.pages.account.detail.tab.transactions': '交易',
   'app.pages.account.detail.viewAll': '查看所有交易',
   'app.pages.account.detail.viewOutGoing': '查看发送交易',
   'app.pages.account.detail.viewIncoming': '查看接收交易',
@@ -183,4 +184,6 @@ export default {
   'Contract Creator': '合约创建者',
   'contract.at-txn1': ' 在 ',
   'contract.at-txn2': ' 交易',
+  'Click to edit contract': '点击编辑合约',
+  'Click to enter the official site': '点击进入官方网站',
 };

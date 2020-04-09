@@ -36,6 +36,7 @@ export default {
 
   // blocks & txns
   'app.pages.account.detail.transactions': 'Transactions',
+  'app.pages.account.detail.tab.transactions': 'Transactions',
   'app.pages.blockAndTx.blocks': 'Blocks',
   'app.pages.blockAndTx.viewAllBlocks': 'View All Blocks',
   'app.pages.blockAndTx.viewAllTransactions': 'View All Transactions',

@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { injectIntl } from 'react-intl';
 import * as commonCss from '../../globalStyles/common';
 import CopyButton from '../../components/CopyButton';
 import QrcodeButton from '../../components/QrcodeButton';
@@ -24,6 +25,7 @@ const HeadBar = styled.div`
   margin-bottom: 24px;
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
 
   .sep {
     display: none;
@@ -63,9 +65,17 @@ const HeadBar = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+
     &:hover {
       cursor: pointer;
       background: rgba(0, 0, 0, 0.54);
+    }
+    .addr-icon {
+      cursor: pointer;
+      width: 16px;
+      height: 16px;
+      display: block;
+      background-size: contain;
     }
   }
 `;
@@ -112,6 +122,11 @@ const Statistic = styled.div`
   .token-select {
     width: 346px;
     margin-top: -10px;
+    ${media.mobile`
+      width: auto;
+      margin-left: 20px;
+      margin-right: 20px;
+    `}
   }
   .balance {
     width: 24%;
@@ -123,6 +138,9 @@ const Statistic = styled.div`
     width: 36%;
     border-left: 1px solid rgba(0, 0, 0, 0.08);
     ${fullWidthMobile}
+    ${media.mobile`
+      margin-right: 0px;
+    `}
   }
   .wrap {
     /* height: 68px; */
@@ -169,15 +187,25 @@ const Statistic = styled.div`
 
 const ContractInfoPanel = styled.div`
   display: flex;
+  flex-wrap: wrap;
   border-radius: 4px;
   margin-bottom: 35px;
 
   > div {
-    box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+    box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px 1px;
     margin-left: 24px;
     flex: 1;
+    ${media.pad`
+      margin-left: 17px;
+      margin-top: 20px;
+      margin-right: 15px;
+    `}
     &:first-child {
       margin-left: 0;
+      ${media.pad`
+        margin-left: 17px;
+        margin-top: 0px;
+      `}
     }
   }
   .contract-info-row {
@@ -203,6 +231,10 @@ const ContractInfoPanel = styled.div`
     line-height: 19px;
     font-weight: bold;
     color: rgba(33, 33, 33, 1);
+    flex-shrink: 0;
+    ${media.pad`
+     width: 120px;
+   `}
   }
 
   .contract-right-val {
@@ -215,6 +247,7 @@ const ContractInfoPanel = styled.div`
     color: rgba(33, 33, 33, 1);
     align-items: center;
     display: flex;
+    flex-wrap: wrap;
     > span {
       margin-right: 5px;
     }
@@ -339,7 +372,7 @@ class AccountHead extends Component {
             <div className="contract-left-info">{i18n('Contract Creator')}</div>
             <div className="contract-right-row">
               <div className="contract-right-val">
-                <EllipsisLine linkTo="/todo----/" text={creatorTransaction.from} />
+                <EllipsisLine linkTo={`/address/${creatorTransaction.from}`} text={creatorTransaction.from} />
                 {i18n('contract.at-txn1')}
                 <EllipsisLine linkTo={`/transactionsdetail/${creatorTransaction.hash}`} text={creatorTransaction.hash} />
                 {i18n('contract.at-txn2')}
@@ -352,9 +385,10 @@ class AccountHead extends Component {
   }
 
   render() {
-    const { accountid } = this.props;
+    const { accountid, intl } = this.props;
     const { isLoading, accountDetail, tokenTotal, tokenList } = this.state;
 
+    const isContractAddr = isContract(accountid);
     const tokenOpts = tokenList.map((v) => {
       return {
         key: v.address,
@@ -365,16 +399,27 @@ class AccountHead extends Component {
       };
     });
 
+    const toolTip3 = intl.formatMessage({
+      id: 'Click to edit contract',
+    });
+    const toolTip4 = intl.formatMessage({
+      id: 'Click to enter the official site',
+    });
+
     return (
       <Fragment>
         <HeadBar>
-          <h1>{i18n('Address')}</h1>
+          <h1>{isContractAddr ? i18n('Contract') : i18n('Address')}</h1>
           <p>{accountid}</p>
           <br className="sep" />
           <CopyButton txtToCopy={accountid} toolTipId="Copy address to clipboard" />
           <QrcodeButton titleTxt={accountid} qrTxt={accountid} tooltipId="Click to view QR Code" />
 
-          <Link className="address-righticon">
+          {/* todo */}
+          <Link className="address-righticon" data-inverted="" data-tooltip={toolTip3} data-position="bottom left">
+            <img />
+          </Link>
+          <Link className="address-righticon" data-inverted="" data-tooltip={toolTip4} data-position="bottom left">
             <img />
           </Link>
         </HeadBar>
@@ -438,6 +483,9 @@ AccountHead.propTypes = {
     push: PropTypes.func,
   }).isRequired,
   updateBlockCount: PropTypes.func.isRequired,
+  intl: PropTypes.objectOf({
+    formatMessage: PropTypes.func,
+  }).isRequired,
 };
 
-export default AccountHead;
+export default injectIntl(AccountHead);

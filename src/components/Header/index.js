@@ -150,6 +150,15 @@ const LangSelector = styled.div.attrs({
       display: block;
     }
   `}
+
+  ${media.mobile`
+    .dropdown.item .menu {
+      right: 0;
+      white-space: nowrap;
+      width: auto;
+      left: auto;
+    }
+  `}
 `;
 
 const networks = [
