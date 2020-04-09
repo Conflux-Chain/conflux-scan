@@ -64,7 +64,7 @@ const minedColumns = [
     className: 'one wide aligned',
     dataIndex: 'miner',
     title: i18n('Miner'),
-    render: (text) => <EllipsisLine linkTo={`/accountdetail/${text}`} text={text} />,
+    render: (text) => <EllipsisLine linkTo={`/address/${text}`} text={text} />,
   },
   {
     key: 6,

@@ -110,7 +110,7 @@ const columns = [
     className: 'two wide aligned',
     dataIndex: 'from',
     title: i18n('From'),
-    render: (text) => <EllipsisLine linkTo={`/accountdetail/${text}`} text={text} />,
+    render: (text) => <EllipsisLine linkTo={`/address/${text}`} text={text} />,
   },
   {
     key: 3,
@@ -125,7 +125,7 @@ const columns = [
           </div>
         );
       }
-      return <EllipsisLine linkTo={`/accountdetail/${text}`} text={text} />;
+      return <EllipsisLine linkTo={`/address/${text}`} text={text} />;
     },
   },
   {

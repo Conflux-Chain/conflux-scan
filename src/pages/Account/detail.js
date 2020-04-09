@@ -70,7 +70,10 @@ class Detail extends Component {
       match: { params },
     } = this.props;
 
-    const { accountid } = params;
+    let { accountid } = params;
+    accountid = accountid.replace(/^0x3/, '0x8');
+    console.log(accountid, '11');
+
     const isContractAddr = isContract(accountid);
 
     return (

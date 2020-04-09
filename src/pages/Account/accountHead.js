@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import * as commonCss from '../../globalStyles/common';
 import CopyButton from '../../components/CopyButton';
@@ -21,6 +22,9 @@ const HeadBar = styled.div`
   font-size: 16px;
   font-weight: 400;
   margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+
   .sep {
     display: none;
   }
@@ -48,6 +52,21 @@ const HeadBar = styled.div`
     font-size: 20px;
     font-weight: 700;
     margin-right: 24px;
+  }
+
+  .address-righticon {
+    margin-left: 10px;
+    width: 32px;
+    height: 32px;
+    background: rgba(0, 0, 0, 0.08);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    &:hover {
+      cursor: pointer;
+      background: rgba(0, 0, 0, 0.54);
+    }
   }
 `;
 
@@ -354,6 +373,10 @@ class AccountHead extends Component {
           <br className="sep" />
           <CopyButton txtToCopy={accountid} toolTipId="Copy address to clipboard" />
           <QrcodeButton titleTxt={accountid} qrTxt={accountid} tooltipId="Click to view QR Code" />
+
+          <Link className="address-righticon">
+            <img />
+          </Link>
         </HeadBar>
         {isLoading && <TableLoading />}
         <Statistic>

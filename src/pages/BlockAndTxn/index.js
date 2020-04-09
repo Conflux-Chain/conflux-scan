@@ -227,7 +227,7 @@ class BlockAndTxn extends Component {
               <PCell>
                 <Countdown timestamp={row.timestamp * 1000} />
               </PCell>
-              <EllipsisLine prefix={i18n('Miner')} linkTo={`/accountdetail/${row.miner}`} text={row.miner} />
+              <EllipsisLine prefix={i18n('Miner')} linkTo={`/address/${row.miner}`} text={row.miner} />
               <FloatGas>
                 <PCell>
                   {row.transactionCount} {row.transactionCount <= 1 ? i18n('txn') : i18n('txns')}
@@ -267,7 +267,7 @@ class BlockAndTxn extends Component {
           <div>
             <EllipsisLine
               prefix={i18n('Miner')}
-              linkTo={`/accountdetail/${text}`}
+              linkTo={`/address/${text}`}
               text={
                 (/* fmt */) => {
                   return ' ' + text;
@@ -305,8 +305,8 @@ class BlockAndTxn extends Component {
               <PCell>
                 <Countdown timestamp={row.timestamp * 1000 + plusTimeCount * 1000} />
               </PCell>
-              <EllipsisLine prefix={i18n('From')} linkTo={`/accountdetail/${row.from}`} text={row.from} />
-              <EllipsisLine is2ndLine prefix={i18n('To')} linkTo={`/accountdetail/${row.to}`} text={row.to} />
+              <EllipsisLine prefix={i18n('From')} linkTo={`/address/${row.from}`} text={row.from} />
+              <EllipsisLine is2ndLine prefix={i18n('To')} linkTo={`/address/${row.to}`} text={row.to} />
               <FloatGas>
                 <StyledLabel>{converToGasPrice3Fixed(row.value) + ' CFX'}</StyledLabel>
               </FloatGas>
@@ -343,15 +343,13 @@ class BlockAndTxn extends Component {
         render: (text, row) => {
           let line2;
           if (row.contractCreated) {
-            line2 = (
-              <EllipsisLine is2ndLine prefix={i18n('To')} linkTo={`/accountdetail/${row.contractCreated}`} text={row.contractCreated} />
-            );
+            line2 = <EllipsisLine is2ndLine prefix={i18n('To')} linkTo={`/address/${row.contractCreated}`} text={row.contractCreated} />;
           } else {
-            line2 = <EllipsisLine is2ndLine prefix={i18n('To')} linkTo={`/accountdetail/${row.to}`} text={row.to} />;
+            line2 = <EllipsisLine is2ndLine prefix={i18n('To')} linkTo={`/address/${row.to}`} text={row.to} />;
           }
           return (
             <div>
-              <EllipsisLine prefix={i18n('From')} linkTo={`/accountdetail/${text}`} text={text} />
+              <EllipsisLine prefix={i18n('From')} linkTo={`/address/${text}`} text={text} />
               {line2}
             </div>
           );

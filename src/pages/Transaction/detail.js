@@ -311,11 +311,7 @@ class Detail extends Component {
                           <td className="">
                             <TokensDiv>
                               <em>{i18n('To')}</em>
-                              <EllipsisLine
-                                ellipsisStyle={{ maxWidth: 152 }}
-                                linkTo={`/accountdetail/${account.value}`}
-                                text={account.value}
-                              />
+                              <EllipsisLine ellipsisStyle={{ maxWidth: 152 }} linkTo={`/address/${account.value}`} text={account.value} />
                               <em>{i18n('For')}</em>
                               <span>{dripTocfx(value.value)}</span>
                               <img className="fc-logo" src={iconFcLogo} />
@@ -343,13 +339,9 @@ class Detail extends Component {
                         <td className="">
                           <TokensDiv>
                             <em>{i18n('From')}</em>
-                            <EllipsisLine ellipsisStyle={{ maxWidth: 152 }} linkTo={`/accountdetail/${result.from}`} text={result.from} />
+                            <EllipsisLine ellipsisStyle={{ maxWidth: 152 }} linkTo={`/address/${result.from}`} text={result.from} />
                             <em>{i18n('To')}</em>
-                            <EllipsisLine
-                              ellipsisStyle={{ maxWidth: 152 }}
-                              linkTo={`/accountdetail/${toAccount.value}`}
-                              text={toAccount.value}
-                            />
+                            <EllipsisLine ellipsisStyle={{ maxWidth: 152 }} linkTo={`/address/${toAccount.value}`} text={toAccount.value} />
                             <em>For</em>
                             <span>{dripTocfx(value.value)}</span>
 
@@ -373,7 +365,7 @@ class Detail extends Component {
                 <tr className="">
                   <td className="collapsing">{i18n('From')}</td>
                   <td className="">
-                    <Link to={`/accountdetail/${result.from}`}>{result.from}</Link>
+                    <Link to={`/address/${result.from}`}>{result.from}</Link>
                     <CopyButton style={copyBtnStyle} txtToCopy={result.from} btnType="three" toolTipId="Copy to clipboard" />
                   </td>
                 </tr>
@@ -387,7 +379,7 @@ class Detail extends Component {
                           toDiv = (
                             <span>
                               {i18n('Contract')} &nbsp;
-                              <Link to={`/accountdetail/${result.to}`}>{result.to}</Link>
+                              <Link to={`/address/${result.to}`}>{result.to}</Link>
                               <img src={iconWesign} className="logo" />
                               {i18n('WeSign')}
                               <CopyButton style={copyBtnStyle} txtToCopy={result.to} btnType="three" toolTipId="Copy to clipboard" />
@@ -396,7 +388,7 @@ class Detail extends Component {
                         } else {
                           toDiv = (
                             <span>
-                              <Link to={`/accountdetail/${result.to}`}>{result.to}</Link>
+                              <Link to={`/address/${result.to}`}>{result.to}</Link>
                               <CopyButton style={copyBtnStyle} txtToCopy={result.to} btnType="three" toolTipId="Copy to clipboard" />
                             </span>
                           );
@@ -405,7 +397,7 @@ class Detail extends Component {
                         toDiv = (
                           <span>
                             [{i18n('Contract')} &nbsp;
-                            <Link to={`/accountdetail/${result.contractCreated}`}>{result.contractCreated}</Link>
+                            <Link to={`/address/${result.contractCreated}`}>{result.contractCreated}</Link>
                             &nbsp; {i18n('Created')}]
                           </span>
                         );
