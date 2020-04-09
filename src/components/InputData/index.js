@@ -11,6 +11,7 @@ const stylePopup = {
   fontSize: '12px',
   color: 'rgba(255,255,255,0.87)',
   lineHeight: '14px',
+  width: '240px',
 };
 const Wrap = styled.div`
   .textAreaContainer {

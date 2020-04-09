@@ -77,7 +77,7 @@ const StyledTabel = styled.table`
 
   td.collapsing.init-top {
     font-weight: bold !important;
-    padding-top: 1em !important;
+    /* padding-top: 1em !important; */
     vertical-align: initial !important;
     ${media.mobile`
       padding: 0.1em 2em 0.1em 2em !important;
