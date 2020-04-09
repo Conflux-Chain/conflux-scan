@@ -6,10 +6,14 @@ import * as commonCss from '../../globalStyles/common';
 import CopyButton from '../../components/CopyButton';
 import QrcodeButton from '../../components/QrcodeButton';
 import TableLoading from '../../components/TableLoading';
-import { reqAccount } from '../../utils/api';
-import { errorCodes } from '../../constants';
+import EllipsisLine from '../../components/EllipsisLine';
+import { reqContract, reqAccount, reqTokenList } from '../../utils/api';
+import { errorCodes, IMG_PFX } from '../../constants';
 import media from '../../globalStyles/media';
-import { convertToValueorFee, i18n, renderAny } from '../../utils';
+import { convertToValueorFee, i18n, renderAny, isContract } from '../../utils';
+import TokenSelect from '../../components/TokenSelect';
+import imgtokenIcon from '../../assets/images/icons/token-icon.svg';
+import contractNameIcon from '../../assets/images/icons/contract-nameicon.svg';
 
 const HeadBar = styled.div`
   margin-top: 24px;
@@ -80,11 +84,15 @@ const Statistic = styled.div`
     ${fullWidthMobile}
     ${media.pad`border-bottom: 1px solid rgba(0, 0, 0, 0.08);`}
   }
-  .miner {
-    width: 20%;
+  .token {
+    width: 15%;
     border-left: 1px solid rgba(0, 0, 0, 0.08);
     ${fullWidthMobile}
     ${media.pad`border-bottom: 1px solid rgba(0, 0, 0, 0.08);`}
+  }
+  .token-select {
+    width: 346px;
+    margin-top: -10px;
   }
   .balance {
     width: 24%;
@@ -105,7 +113,8 @@ const Statistic = styled.div`
     * {
       font-size: 16px;
     }
-    svg {
+    svg,
+    img {
       width: 32px;
       height: 32px;
       opacity: 0.38;
@@ -117,6 +126,9 @@ const Statistic = styled.div`
     }
   }
   .balance .wrap svg {
+    opacity: 1;
+  }
+  .token .wrap img {
     opacity: 1;
   }
   .sectionWrap {
@@ -136,6 +148,64 @@ const Statistic = styled.div`
   }
 `;
 
+const ContractInfoPanel = styled.div`
+  display: flex;
+  border-radius: 4px;
+  margin-bottom: 35px;
+
+  > div {
+    box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+    margin-left: 24px;
+    flex: 1;
+    &:first-child {
+      margin-left: 0;
+    }
+  }
+  .contract-info-row {
+    display: flex;
+    &:first-of-type .contract-left-info {
+      padding-top: 24px;
+    }
+    &:first-of-type .contract-right-val {
+      padding-top: 24px;
+    }
+    img {
+      width: 21px;
+      height: 21px;
+      margin-right: 8px;
+    }
+  }
+  .contract-left-info {
+    width: 202px;
+    padding-left: 17px;
+    background: rgba(237, 242, 249, 1);
+    padding-bottom: 24px;
+    font-size: 16px;
+    line-height: 19px;
+    font-weight: bold;
+    color: rgba(33, 33, 33, 1);
+  }
+
+  .contract-right-val {
+    flex: 1;
+    background: #fff;
+    padding-left: 17px;
+    padding-bottom: 24px;
+    font-size: 16px;
+    line-height: 16px;
+    color: rgba(33, 33, 33, 1);
+    align-items: center;
+    display: flex;
+    > span {
+      margin-right: 5px;
+    }
+  }
+  .info-right-col .contract-info-row {
+    background: #fff;
+    height: 100%;
+  }
+`;
+
 class AccountHead extends Component {
   constructor(...args) {
     super(...args);
@@ -143,15 +213,18 @@ class AccountHead extends Component {
     this.state = {
       isLoading: false,
       accountDetail: {},
-    };
+      tokenList: [],
+      tokenTotal: 0,
 
-    document.addEventListener('update-blockcount', (event) => {
-      const { accountDetail } = this.state;
-      const { accountid: accountIdCur } = this.props;
-      if (accountDetail.blockCount !== event.total) {
-        this.fetchAccountDetail(accountIdCur);
-      }
-    });
+      // contract 部分
+      contractName: '',
+      tokenName: '',
+      tokenIcon: '',
+      creatorTransaction: {
+        hash: '',
+        from: '',
+      },
+    };
   }
 
   componentDidMount() {
@@ -168,15 +241,17 @@ class AccountHead extends Component {
   }
 
   fetchAccountDetail(accountid) {
-    const { history, onFetchErr } = this.props;
+    const { history, onFetchErr, updateBlockCount } = this.props;
     this.setState({ isLoading: true });
 
     reqAccount({ address: accountid }).then((body) => {
       if (body.code === 0) {
         this.setState({
           accountDetail: body.result,
+          creatorTransaction: body.result.creatorTransaction || {},
           isLoading: false,
         });
+        updateBlockCount(body.result.blockCount);
       } else if (body.code === errorCodes.ParameterError) {
         history.push(`/search-notfound?searchId=${accountid}`);
       } else {
@@ -186,16 +261,95 @@ class AccountHead extends Component {
         onFetchErr();
       }
     });
+
+    reqTokenList({
+      address: accountid,
+    }).then((body) => {
+      this.setState({
+        tokenTotal: body.result.total,
+        tokenList: body.result.list || [],
+      });
+    });
+
+    // accountid = '0x8123123'
+    if (isContract(accountid)) {
+      const fields = ['address', 'type', 'name', 'webside', 'tokenName', 'tokenSymbol', 'tokenDecimal'].join(',');
+
+      reqContract({
+        fields,
+        address: accountid,
+      }).then((body) => {
+        this.setState({
+          contractName: body.result.name,
+          tokenName: body.result.tokenName,
+          tokenIcon: body.result.tokenIcon,
+        });
+      });
+    }
+  }
+
+  renderContractToken() {
+    const { accountid } = this.props;
+    if (!isContract(accountid)) {
+      return null;
+    }
+
+    const { contractName, tokenName, tokenIcon, creatorTransaction } = this.state;
+
+    return (
+      <ContractInfoPanel>
+        <div>
+          <div className="contract-info-row">
+            <div className="contract-left-info">{i18n('Contract Name')}</div>
+            <div className="contract-right-val">
+              <img src={IMG_PFX + contractNameIcon} />
+              {contractName}
+            </div>
+          </div>
+          <div className="contract-info-row">
+            <div className="contract-left-info">{i18n('Token Tracker')}</div>
+            <div className="contract-right-val">
+              {tokenIcon && <img src={IMG_PFX + tokenIcon} />}
+              <a>{tokenName}</a>
+            </div>
+          </div>
+        </div>
+
+        <div className="info-right-col">
+          <div className="contract-info-row">
+            <div className="contract-left-info">{i18n('Contract Creator')}</div>
+            <div className="contract-right-row">
+              <div className="contract-right-val">
+                <EllipsisLine linkTo="/todo----/" text={creatorTransaction.from} />
+                {i18n('contract.at-txn1')}
+                <EllipsisLine linkTo={`/transactionsdetail/${creatorTransaction.hash}`} text={creatorTransaction.hash} />
+                {i18n('contract.at-txn2')}
+              </div>
+            </div>
+          </div>
+        </div>
+      </ContractInfoPanel>
+    );
   }
 
   render() {
     const { accountid } = this.props;
-    const { isLoading, accountDetail } = this.state;
+    const { isLoading, accountDetail, tokenTotal, tokenList } = this.state;
+
+    const tokenOpts = tokenList.map((v) => {
+      return {
+        key: v.address,
+        value: v.address,
+        imgSrc: IMG_PFX + v.tokenIcon,
+        label1: `${v.tokenName} (${v.tokenSymbol})`,
+        label2: `${v.balance} ${v.tokenSymbol}`,
+      };
+    });
 
     return (
       <Fragment>
         <HeadBar>
-          <h1>{i18n('Account')}</h1>
+          <h1>{i18n('Address')}</h1>
           <p>{accountid}</p>
           <br className="sep" />
           <CopyButton txtToCopy={accountid} toolTipId="Copy address to clipboard" />
@@ -216,17 +370,7 @@ class AccountHead extends Component {
               </div>
             </div>
           </div>
-          <div className="miner">
-            <div className="wrap">
-              <svg className="icon" aria-hidden="true">
-                <use xlinkHref="#iconwakuang" />
-              </svg>
-              <div>
-                <h2>{i18n('Mined Blocks')}</h2>
-                <p>{accountDetail.blockCount}</p>
-              </div>
-            </div>
-          </div>
+
           <div className="balance">
             <div className="wrap">
               <svg className="icon" aria-hidden="true">
@@ -236,38 +380,29 @@ class AccountHead extends Component {
                 <h2>{i18n('Balance')}</h2>
                 {convertToValueorFee(accountDetail.balance)}
                 <span style={{ marginLeft: 5 }}>CFX</span>
-                {/* <EllipsisLine unit="CFX" text={} /> */}
               </div>
             </div>
           </div>
-          <div className="seen">
+
+          <div className="token">
             <div className="wrap">
-              <svg className="icon" aria-hidden="true">
-                <use xlinkHref="#iconliulan" />
-              </svg>
-              <div className="sectionWrap">
-                <section>
-                  <h2>{i18n('First Seen')}</h2>
-                  {renderAny(() => {
-                    if (!accountDetail.firstTime) {
-                      return i18n('No Record');
-                    }
-                    return <p>{moment(accountDetail.firstTime * 1000).format('YYYY-MM-DD HH:mm:ss')}</p>;
-                  })}
-                </section>
-                <section>
-                  <h2>{i18n('Last Seen')}</h2>
-                  {renderAny(() => {
-                    if (!accountDetail.lastTime) {
-                      return i18n('No Record');
-                    }
-                    return <p>{moment(accountDetail.lastTime * 1000).format('YYYY-MM-DD HH:mm:ss')}</p>;
-                  })}
-                </section>
+              <img src={imgtokenIcon} />
+              <div>
+                <h2>{i18n('Token')}</h2>
+                <p>
+                  {tokenTotal} {i18n('num.Tokens')}
+                </p>
               </div>
+            </div>
+          </div>
+
+          <div className="seen">
+            <div className="token-select">
+              <TokenSelect blueVal={tokenTotal} text="Tokens" options={tokenOpts} />
             </div>
           </div>
         </Statistic>
+        {this.renderContractToken()}
       </Fragment>
     );
   }
@@ -279,6 +414,7 @@ AccountHead.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func,
   }).isRequired,
+  updateBlockCount: PropTypes.func.isRequired,
 };
 
 export default AccountHead;

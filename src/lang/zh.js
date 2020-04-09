@@ -168,4 +168,19 @@ export default {
 
   'network.testnet': 'Conflux测试网',
   'network.mainnet': 'Conflux主网',
+  'network-short.mainnet': 'Conflux测试网',
+  'network-short.testnet': 'Conflux主网',
+
+  'pagination.limited': '共计找到<%=total%>条记录（仅显示最后<%=listLimit%>条记录）',
+  'pagination.total': '共计找到<%=total%>条记录',
+
+  Token: '代币',
+  Tokens: '代币',
+  'num.Tokens': '种代币',
+  'Token Txns': '代币交易',
+  'Contract Name': '合约名',
+  'Token Tracker': '代币搜索器',
+  'Contract Creator': '合约创建者',
+  'contract.at-txn1': ' 在 ',
+  'contract.at-txn2': ' 交易',
 };

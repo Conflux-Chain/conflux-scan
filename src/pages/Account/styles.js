@@ -62,15 +62,72 @@ export const TabWrapper = styled.div`
   margin-top: 24px;
   display: flex;
   justify-content: flex-end;
-  .page-pc {
-    display: inline-flex !important;
-  }
-  .page-h5 {
-    ${commonCss.hide}
-  }
-  ${media.pad`
+  ${commonCss.paginatorMixin}
+`;
+
+export const IconFace = styled.div`
+  margin-left: 16px;
+  width: 32px;
+  height: 32px;
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 20px;
+  display: inline-flex;
   justify-content: center;
-  .page-pc { ${commonCss.hide} }
-  .page-h5 { display: inline-flex!important; }
-`}
+  align-items: center;
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+  &:hover {
+    cursor: pointer;
+    background: rgba(0, 0, 0, 0.54);
+    svg {
+      color: #fff;
+    }
+  }
+
+  &.iconmore1 {
+    svg {
+      color: #000;
+    }
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+  }
+  &.iconmore1:hover {
+    cursor: pointer;
+    background: rgba(0, 0, 0, 0.05);
+  }
+`;
+
+export const CtrlPanel = styled.div`
+  position: absolute;
+  right: 0;
+  top: 0px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  ${media.pad`
+    position: relative;
+    width: auto;
+    padding-top: 20px;
+    padding-left: 16px;
+    background: #fff;
+    z-index: 10;
+    align-items: flex-end;
+    justify-content: flex-end;
+    padding-right: 10px;
+  `}
+  .screentime {
+    ${media.pad`display: block; margin-bottom: 8px; margin-right: 0;`}
+    font-size: 16px;
+    margin-right: 5px;
+  }
+  .date-picker {
+    ${media.pad`width: 250px!important; display: inline-block;`}
+  }
+  .drop-btn {
+    svg {
+      transform: rotate(90deg);
+    }
+  }
 `;

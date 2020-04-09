@@ -1,5 +1,6 @@
 import React from 'react';
 import BigNumber from 'bignumber.js';
+import template from 'lodash/template';
 import superagent from 'superagent';
 import querystring from 'querystring';
 import huNum from 'humanize-number';
@@ -219,7 +220,7 @@ export const sendRequest = (config) => {
 };
 
 /* eslint react/prop-types: 0 */
-function I18nComp({ id, html }) {
+function I18nComp({ id, html, param }) {
   if (html) {
     return (
       <FormattedHTMLMessage id={id}>
@@ -229,12 +230,24 @@ function I18nComp({ id, html }) {
       </FormattedHTMLMessage>
     );
   }
+
+  if (param) {
+    return (
+      <FormattedHTMLMessage id={id}>
+        {(s) => {
+          // console.log(s)
+          return template(s)(param);
+        }}
+      </FormattedHTMLMessage>
+    );
+  }
+
   return <FormattedMessage id={id} />;
 }
 const I18nComp1 = injectIntl(I18nComp);
 
 export function i18n(id, config = {}) {
-  return <I18nComp1 id={id} html={config.html} />;
+  return <I18nComp1 id={id} html={config.html} param={config.param} />;
 }
 
 export function renderAny(cb) {
@@ -269,3 +282,8 @@ export const updateStore = (s) => {
 export const getStore = () => {
   return store;
 };
+
+export function isContract(a) {
+  const strip = a.replace(/^0x/, '');
+  return strip[0] === '8';
+}

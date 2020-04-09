@@ -9,6 +9,7 @@ import { i18n, renderAny } from '../../utils';
 import { StyledTabel, TabPanel } from './styles';
 import Pagination from '../../components/Pagination';
 import { reqMinedBlockList } from '../../utils/api';
+import { TotalDesc, getTotalPage } from '../../components/TotalDesc';
 
 const PCell = styled.div`
   margin: 0 !important;
@@ -126,16 +127,13 @@ class MinedBlocks extends Component {
       pageSize: 10,
     }).then((body) => {
       if (body.code === 0) {
-        const { total } = body.result;
+        const { total, listLimit } = body.result;
         this.setState({
           minedBlockList: body.result.list.filter((v) => !!v),
           curMinedPage,
           minedTotalCount: total,
+          listLimit,
         });
-
-        const evt = new Event('update-blockcount');
-        evt.total = total;
-        document.dispatchEvent(evt);
       }
     });
   }
@@ -143,7 +141,8 @@ class MinedBlocks extends Component {
   render() {
     const { accountid, isActive } = this.props;
     const { minedBlockList, minedTotalCount, curMinedPage } = this.state;
-    const { activated } = this.state;
+    const { activated, listLimit } = this.state;
+
     if (!activated) {
       return null;
     }
@@ -165,6 +164,7 @@ class MinedBlocks extends Component {
           return (
             <MinedWrap>
               <div className="page-pc">
+                <TotalDesc total={minedTotalCount} listLimit={listLimit} />
                 <Pagination
                   prevItem={{
                     'aria-label': 'Previous item',
@@ -179,11 +179,12 @@ class MinedBlocks extends Component {
                     this.fetchMinedBlockList(accountid, data.activePage);
                   }}
                   activePage={curMinedPage}
-                  totalPages={Math.ceil(minedTotalCount / 10)}
+                  totalPages={getTotalPage(minedTotalCount, 10, listLimit)}
                   ellipsisItem={null}
                 />
               </div>
               <div className="page-h5">
+                <TotalDesc total={minedTotalCount} listLimit={listLimit} />
                 <Pagination
                   prevItem={{
                     'aria-label': 'Previous item',
@@ -203,7 +204,7 @@ class MinedBlocks extends Component {
                   firstItem={null}
                   lastItem={null}
                   siblingRange={1}
-                  totalPages={Math.ceil(minedTotalCount / 10)}
+                  totalPages={getTotalPage(minedTotalCount, 10, listLimit)}
                 />
               </div>
             </MinedWrap>

@@ -11,3 +11,5 @@ export const errorCodes = {
 };
 
 export const UPDATE_COMMON = 'UPDATE_COMMON';
+
+export const IMG_PFX = 'data:image/png;base64, ';

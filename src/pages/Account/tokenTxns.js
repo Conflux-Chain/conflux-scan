@@ -8,13 +8,13 @@ import PropTypes from 'prop-types';
 import DataList from '../../components/DataList';
 import EllipsisLine from '../../components/EllipsisLine';
 import Countdown from '../../components/Countdown';
+import { IMG_PFX } from '../../constants';
 import { convertToValueorFee, converToGasPrice, i18n, renderAny } from '../../utils';
 import { StyledTabel, TabPanel, PCell, TabWrapper, IconFace, CtrlPanel } from './styles';
 import Pagination from '../../components/Pagination';
 import iconStatusErr from '../../assets/images/icons/status-err.svg';
 import iconStatusSkip from '../../assets/images/icons/status-skip.svg';
 import { reqAccountTransactionList } from '../../utils/api';
-import media from '../../globalStyles/media';
 import { TotalDesc, getTotalPage } from '../../components/TotalDesc';
 
 const ContractCell = styled.div`
@@ -23,9 +23,26 @@ const ContractCell = styled.div`
   font-weight: normal;
 `;
 
+const TokenLineDiv = styled.div`
+  display: flex;
+  align-items: center;
+
+  img {
+    width: 21px;
+    height: 21px;
+  }
+  a {
+    margin-left: 8px;
+    font-size: 16px;
+    font-weight: 400;
+    color: rgba(66, 146, 250, 1);
+    line-height: 19px;
+  }
+`;
+
 const { RangePicker } = DatePicker;
 
-class Transitions extends Component {
+class TokenTxns extends Component {
   constructor(...args) {
     super(...args);
     this.state = {
@@ -36,31 +53,32 @@ class Transitions extends Component {
         pageSize: 10,
         txType: 'all',
       },
+      activated: false,
       listLimit: undefined,
     };
   }
 
-  componentDidMount() {
-    const { accountid } = this.props;
-    // const { queries } = this.state;
+  componentDidUpdate() {
+    const { isActive } = this.props;
+    if (isActive) {
+      const { activated } = this.state;
+      if (!activated) {
+        this.onMount();
+        // eslint-disable-next-line react/no-did-update-set-state
+        this.setState({
+          activated: true,
+        });
+      }
+    }
+  }
 
+  onMount() {
+    const { accountid } = this.props;
     this.changePage(accountid, {
       page: 1,
       pageSize: 10,
       txType: 'all',
     });
-  }
-
-  componentDidUpdate(prevProps) {
-    // eslint-disable-next-line react/destructuring-assignment
-    if (this.props.accountid !== prevProps.accountid) {
-      // eslint-disable-next-line react/destructuring-assignment
-      this.changePage(this.props.accountid, {
-        page: 1,
-        pageSize: 10,
-        txType: 'all',
-      });
-    }
   }
 
   changePage(accountid, queries) {
@@ -80,7 +98,11 @@ class Transitions extends Component {
 
   render() {
     const { accountid, isActive, intl } = this.props;
-    const { TxList, TxTotalCount, queries, listLimit } = this.state;
+    const { TxList, TxTotalCount, queries, listLimit, activated } = this.state;
+
+    if (!activated) {
+      return null;
+    }
 
     const columns = [
       {
@@ -167,23 +189,28 @@ class Transitions extends Component {
       },
       {
         key: 5,
-        className: 'two wide aligned',
-        dataIndex: 'drei',
-        title: i18n('Fee'),
+        className: 'three wide aligned',
+        dataIndex: '', // todo modify
+        title: i18n('Token'),
         render: (text, row) => {
-          const result = new BigNumber(row.gas).multipliedBy(row.gasPrice);
-          return <EllipsisLine unit="CFX" text={convertToValueorFee(result.toFixed())} />;
+          const { tokenName, tokenSymbol, tokenIcon } = row;
+          return (
+            <TokenLineDiv>
+              <img src={IMG_PFX + tokenIcon} />
+              <a>{`${tokenName} (${tokenSymbol})`}</a>
+            </TokenLineDiv>
+          );
         },
       },
+      // {
+      //   key: 6,
+      //   className: 'two wide aligned',
+      //   dataIndex: 'gasPrice',
+      //   title: i18n('Gas Price'),
+      //   render: (text) => <EllipsisLine unit="Gdrip" text={converToGasPrice(text)} />,
+      // },
       {
         key: 6,
-        className: 'two wide aligned',
-        dataIndex: 'gasPrice',
-        title: i18n('Gas Price'),
-        render: (text) => <EllipsisLine unit="Gdrip" text={converToGasPrice(text)} />,
-      },
-      {
-        key: 7,
         className: 'three wide aligned',
         dataIndex: 'timestamp',
         title: i18n('Age'),
@@ -333,7 +360,7 @@ class Transitions extends Component {
   }
 }
 
-Transitions.propTypes = {
+TokenTxns.propTypes = {
   accountid: PropTypes.string.isRequired,
   isActive: PropTypes.bool.isRequired,
   intl: PropTypes.shape({
@@ -341,6 +368,6 @@ Transitions.propTypes = {
   }).isRequired,
 };
 
-Transitions.defaultProps = {};
+TokenTxns.defaultProps = {};
 
-export default injectIntl(Transitions);
+export default injectIntl(TokenTxns);

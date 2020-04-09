@@ -108,4 +108,13 @@ export default {
 
   'network.testnet': 'Conflux Testnet',
   'network.mainnet': 'Conflux Mainnet',
+  'network-short.mainnet': 'Conflux Mainnet',
+  'network-short.testnet': 'Conflux Testnet',
+
+  'pagination.limited': 'A total of <%=total%> records found (Showing the last <%=listLimit%> records)',
+  'pagination.total': 'A total of <%=total%> records found',
+
+  'num.Tokens': 'Tokens',
+  'contract.at-txn1': 'at txn',
+  'contract.at-txn2': ' ',
 };

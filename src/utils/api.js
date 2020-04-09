@@ -122,3 +122,21 @@ export const reqUtilType = (param, extra) => {
     ...extra,
   }).then((res) => res.body);
 };
+
+export const reqContract = (param, extra) => {
+  return sendRequest({
+    // url: `${futurePrefix}/contract/query`,
+    url: 'http://yapi.conflux-chain.org/mock/20/contract/query',
+    query: param,
+    ...extra,
+  }).then((res) => res.body);
+};
+
+export const reqTokenList = (param, extra) => {
+  return sendRequest({
+    // url: `${futurePrefix}/account/token/list`,
+    url: 'http://yapi.conflux-chain.org/mock/20/account/token/list',
+    query: param,
+    ...extra,
+  }).then((res) => res.body);
+};

@@ -22,7 +22,6 @@ const Wrapper = styled.header`
   padding: 0 25px;
   justify-content: space-between;
   text-align: left;
-  //border-bottom: 1px solid #ccc;
   background-color: #fff;
   box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.19);
   z-index: 1000;
@@ -91,6 +90,10 @@ const LangSelector = styled.div.attrs({
   &.network-select.menu {
     width: 184px;
     margin-right: 24px;
+    ${media.pad`
+      width: 50px;
+      margin-right: 0;
+    `}
   }
 
   .text-short {

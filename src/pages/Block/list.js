@@ -10,6 +10,7 @@ import { i18n, sendRequest } from '../../utils/index';
 import Dag from '../../components/Dag';
 import * as commonCss from '../../globalStyles/common';
 import { reqBlockList } from '../../utils/api';
+import { TotalDesc } from '../../components/TotalDesc';
 
 const DagWrapper = styled.div`
   #dag-viewer {
@@ -246,6 +247,7 @@ class List extends Component {
                 </div>
               </div>
               <div className="page-pc">
+                <TotalDesc total={TotalCount} />
                 <Pagination
                   style={{ float: 'right' }}
                   prevItem={{
@@ -266,6 +268,7 @@ class List extends Component {
                 />
               </div>
               <div className="page-h5">
+                <TotalDesc total={TotalCount} />
                 <Pagination
                   prevItem={{
                     'aria-label': 'Previous item',

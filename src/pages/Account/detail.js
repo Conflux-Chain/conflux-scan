@@ -4,12 +4,14 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
 import compose from 'lodash/fp/compose';
-import { i18n } from '../../utils';
+import { i18n, isContract } from '../../utils';
 import * as commonCss from '../../globalStyles/common';
 import media from '../../globalStyles/media';
 import MinedBlocks from './minedBlocks';
 import Transitions from './transitions';
 import AccountHead from './accountHead';
+import ContractPanel from './contractPanel';
+import TokenTxns from './tokenTxns';
 
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -44,21 +46,32 @@ const TabZone = styled.div`
   }
 `;
 
+const tabEnum = {
+  transactions: 'transactions',
+  tokenTxns: 'tokenTxns',
+  contract: 'contract',
+  minedBlocks: 'minedBlocks',
+};
+
 class Detail extends Component {
   constructor(...args) {
     super(...args);
     this.state = {
-      currentTab: 1,
+      blockCount: 0,
+      currentTab: tabEnum.transactions,
       showMaintaining: false,
     };
   }
 
   render() {
-    const { currentTab, showMaintaining } = this.state;
+    const { currentTab, showMaintaining, blockCount } = this.state;
     const {
       intl,
       match: { params },
     } = this.props;
+
+    const { accountid } = params;
+    const isContractAddr = isContract(accountid);
 
     return (
       <div className="page-address-detail">
@@ -69,11 +82,16 @@ class Detail extends Component {
         )}
         <Wrapper>
           <AccountHead
-            accountid={params.accountid}
+            accountid={accountid}
             history={history}
             onFetchErr={() => {
               this.setState({
                 showMaintaining: true,
+              });
+            }}
+            updateBlockCount={(num) => {
+              this.setState({
+                blockCount: num,
               });
             }}
           />
@@ -81,26 +99,51 @@ class Detail extends Component {
             <div className="ui attached tabular menu">
               <button
                 type="button"
-                className={currentTab === 1 ? 'active item' : 'item'}
+                className={currentTab === tabEnum.transactions ? 'active item' : 'item'}
                 onKeyUp={() => {}}
-                onClick={() => this.setState({ currentTab: 1 })}
+                onClick={() => this.setState({ currentTab: tabEnum.transactions })}
               >
                 {i18n('app.pages.account.detail.transactions')}
               </button>
               <button
                 type="button"
-                className={currentTab === 2 ? 'active item' : 'item'}
+                className={currentTab === tabEnum.tokenTxns ? 'active item' : 'item'}
+                onKeyUp={() => {}}
+                onClick={() => this.setState({ currentTab: tabEnum.tokenTxns })}
+              >
+                {i18n('Token Txns')}
+              </button>
+              {isContractAddr && (
+                <button
+                  type="button"
+                  className={currentTab === tabEnum.contract ? 'active item' : 'item'}
+                  onKeyUp={() => {}}
+                  onClick={() => this.setState({ currentTab: tabEnum.contract })}
+                >
+                  {i18n('Contract')}
+                </button>
+              )}
+              <button
+                type="button"
+                className={currentTab === tabEnum.minedBlocks ? 'active item' : 'item'}
                 onKeyUp={() => {}}
                 onClick={() => {
-                  this.setState({ currentTab: 2 });
+                  this.setState({ currentTab: tabEnum.minedBlocks });
+                }}
+                style={{
+                  display: blockCount > 0 ? 'block' : 'none',
                 }}
               >
                 {i18n('Mined Blocks')}
               </button>
             </div>
             <div className="ctrlpanel-wrap">
-              <Transitions isActive={currentTab === 1} accountid={params.accountid} />
-              <MinedBlocks isActive={currentTab === 2} accountid={params.accountid} />
+              <Transitions isActive={currentTab === tabEnum.transactions} accountid={accountid} />
+              {blockCount > 0 && (
+                <MinedBlocks blockCount={blockCount} isActive={currentTab === tabEnum.minedBlocks} accountid={accountid} />
+              )}
+              {isContractAddr && <ContractPanel isActive={currentTab === tabEnum.contract} accountid={accountid} />}
+              <TokenTxns isActive={currentTab === tabEnum.tokenTxns} accountid={accountid} />
             </div>
           </TabZone>
         </Wrapper>

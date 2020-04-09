@@ -10,6 +10,7 @@ import { convertToValueorFee, converToGasPrice, i18n, sendRequest } from '../../
 import media from '../../globalStyles/media';
 import * as commonCss from '../../globalStyles/common';
 import { reqTransactionList } from '../../utils/api';
+import { TotalDesc } from '../../components/TotalDesc';
 
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -218,6 +219,7 @@ class List extends Component {
                 </div>
               </div>
               <div className="page-pc">
+                <TotalDesc total={TotalCount} />
                 <Pagination
                   style={{ float: 'right' }}
                   ellipsisItem={null}
@@ -238,6 +240,7 @@ class List extends Component {
                 />
               </div>
               <div className="page-h5">
+                <TotalDesc total={TotalCount} />
                 <Pagination
                   prevItem={{
                     'aria-label': 'Previous item',

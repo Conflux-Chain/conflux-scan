@@ -2,21 +2,32 @@ import React, { PureComponent } from 'react';
 import { Dropdown } from 'semantic-ui-react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import { injectIntl } from 'react-intl';
 
 const DropDownDiv = styled.div`
   .ui.selection.dropdown {
     border: 1px solid rgba(224, 225, 226, 1);
+    min-height: 36px;
+    padding-top: 10px;
+    padding-bottom: 10px;
   }
   .ui.selection.dropdown .menu > .item {
     padding: 13px 13px 13px 11px !important;
     color: #212121;
   }
+  .ui.dropdown:not(.button) > .default.text {
+    color: rgba(0, 0, 0, 0.87);
+  }
+
   .ui.dropdown .menu .selected.item {
     font-weight: bold;
     color: #1e3de4;
   }
   .ui.selection.active.dropdown:hover {
     border-color: #e0e1e2;
+  }
+  .ui.fluid.dropdown > .dropdown.icon {
+    top: 8px;
   }
 
   .token-content {
@@ -41,12 +52,21 @@ const DropDownDiv = styled.div`
   .token-tag {
     border-radius: 2px;
     color: #fff;
-    width: 24px;
+    padding-left: 5px;
+    padding-right: 5px;
+    min-width: 14px;
     height: 21px;
     position: absolute;
     background: #1783ff;
-    top: 12px;
+    top: 9px;
     margin-left: 16px;
+    z-index: 99;
+    pointer-events: none;
+    font-style: normal;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 22px;
+    text-align: center;
   }
   position: relative;
 `;
@@ -61,15 +81,25 @@ class TokenSelect extends PureComponent {
     this.wrapper = React.createRef();
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    this.syncLeftPos();
+  }
+
+  componentDidUpdate(prevProps) {
+    // eslint-disable-next-line react/destructuring-assignment
+    if (prevProps.intl.locale !== this.props.intl.locale) {
+      const txtElem = this.wrapper.current.querySelector('.text');
+      // eslint-disable-next-line react/no-did-update-set-state
+      this.setState({
+        tagLeftPos: txtElem.offsetWidth + 10,
+      });
+    }
+  }
 
   handleChange = (e, { value }) => {
-    // this.setState({
-    //   value,
-    // });
     const { onChange } = this.props;
     onChange(value);
-    this.syncLeftPos();
+    // this.syncLeftPos();
   };
 
   syncLeftPos() {
@@ -77,7 +107,7 @@ class TokenSelect extends PureComponent {
       showTag: false,
     });
     setTimeout(() => {
-      const txtElem = this.wrapper.current.querySelector('input + .text');
+      const txtElem = this.wrapper.current.querySelector('.text');
       this.setState({
         tagLeftPos: txtElem.offsetWidth + 10,
         showTag: true,
@@ -88,7 +118,7 @@ class TokenSelect extends PureComponent {
   render() {
     const { showTag, tagLeftPos } = this.state;
 
-    const { options, placeholder, value } = this.props;
+    const { intl, options, placeholder, value, text, blueVal } = this.props;
     const viewOpts = options.map((v) => {
       return {
         key: v.value,
@@ -104,15 +134,20 @@ class TokenSelect extends PureComponent {
       };
     });
 
+    const txtShow =
+      intl.formatMessage({
+        id: text,
+      }) || '';
+
     const cfg = {
       placeholder,
       fluid: true,
-      search: true,
+      // search: true,
       selectOnBlur: false,
       selection: true,
       options: viewOpts,
       onChange: this.handleChange,
-      // onBlur: this.onBlur
+      text: txtShow,
     };
     if (value) {
       cfg.value = value;
@@ -127,7 +162,9 @@ class TokenSelect extends PureComponent {
             display: showTag ? 'block' : 'none',
             left: tagLeftPos,
           }}
-        />
+        >
+          {blueVal}
+        </i>
       </DropDownDiv>
     );
   }
@@ -135,16 +172,25 @@ class TokenSelect extends PureComponent {
 
 TokenSelect.propTypes = {
   accountid: PropTypes.string.isRequired,
-  placeholder: PropTypes.string.isRequired,
+  placeholder: PropTypes.string,
   value: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired,
+  onChange: PropTypes.func,
   options: PropTypes.arrayOf({
     value: PropTypes.string,
     text: PropTypes.string,
     content: PropTypes.element,
   }).isRequired,
+  blueVal: PropTypes.number,
+  intl: PropTypes.objectOf({
+    locale: PropTypes.string,
+  }).isRequired,
+  text: PropTypes.string.isRequired,
 };
 
-TokenSelect.defaultProps = {};
+TokenSelect.defaultProps = {
+  onChange: () => {},
+  blueVal: 0,
+  placeholder: '',
+};
 
-export default TokenSelect;
+export default injectIntl(TokenSelect);
