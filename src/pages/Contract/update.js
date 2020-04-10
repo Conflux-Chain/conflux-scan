@@ -35,9 +35,15 @@ const Wrapper = styled.div`
 
   .redAsterisk {
     position: absolute;
-    color: red;
-    top: 4px;
+    display: inline-block;
+    top: 0px;
     left: -8px;
+    width: 9px;
+    height: 22px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #df0000;
+    line-height: 22px;
   }
   .asteriskContainer {
     display: inline-block;
@@ -49,12 +55,18 @@ const Wrapper = styled.div`
     &.disabled {
       opacity: 40%;
     }
+    > span:last-child {
+      white-space: normal;
+    }
   }
 
   .inputContainer {
     width: 400px;
     height: 36px;
     border-radius: 4px;
+    ${media.pad`
+      width: auto
+    `}
   }
 
   .inputItem {
@@ -89,18 +101,17 @@ const Wrapper = styled.div`
       border: 1px solid rgba(224, 225, 226, 1);
       cursor: auto;
     }
+    ${media.mobile`
+      margin-bottom: 10px;
+    `}
   }
 `;
 
 const StyledTabel = styled.div`
-  /* margin-top: 20px;
-  width: 100%;
-  background: #fff;
-  border-radius: 4px !important;
-  box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.12) !important; */
   ${media.mobile`
     margin: 0 auto;
     overflow-x: scroll;
+    overflow-y: hidden;
   `}
 
   tr > td {
@@ -121,10 +132,11 @@ const StyledTabel = styled.div`
     width: 200px !important;
     font-weight: bold !important;
     padding: 0.5em 0em 0.5em 2em !important;
-    ${media.mobile`
-      padding: 0.1em 2em 0.1em 2em !important;
-    `}
     background: #edf2f9 !important;
+    ${media.pad`
+      padding: 0.1em 2em 0.1em 2em !important;
+      min-width: 200px !important;
+    `}
   }
   td.top {
     padding-top: 15px !important;
@@ -151,11 +163,14 @@ const StyledTabel = styled.div`
     align-items: center;
     background: #f7f7f7;
     margin-left: 130px;
+    ${media.pad`
+      margin-left: 30px;
+    `}
   }
 
   .customBtn {
-    background: #fff;
-    box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+    width: 200px;
+    height: 36px;
     border-radius: 4px;
     color: #000;
     font-size: 16px;
@@ -163,9 +178,15 @@ const StyledTabel = styled.div`
     line-height: 36px;
     text-align: center;
     border: 1px solid rgba(224, 225, 226, 1);
+    cursor: pointer;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     &.disabled {
       color: rgba(0, 0, 0, 0.5);
     }
+    ${media.pad`
+      width: auto;
+    `}
   }
 
   .removeText {
@@ -177,7 +198,7 @@ const StyledTabel = styled.div`
   }
 
   .fixed-first {
-    width: 443px;
+    /* width: 443px; */
   }
 
   .editorContainer {
@@ -193,6 +214,10 @@ const HeadBar = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  ${media.mobile`
+    flex-direction: column;
+    align-items: flex-start;
+  `}
 
   * {
     display: inline-block;
@@ -222,12 +247,19 @@ const FilterSelector = styled.div.attrs({
   box-shadow: none !important;
   padding-bottom: 10px !important;
   background: transparent !important;
+  ${media.pad`
+    width: auto;
+  `}
 
   .ui.dropdown {
     width: 100%;
-    justify-content: space-around;
+    justify-content: space-between;
     border: 1px solid #e0e1e2;
     border-radius: 4px !important;
+    padding: 0 12px 0 5px !important;
+    ${media.pad`
+      width: auto;
+    `}
 
     .menu > .item {
       outline: none;
@@ -338,19 +370,32 @@ const StyledTabelWrapper = styled.div`
 const ContentBottomContainer = styled.div`
   display: flex;
   justify-content: space-between;
+  ${media.mobile`
+    flex-direction: column;
+    justify-content: center;
+  `}
   .leftContainer {
     div {
       display: inline-block;
     }
     .inputContainer {
       margin-left: 12px;
+      ${media.mobile`
+        margin-left: 0px;
+      `}
     }
     .labelText {
       font-weight: bold;
       color: #151515;
       font-size: 16px;
       line-height: 19px;
+      ${media.mobile`
+        margin-left: 8px;
+      `}
     }
+    ${media.mobile`
+      margin-bottom: 10px;
+    `}
   }
 `;
 
@@ -699,8 +744,8 @@ class ContractUpdate extends Component {
                   <tr className="centered">
                     <td className="collapsing top">
                       <div className="relativeContainer">
+                        <span className="redAsterisk">*</span>
                         {i18n('app.pages.contract.address')}
-                        <Icon name="asterisk" className="redAsterisk" size="mini" />
                       </div>
                     </td>
                     <td className="aligned top fixed-first">
@@ -742,8 +787,8 @@ class ContractUpdate extends Component {
                   <tr>
                     <td className="collapsing">
                       <div className="relativeContainer">
+                        <span className="redAsterisk">*</span>
                         {i18n('Name Tag')}
-                        <Icon name="asterisk" className="redAsterisk" size="mini" />
                       </div>
                     </td>
                     <td className="aligned">
@@ -753,7 +798,9 @@ class ContractUpdate extends Component {
                     </td>
                   </tr>
                   <tr>
-                    <td className="collapsing bottom">{i18n('app.directory.website.title')}</td>
+                    <td className="collapsing bottom">
+                      <div className="relativeContainer">{i18n('app.directory.website.title')}</div>
+                    </td>
                     <td className="aligned bottom">
                       <div className="ui input inputContainer">
                         <input className="inputItem" type="text" value={websiteVal} onChange={(e) => this.handleWebsiteChange(e)} />
@@ -767,8 +814,8 @@ class ContractUpdate extends Component {
                   <tr className="centered">
                     <td className="collapsing top">
                       <div className="relativeContainer">
+                        <span className="redAsterisk">*</span>
                         {i18n('app.pages.contract.contractType')}
-                        <Icon name="asterisk" className="redAsterisk" size="mini" />
                       </div>
                     </td>
                     <td className="aligned top fixed-first">
@@ -841,8 +888,8 @@ class ContractUpdate extends Component {
                   <tr>
                     <td className="collapsing">
                       <div className={this.isGeneralContractType() ? 'relativeContainer disabled' : 'relativeContainer'}>
+                        <span className="redAsterisk">*</span>
                         {i18n('app.pages.contract.tokenName')}
-                        <Icon name="asterisk" className="redAsterisk" size="mini" />
                       </div>
                     </td>
                     <td className="aligned">
@@ -860,8 +907,8 @@ class ContractUpdate extends Component {
                   <tr>
                     <td className="collapsing">
                       <div className={this.isGeneralContractType() ? 'relativeContainer disabled' : 'relativeContainer'}>
+                        <span className="redAsterisk">*</span>
                         {i18n('app.pages.contract.tokenSymbol')}
-                        <Icon name="asterisk" className="redAsterisk" size="mini" />
                       </div>
                     </td>
                     <td className="aligned">
@@ -879,8 +926,8 @@ class ContractUpdate extends Component {
                   <tr>
                     <td className="collapsing bottom">
                       <div className={this.isGeneralContractType() ? 'relativeContainer disabled' : 'relativeContainer'}>
+                        <span className="redAsterisk">*</span>
                         {i18n('app.pages.contract.decimals')}
-                        <Icon name="asterisk" className="redAsterisk" size="mini" />
                       </div>
                     </td>
                     <td className="aligned bottom">
@@ -959,8 +1006,8 @@ class ContractUpdate extends Component {
               <ContentBottomContainer>
                 <div className="leftContainer">
                   <div className="relativeContainer labelText">
+                    <span className="redAsterisk">*</span>
                     {i18n('app.pages.contract.typeinAdminPassword')}
-                    <Icon name="asterisk" className="redAsterisk" size="mini" />
                   </div>
                   <div className="ui input inputContainer">
                     <input className="inputItem" type="password" value={passwordVal} onChange={(e) => this.handlePasswordChange(e)} />
