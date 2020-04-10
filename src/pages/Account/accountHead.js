@@ -333,9 +333,12 @@ class AccountHead extends Component {
     reqTokenList({
       address: accountid,
     }).then((body) => {
+      const listSorted = (body.result.list || []).sort((a, b) => {
+        return b.balance - a.balance;
+      });
       this.setState({
         tokenTotal: body.result.total,
-        tokenList: body.result.list || [],
+        tokenList: listSorted,
       });
     });
   }
