@@ -1,5 +1,5 @@
 import { sendRequest } from './index';
-import { apiPrefix, futurePrefix, contractMangerPrefix, contractPrefix } from '../constants';
+import { apiPrefix, futurePrefix, contractMangerPrefix } from '../constants';
 
 export const reqFcStat = (param) => {
   return sendRequest({
@@ -130,14 +130,6 @@ export const reqContract = (param, extra) => {
     ...extra,
   }).then((res) => res.body);
 };
-// url: 'http://yapi.conflux-chain.org/mock/20/contract/query',
-export const reqContractQuery = (param, extra) => {
-  return sendRequest({
-    url: `${contractPrefix}/contract/query`,
-    query: param,
-    ...extra,
-  }).then((res) => res.body);
-};
 
 export const reqTokenList = (param, extra) => {
   return sendRequest({
@@ -159,7 +151,7 @@ export const reqTokenTxnList = (param, extra) => {
 export const reqContractUpdate = (param, extra) => {
   return sendRequest({
     type: 'POST',
-    url: `${contractPrefix}/contract/update`,
+    url: `${contractMangerPrefix}/api/contract/update`,
     body: param,
     ...extra,
   }).then((res) => res.body);

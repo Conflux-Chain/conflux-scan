@@ -17,7 +17,7 @@ import iconStatusErr from '../../assets/images/icons/status-err.svg';
 import iconStatusSuccess from '../../assets/images/icons/status-success.svg';
 import iconStatusSkip from '../../assets/images/icons/status-skip.svg';
 import CopyButton from '../../components/CopyButton';
-import { reqTransactionDetail, reqContractQuery } from '../../utils/api';
+import { reqTransactionDetail, reqContract } from '../../utils/api';
 import { decodeContract } from '../../utils/transaction';
 import { errorCodes, addressTypeContract } from '../../constants';
 import InputData from '../../components/InputData';
@@ -293,11 +293,23 @@ class Detail extends Component {
           let toAddress = transactionDetails.to;
           if (getAddressType(toAddress) === addressTypeContract) {
             this.setState({ isContract: true });
-            reqContractQuery({ address: toAddress, fields: ['abi', 'bytecode', 'icon'] }).then((contractResponse) => {
-              const responseBody = contractResponse.body;
-              switch (responseBody.code) {
+            const fields = [
+              'address',
+              'type',
+              'name',
+              'webside',
+              'tokenName',
+              'tokenSymbol',
+              'tokenDecimal',
+              'abi',
+              'bytecode',
+              'icon',
+              'sourceCode',
+            ].join(',');
+            reqContract({ address: toAddress, fields: fields }).then((contractResponse) => {
+              switch (contractResponse.code) {
                 case 0:
-                  const result = responseBody.result;
+                  const result = contractResponse.result;
                   const contractType = result.typeCode;
                   let decodedData = {};
                   let filterKeys = [];
@@ -448,7 +460,7 @@ class Detail extends Component {
                           <span>
                             {i18n('Contract')} &nbsp;
                             <Link to={`/address/${result.to}`}>{result.to}</Link>
-                            <img className="logo" src={`data:image/png;base64,${contractInfo.icon}`} />
+                            <img className="logo" src={`${contractInfo.icon}`} />
                             <Link to={`/address/${result.to}`}>{contractInfo.name}</Link>
                             <CopyButton style={copyBtnStyle} txtToCopy={result.to} btnType="three" toolTipId="Copy to clipboard" />
                           </span>
