@@ -99,7 +99,7 @@ class Detail extends Component {
       'address',
       'type',
       'name',
-      'webside',
+      'website',
       'tokenName',
       'tokenSymbol',
       'tokenIcon',
