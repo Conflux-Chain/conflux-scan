@@ -91,6 +91,14 @@ export default {
   'app.pages.txns.Success': '成功',
   'app.pages.txns.Err': '失败',
   'app.pages.txns.Skip': '跳过',
+  'app.pages.txns.inputData': '数据输入',
+  'app.pages.txns.original': '原版',
+  'app.pages.txns.utf8': 'UTF-8',
+  'app.pages.txns.decodeInputData': '解码输入数据',
+  'app.pages.txns.inputTips': '构成交易输入数据的二进制数据如果是消息调用，则为输入数据；如果是合同创建，则为合同初始化',
+  'app.pages.txns.proposedEpoch': 'Proposed Epoch',
+  'app.pages.txns.storageLimit': 'Storage Limit',
+  'app.pages.txns.chainId': 'Chain ID',
   'app.pages.err-reason.1': '交易错误：智能合约执行错误，或gas fee不足',
   'app.pages.err-reason.2': '交易错误：nonce错误，签名验证失败，或余额不足',
 
@@ -186,4 +194,21 @@ export default {
   'contract.at-txn2': ' 交易',
   'Click to edit contract': '点击编辑合约',
   'Click to enter the official site': '点击进入官方网站',
+  // Contract
+  'app.pages.contract.edit': 'Edit Contract',
+  'app.pages.contract.address': 'Contract Address',
+  'app.pages.contract.uploadIcon': 'Upload Contract Icon',
+  'app.pages.contract.removePhoto': 'Remove photo',
+  'app.pages.contract.contractType': 'Contract Type',
+  'app.pages.contract.tokenName': 'Token Name',
+  'app.pages.contract.tokenSymbol': 'Token Symbol',
+  'app.pages.contract.decimals': 'Decimals of Precision',
+  'app.pages.contract.uploadTokenIcon': 'Upload Token Icon',
+  'app.pages.contract.sourceCode': 'Contract Source Code',
+  'app.pages.contract.abi': 'Contract ABI',
+  'app.pages.contract.typeinAdminPassword': 'Please type in administrator password',
+
+  // Common
+  'app.common.submit': 'Submit',
+  'app.common.submitTips': 'Please finish all the tabs before submit',
 };

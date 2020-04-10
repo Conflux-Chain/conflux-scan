@@ -48,9 +48,18 @@ export default {
   'app.pages.txns.Success': 'Success',
   'app.pages.txns.Err': 'Error',
   'app.pages.txns.Skip': 'Skip',
+  'app.pages.txns.inputData': 'Input Data',
+  'app.pages.txns.original': 'Original',
+  'app.pages.txns.utf8': 'UTF-8',
+  'app.pages.txns.decodeInputData': 'Decode Input Data',
+  'app.pages.txns.inputTips':
+    'The binary data that formed the input to the transaction, either the input data if it was a message call or the contract initialisation if it was a contract creation',
+  'app.pages.txns.proposedEpoch': 'Proposed Epoch',
+  'app.pages.txns.storageLimit': 'Storage Limit',
+  'app.pages.txns.chainId': 'Chain ID',
 
   'app.pages.err-reason.1': 'Transfer Error: Error encountered during contract execution, or out of gas',
-  'app.pages.err-reason.2': 'Transfer Error: Wrong nonce，signature verification failed, or insufficient funds',
+  'app.pages.err-reason.2': 'Transfer Error: Wrong nonce, signature verification failed, or insufficient funds',
 
   'app.pages.block.confirm.title': 'Please Confirm',
   'app.pages.block.confirm.pageWarning': 'page > 10000 is not supported',
@@ -118,4 +127,21 @@ export default {
   'num.Tokens': 'Tokens',
   'contract.at-txn1': 'at txn',
   'contract.at-txn2': ' ',
+  // Contract
+  'app.pages.contract.edit': 'Edit Contract',
+  'app.pages.contract.address': 'Contract Address',
+  'app.pages.contract.uploadIcon': 'Upload Contract Icon',
+  'app.pages.contract.removePhoto': 'Remove photo',
+  'app.pages.contract.contractType': 'Contract Type',
+  'app.pages.contract.tokenName': 'Token Name',
+  'app.pages.contract.tokenSymbol': 'Token Symbol',
+  'app.pages.contract.decimals': 'Decimals of Precision',
+  'app.pages.contract.uploadTokenIcon': 'Upload Token Icon',
+  'app.pages.contract.sourceCode': 'Contract Source Code',
+  'app.pages.contract.abi': 'Contract ABI',
+  'app.pages.contract.typeinAdminPassword': 'Please type in administrator password',
+
+  // Common
+  'app.common.submit': 'Submit',
+  'app.common.submitTips': 'Please finish all the tabs before submit',
 };

@@ -7,7 +7,7 @@ import huNum from 'humanize-number';
 import { injectIntl, FormattedMessage, FormattedHTMLMessage } from 'react-intl';
 import { toast } from '../components/Toast';
 import { notice } from '../components/Message/notice';
-import { errorCodes } from '../constants';
+import { errorCodes, addressTypeContract, addressTypeCommon } from '../constants';
 
 let errorId = null;
 let source = null;
@@ -287,3 +287,12 @@ export function isContract(a) {
   const strip = a.replace(/^0x/, '');
   return strip[0] === '8';
 }
+export const devidedByDecimals = (number, decimals) => {
+  const bignumber = number instanceof BigNumber ? number : new BigNumber(number);
+  const result = bignumber.dividedBy(10 ** decimals);
+  return result.toString(10);
+};
+
+export const getAddressType = (address) => {
+  return address.startsWith('8') ? addressTypeContract : addressTypeCommon;
+};
