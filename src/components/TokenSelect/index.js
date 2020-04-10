@@ -11,6 +11,9 @@ const DropDownDiv = styled.div`
     padding-top: 10px;
     padding-bottom: 10px;
   }
+  .ui.selection.dropdown .menu {
+    max-height: 200px;
+  }
   .ui.selection.dropdown .menu > .item {
     padding: 13px 13px 13px 11px !important;
     color: #212121;
@@ -29,7 +32,6 @@ const DropDownDiv = styled.div`
   .ui.fluid.dropdown > .dropdown.icon {
     top: 8px;
   }
-
   .token-content {
     display: flex;
     > span {
@@ -60,7 +62,7 @@ const DropDownDiv = styled.div`
     background: #1783ff;
     top: 9px;
     margin-left: 16px;
-    z-index: 99;
+    z-index: 90;
     pointer-events: none;
     font-style: normal;
     font-size: 12px;

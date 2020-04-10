@@ -118,8 +118,8 @@ export default {
 
   'network.testnet': 'Conflux Testnet',
   'network.mainnet': 'Conflux Mainnet',
-  'network-short.mainnet': 'Conflux Mainnet',
-  'network-short.testnet': 'Conflux Testnet',
+  'network-short.mainnet': 'Main',
+  'network-short.testnet': 'Test',
 
   'pagination.limited': 'A total of <%=total%> records found (Showing the last <%=listLimit%> records)',
   'pagination.total': 'A total of <%=total%> records found',
@@ -146,6 +146,7 @@ export default {
   'app.common.submitTips': 'Please finish all the tabs before submit',
   'app.common.success': 'Success',
   'app.common.submitSucceed': 'Submit succeed',
+  'account-page-notfound-field': 'Not Available',
   'app.common.sourceCode': 'Source Code',
   'app.common.abi': 'ABI',
 };

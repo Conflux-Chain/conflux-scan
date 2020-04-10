@@ -12,7 +12,7 @@ import QrcodeButton from '../../components/QrcodeButton';
 import TableLoading from '../../components/TableLoading';
 import EllipsisLine from '../../components/EllipsisLine';
 import { reqContract, reqAccount, reqTokenList } from '../../utils/api';
-import { errorCodes, IMG_PFX } from '../../constants';
+import { errorCodes } from '../../constants';
 import media from '../../globalStyles/media';
 import { convertToValueorFee, i18n, renderAny, isContract } from '../../utils';
 import TokenSelect from '../../components/TokenSelect';
@@ -341,7 +341,7 @@ class AccountHead extends Component {
   }
 
   renderContractToken() {
-    const { accountid, contractInfo } = this.props;
+    const { accountid, contractInfo = {} } = this.props;
     if (!isContract(accountid)) {
       return null;
     }
@@ -354,15 +354,15 @@ class AccountHead extends Component {
           <div className="contract-info-row">
             <div className="contract-left-info">{i18n('Contract Name')}</div>
             <div className="contract-right-val">
-              <img src={IMG_PFX + contractInfo.name} />
-              {contractInfo.name}
+              {contractInfo.icon && <img src={contractInfo.icon} />}
+              {contractInfo.name || i18n('account-page-notfound-field')}
             </div>
           </div>
           <div className="contract-info-row">
             <div className="contract-left-info">{i18n('Token Tracker')}</div>
             <div className="contract-right-val">
-              {contractInfo.tokenIcon && <img src={IMG_PFX + contractInfo.tokenIcon} />}
-              <a>{contractInfo.tokenName}</a>
+              {contractInfo.tokenIcon && <img src={contractInfo.tokenIcon} />}
+              <a>{contractInfo.tokenName || ''}</a>
             </div>
           </div>
         </div>
@@ -371,12 +371,14 @@ class AccountHead extends Component {
           <div className="contract-info-row">
             <div className="contract-left-info">{i18n('Contract Creator')}</div>
             <div className="contract-right-row">
-              <div className="contract-right-val">
-                <EllipsisLine linkTo={`/address/${creatorTransaction.from}`} text={creatorTransaction.from} />
-                {i18n('contract.at-txn1')}
-                <EllipsisLine linkTo={`/transactionsdetail/${creatorTransaction.hash}`} text={creatorTransaction.hash} />
-                {i18n('contract.at-txn2')}
-              </div>
+              {creatorTransaction.hash && (
+                <div className="contract-right-val">
+                  <EllipsisLine linkTo={`/address/${creatorTransaction.from}`} text={creatorTransaction.from} />
+                  {i18n('contract.at-txn1')}
+                  <EllipsisLine linkTo={`/transactionsdetail/${creatorTransaction.hash}`} text={creatorTransaction.hash} />
+                  {i18n('contract.at-txn2')}
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -385,7 +387,7 @@ class AccountHead extends Component {
   }
 
   render() {
-    const { accountid, intl } = this.props;
+    const { accountid, intl, contractInfo } = this.props;
     const { isLoading, accountDetail, tokenTotal, tokenList } = this.state;
 
     const isContractAddr = isContract(accountid);
@@ -393,7 +395,7 @@ class AccountHead extends Component {
       return {
         key: v.address,
         value: v.address,
-        imgSrc: IMG_PFX + v.tokenIcon,
+        imgSrc: v.tokenIcon,
         label1: `${v.tokenName} (${v.tokenSymbol})`,
         label2: `${v.balance} ${v.tokenSymbol}`,
       };
@@ -425,9 +427,18 @@ class AccountHead extends Component {
               >
                 <i className="edit-icon" />
               </Link>
-              <Link className="address-righticon" data-inverted="" data-tooltip={toolTip4} data-position="bottom left">
-                <i className="open-icon" />
-              </Link>
+              {contractInfo.website && (
+                <a
+                  href={contractInfo.websit}
+                  target="_blank"
+                  className="address-righticon"
+                  data-inverted=""
+                  data-tooltip={toolTip4}
+                  data-position="bottom left"
+                >
+                  <i className="open-icon" />
+                </a>
+              )}
             </Fragment>
           )}
         </HeadBar>

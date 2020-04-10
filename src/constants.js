@@ -10,6 +10,7 @@ export const errorCodes = {
   DBError: 10999,
   BlockNotFoundError: 20404,
   TxNotFoundError: 30404,
+  ContractNotFound: 40404,
 };
 
 export const UPDATE_COMMON = 'UPDATE_COMMON';
