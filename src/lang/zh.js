@@ -213,4 +213,6 @@ export default {
   'app.common.submitTips': 'Please finish all the tabs before submit',
   'app.common.success': 'Success',
   'app.common.submitSucceed': '提交成功',
+  'app.common.sourceCode': 'Source Code',
+  'app.common.abi': 'ABI',
 };

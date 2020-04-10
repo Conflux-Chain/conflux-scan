@@ -190,7 +190,9 @@ class Detail extends Component {
               {blockCount > 0 && (
                 <MinedBlocks blockCount={blockCount} isActive={currentTab === tabEnum.minedBlocks} accountid={accountid} />
               )}
-              {isContractAddr && <ContractPanel isActive={currentTab === tabEnum.contract} accountid={accountid} />}
+              {isContractAddr && (
+                <ContractPanel isActive={currentTab === tabEnum.contract} accountid={accountid} contractInfo={contractInfo} />
+              )}
               <TokenTxns isActive={currentTab === tabEnum.tokenTxns} accountid={accountid} />
             </div>
           </TabZone>
