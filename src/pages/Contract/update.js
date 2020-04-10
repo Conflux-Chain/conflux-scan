@@ -628,6 +628,7 @@ class ContractUpdate extends Component {
     } = this.state;
     const {
       match: { params },
+      history,
     } = this.props;
     const bodyparams = {};
     bodyparams.address = params.address;
@@ -645,7 +646,11 @@ class ContractUpdate extends Component {
     reqContractUpdate(bodyparams).then((response) => {
       const resBody = response.body;
       if (resBody.code === 0) {
-        // TODO
+        toast.success({
+          title: 'app.common.success',
+          content: 'app.common.submitSucceed',
+        });
+        history.replace(`/accountdetail/${params.address}`);
       }
     });
   }
@@ -989,6 +994,9 @@ class ContractUpdate extends Component {
   }
 }
 ContractUpdate.propTypes = {
+  history: PropTypes.shape({
+    replace: PropTypes.func,
+  }).isRequired,
   match: PropTypes.objectOf(PropTypes.string),
 };
 ContractUpdate.defaultProps = {

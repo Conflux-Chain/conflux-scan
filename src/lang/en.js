@@ -144,4 +144,6 @@ export default {
   // Common
   'app.common.submit': 'Submit',
   'app.common.submitTips': 'Please finish all the tabs before submit',
+  'app.common.success': 'Success',
+  'app.common.submitSucceed': 'Submit succeed',
 };
