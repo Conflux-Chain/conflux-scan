@@ -15,7 +15,7 @@ import { StyledTabel, TabPanel, PCell, TabWrapper, IconFace, CtrlPanel } from '.
 import Pagination from '../../components/Pagination';
 import iconStatusErr from '../../assets/images/icons/status-err.svg';
 import iconStatusSkip from '../../assets/images/icons/status-skip.svg';
-import { reqAccountTransactionList } from '../../utils/api';
+import { reqTokenTxnList } from '../../utils/api';
 import { TotalDesc, getTotalPage } from '../../components/TotalDesc';
 
 const ContractCell = styled.div`
@@ -105,7 +105,7 @@ class TokenTxns extends Component {
       delete queries.endTime;
     }
     // todo api change
-    reqAccountTransactionList({
+    reqTokenTxnList({
       address: accountid,
       ...queries,
     }).then((body) => {

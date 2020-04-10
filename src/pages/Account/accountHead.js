@@ -16,6 +16,10 @@ import { convertToValueorFee, i18n, renderAny, isContract } from '../../utils';
 import TokenSelect from '../../components/TokenSelect';
 import imgtokenIcon from '../../assets/images/icons/token-icon.svg';
 import contractNameIcon from '../../assets/images/icons/contract-nameicon.svg';
+import iconEdit from '../../assets/images/icons/icon-edit.svg';
+import iconEditHover from '../../assets/images/icons/icon-edit-hover.svg';
+import iconOpen from '../../assets/images/icons/icon-open.svg';
+import iconOpenHover from '../../assets/images/icons/icon-open-hover.svg';
 
 const HeadBar = styled.div`
   margin-top: 24px;
@@ -70,12 +74,25 @@ const HeadBar = styled.div`
       cursor: pointer;
       background: rgba(0, 0, 0, 0.54);
     }
-    .addr-icon {
+    .open-icon {
       cursor: pointer;
-      width: 16px;
-      height: 16px;
+      width: 32px;
+      height: 32px;
       display: block;
-      background-size: contain;
+      background-image: url("${iconOpen}");
+      &:hover {
+        background-image: url("${iconOpenHover}");
+      }
+    }
+    .edit-icon {
+      cursor: pointer;
+      width: 32px;
+      height: 32px;
+      display: block;
+      background-image: url("${iconEdit}");
+      &:hover {
+        background-image: url("${iconEditHover}");
+      }
     }
   }
 `;
@@ -331,11 +348,14 @@ class AccountHead extends Component {
         fields,
         address: accountid,
       }).then((body) => {
-        this.setState({
-          contractName: body.result.name,
-          tokenName: body.result.tokenName,
-          tokenIcon: body.result.tokenIcon,
-        });
+        // todo error check
+        if (body.code === 0) {
+          this.setState({
+            contractName: body.result.name,
+            tokenName: body.result.tokenName,
+            tokenIcon: body.result.tokenIcon,
+          });
+        }
       });
     }
   }
@@ -414,14 +434,22 @@ class AccountHead extends Component {
           <br className="sep" />
           <CopyButton txtToCopy={accountid} toolTipId="Copy address to clipboard" />
           <QrcodeButton titleTxt={accountid} qrTxt={accountid} tooltipId="Click to view QR Code" />
-
-          {/* todo */}
-          <Link className="address-righticon" data-inverted="" data-tooltip={toolTip3} data-position="bottom left">
-            <img />
-          </Link>
-          <Link className="address-righticon" data-inverted="" data-tooltip={toolTip4} data-position="bottom left">
-            <img />
-          </Link>
+          {isContractAddr && (
+            <Fragment>
+              <Link
+                to={`/contract/update/${accountid}`}
+                className="address-righticon"
+                data-inverted=""
+                data-tooltip={toolTip3}
+                data-position="bottom left"
+              >
+                <i className="edit-icon" />
+              </Link>
+              <Link className="address-righticon" data-inverted="" data-tooltip={toolTip4} data-position="bottom left">
+                <i className="open-icon" />
+              </Link>
+            </Fragment>
+          )}
         </HeadBar>
         {isLoading && <TableLoading />}
         <Statistic>
