@@ -572,10 +572,11 @@ class ContractUpdate extends Component {
       'address',
       'type',
       'name',
-      'webside',
+      'website',
       'tokenName',
       'tokenSymbol',
       'tokenDecimal',
+      'tokenIcon',
       'abi',
       'bytecode',
       'icon',
@@ -593,7 +594,7 @@ class ContractUpdate extends Component {
             websiteVal: result.website,
             tokenNameVal: result.tokenName,
             tokenSymbolVal: result.tokenSymbol,
-            tokenDecimalsVal: result.tokenDecimals,
+            tokenDecimalsVal: result.tokenDecimal,
             iconContractSource: result.icon,
             iconTokenSource: result.tokenIcon,
             sourceCode: result.sourceCode,
@@ -630,12 +631,12 @@ class ContractUpdate extends Component {
     const bodyparams = {};
     bodyparams.address = params.address;
     bodyparams.name = nameTagVal;
-    bodyparams.webside = websiteVal;
+    bodyparams.website = websiteVal;
     bodyparams.icon = iconContractSource;
     bodyparams.typeCode = Number(this.getKeyByContractValue(selectedContractType));
     bodyparams.tokenName = tokenNameVal;
     bodyparams.tokenSymbol = tokenSymbolVal;
-    bodyparams.tokenDecimal = tokenDecimalsVal;
+    bodyparams.tokenDecimal = Number(tokenDecimalsVal);
     bodyparams.tokenIcon = iconTokenSource;
     bodyparams.sourceCode = sourceCode;
     bodyparams.abi = abiVal;
@@ -883,7 +884,7 @@ class ContractUpdate extends Component {
                       <div className="ui input inputContainer">
                         <input
                           className="inputItem"
-                          type="text"
+                          type="number"
                           value={tokenDecimalsVal}
                           onChange={(e) => this.handleTokenDecimalsChange(e)}
                           readOnly={this.isGeneralContractType()}
