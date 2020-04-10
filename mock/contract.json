@@ -2,7 +2,7 @@
   "code": 0,
   "message": "test",
   "result": {
-    "address": "8xd29c3302edff23bf425ba6e0ba6e17da16fb287c",
+    "address": "0x829c3302edff23bf425ba6e0ba6e17da16fb287c",
     "typeCode": 1,
     "name": "TetherContract",
     "website": "https://google.com",

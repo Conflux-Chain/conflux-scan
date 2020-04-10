@@ -14,6 +14,7 @@ import AccountHead from './accountHead';
 import ContractPanel from './contractPanel';
 import TokenTxns from './tokenTxns';
 import { reqContract } from '../../utils/api';
+import { errorCodes } from '../../constants';
 
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -95,13 +96,30 @@ class Detail extends Component {
   }
 
   fetchContractInfo(accountid) {
-    const fields = ['address', 'type', 'name', 'webside', 'tokenName', 'tokenSymbol', 'tokenDecimal'].join(',');
+    const fields = [
+      'address',
+      'type',
+      'name',
+      'website',
+      'tokenName',
+      'tokenSymbol',
+      'tokenIcon',
+      'tokenDecimal',
+      'abi',
+      'bytecode',
+      'icon',
+      'sourceCode',
+    ].join(',');
 
-    reqContract({
-      fields,
-      address: accountid,
-    }).then((body) => {
-      // todo error check
+    reqContract(
+      {
+        fields,
+        address: accountid,
+      },
+      {
+        showError: false,
+      }
+    ).then((body) => {
       if (body.code === 0) {
         this.setState({
           contractInfo: body.result,
@@ -190,7 +208,9 @@ class Detail extends Component {
               {blockCount > 0 && (
                 <MinedBlocks blockCount={blockCount} isActive={currentTab === tabEnum.minedBlocks} accountid={accountid} />
               )}
-              {isContractAddr && <ContractPanel isActive={currentTab === tabEnum.contract} accountid={accountid} />}
+              {isContractAddr && (
+                <ContractPanel isActive={currentTab === tabEnum.contract} accountid={accountid} contractInfo={contractInfo} />
+              )}
               <TokenTxns isActive={currentTab === tabEnum.tokenTxns} accountid={accountid} />
             </div>
           </TabZone>

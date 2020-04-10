@@ -84,13 +84,15 @@ class Transitions extends Component {
       address: accountid,
       ...queries,
     }).then((body) => {
-      this.setState({
-        TxList: body.result.list,
-        TxTotalCount: body.result.total,
-        listLimit: body.result.listLimit,
-        queries,
-      });
-      document.dispatchEvent(new Event('scroll-to-top'));
+      if (body.code === 0) {
+        this.setState({
+          TxList: body.result.list,
+          TxTotalCount: body.result.total,
+          listLimit: body.result.listLimit,
+          queries,
+        });
+        document.dispatchEvent(new Event('scroll-to-top'));
+      }
     });
   }
 
@@ -246,6 +248,7 @@ class Transitions extends Component {
                 });
                 this.changePage(accountid, {
                   ...queries,
+                  page: 1,
                   startTime: null,
                   endTime: null,
                 });

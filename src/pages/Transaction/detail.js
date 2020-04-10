@@ -17,7 +17,7 @@ import iconStatusErr from '../../assets/images/icons/status-err.svg';
 import iconStatusSuccess from '../../assets/images/icons/status-success.svg';
 import iconStatusSkip from '../../assets/images/icons/status-skip.svg';
 import CopyButton from '../../components/CopyButton';
-import { reqTransactionDetail, reqContractQuery } from '../../utils/api';
+import { reqTransactionDetail, reqContract } from '../../utils/api';
 import { decodeContract } from '../../utils/transaction';
 import { errorCodes, addressTypeContract } from '../../constants';
 import InputData from '../../components/InputData';
@@ -293,17 +293,30 @@ class Detail extends Component {
           let toAddress = transactionDetails.to;
           if (getAddressType(toAddress) === addressTypeContract) {
             this.setState({ isContract: true });
-            reqContractQuery({ address: toAddress, fields: ['abi', 'bytecode', 'icon'] }).then((contractResponse) => {
-              const responseBody = contractResponse.body;
-              switch (responseBody.code) {
+            const fields = [
+              'address',
+              'type',
+              'name',
+              'website',
+              'tokenName',
+              'tokenSymbol',
+              'tokenIcon',
+              'tokenDecimal',
+              'abi',
+              'bytecode',
+              'icon',
+              'sourceCode',
+            ].join(',');
+            reqContract({ address: toAddress, fields: fields }).then((contractResponse) => {
+              switch (contractResponse.code) {
                 case 0:
-                  const result = responseBody.result;
+                  const result = contractResponse.result;
                   const contractType = result.typeCode;
                   let decodedData = {};
                   let filterKeys = [];
                   if (contractType !== 0) {
                     decodedData = decodeContract({
-                      abi: result.abi,
+                      abi: JSON.parse(result.abi),
                       bytecode: result.bytecode,
                       address: result.address,
                       transacionData: transactionDetails.data,
@@ -434,7 +447,7 @@ class Detail extends Component {
                 <tr className="">
                   <td className="collapsing">{i18n('From')}</td>
                   <td className="">
-                    <Link to={`/accountdetail/${result.from}`}>{result.from}</Link>
+                    <Link to={`/address/${result.from}`}>{result.from}</Link>
                     <CopyButton style={copyBtnStyle} txtToCopy={result.from} btnType="three" toolTipId="Copy to clipboard" />
                   </td>
                 </tr>
@@ -447,16 +460,16 @@ class Detail extends Component {
                         toDiv = (
                           <span>
                             {i18n('Contract')} &nbsp;
-                            <Link to={`/accountdetail/${result.to}`}>{result.to}</Link>
-                            <img className="logo" src={`data:image/png;base64,${contractInfo.icon}`} />
-                            <Link to={`/accountdetail/${result.to}`}>{contractInfo.name}</Link>
+                            <Link to={`/address/${result.to}`}>{result.to}</Link>
+                            <img className="logo" src={`${contractInfo.icon}`} />
+                            <Link to={`/address/${result.to}`}>{contractInfo.name}</Link>
                             <CopyButton style={copyBtnStyle} txtToCopy={result.to} btnType="three" toolTipId="Copy to clipboard" />
                           </span>
                         );
                       } else {
                         toDiv = (
                           <span>
-                            <Link to={`/accountdetail/${result.to}`}>{result.to}</Link>
+                            <Link to={`/address/${result.to}`}>{result.to}</Link>
                             <CopyButton style={copyBtnStyle} txtToCopy={result.to} btnType="three" toolTipId="Copy to clipboard" />
                           </span>
                         );
@@ -469,52 +482,56 @@ class Detail extends Component {
                   if (contractType === 0) {
                     return null;
                   }
-                  let contrctToAddress = decodedData.params[0];
-                  let value = decodedData.params[1];
-                  if (contractType === 3 && decodedData.name === 'mint') {
+                  try {
+                    let contrctToAddress = decodedData.params[0];
+                    let value = decodedData.params[1];
+                    if (contractType === 3 && decodedData.name === 'mint') {
+                      return (
+                        <tr className="">
+                          <td className="collapsing">{i18n('Token Minted')}</td>
+                          <td className="">
+                            <TokensDiv>
+                              <em>{i18n('To')}</em>
+                              <EllipsisLine
+                                ellipsisStyle={{ maxWidth: 152 }}
+                                linkTo={`/address/${contrctToAddress}`}
+                                text={contrctToAddress}
+                              />
+                              <em>{i18n('For')}</em>
+                              <span>{devidedByDecimals(value, contractInfo.decimals)}</span>
+                              <img className="fc-logo" src={`data:image/png;base64,${contractInfo.icon}`} />
+
+                              <span>{`${contractInfo.name} (${contractInfo.symbol})`}</span>
+                            </TokensDiv>
+                          </td>
+                        </tr>
+                      );
+                    }
                     return (
                       <tr className="">
-                        <td className="collapsing">{i18n('Token Minted')}</td>
+                        <td className="collapsing">{i18n('Token Transferred')}</td>
                         <td className="">
                           <TokensDiv>
+                            <em>{i18n('From')}</em>
+                            <EllipsisLine ellipsisStyle={{ maxWidth: 152 }} linkTo={`/address/${result.from}`} text={result.from} />
                             <em>{i18n('To')}</em>
                             <EllipsisLine
                               ellipsisStyle={{ maxWidth: 152 }}
-                              linkTo={`/accountdetail/${contrctToAddress}`}
+                              linkTo={`/address/${contrctToAddress}`}
                               text={contrctToAddress}
                             />
-                            <em>{i18n('For')}</em>
+                            <em>For</em>
                             <span>{devidedByDecimals(value, contractInfo.decimals)}</span>
-                            <img className="fc-logo" src={`data:image/png;base64,${contractInfo.icon}`} />
 
+                            <img className="fc-logo" src={`data:image/png;base64,${contractInfo.icon}`} />
                             <span>{`${contractInfo.name} (${contractInfo.symbol})`}</span>
                           </TokensDiv>
                         </td>
                       </tr>
                     );
+                  } catch {
+                    return null;
                   }
-                  return (
-                    <tr className="">
-                      <td className="collapsing">{i18n('Token Transferred')}</td>
-                      <td className="">
-                        <TokensDiv>
-                          <em>{i18n('From')}</em>
-                          <EllipsisLine ellipsisStyle={{ maxWidth: 152 }} linkTo={`/accountdetail/${result.from}`} text={result.from} />
-                          <em>{i18n('To')}</em>
-                          <EllipsisLine
-                            ellipsisStyle={{ maxWidth: 152 }}
-                            linkTo={`/accountdetail/${contrctToAddress}`}
-                            text={contrctToAddress}
-                          />
-                          <em>For</em>
-                          <span>{devidedByDecimals(value, contractInfo.decimals)}</span>
-
-                          <img className="fc-logo" src={`data:image/png;base64,${contractInfo.icon}`} />
-                          <span>{`${contractInfo.name} (${contractInfo.symbol})`}</span>
-                        </TokensDiv>
-                      </td>
-                    </tr>
-                  );
                 })}
                 <tr className="">
                   <td className="collapsing">{i18n('Value')}</td>

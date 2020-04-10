@@ -32,8 +32,8 @@ function decodeinput(bytecode, functionName, abi) {
   return null;
 }
 
-function decodeContract({ abi, bytecode, address, transacionData }) {
-  const contract = cfx.Contract({ abi, code: bytecode, address });
+function decodeContract({ abi, address, transacionData }) {
+  const contract = cfx.Contract({ abi, address });
   return contract.abi.decodeData(transacionData);
 }
 

@@ -177,8 +177,8 @@ export default {
 
   'network.testnet': 'Conflux测试网',
   'network.mainnet': 'Conflux主网',
-  'network-short.mainnet': 'Conflux测试网',
-  'network-short.testnet': 'Conflux主网',
+  'network-short.mainnet': '主网',
+  'network-short.testnet': '测试网',
 
   'pagination.limited': '共计找到<%=total%>条记录（仅显示最后<%=listLimit%>条记录）',
   'pagination.total': '共计找到<%=total%>条记录',
@@ -213,4 +213,7 @@ export default {
   'app.common.submitTips': 'Please finish all the tabs before submit',
   'app.common.success': 'Success',
   'app.common.submitSucceed': '提交成功',
+  'account-page-notfound-field': '暂无',
+  'app.common.sourceCode': 'Source Code',
+  'app.common.abi': 'ABI',
 };

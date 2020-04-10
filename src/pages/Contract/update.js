@@ -12,11 +12,10 @@ import AceEditor from 'react-ace';
 import media from '../../globalStyles/media';
 import { i18n } from '../../utils';
 import TableLoading from '../../components/TableLoading';
-import { reqContractQuery, reqContractUpdate } from '../../utils/api';
+import { reqContract, reqContractUpdate } from '../../utils/api';
 import { defaultContractIcon, defaultTokenIcon, contractTypes, contractTypeGeneral } from '../../constants';
 import 'ace-mode-solidity/build/remix-ide/mode-solidity';
 import 'ace-builds/src-noconflict/theme-github';
-import ContractResponse from '../../../mock/contract.json';
 import { toast } from '../../components/Toast';
 
 const stylePopup = {
@@ -614,47 +613,46 @@ class ContractUpdate extends Component {
   }
 
   fetchContactInfo(address) {
-    // reqContractQuery({ address: address, fields: ['abi', 'bytecode', 'icon'] }).then((contractResponse) => {
-    //   const responseBody = contractResponse.body;
-    //   switch (responseBody.code) {
-    //     case 0:
-    //       this.setState({
-    //         contractInfo: responseBody.result,
-    //         isLoading: false,
-    //       });
-    //       break;
-    //     default:
-    //       this.setState({
-    //         isLoading: false,
-    //       });
-    //       break;
-    //   }
-    // });
-    console.log(address);
-    const responseBody = ContractResponse;
-    switch (responseBody.code) {
-      case 0:
-        const result = responseBody.result;
-        this.setState({
-          isLoading: false,
-          selectedContractType: this.getContractStrByType(result.typeCode),
-          nameTagVal: result.name,
-          websiteVal: result.website,
-          tokenNameVal: result.tokenName,
-          tokenSymbolVal: result.tokenSymbol,
-          tokenDecimalsVal: result.tokenDecimals,
-          iconContractSource: result.icon,
-          iconTokenSource: result.tokenIcon,
-          sourceCode: result.sourceCode,
-          abiVal: JSON.stringify(result.abi),
-        });
-        break;
-      default:
-        this.setState({
-          isLoading: false,
-        });
-        break;
-    }
+    const fields = [
+      'address',
+      'type',
+      'name',
+      'website',
+      'tokenName',
+      'tokenSymbol',
+      'tokenDecimal',
+      'tokenIcon',
+      'abi',
+      'bytecode',
+      'icon',
+      'sourceCode',
+      'typeCode',
+    ].join(',');
+    reqContract({ address: address, fields: fields }).then((contractResponse) => {
+      switch (contractResponse.code) {
+        case 0:
+          const result = contractResponse.result;
+          this.setState({
+            isLoading: false,
+            selectedContractType: this.getContractStrByType(result.typeCode),
+            nameTagVal: result.name,
+            websiteVal: result.website,
+            tokenNameVal: result.tokenName,
+            tokenSymbolVal: result.tokenSymbol,
+            tokenDecimalsVal: result.tokenDecimal,
+            iconContractSource: result.icon,
+            iconTokenSource: result.tokenIcon,
+            sourceCode: result.sourceCode,
+            abiVal: result.abi,
+          });
+          break;
+        default:
+          this.setState({
+            isLoading: false,
+          });
+          break;
+      }
+    });
   }
 
   submitClick() {
@@ -678,19 +676,18 @@ class ContractUpdate extends Component {
     const bodyparams = {};
     bodyparams.address = params.address;
     bodyparams.name = nameTagVal;
-    bodyparams.webside = websiteVal;
+    bodyparams.website = websiteVal;
     bodyparams.icon = iconContractSource;
     bodyparams.typeCode = Number(this.getKeyByContractValue(selectedContractType));
     bodyparams.tokenName = tokenNameVal;
     bodyparams.tokenSymbol = tokenSymbolVal;
-    bodyparams.tokenDecimal = tokenDecimalsVal;
+    bodyparams.tokenDecimal = Number(tokenDecimalsVal);
     bodyparams.tokenIcon = iconTokenSource;
     bodyparams.sourceCode = sourceCode;
     bodyparams.abi = abiVal;
     bodyparams.password = passwordVal;
     reqContractUpdate(bodyparams).then((response) => {
-      const resBody = response.body;
-      if (resBody.code === 0) {
+      if (response.code === 0) {
         toast.success({
           title: 'app.common.success',
           content: 'app.common.submitSucceed',
@@ -765,7 +762,7 @@ class ContractUpdate extends Component {
                           name="File"
                           style={displayTest}
                           accept="image/*"
-                          ref={this.fileInputRef}
+                          ref={this.fileContractInputRef}
                           onChange={(e) => {
                             this.handleContractIconChange(e);
                           }}
@@ -862,7 +859,7 @@ class ContractUpdate extends Component {
                           name="File"
                           style={displayTest}
                           accept="image/*"
-                          ref={this.fileInputRef}
+                          ref={this.fileTokenInputRef}
                           onChange={(e) => {
                             this.handleTokenIconChange(e);
                           }}
@@ -934,7 +931,7 @@ class ContractUpdate extends Component {
                       <div className="ui input inputContainer">
                         <input
                           className="inputItem"
-                          type="text"
+                          type="number"
                           value={tokenDecimalsVal}
                           onChange={(e) => this.handleTokenDecimalsChange(e)}
                           readOnly={this.isGeneralContractType()}

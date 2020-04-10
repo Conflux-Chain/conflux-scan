@@ -13,6 +13,7 @@ import { UPDATE_COMMON } from '../../constants';
 
 import SearchBox from '../SearchBox';
 import LogoImage from '../../assets/images/logo-b@2.png';
+import LogoTestnet from '../../assets/images/logo-b-testnet.svg';
 
 const Wrapper = styled.header`
   position: relative;
@@ -29,6 +30,7 @@ const Wrapper = styled.header`
   ${media.pad`
     height: 56px;
     padding: 0 8px;
+    padding-right: 0;
   `}
 `;
 
@@ -91,7 +93,7 @@ const LangSelector = styled.div.attrs({
     width: 184px;
     margin-right: 24px;
     ${media.pad`
-      width: 50px;
+      width: 52px;
       margin-right: 0;
     `}
   }
@@ -105,6 +107,9 @@ const LangSelector = styled.div.attrs({
     justify-content: space-around;
     border: 1px solid #ccc;
     border-radius: 40px !important;
+    ${media.mobile`
+     justify-content: center;
+   `}
 
     .menu > .item {
       outline: none;
@@ -128,7 +133,7 @@ const LangSelector = styled.div.attrs({
     min-height: 20px !important;
     
     .item > i.dropdown.icon {
-      margin-left: 4px !important;
+      margin-left: 2px !important;
     }
     .ui.dropdown {
       border: none;
@@ -147,6 +152,7 @@ const LangSelector = styled.div.attrs({
     }
 
     .text-short {
+      white-space: nowrap;
       display: block;
     }
   `}
@@ -171,7 +177,6 @@ const networks = [
 ];
 
 function Header(props) {
-  console.log('header', props);
   const { changeLanguage, toggleNavbar, intl } = props;
   const langs = ['en', 'zh'];
   const {
@@ -183,7 +188,7 @@ function Header(props) {
     <Wrapper>
       <Logo onClick={() => toggleNavbar(false)}>
         <NavLink to="/" className="logo">
-          <img src={LogoImage} alt="Conflux Logo" />
+          <img src={network === 'testnet' ? LogoTestnet : LogoImage} alt="Conflux Logo" />
         </NavLink>
         <svg className="icon" aria-hidden="true">
           <use xlinkHref="#iconcate" />
@@ -209,11 +214,11 @@ function Header(props) {
                       network: v.name,
                     },
                   });
-                  if (v.name === 'mainnet') {
-                    window.location.href = 'https://etherscan.io';
-                  } else {
-                    window.location.href = 'https://ropsten.etherscan.io';
-                  }
+                  // if (v.name === 'mainnet') {
+                  //   window.location.href = 'https://etherscan.io';
+                  // } else {
+                  //   window.location.href = 'https://ropsten.etherscan.io';
+                  // }
                 };
 
                 return (
