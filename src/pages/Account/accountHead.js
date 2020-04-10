@@ -354,15 +354,15 @@ class AccountHead extends Component {
           <div className="contract-info-row">
             <div className="contract-left-info">{i18n('Contract Name')}</div>
             <div className="contract-right-val">
-              <img src={IMG_PFX + contractInfo.name} />
-              {contractInfo.name}
+              {contractInfo.name && <img src={IMG_PFX + contractInfo.name} />}
+              {contractInfo.name || i18n('account-page-notfound-field')}
             </div>
           </div>
           <div className="contract-info-row">
             <div className="contract-left-info">{i18n('Token Tracker')}</div>
             <div className="contract-right-val">
               {contractInfo.tokenIcon && <img src={IMG_PFX + contractInfo.tokenIcon} />}
-              <a>{contractInfo.tokenName}</a>
+              <a>{contractInfo.tokenName || ''}</a>
             </div>
           </div>
         </div>
@@ -385,7 +385,7 @@ class AccountHead extends Component {
   }
 
   render() {
-    const { accountid, intl } = this.props;
+    const { accountid, intl, contractInfo } = this.props;
     const { isLoading, accountDetail, tokenTotal, tokenList } = this.state;
 
     const isContractAddr = isContract(accountid);
@@ -425,9 +425,11 @@ class AccountHead extends Component {
               >
                 <i className="edit-icon" />
               </Link>
-              <Link className="address-righticon" data-inverted="" data-tooltip={toolTip4} data-position="bottom left">
-                <i className="open-icon" />
-              </Link>
+              {contractInfo.website && (
+                <Link className="address-righticon" data-inverted="" data-tooltip={toolTip4} data-position="bottom left">
+                  <i className="open-icon" />
+                </Link>
+              )}
             </Fragment>
           )}
         </HeadBar>

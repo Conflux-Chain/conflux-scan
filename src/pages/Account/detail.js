@@ -14,6 +14,7 @@ import AccountHead from './accountHead';
 import ContractPanel from './contractPanel';
 import TokenTxns from './tokenTxns';
 import { reqContract } from '../../utils/api';
+import { errorCodes } from '../../constants';
 
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -97,11 +98,15 @@ class Detail extends Component {
   fetchContractInfo(accountid) {
     const fields = ['address', 'type', 'name', 'webside', 'tokenName', 'tokenSymbol', 'tokenDecimal'].join(',');
 
-    reqContract({
-      fields,
-      address: accountid,
-    }).then((body) => {
-      // todo error check
+    reqContract(
+      {
+        fields,
+        address: accountid,
+      },
+      {
+        showError: false,
+      }
+    ).then((body) => {
       if (body.code === 0) {
         this.setState({
           contractInfo: body.result,

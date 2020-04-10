@@ -104,18 +104,19 @@ class TokenTxns extends Component {
     if (!queries.endTime) {
       delete queries.endTime;
     }
-    // todo api change
     reqTokenTxnList({
       address: accountid,
       ...queries,
     }).then((body) => {
-      this.setState({
-        TxList: body.result.list,
-        TxTotalCount: body.result.total,
-        listLimit: body.result.listLimit,
-        queries,
-      });
-      document.dispatchEvent(new Event('scroll-to-top'));
+      if (body.code === 0) {
+        this.setState({
+          TxList: body.result.list,
+          TxTotalCount: body.result.total,
+          listLimit: body.result.listLimit,
+          queries,
+        });
+        document.dispatchEvent(new Event('scroll-to-top'));
+      }
     });
   }
 
@@ -212,7 +213,7 @@ class TokenTxns extends Component {
       {
         key: 5,
         className: 'three wide aligned',
-        dataIndex: '', // todo modify
+        dataIndex: '',
         title: i18n('Token'),
         render: (text, row) => {
           const { tokenName, tokenSymbol, tokenIcon } = row;

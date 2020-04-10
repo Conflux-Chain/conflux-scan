@@ -6,6 +6,8 @@ import { NavLink, withRouter } from 'react-router-dom';
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 import styled from 'styled-components';
 import media from '../../globalStyles/media';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
 
 const Wrapper = styled.div`
   position: fixed;
@@ -16,7 +18,7 @@ const Wrapper = styled.div`
   max-height: calc(100vh - 72px);
   padding: 0;
   text-align: center;
-  background-color: #1f204c;
+  /* background-color: #1f204c; */
   z-index: 99;
   overflow-x: hidden;
   overflow-y: auto;
@@ -77,7 +79,7 @@ const Menu = styled.ul`
       color: #ffffff;
       transition: all 0.2s ease-in-out;
 
-      &:hover,
+      &.hover,
       &.actived {
         font-weight: 700;
         background-color: #1e3de4;
@@ -91,6 +93,14 @@ const Menu = styled.ul`
         fill: #fff;
         overflow: hidden;
       }
+    }
+  }
+
+  &.testnet li a {
+    &.hover,
+    &.actived {
+      font-weight: 700;
+      background-color: #4c5163;
     }
   }
 `;
@@ -108,10 +118,16 @@ function Navbar(props) {
   const { location, showNavbar } = props;
   const blocktxnPaths = ['blocktxn', 'blocks', 'blocksdetail', 'transactions', 'transactionsdetail', 'accountdetail', 'epochsdetail'];
   const directoryPaths = ['directory', 'topholders'];
+  const { common } = props;
 
   return (
-    <Wrapper className={showNavbar ? 'show' : ''}>
-      <Menu>
+    <Wrapper
+      className={showNavbar ? 'show' : ''}
+      style={{
+        backgroundColor: common.network === 'testnet' ? '#282B34' : ' #1f204c',
+      }}
+    >
+      <Menu className={common.network}>
         <li>
           <NavLink exact to="/" activeClassName="actived" onClick={cleanState}>
             <svg className="icon" aria-hidden="true">
@@ -156,6 +172,9 @@ Navbar.propTypes = {
     pathname: PropTypes.string.isRequired,
   }),
   showNavbar: PropTypes.bool.isRequired,
+  common: PropTypes.objectOf({
+    network: PropTypes.string,
+  }).isRequired,
 };
 
 Navbar.defaultProps = {
@@ -164,4 +183,16 @@ Navbar.defaultProps = {
   },
 };
 
-export default withRouter(injectIntl(Navbar));
+function mapStateToProps(state) {
+  return {
+    common: state.common,
+  };
+}
+
+const enhance = compose(
+  withRouter,
+  injectIntl,
+  connect(mapStateToProps)
+);
+
+export default enhance(Navbar);
