@@ -598,7 +598,7 @@ class ContractUpdate extends Component {
             iconContractSource: result.icon,
             iconTokenSource: result.tokenIcon,
             sourceCode: result.sourceCode,
-            abiVal: JSON.stringify(result.abi),
+            abiVal: result.abi,
           });
           break;
         default:
