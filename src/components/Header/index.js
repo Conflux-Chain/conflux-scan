@@ -177,7 +177,6 @@ const networks = [
 ];
 
 function Header(props) {
-  console.log('header', props);
   const { changeLanguage, toggleNavbar, intl } = props;
   const langs = ['en', 'zh'];
   const {
