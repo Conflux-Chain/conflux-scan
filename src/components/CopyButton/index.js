@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { injectIntl } from 'react-intl';
 import iconCopy from '../../assets/images/icons/icon-copy.svg';
+import copyIn from '../../assets/images/icons/copyin.svg';
+import copyInHover from '../../assets/images/icons/copyin-hover.svg';
 
 const Wrap = styled.div`
   margin-left: 10px;
@@ -10,7 +12,16 @@ const Wrap = styled.div`
   > img {
     cursor: pointer;
   }
+  .icon-copy {
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+    background-image: url("${copyIn}");
+    display: block;
+    background-size: contain;
+  }
 `;
+
 const IconFace = styled.div`
   margin-left: 16px;
   width: 32px;
@@ -20,16 +31,15 @@ const IconFace = styled.div`
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  svg {
-    width: 16px;
-    height: 16px;
-  }
   &.iconface {
     display: inline-flex;
   }
   &:hover {
     cursor: pointer;
     background: rgba(0, 0, 0, 0.54);
+    .icon-copy {
+      background-image: url("${copyInHover}");
+    }
     svg {
       color: #fff;
     }
@@ -203,13 +213,11 @@ CopyButton.defaultProps = {
       );
     }
     if (btnType === 'three') {
-      return <img src={iconCopy} />;
+      return <i className="icon-copy" />;
     }
     return (
       <IconFace className="iconface">
-        <svg className="icon" aria-hidden="true">
-          <use xlinkHref="#iconfuzhi" />
-        </svg>
+        <i className="icon-copy" />
       </IconFace>
     );
   },

@@ -149,7 +149,7 @@ class SearchBox extends Component {
               history.push(`/transactionsdetail/${value}`);
               break;
             case 2:
-              history.push(`/accountdetail/${value}`);
+              history.push(`/address/${value}`);
               break;
             case 3:
               history.push(`/epochsdetail/${value}`);
@@ -176,7 +176,7 @@ class SearchBox extends Component {
         } else if (filterValue === 3) {
           history.push(`/transactionsdetail/${value}`);
         } else if (filterValue === 4) {
-          history.push(`/accountdetail/${value}`);
+          history.push(`/address/${value}`);
         }
       }
     }

@@ -17,14 +17,29 @@ export const paginatorMixin = css`
   }
   .page-pc {
     display: block;
+    width: 100%;
+    .total {
+      float: left;
+    }
+    .pagination {
+      float: right;
+    }
+  }
+  .total {
+    height: 20px;
+    font-size: 14px;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.6);
+    line-height: 20px;
   }
   ${media.pad` 
   justify-content: center;
   .page-pc { ${hide} }
   .page-h5 { 
-    display: flex!important;
-    align-items: center;
-    justify-content: center;
+    display: block!important;
+    .ui.pagination.menu {
+      white-space: nowrap;
+    }
   }
 `}
 `;

@@ -36,6 +36,7 @@ export default {
 
   // blocks & txns
   'app.pages.account.detail.transactions': 'Transactions',
+  'app.pages.account.detail.tab.transactions': 'Transactions',
   'app.pages.blockAndTx.blocks': 'Blocks',
   'app.pages.blockAndTx.viewAllBlocks': 'View All Blocks',
   'app.pages.blockAndTx.viewAllTransactions': 'View All Transactions',
@@ -114,4 +115,35 @@ export default {
   'app.directory.fc.title': 'FansCoin',
   'app.directory.fc.desc': 'TestNet token',
   'app.directory.community.desc': 'Join the Next Generation Decentralized Application Community',
+
+  'network.testnet': 'Conflux Testnet',
+  'network.mainnet': 'Conflux Mainnet',
+  'network-short.mainnet': 'Conflux Mainnet',
+  'network-short.testnet': 'Conflux Testnet',
+
+  'pagination.limited': 'A total of <%=total%> records found (Showing the last <%=listLimit%> records)',
+  'pagination.total': 'A total of <%=total%> records found',
+
+  'num.Tokens': 'Tokens',
+  'contract.at-txn1': 'at txn',
+  'contract.at-txn2': ' ',
+  // Contract
+  'app.pages.contract.edit': 'Edit Contract',
+  'app.pages.contract.address': 'Contract Address',
+  'app.pages.contract.uploadIcon': 'Upload Contract Icon',
+  'app.pages.contract.removePhoto': 'Remove photo',
+  'app.pages.contract.contractType': 'Contract Type',
+  'app.pages.contract.tokenName': 'Token Name',
+  'app.pages.contract.tokenSymbol': 'Token Symbol',
+  'app.pages.contract.decimals': 'Decimals of Precision',
+  'app.pages.contract.uploadTokenIcon': 'Upload Token Icon',
+  'app.pages.contract.sourceCode': 'Contract Source Code',
+  'app.pages.contract.abi': 'Contract ABI',
+  'app.pages.contract.typeinAdminPassword': 'Please type in administrator password',
+
+  // Common
+  'app.common.submit': 'Submit',
+  'app.common.submitTips': 'Please finish all the tabs before submit',
+  'app.common.success': 'Success',
+  'app.common.submitSucceed': 'Submit succeed',
 };

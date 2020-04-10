@@ -68,6 +68,7 @@ export default {
   'app.comp.searchbox.placeholder': '纪元 / 区块哈希 / 交易哈希 / 地址',
 
   'app.pages.account.detail.transactions': '交易数',
+  'app.pages.account.detail.tab.transactions': '交易',
   'app.pages.account.detail.viewAll': '查看所有交易',
   'app.pages.account.detail.viewOutGoing': '查看发送交易',
   'app.pages.account.detail.viewIncoming': '查看接收交易',
@@ -173,4 +174,43 @@ export default {
   'Token Minted': '代币铸造',
   'Token Burned': '代币承兑',
   'Copy to clipboard': '复制到剪切板',
+
+  'network.testnet': 'Conflux测试网',
+  'network.mainnet': 'Conflux主网',
+  'network-short.mainnet': 'Conflux测试网',
+  'network-short.testnet': 'Conflux主网',
+
+  'pagination.limited': '共计找到<%=total%>条记录（仅显示最后<%=listLimit%>条记录）',
+  'pagination.total': '共计找到<%=total%>条记录',
+
+  Token: '代币',
+  Tokens: '代币',
+  'num.Tokens': '种代币',
+  'Token Txns': '代币交易',
+  'Contract Name': '合约名',
+  'Token Tracker': '代币搜索器',
+  'Contract Creator': '合约创建者',
+  'contract.at-txn1': ' 在 ',
+  'contract.at-txn2': ' 交易',
+  'Click to edit contract': '点击编辑合约',
+  'Click to enter the official site': '点击进入官方网站',
+  // Contract
+  'app.pages.contract.edit': 'Edit Contract',
+  'app.pages.contract.address': 'Contract Address',
+  'app.pages.contract.uploadIcon': 'Upload Contract Icon',
+  'app.pages.contract.removePhoto': 'Remove photo',
+  'app.pages.contract.contractType': 'Contract Type',
+  'app.pages.contract.tokenName': 'Token Name',
+  'app.pages.contract.tokenSymbol': 'Token Symbol',
+  'app.pages.contract.decimals': 'Decimals of Precision',
+  'app.pages.contract.uploadTokenIcon': 'Upload Token Icon',
+  'app.pages.contract.sourceCode': 'Contract Source Code',
+  'app.pages.contract.abi': 'Contract ABI',
+  'app.pages.contract.typeinAdminPassword': 'Please type in administrator password',
+
+  // Common
+  'app.common.submit': 'Submit',
+  'app.common.submitTips': 'Please finish all the tabs before submit',
+  'app.common.success': 'Success',
+  'app.common.submitSucceed': '提交成功',
 };

@@ -28,6 +28,10 @@ module.exports = merge(commom, {
       '/future': {
         target: 'http://13.75.69.106',
       },
+      '/contract-manager': {
+        target: 'http://13.75.69.106:8886',
+        pathRewrite: { '^/contract-manager': '' },
+      },
       // for developing dag locally
       '/conflux-dag.js': 'http://localhost:8081/dist/',
       '/dist/vendors~pixi.js.conflux-dag.js': 'http://localhost:8081/',
@@ -35,5 +39,7 @@ module.exports = merge(commom, {
       '/dist/2.conflux-dag.js': 'http://localhost:8081/',
       '/dist/0.conflux-dag.js': 'http://localhost:8081/',
     },
+    hot: false,
+    inline: false,
   },
 });

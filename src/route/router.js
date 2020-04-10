@@ -30,7 +30,7 @@ const SearchNotFound = lazy(() => import('../pages/SearchNotFound'));
 const NotFound = lazy(() => import('../pages/404'));
 const NotFoundTx = lazy(() => import('../pages/NotFoundTx'));
 const FansCoin = lazy(() => import('../pages/FansCoin'));
-
+const ContractUpdate = lazy(() => import('../pages/Contract/update'));
 function Router() {
   return (
     <Suspense fallback={<div className="ui active loader" />}>
@@ -45,11 +45,13 @@ function Router() {
         <Route path="/transactions" component={TransactionList} />
         <Route path="/transactionsdetail/:txnhash" component={TransactionDetail} />
         <Route path="/accountdetail/:accountid" component={AccountDetail} />
+        <Route path="/address/:accountid" component={AccountDetail} />
         <Route path="/epochsdetail/:epochid" component={EpochDetail} />
         <Route path="/topholders" component={TopHolder} />
         <Route path="/search-notfound" component={SearchNotFound} />
         <Route path="/notfoundtx" component={NotFoundTx} />
         <Route path="/fansCoin" component={FansCoin} />
+        <Route path="/contract/update/:address" component={ContractUpdate} />
         <Route component={NotFound} />
       </Switch>
     </Suspense>
