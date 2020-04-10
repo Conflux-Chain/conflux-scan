@@ -429,7 +429,7 @@ class AccountHead extends Component {
               </Link>
               {contractInfo.website && (
                 <a
-                  href={contractInfo.websit}
+                  href={contractInfo.website}
                   target="_blank"
                   className="address-righticon"
                   data-inverted=""
