@@ -1,3 +1,4 @@
+/* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
@@ -12,6 +13,7 @@ import Transitions from './transitions';
 import AccountHead from './accountHead';
 import ContractPanel from './contractPanel';
 import TokenTxns from './tokenTxns';
+import { reqContract } from '../../utils/api';
 
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -60,16 +62,28 @@ class Detail extends Component {
       blockCount: 0,
       currentTab: tabEnum.transactions,
       showMaintaining: false,
+      contractInfo: {},
     };
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    const {
+      match: { params },
+    } = this.props;
+    const { accountid } = params;
+    if (isContract(accountid)) {
+      this.fetchContractInfo(accountid);
+    }
+  }
 
   componentDidUpdate(prevProps) {
     // eslint-disable-next-line react/destructuring-assignment
     if (this.props.accountid !== prevProps.accountid) {
       // eslint-disable-next-line react/destructuring-assignment
       this.switchTabIfNeed();
+      if (isContract(this.props.accountid)) {
+        this.fetchContractInfo(this.props.accountid);
+      }
     }
   }
 
@@ -80,8 +94,24 @@ class Detail extends Component {
     }
   }
 
+  fetchContractInfo(accountid) {
+    const fields = ['address', 'type', 'name', 'webside', 'tokenName', 'tokenSymbol', 'tokenDecimal'].join(',');
+
+    reqContract({
+      fields,
+      address: accountid,
+    }).then((body) => {
+      // todo error check
+      if (body.code === 0) {
+        this.setState({
+          contractInfo: body.result,
+        });
+      }
+    });
+  }
+
   render() {
-    const { currentTab, showMaintaining, blockCount } = this.state;
+    const { currentTab, showMaintaining, blockCount, contractInfo } = this.state;
     const {
       intl,
       match: { params },
@@ -101,6 +131,7 @@ class Detail extends Component {
           <AccountHead
             accountid={accountid}
             history={history}
+            contractInfo={contractInfo}
             onFetchErr={() => {
               this.setState({
                 showMaintaining: true,

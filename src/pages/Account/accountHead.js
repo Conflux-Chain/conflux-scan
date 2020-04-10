@@ -1,3 +1,5 @@
+/* eslint-disable react/forbid-prop-types */
+/* eslint-disable react/require-default-props */
 import React, { Component, Fragment } from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
@@ -286,9 +288,6 @@ class AccountHead extends Component {
       tokenTotal: 0,
 
       // contract 部分
-      contractName: '',
-      tokenName: '',
-      tokenIcon: '',
       creatorTransaction: {
         hash: '',
         from: '',
@@ -339,34 +338,15 @@ class AccountHead extends Component {
         tokenList: body.result.list || [],
       });
     });
-
-    // accountid = '0x8123123'
-    if (isContract(accountid)) {
-      const fields = ['address', 'type', 'name', 'webside', 'tokenName', 'tokenSymbol', 'tokenDecimal'].join(',');
-
-      reqContract({
-        fields,
-        address: accountid,
-      }).then((body) => {
-        // todo error check
-        if (body.code === 0) {
-          this.setState({
-            contractName: body.result.name,
-            tokenName: body.result.tokenName,
-            tokenIcon: body.result.tokenIcon,
-          });
-        }
-      });
-    }
   }
 
   renderContractToken() {
-    const { accountid } = this.props;
+    const { accountid, contractInfo } = this.props;
     if (!isContract(accountid)) {
       return null;
     }
 
-    const { contractName, tokenName, tokenIcon, creatorTransaction } = this.state;
+    const { creatorTransaction } = this.state;
 
     return (
       <ContractInfoPanel>
@@ -374,15 +354,15 @@ class AccountHead extends Component {
           <div className="contract-info-row">
             <div className="contract-left-info">{i18n('Contract Name')}</div>
             <div className="contract-right-val">
-              <img src={IMG_PFX + contractNameIcon} />
-              {contractName}
+              <img src={IMG_PFX + contractInfo.name} />
+              {contractInfo.name}
             </div>
           </div>
           <div className="contract-info-row">
             <div className="contract-left-info">{i18n('Token Tracker')}</div>
             <div className="contract-right-val">
-              {tokenIcon && <img src={IMG_PFX + tokenIcon} />}
-              <a>{tokenName}</a>
+              {contractInfo.tokenIcon && <img src={IMG_PFX + contractInfo.tokenIcon} />}
+              <a>{contractInfo.tokenName}</a>
             </div>
           </div>
         </div>
@@ -514,6 +494,7 @@ AccountHead.propTypes = {
   intl: PropTypes.objectOf({
     formatMessage: PropTypes.func,
   }).isRequired,
+  contractInfo: PropTypes.object,
 };
 
 export default injectIntl(AccountHead);
