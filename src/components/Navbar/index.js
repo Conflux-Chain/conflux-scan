@@ -5,9 +5,9 @@ import PropTypes from 'prop-types';
 import { NavLink, withRouter } from 'react-router-dom';
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 import styled from 'styled-components';
-import media from '../../globalStyles/media';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
+import media from '../../globalStyles/media';
 
 const Wrapper = styled.div`
   position: fixed;
@@ -28,7 +28,7 @@ const Wrapper = styled.div`
     left: -120px;
     max-height: calc(100vh - 56px);
     transition: 0.2s all ease-out;
-    
+
     &.show {
       left: 0;
       // animation: bounce-in-left 0.5s forwards;

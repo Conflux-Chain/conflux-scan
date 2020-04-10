@@ -219,7 +219,7 @@ class TokenTxns extends Component {
           const { tokenName, tokenSymbol, tokenIcon } = row;
           return (
             <TokenLineDiv>
-              <img src={IMG_PFX + tokenIcon} />
+              <img src={tokenIcon} />
               <a>{`${tokenName} (${tokenSymbol})`}</a>
             </TokenLineDiv>
           );

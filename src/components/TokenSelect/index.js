@@ -62,7 +62,7 @@ const DropDownDiv = styled.div`
     background: #1783ff;
     top: 9px;
     margin-left: 16px;
-    z-index: 9;
+    z-index: 90;
     pointer-events: none;
     font-style: normal;
     font-size: 12px;
