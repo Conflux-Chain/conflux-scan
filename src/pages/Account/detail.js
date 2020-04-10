@@ -102,6 +102,7 @@ class Detail extends Component {
       'webside',
       'tokenName',
       'tokenSymbol',
+      'tokenIcon',
       'tokenDecimal',
       'abi',
       'bytecode',
