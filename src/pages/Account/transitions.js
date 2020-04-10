@@ -248,6 +248,7 @@ class Transitions extends Component {
                 });
                 this.changePage(accountid, {
                   ...queries,
+                  page: 1,
                   startTime: null,
                   endTime: null,
                 });

@@ -177,8 +177,8 @@ export default {
 
   'network.testnet': 'Conflux测试网',
   'network.mainnet': 'Conflux主网',
-  'network-short.mainnet': '测试网',
-  'network-short.testnet': '主网',
+  'network-short.mainnet': '主网',
+  'network-short.testnet': '测试网',
 
   'pagination.limited': '共计找到<%=total%>条记录（仅显示最后<%=listLimit%>条记录）',
   'pagination.total': '共计找到<%=total%>条记录',
