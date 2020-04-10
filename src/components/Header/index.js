@@ -1,12 +1,15 @@
 // Header Component
 
 import React, { Component, useState } from 'react';
+import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 import styled from 'styled-components';
 import media from '../../globalStyles/media';
+import { i18n } from '../../utils';
+import { UPDATE_COMMON } from '../../constants';
 
 import SearchBox from '../SearchBox';
 import LogoImage from '../../assets/images/logo-b@2.png';
@@ -19,7 +22,6 @@ const Wrapper = styled.header`
   padding: 0 25px;
   justify-content: space-between;
   text-align: left;
-  //border-bottom: 1px solid #ccc;
   background-color: #fff;
   box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.19);
   z-index: 1000;
@@ -83,6 +85,16 @@ const LangSelector = styled.div.attrs({
   border: none !important;
   box-shadow: none !important;
   cursor: pointer;
+  flex-shrink: 0;
+
+  &.network-select.menu {
+    width: 184px;
+    margin-right: 24px;
+    ${media.pad`
+      width: 50px;
+      margin-right: 0;
+    `}
+  }
 
   .text-short {
     display: none;
@@ -138,12 +150,34 @@ const LangSelector = styled.div.attrs({
       display: block;
     }
   `}
+
+  ${media.mobile`
+    .dropdown.item .menu {
+      right: 0;
+      white-space: nowrap;
+      width: auto;
+      left: auto;
+    }
+  `}
 `;
+
+const networks = [
+  {
+    name: 'testnet',
+  },
+  {
+    name: 'mainnet',
+  },
+];
 
 function Header(props) {
   console.log('header', props);
   const { changeLanguage, toggleNavbar, intl } = props;
   const langs = ['en', 'zh'];
+  const {
+    common: { network },
+    dispatch,
+  } = props;
 
   return (
     <Wrapper>
@@ -158,6 +192,48 @@ function Header(props) {
       <SearchBoxContainer>
         <SearchBox />
       </SearchBoxContainer>
+
+      <LangSelector className="network-select">
+        <div className="ui dropdown link item">
+          <span className="text">{i18n(`network.${network}`)}</span>
+          <span className="text-short">{i18n(`network-short.${network}`)}</span>
+          <i className="dropdown icon" />
+          <div className="menu transition visible">
+            {networks
+              .filter((v) => v.name !== network)
+              .map((v) => {
+                const updateNet = () => {
+                  dispatch({
+                    type: UPDATE_COMMON,
+                    payload: {
+                      network: v.name,
+                    },
+                  });
+                  if (v.name === 'mainnet') {
+                    window.location.href = 'https://etherscan.io';
+                  } else {
+                    window.location.href = 'https://ropsten.etherscan.io';
+                  }
+                };
+
+                return (
+                  <div
+                    className="item"
+                    onClick={() => updateNet()}
+                    onKeyPress={() => updateNet()}
+                    role="menuitem"
+                    tabIndex={0}
+                    key={v.name}
+                  >
+                    <span className="text">{i18n(`network.${v.name}`)}</span>
+                    <span className="text-short">{i18n(`network-short.${v.name}`)}</span>
+                  </div>
+                );
+              })}
+          </div>
+        </div>
+      </LangSelector>
+
       <LangSelector>
         <div className="ui dropdown link item">
           <span className="text">
@@ -198,6 +274,16 @@ Header.propTypes = {
   intl: intlShape.isRequired,
   changeLanguage: PropTypes.func.isRequired,
   toggleNavbar: PropTypes.func.isRequired,
+  common: PropTypes.objectOf({
+    network: PropTypes.string,
+  }).isRequired,
+  dispatch: PropTypes.string.isRequired,
 };
 
-export default injectIntl(Header);
+function mapStateToProps(state) {
+  return {
+    common: state.common,
+  };
+}
+
+export default connect(mapStateToProps)(injectIntl(Header));

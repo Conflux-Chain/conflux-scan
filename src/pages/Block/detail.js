@@ -13,6 +13,8 @@ import EllipsisLine from '../../components/EllipsisLine';
 import { convertToValueorFee, converToGasPrice, i18n, sendRequest } from '../../utils';
 import media from '../../globalStyles/media';
 import * as commonCss from '../../globalStyles/common';
+import { reqBlock, reqBlockTransactionList, reqBlockRefereeBlockList } from '../../utils/api';
+import { errorCodes } from '../../constants';
 
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -144,6 +146,11 @@ const TabContent = styled.div`
     box-shadow: none;
   }
 `;
+const ContractCell = styled.div`
+  color: rgba(0, 0, 0, 0.87);
+  font-size: 16px;
+  font-weight: normal;
+`;
 
 const TxColumns = [
   {
@@ -158,14 +165,23 @@ const TxColumns = [
     className: 'two wide aligned',
     dataIndex: 'from',
     title: i18n('From'),
-    render: (text) => <EllipsisLine linkTo={`/accountdetail/${text}`} text={text} />,
+    render: (text) => <EllipsisLine linkTo={`/address/${text}`} text={text} />,
   },
   {
     key: 3,
     className: 'two wide aligned',
     dataIndex: 'to',
     title: i18n('To'),
-    render: (text) => <EllipsisLine linkTo={`/accountdetail/${text}`} text={text} />,
+    render: (text, row) => {
+      if (row.contractCreated) {
+        return (
+          <div>
+            <ContractCell>{i18n('Contract Creation')}</ContractCell>
+          </div>
+        );
+      }
+      return <EllipsisLine linkTo={`/address/${text}`} text={text} />;
+    },
   },
   {
     key: 4,
@@ -211,7 +227,7 @@ const RefColumns = [
   {
     key: 2,
     title: i18n('Position'),
-    dataIndex: 'position',
+    dataIndex: 'blockIndex',
     className: 'one wide aligned plain_th',
     render: (text, row) => (
       <div>
@@ -226,7 +242,7 @@ const RefColumns = [
     className: 'one wide aligned',
     render: (text, row) => (
       <div>
-        <EllipsisLine isLong linkTo={`/blocksdetail/${text}`} isPivot={row.isPivot} text={text} />
+        <EllipsisLine isLong linkTo={`/blocksdetail/${text}`} isPivot={row.pivotHash === row.hash} text={text} />
       </div>
     ),
   },
@@ -242,7 +258,7 @@ const RefColumns = [
     className: 'one wide aligned',
     dataIndex: 'miner',
     title: i18n('Miner'),
-    render: (text) => <EllipsisLine linkTo={`/accountdetail/${text}`} text={text} />,
+    render: (text) => <EllipsisLine linkTo={`/address/${text}`} text={text} />,
   },
   {
     key: 6,
@@ -267,6 +283,8 @@ const RefColumns = [
   },
 ];
 
+const pageSize = 10;
+
 class Detail extends Component {
   constructor(...args) {
     super(...args);
@@ -274,7 +292,6 @@ class Detail extends Component {
       match: { params },
     } = this.props;
     this.state = {
-      blockhash: params.blockhash,
       currentTab: 1,
       TxTotalCount: 0,
       refereeBlockList: [],
@@ -282,6 +299,8 @@ class Detail extends Component {
       TxList: [],
       isLoading: true,
       curPage: 1,
+      refBlockCurPage: 1,
+      refTotal: 0,
     };
   }
 
@@ -290,77 +309,80 @@ class Detail extends Component {
       match: { params },
     } = this.props;
     this.fetchBlockDetail(params.blockhash, { activePage: 1 });
-    this.fetchReffereBlock(params.blockhash);
+    this.fetchReffereBlock(params.blockhash, { refBlockCurPage: 1 });
+  }
+
+  componentDidUpdate(prevProps) {
+    // eslint-disable-next-line react/destructuring-assignment
+    const { blockhash } = this.props.match.params;
+    // eslint-disable-next-line react/destructuring-assignment
+    if (blockhash !== prevProps.match.params.blockhash) {
+      this.fetchBlockDetail(blockhash, { activePage: 1 });
+      this.fetchReffereBlock(blockhash, { refBlockCurPage: 1 });
+    }
   }
 
   fetchBlockDetail(blockHash, { activePage }) {
     const { history } = this.props;
-    this.setState({ isLoading: true, blockhash: blockHash });
+    this.setState({ isLoading: true });
 
-    sendRequest({
-      url: `/api/block/${blockHash}`,
-      query: {},
-      showError: false,
-    }).then((res) => {
-      if (res.body.code === 0) {
+    reqBlock({ hash: blockHash }, { showError: false }).then((body) => {
+      if (body.code === 0) {
         this.setState({
-          blockDetail: res.body.result.data,
+          blockDetail: body.result,
           isLoading: false,
         });
-      } else if (res.body.code === 1) {
+      } else if (body.code === errorCodes.BlockNotFoundError) {
         history.push(`/search-notfound?searchId=${blockHash}`);
       }
     });
 
-    sendRequest({
-      url: `/api/block/${blockHash}/transactionList`,
-      query: {
-        pageNum: activePage,
-        pageSize: 10,
+    reqBlockTransactionList(
+      {
+        blockHash,
+        page: activePage,
+        pageSize,
       },
-      showError: false,
-    }).then((res) => {
-      if (res.body.code === 0) {
+      { showError: false }
+    ).then((body) => {
+      if (body.code === 0) {
         this.setState({
-          TxList: res.body.result.data,
-          TxTotalCount: res.body.result.total,
+          TxList: body.result.list.filter((v) => !!v),
+          TxTotalCount: body.result.total,
           curPage: activePage,
         });
       }
     });
   }
 
-  fetchReffereBlock(blockHash) {
+  fetchReffereBlock(blockHash, { refBlockCurPage }) {
     this.setState({ isLoading: true });
 
-    sendRequest({
-      url: `/api/block/${blockHash}/refereeBlockList`,
-      query: {
-        pageNum: 1,
-        pageSize: 20,
+    reqBlockRefereeBlockList(
+      {
+        page: refBlockCurPage,
+        pageSize,
+        referredBy: blockHash,
       },
-      showError: false,
-    }).then((res) => {
-      if (res.body.code === 0) {
+      { showError: false }
+    ).then((body) => {
+      if (body.code === 0) {
         this.setState({
-          refereeBlockList: res.body.result.data,
+          refTotal: body.result.total,
+          refereeBlockList: body.result.list.filter((v) => !!v),
           isLoading: false,
+          refBlockCurPage,
         });
       }
     });
   }
 
   render() {
-    const { blockDetail, TxList, TxTotalCount, isLoading, currentTab, refereeBlockList, curPage, blockhash } = this.state;
+    const { blockDetail, TxList, TxTotalCount, isLoading, currentTab, refereeBlockList, curPage, refBlockCurPage, refTotal } = this.state;
     const {
       match: { params },
     } = this.props;
 
-    if (blockhash !== params.blockhash) {
-      this.fetchBlockDetail(params.blockhash, { activePage: 1 });
-    }
-
-    // console.log(refereeBlockList, '===refereeBlockList');
     return (
       <div className="page-block-detail">
         <Wrapper>
@@ -391,7 +413,7 @@ class Detail extends Component {
                   <tr className="">
                     <td className="collapsing">{i18n('Miner')}</td>
                     <td className="">
-                      <Link to={`/accountdetail/${blockDetail.miner}`}>{blockDetail.miner}</Link>
+                      <Link to={`/address/${blockDetail.miner}`}>{blockDetail.miner}</Link>
                     </td>
                   </tr>
                   <tr className="">
@@ -438,7 +460,7 @@ class Detail extends Component {
                 }}
               >
                 {i18n('Reference Blocks')}
-                {`(${refereeBlockList.length})`}
+                {`(${refTotal})`}
               </button>
             </div>
 
@@ -467,7 +489,7 @@ class Detail extends Component {
                         this.fetchBlockDetail(params.blockhash, data);
                       }}
                       activePage={curPage}
-                      totalPages={Math.ceil(TxTotalCount / 10)}
+                      totalPages={Math.ceil(TxTotalCount / pageSize)}
                     />
                   </div>
                   <div className="page-h5">
@@ -490,7 +512,7 @@ class Detail extends Component {
                       firstItem={null}
                       lastItem={null}
                       siblingRange={1}
-                      totalPages={Math.ceil(TxTotalCount / 10)}
+                      totalPages={Math.ceil(TxTotalCount / pageSize)}
                     />
                   </div>
                 </TabWrapper>
@@ -503,6 +525,49 @@ class Detail extends Component {
                     </div>
                   </div>
                 </StyledTabelWrapper>
+                <TabWrapper>
+                  <div className="page-pc">
+                    <Pagination
+                      prevItem={{
+                        'aria-label': 'Previous item',
+                        content: i18n('lastPage'),
+                      }}
+                      nextItem={{
+                        'aria-label': 'Next item',
+                        content: i18n('nextPage'),
+                      }}
+                      onPageChange={(e, data) => {
+                        e.preventDefault();
+                        this.fetchReffereBlock(params.blockhash, { refBlockCurPage: data.activePage });
+                      }}
+                      activePage={refBlockCurPage}
+                      totalPages={Math.ceil(refTotal / pageSize)}
+                    />
+                  </div>
+                  <div className="page-h5">
+                    <Pagination
+                      prevItem={{
+                        'aria-label': 'Previous item',
+                        content: i18n('lastPage'),
+                      }}
+                      nextItem={{
+                        'aria-label': 'Next item',
+                        content: i18n('nextPage'),
+                      }}
+                      boundaryRange={0}
+                      activePage={refBlockCurPage}
+                      onPageChange={(e, data) => {
+                        e.preventDefault();
+                        this.fetchReffereBlock(params.blockhash, { refBlockCurPage: data.activePage });
+                      }}
+                      ellipsisItem={null}
+                      firstItem={null}
+                      lastItem={null}
+                      siblingRange={1}
+                      totalPages={Math.ceil(refTotal / pageSize)}
+                    />
+                  </div>
+                </TabWrapper>
               </div>
             </TabContent>
           </TabZone>

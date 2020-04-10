@@ -1,11 +1,13 @@
 import React from 'react';
 import BigNumber from 'bignumber.js';
+import template from 'lodash/template';
 import superagent from 'superagent';
 import querystring from 'querystring';
 import huNum from 'humanize-number';
 import { injectIntl, FormattedMessage, FormattedHTMLMessage } from 'react-intl';
 import { toast } from '../components/Toast';
 import { notice } from '../components/Message/notice';
+import { errorCodes } from '../constants';
 
 let errorId = null;
 let source = null;
@@ -190,14 +192,11 @@ export const sendRequest = (config) => {
     if (result.body.code !== 0 && config.showError !== false) {
       let title;
       switch (result.body.code) {
-        case 1:
+        case errorCodes.ParameterError:
           title = 'app.comp.toast.error.1';
           break;
-        case 2:
+        case errorCodes.DBError:
           title = 'app.comp.toast.error.2';
-          break;
-        case 3:
-          title = 'app.comp.toast.error.3';
           break;
         default:
           title = 'app.comp.toast.error.other';
@@ -209,7 +208,7 @@ export const sendRequest = (config) => {
     }
   });
   reqPromise.catch((error) => {
-    if (config && config.url === '/api/block/recent') return;
+    if (config && config.url.match(/dashboard\/dag$/)) return;
     console.log(error);
     toast.error({
       content: 'app.comp.toast.error.networkErr',
@@ -221,7 +220,7 @@ export const sendRequest = (config) => {
 };
 
 /* eslint react/prop-types: 0 */
-function I18nComp({ id, html }) {
+function I18nComp({ id, html, param }) {
   if (html) {
     return (
       <FormattedHTMLMessage id={id}>
@@ -231,12 +230,24 @@ function I18nComp({ id, html }) {
       </FormattedHTMLMessage>
     );
   }
+
+  if (param) {
+    return (
+      <FormattedHTMLMessage id={id}>
+        {(s) => {
+          // console.log(s)
+          return template(s)(param);
+        }}
+      </FormattedHTMLMessage>
+    );
+  }
+
   return <FormattedMessage id={id} />;
 }
 const I18nComp1 = injectIntl(I18nComp);
 
 export function i18n(id, config = {}) {
-  return <I18nComp1 id={id} html={config.html} />;
+  return <I18nComp1 id={id} html={config.html} param={config.param} />;
 }
 
 export function renderAny(cb) {
@@ -258,3 +269,21 @@ export const humanizeNum = (a) => {
 };
 
 export { notice };
+
+export const getTotalPage = (count, limit) => {
+  return Math.ceil(count / limit);
+};
+
+let store;
+export const updateStore = (s) => {
+  store = s;
+};
+
+export const getStore = () => {
+  return store;
+};
+
+export function isContract(a) {
+  const strip = a.replace(/^0x/, '');
+  return strip[0] === '8';
+}

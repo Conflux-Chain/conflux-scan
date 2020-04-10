@@ -8,6 +8,7 @@ import { Dimmer, Loader, Image, Segment } from 'semantic-ui-react';
 
 import compose from 'lodash/fp/compose';
 import media from '../../globalStyles/media';
+import { reqUtilType } from '../../utils/api';
 
 const Input = styled.input`
   height: 100%;
@@ -134,13 +135,13 @@ class SearchBox extends Component {
 
       if (filterValue === 0) {
         try {
-          const { code, result } = (await superagent.get(`/api/util/type/${value}`)).body;
+          const { code, result } = await reqUtilType({ value }, { showError: false });
           if (code !== 0) {
             history.push(`/search-notfound?searchId=${value}`);
             hideLoading();
             return;
           }
-          switch (result.data) {
+          switch (result.typeCode) {
             case 0:
               history.push(`/blocksdetail/${value}`);
               break;
@@ -148,7 +149,7 @@ class SearchBox extends Component {
               history.push(`/transactionsdetail/${value}`);
               break;
             case 2:
-              history.push(`/accountdetail/${value}`);
+              history.push(`/address/${value}`);
               break;
             case 3:
               history.push(`/epochsdetail/${value}`);
@@ -175,7 +176,7 @@ class SearchBox extends Component {
         } else if (filterValue === 3) {
           history.push(`/transactionsdetail/${value}`);
         } else if (filterValue === 4) {
-          history.push(`/accountdetail/${value}`);
+          history.push(`/address/${value}`);
         }
       }
     }

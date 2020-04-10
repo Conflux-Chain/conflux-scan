@@ -23,7 +23,7 @@ import GlobalStyle from './globalStyles';
 import zhTranslationMessages from './lang/zh';
 import enTranslationMessages from './lang/en';
 
-Sentry.init({ dsn: 'https://f9be7624ef1045f98f022fdca9ad1cc5@sentry.conflux-chain.org/2' });
+Sentry.init({ dsn: 'https://2a65cc47c686438ebde60b1237a8a8ec@sentry.io/5168571' });
 
 require('./assets/iconfont/iconfont.js');
 

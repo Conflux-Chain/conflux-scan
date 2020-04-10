@@ -44,6 +44,7 @@ export default {
   Age: '块龄',
   Contract: '合约',
   Created: '已创建',
+  'Contract Creation': '合约创建',
   WeSign: '画押',
 
   'app.head.menu.home': '首页',
@@ -67,6 +68,7 @@ export default {
   'app.comp.searchbox.placeholder': '纪元 / 区块哈希 / 交易哈希 / 地址',
 
   'app.pages.account.detail.transactions': '交易数',
+  'app.pages.account.detail.tab.transactions': '交易',
   'app.pages.account.detail.viewAll': '查看所有交易',
   'app.pages.account.detail.viewOutGoing': '查看发送交易',
   'app.pages.account.detail.viewIncoming': '查看接收交易',
@@ -164,4 +166,24 @@ export default {
   'Token Minted': '代币铸造',
   'Token Burned': '代币承兑',
   'Copy to clipboard': '复制到剪切板',
+
+  'network.testnet': 'Conflux测试网',
+  'network.mainnet': 'Conflux主网',
+  'network-short.mainnet': 'Conflux测试网',
+  'network-short.testnet': 'Conflux主网',
+
+  'pagination.limited': '共计找到<%=total%>条记录（仅显示最后<%=listLimit%>条记录）',
+  'pagination.total': '共计找到<%=total%>条记录',
+
+  Token: '代币',
+  Tokens: '代币',
+  'num.Tokens': '种代币',
+  'Token Txns': '代币交易',
+  'Contract Name': '合约名',
+  'Token Tracker': '代币搜索器',
+  'Contract Creator': '合约创建者',
+  'contract.at-txn1': ' 在 ',
+  'contract.at-txn2': ' 交易',
+  'Click to edit contract': '点击编辑合约',
+  'Click to enter the official site': '点击进入官方网站',
 };

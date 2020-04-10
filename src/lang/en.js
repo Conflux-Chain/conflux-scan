@@ -36,6 +36,7 @@ export default {
 
   // blocks & txns
   'app.pages.account.detail.transactions': 'Transactions',
+  'app.pages.account.detail.tab.transactions': 'Transactions',
   'app.pages.blockAndTx.blocks': 'Blocks',
   'app.pages.blockAndTx.viewAllBlocks': 'View All Blocks',
   'app.pages.blockAndTx.viewAllTransactions': 'View All Transactions',
@@ -105,4 +106,16 @@ export default {
   'app.directory.fc.title': 'FansCoin',
   'app.directory.fc.desc': 'TestNet token',
   'app.directory.community.desc': 'Join the Next Generation Decentralized Application Community',
+
+  'network.testnet': 'Conflux Testnet',
+  'network.mainnet': 'Conflux Mainnet',
+  'network-short.mainnet': 'Conflux Mainnet',
+  'network-short.testnet': 'Conflux Testnet',
+
+  'pagination.limited': 'A total of <%=total%> records found (Showing the last <%=listLimit%> records)',
+  'pagination.total': 'A total of <%=total%> records found',
+
+  'num.Tokens': 'Tokens',
+  'contract.at-txn1': 'at txn',
+  'contract.at-txn2': ' ',
 };

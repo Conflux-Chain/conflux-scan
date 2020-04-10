@@ -1,4 +1,5 @@
 import { sendRequest } from './index';
+import { apiPrefix, futurePrefix, contractMangerPrefix } from '../constants';
 
 export const reqFcStat = (param) => {
   return sendRequest({
@@ -26,5 +27,124 @@ export const reqFcByAddress = (param) => {
 };
 
 export const reqRecentDagBlock = () => {
-  return sendRequest({ url: '/api/block/recent' }).then((res) => res.body);
+  return sendRequest({ url: `${futurePrefix}/dashboard/dag` }).then((res) => res.body);
+};
+
+export const reqAccount = (param, extra) => {
+  return sendRequest({
+    url: `${futurePrefix}/account/query`,
+    query: param,
+    ...extra,
+  }).then((res) => res.body);
+};
+
+export const reqAccountTransactionList = (param) => {
+  return sendRequest({
+    url: `${futurePrefix}/transaction/list`,
+    query: param,
+  }).then((res) => res.body);
+};
+
+export const reqMinedBlockList = (param, extra) => {
+  return sendRequest({
+    url: `${futurePrefix}/block/list`,
+    query: param,
+    ...extra,
+  }).then((res) => res.body);
+};
+
+export const reqBlock = (param, extra) => {
+  return sendRequest({
+    url: `${futurePrefix}/block/query`,
+    query: param,
+    ...extra,
+  }).then((res) => res.body);
+};
+
+export const reqBlockTransactionList = (param, extra) => {
+  return sendRequest({
+    url: `${futurePrefix}/transaction/list`,
+    // url: `${apiPrefix}/block/${param.blockHash}/transactionList`,
+    query: param,
+    ...extra,
+  }).then((res) => res.body);
+};
+
+export const reqBlockRefereeBlockList = (param, extra) => {
+  return sendRequest({
+    url: `${futurePrefix}/block/list`,
+    query: param,
+    ...extra,
+  }).then((res) => res.body);
+};
+
+export const reqBlockList = (param, extra) => {
+  return sendRequest({
+    url: `${futurePrefix}/block/list`,
+    query: param,
+    ...extra,
+  }).then((res) => res.body);
+};
+
+export const reqTransactionList = (param) => {
+  return sendRequest({
+    url: `${futurePrefix}/transaction/list`,
+    query: param,
+  }).then((res) => res.body);
+};
+
+export const reqStatistics = (param) => {
+  return sendRequest({
+    url: `${futurePrefix}/dashboard/trend`,
+    query: param,
+  }).then((res) => res.body);
+};
+
+export const reqStatisticsItem = (param) => {
+  return sendRequest({
+    url: `${futurePrefix}/dashboard/plot`,
+    query: param,
+  }).then((res) => res.body);
+};
+
+export const reqTransactionDetail = (param, extra) => {
+  return sendRequest({
+    url: `${futurePrefix}/transaction/query`,
+    query: param,
+    ...extra,
+  }).then((res) => res.body);
+};
+
+export const reqUtilType = (param, extra) => {
+  return sendRequest({
+    url: `${futurePrefix}/util/type`,
+    query: param,
+    ...extra,
+  }).then((res) => res.body);
+};
+
+export const reqContract = (param, extra) => {
+  return sendRequest({
+    url: `${contractMangerPrefix}/api/contract/query`,
+    // url: 'http://yapi.conflux-chain.org/mock/20/contract/query',
+    query: param,
+    ...extra,
+  }).then((res) => res.body);
+};
+
+export const reqTokenList = (param, extra) => {
+  return sendRequest({
+    url: `${contractMangerPrefix}/api/account/token/list`,
+    // url: 'http://yapi.conflux-chain.org/mock/20/account/token/list',
+    query: param,
+    ...extra,
+  }).then((res) => res.body);
+};
+
+export const reqTokenTxnList = (param, extra) => {
+  return sendRequest({
+    url: `${futurePrefix}/account/token/transaction/list`,
+    query: param,
+    ...extra,
+  }).then((res) => res.body);
 };
