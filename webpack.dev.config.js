@@ -21,8 +21,8 @@ module.exports = merge(commom, {
     proxy: {
       '/proxy': 'http://127.0.0.1:3000',
       '/api': {
-        // target: 'http://testnet-jsonrpc.conflux-chain.org:18084',
-        target: 'http://13.75.69.106',
+        target: 'http://testnet-jsonrpc.conflux-chain.org:18084',
+        // target: 'http://13.75.69.106',
         // pathRewrite: { '^/api': '' },
       },
       '/future': {
