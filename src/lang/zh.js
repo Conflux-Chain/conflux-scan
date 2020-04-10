@@ -214,4 +214,6 @@ export default {
   'app.common.success': 'Success',
   'app.common.submitSucceed': '提交成功',
   'account-page-notfound-field': '暂无',
+  'app.common.sourceCode': 'Source Code',
+  'app.common.abi': 'ABI',
 };

@@ -147,4 +147,6 @@ export default {
   'app.common.success': 'Success',
   'app.common.submitSucceed': 'Submit succeed',
   'account-page-notfound-field': 'Not Available',
+  'app.common.sourceCode': 'Source Code',
+  'app.common.abi': 'ABI',
 };
