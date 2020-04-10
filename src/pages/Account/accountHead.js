@@ -428,9 +428,16 @@ class AccountHead extends Component {
                 <i className="edit-icon" />
               </Link>
               {contractInfo.website && (
-                <Link className="address-righticon" data-inverted="" data-tooltip={toolTip4} data-position="bottom left">
+                <a
+                  href={contractInfo.websit}
+                  target="_blank"
+                  className="address-righticon"
+                  data-inverted=""
+                  data-tooltip={toolTip4}
+                  data-position="bottom left"
+                >
                   <i className="open-icon" />
-                </Link>
+                </a>
               )}
             </Fragment>
           )}
