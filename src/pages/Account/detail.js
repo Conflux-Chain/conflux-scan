@@ -95,7 +95,19 @@ class Detail extends Component {
   }
 
   fetchContractInfo(accountid) {
-    const fields = ['address', 'type', 'name', 'webside', 'tokenName', 'tokenSymbol', 'tokenDecimal'].join(',');
+    const fields = [
+      'address',
+      'type',
+      'name',
+      'webside',
+      'tokenName',
+      'tokenSymbol',
+      'tokenDecimal',
+      'abi',
+      'bytecode',
+      'icon',
+      'sourceCode',
+    ].join(',');
 
     reqContract({
       fields,
