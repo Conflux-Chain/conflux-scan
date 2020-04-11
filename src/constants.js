@@ -28,17 +28,25 @@ const contractTypeERC777Str = 'ERC777';
 const contractTypeFcStr = 'FansCoin';
 const contractTypeERC721Str = 'ERC721';
 const contractTypeDEXStr = 'DEX';
+const contractTypeCodeGeneralNum = 0;
+const contractTypeCodeErc20Num = 100;
+const contractTypeCodeErc777Num = 200;
+const contractTypeCodeFcNum = 201;
 export const contractTypes = {
-  0: contractTypeGeneralStr,
-  100: contractTypeERC20Str,
-  200: contractTypeERC777Str,
-  201: contractTypeFcStr,
+  [contractTypeCodeGeneralNum]: 'app.pages.contract.generalContract',
+  [contractTypeCodeErc20Num]: 'app.pages.contract.erc20',
+  [contractTypeCodeErc777Num]: 'app.pages.contract.erc777',
+  [contractTypeCodeFcNum]: 'app.pages.contract.fansCoin',
   // 500: contractTypeERC721Str,
   // 1000: contractTypeDEXStr,
 };
 export const contractTypeGeneral = contractTypeGeneralStr;
+export const contractTypeCodeGeneral = contractTypeCodeGeneralNum;
 export const contractTypeERC20 = contractTypeERC20Str;
+export const contractTypeCodeErc20 = contractTypeCodeErc20Num;
 export const contractTypeERC777 = contractTypeERC777Str;
+export const contractTypeCodeErc777 = contractTypeCodeErc777Num;
 export const contractTypeFc = contractTypeFcStr;
+export const contractTypeCodeFc = contractTypeCodeFcNum;
 export const contractTypeERC721 = contractTypeERC721Str;
 export const contractTypeDEX = contractTypeDEXStr;

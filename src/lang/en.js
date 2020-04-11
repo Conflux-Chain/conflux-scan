@@ -25,6 +25,7 @@ export default {
   'app.pages.account.detail.viewAll': 'View All',
   'app.pages.account.detail.viewOutGoing': 'View Outgoing Txns',
   'app.pages.account.detail.viewIncoming': 'View Incoming Txns',
+  'app.pages.account.detail.tokenTxns': 'Token Txns',
 
   // blocks
   'app.pages.blocks.position': 'Position',
@@ -57,7 +58,8 @@ export default {
   'app.pages.txns.proposedEpoch': 'Proposed Epoch',
   'app.pages.txns.storageLimit': 'Storage Limit',
   'app.pages.txns.chainId': 'Chain ID',
-
+  'app.pages.txns.tokenTransferred': 'Token Transferred',
+  'app.pages.txns.transaction': 'Transaction',
   'app.pages.err-reason.1': 'Transfer Error: Error encountered during contract execution, or out of gas',
   'app.pages.err-reason.2': 'Transfer Error: Wrong nonce, signature verification failed, or insufficient funds',
 
@@ -139,14 +141,20 @@ export default {
   'app.pages.contract.uploadTokenIcon': 'Upload Token Icon',
   'app.pages.contract.sourceCode': 'Contract Source Code',
   'app.pages.contract.abi': 'Contract ABI',
-  'app.pages.contract.typeinAdminPassword': 'Please type in administrator password',
-
+  'app.pages.contract.typeinAdminPassword': 'Please enter your admin password',
+  'app.pages.contract.nameTag': 'Name Tag',
+  'app.pages.contract.generalContract': 'General Contract',
+  'app.pages.contract.erc20': 'ERC20',
+  'app.pages.contract.erc777': 'ERC777',
+  'app.pages.contract.fansCoin': 'FansCoin',
   // Common
   'app.common.submit': 'Submit',
-  'app.common.submitTips': 'Please finish all the tabs before submit',
+  'app.common.submitTips': 'Please enter all the information',
   'app.common.success': 'Success',
   'app.common.submitSucceed': 'Submit succeed',
   'account-page-notfound-field': 'Not Available',
   'app.common.sourceCode': 'Source Code',
   'app.common.abi': 'ABI',
+  'app.common.officialSite': 'Official Site',
+  'app.common.contract': 'Contract',
 };

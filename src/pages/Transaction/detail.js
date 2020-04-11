@@ -384,7 +384,7 @@ class Detail extends Component {
       <div className="page-transaction-detail">
         <Wrapper>
           <HeadBar>
-            <h1>{i18n('Transaction')}</h1>
+            <h1>{i18n('app.pages.txns.transaction')}</h1>
             <p>{params.txnhash}</p>
           </HeadBar>
           {isLoading ? (
@@ -510,7 +510,7 @@ class Detail extends Component {
                     }
                     return (
                       <tr className="">
-                        <td className="collapsing">{i18n('Token Transferred')}</td>
+                        <td className="collapsing">{i18n('app.pages.txns.tokenTransferred')}</td>
                         <td className="">
                           <TokensDiv>
                             <em>{i18n('From')}</em>

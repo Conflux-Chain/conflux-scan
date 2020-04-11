@@ -177,7 +177,7 @@ class Detail extends Component {
                 onKeyUp={() => {}}
                 onClick={() => this.setState({ currentTab: tabEnum.tokenTxns })}
               >
-                {i18n('Token Txns')}
+                {i18n('app.pages.account.detail.tokenTxns')}
               </button>
               {isContractAddr && (
                 <button
@@ -186,7 +186,7 @@ class Detail extends Component {
                   onKeyUp={() => {}}
                   onClick={() => this.setState({ currentTab: tabEnum.contract })}
                 >
-                  {i18n('Contract')}
+                  {i18n('app.common.contract')}
                 </button>
               )}
               <button

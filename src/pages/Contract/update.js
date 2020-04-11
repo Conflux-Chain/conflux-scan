@@ -13,7 +13,7 @@ import media from '../../globalStyles/media';
 import { i18n } from '../../utils';
 import TableLoading from '../../components/TableLoading';
 import { reqContract, reqContractUpdate } from '../../utils/api';
-import { defaultContractIcon, defaultTokenIcon, contractTypes, contractTypeGeneral } from '../../constants';
+import { defaultContractIcon, defaultTokenIcon, contractTypes, contractTypeCodeGeneral } from '../../constants';
 import 'ace-mode-solidity/build/remix-ide/mode-solidity';
 import 'ace-builds/src-noconflict/theme-github';
 import { toast } from '../../components/Toast';
@@ -419,7 +419,7 @@ class ContractUpdate extends Component {
       isLoading: true,
       nameTagVal: '',
       websiteVal: '',
-      selectedContractType: '',
+      selectedContractTypeCode: 0,
       tokenNameVal: '',
       tokenSymbolVal: '',
       tokenDecimalsVal: '',
@@ -593,7 +593,7 @@ class ContractUpdate extends Component {
 
   updateCanSubmit() {
     const {
-      selectedContractType,
+      selectedContractTypeCode,
       nameTagVal,
       abiVal,
       tokenNameVal,
@@ -603,7 +603,7 @@ class ContractUpdate extends Component {
       passwordVal,
     } = this.state;
     let isSubmitable = false;
-    if (selectedContractType === contractTypeGeneral) {
+    if (selectedContractTypeCode === contractTypeCodeGeneral) {
       if (nameTagVal && sourceCode && abiVal && passwordVal) {
         isSubmitable = true;
       }
@@ -638,7 +638,7 @@ class ContractUpdate extends Component {
           const result = contractResponse.result;
           this.setState({
             isLoading: false,
-            selectedContractType: this.getContractStrByType(result.typeCode),
+            selectedContractTypeCode: result.typeCode,
             nameTagVal: result.name,
             websiteVal: result.website,
             tokenNameVal: result.tokenName,
@@ -661,7 +661,6 @@ class ContractUpdate extends Component {
 
   submitClick() {
     const {
-      selectedContractType,
       nameTagVal,
       abiVal,
       tokenNameVal,
@@ -672,6 +671,7 @@ class ContractUpdate extends Component {
       iconContractSource,
       iconTokenSource,
       websiteVal,
+      selectedContractTypeCode,
     } = this.state;
     const {
       match: { params },
@@ -682,7 +682,7 @@ class ContractUpdate extends Component {
     bodyparams.name = nameTagVal;
     bodyparams.website = websiteVal;
     bodyparams.icon = iconContractSource;
-    bodyparams.typeCode = Number(this.getKeyByContractValue(selectedContractType));
+    bodyparams.typeCode = Number(selectedContractTypeCode);
     bodyparams.tokenName = tokenNameVal;
     bodyparams.tokenSymbol = tokenSymbolVal;
     bodyparams.tokenDecimal = Number(tokenDecimalsVal);
@@ -702,8 +702,8 @@ class ContractUpdate extends Component {
   }
 
   isGeneralContractType() {
-    const { selectedContractType } = this.state;
-    return selectedContractType === contractTypeGeneral;
+    const { selectedContractTypeCode } = this.state;
+    return selectedContractTypeCode === contractTypeCodeGeneral;
   }
 
   render() {
@@ -713,7 +713,7 @@ class ContractUpdate extends Component {
     const {
       iconContractSource,
       iconTokenSource,
-      selectedContractType,
+      selectedContractTypeCode,
       currentTab,
       isLoading,
       nameTagVal,
@@ -789,7 +789,7 @@ class ContractUpdate extends Component {
                     <td className="collapsing">
                       <div className="relativeContainer">
                         <span className="redAsterisk">*</span>
-                        {i18n('Name Tag')}
+                        {i18n('app.pages.contract.nameTag')}
                       </div>
                     </td>
                     <td className="aligned">
@@ -800,7 +800,7 @@ class ContractUpdate extends Component {
                   </tr>
                   <tr>
                     <td className="collapsing bottom">
-                      <div className="relativeContainer">{i18n('app.directory.website.title')}</div>
+                      <div className="relativeContainer">{i18n('app.common.officialSite')}</div>
                     </td>
                     <td className="aligned bottom">
                       <div className="ui input inputContainer">
@@ -823,7 +823,7 @@ class ContractUpdate extends Component {
                       <div className="ui input disabled inputContainer">
                         <FilterSelector>
                           <div className="ui dropdown link item">
-                            <span>{selectedContractType || contractTypeGeneral}</span>
+                            <span>{i18n(contractTypes[selectedContractTypeCode])}</span>
                             <i className="dropdown icon" />
                             <div className="menu transition visible">
                               {Object.keys(contractTypes).map((key, index) => (
@@ -833,17 +833,17 @@ class ContractUpdate extends Component {
                                   role="button"
                                   tabIndex={index}
                                   onClick={() =>
-                                    this.setState({ selectedContractType: contractTypes[key] }, () => {
+                                    this.setState({ selectedContractTypeCode: key }, () => {
                                       this.updateCanSubmit();
                                     })
                                   }
                                   onKeyPress={() =>
-                                    this.setState({ selectedContractType: contractTypes[key] }, () => {
+                                    this.setState({ selectedContractTypeCode: key }, () => {
                                       this.updateCanSubmit();
                                     })
                                   }
                                 >
-                                  {contractTypes[key]}
+                                  {i18n(contractTypes[key])}
                                 </div>
                               ))}
                             </div>
