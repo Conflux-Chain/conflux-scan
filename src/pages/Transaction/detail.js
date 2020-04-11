@@ -457,21 +457,31 @@ class Detail extends Component {
                   <td className="to">
                     {renderAny(() => {
                       let toDiv;
-                      if (isContract) {
+                      if (result.to) {
+                        if (isContract) {
+                          toDiv = (
+                            <span>
+                              {i18n('Contract')} &nbsp;
+                              <Link to={`/address/${result.to}`}>{result.to}</Link>
+                              <img className="logo" src={`${contractInfo.icon}`} />
+                              <Link to={`/address/${result.to}`}>{contractInfo.name}</Link>
+                              <CopyButton style={copyBtnStyle} txtToCopy={result.to} btnType="three" toolTipId="Copy to clipboard" />
+                            </span>
+                          );
+                        } else {
+                          toDiv = (
+                            <span>
+                              <Link to={`/address/${result.to}`}>{result.to}</Link>
+                              <CopyButton style={copyBtnStyle} txtToCopy={result.to} btnType="three" toolTipId="Copy to clipboard" />
+                            </span>
+                          );
+                        }
+                      } else if (result.contractCreated) {
                         toDiv = (
                           <span>
-                            {i18n('Contract')} &nbsp;
-                            <Link to={`/address/${result.to}`}>{result.to}</Link>
-                            <img className="logo" src={`${contractInfo.icon}`} />
-                            <Link to={`/address/${result.to}`}>{contractInfo.name}</Link>
-                            <CopyButton style={copyBtnStyle} txtToCopy={result.to} btnType="three" toolTipId="Copy to clipboard" />
-                          </span>
-                        );
-                      } else {
-                        toDiv = (
-                          <span>
-                            <Link to={`/address/${result.to}`}>{result.to}</Link>
-                            <CopyButton style={copyBtnStyle} txtToCopy={result.to} btnType="three" toolTipId="Copy to clipboard" />
+                            [{i18n('Contract')} &nbsp;
+                            <Link to={`/accountdetail/${result.contractCreated}`}>{result.contractCreated}</Link>
+                            &nbsp; {i18n('Created')}]
                           </span>
                         );
                       }
