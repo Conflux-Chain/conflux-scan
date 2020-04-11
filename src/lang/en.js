@@ -104,5 +104,7 @@ export default {
   'app.directory.community.title': 'Community',
   'app.directory.fc.title': 'FansCoin',
   'app.directory.fc.desc': 'TestNet token',
+  'app.directory.contract.title': 'Contract',
+  'app.directory.contract.desc': 'Submit Contract Information',
   'app.directory.community.desc': 'Join the Next Generation Decentralized Application Community',
 };

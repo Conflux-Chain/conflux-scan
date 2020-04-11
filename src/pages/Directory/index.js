@@ -5,6 +5,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import styled from 'styled-components';
 import media from '../../globalStyles/media';
 import iconFcLogo from '../../assets/images/icons/fc-logo.svg';
+import contractLogo from '../../assets/images/icons/contract.svg';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -153,10 +154,13 @@ const links = [
     disable: false,
   },
   {
-    key: 'topholders',
-    icon: 'iconusers',
+    key: 'contract',
+    icon: <img src={contractLogo} />,
     href: '',
-    disable: true,
+    disable: false,
+    onClick: (history) => {
+      history.push('/contract/create');
+    },
   },
   {
     key: 'community',
