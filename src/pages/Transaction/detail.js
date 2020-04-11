@@ -306,6 +306,7 @@ class Detail extends Component {
               'bytecode',
               'icon',
               'sourceCode',
+              'typeCode',
             ].join(',');
             reqContract({ address: toAddress, fields: fields }).then((contractResponse) => {
               switch (contractResponse.code) {

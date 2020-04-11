@@ -873,7 +873,7 @@ class ContractUpdate extends Component {
                           className={this.isGeneralContractType() ? 'customBtn disabled' : 'customBtn'}
                           onClick={() => (this.isGeneralContractType() ? false : this.fileTokenInputRef.current.click())}
                         >
-                          {i18n('app.pages.contract.uploadIcon')}
+                          {i18n('app.pages.contract.uploadTokenIcon')}
                         </button>
                         <div
                           className={this.isGeneralContractType() ? 'removeText disabled' : 'removeText'}

@@ -24,6 +24,7 @@ const Wrap = styled.div`
     color: #585858;
     line-height: 22px;
     resize: none;
+    outline: none;
   }
 `;
 class InputData extends PureComponent {
