@@ -156,3 +156,12 @@ export const reqContractUpdate = (param, extra) => {
     ...extra,
   }).then((res) => res.body);
 };
+
+export const reqContractCreate = (param, extra) => {
+  return sendRequest({
+    type: 'POST',
+    url: `${contractMangerPrefix}/api/contract/create`,
+    body: param,
+    ...extra,
+  }).then((res) => res.body);
+};

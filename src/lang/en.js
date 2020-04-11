@@ -131,6 +131,7 @@ export default {
   'contract.at-txn2': ' ',
   // Contract
   'app.pages.contract.edit': 'Edit Contract',
+  'app.pages.contract.create': 'Create Contract',
   'app.pages.contract.address': 'Contract Address',
   'app.pages.contract.uploadIcon': 'Upload Contract Icon',
   'app.pages.contract.removePhoto': 'Remove photo',

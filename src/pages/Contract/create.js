@@ -12,7 +12,7 @@ import AceEditor from 'react-ace';
 import media from '../../globalStyles/media';
 import { i18n } from '../../utils';
 import TableLoading from '../../components/TableLoading';
-import { reqContract, reqContractUpdate } from '../../utils/api';
+import { reqContractCreate } from '../../utils/api';
 import { defaultContractIcon, defaultTokenIcon, contractTypes, contractTypeCodeGeneral } from '../../constants';
 import 'ace-mode-solidity/build/remix-ide/mode-solidity';
 import 'ace-builds/src-noconflict/theme-github';
@@ -416,7 +416,6 @@ class ContractUpdate extends Component {
       iconContractSource: '',
       iconTokenSource: '',
       currentTab: 1,
-      isLoading: true,
       nameTagVal: '',
       websiteVal: '',
       selectedContractTypeCode: 0,
@@ -427,26 +426,14 @@ class ContractUpdate extends Component {
       abiVal: '',
       passwordVal: '',
       canSubmit: false,
+      addressVal: '',
     };
     this.handleSourceChange = this.handleSourceChange.bind(this);
   }
 
-  componentDidMount() {
-    const {
-      match: { params },
-    } = this.props;
-    this.fetchContactInfo(params.address);
-  }
+  componentDidMount() {}
 
-  componentDidUpdate(prevProps) {
-    const {
-      match: { params },
-    } = this.props;
-    const { address } = params;
-    if (address !== prevProps.match.params.address) {
-      this.fetchContactInfo(params.address);
-    }
-  }
+  componentDidUpdate() {}
 
   getContractStrByType(type) {
     return contractTypes[type] || '';
@@ -488,6 +475,17 @@ class ContractUpdate extends Component {
     };
 
     reader.readAsDataURL(file);
+  }
+
+  handleAddressChange(e) {
+    this.setState(
+      {
+        addressVal: e.target.value,
+      },
+      () => {
+        this.updateCanSubmit();
+      }
+    );
   }
 
   handleNameChange(e) {
@@ -615,50 +613,8 @@ class ContractUpdate extends Component {
     return isSubmitable;
   }
 
-  fetchContactInfo(address) {
-    const fields = [
-      'address',
-      'type',
-      'name',
-      'website',
-      'tokenName',
-      'tokenSymbol',
-      'tokenDecimal',
-      'tokenIcon',
-      'abi',
-      'bytecode',
-      'icon',
-      'sourceCode',
-      'typeCode',
-    ].join(',');
-    reqContract({ address: address, fields: fields }).then((contractResponse) => {
-      switch (contractResponse.code) {
-        case 0:
-          const result = contractResponse.result;
-          this.setState({
-            isLoading: false,
-            selectedContractTypeCode: result.typeCode,
-            nameTagVal: result.name,
-            websiteVal: result.website,
-            tokenNameVal: result.tokenName,
-            tokenSymbolVal: result.tokenSymbol,
-            tokenDecimalsVal: result.tokenDecimal,
-            iconContractSource: result.icon,
-            iconTokenSource: result.tokenIcon,
-            sourceCode: result.sourceCode,
-            abiVal: result.abi,
-          });
-          break;
-        default:
-          this.setState({
-            isLoading: false,
-          });
-          break;
-      }
-    });
-  }
-
   submitClick() {
+    const { history } = this.props;
     const {
       nameTagVal,
       abiVal,
@@ -671,13 +627,10 @@ class ContractUpdate extends Component {
       iconTokenSource,
       websiteVal,
       selectedContractTypeCode,
+      addressVal,
     } = this.state;
-    const {
-      match: { params },
-      history,
-    } = this.props;
     const bodyparams = {};
-    bodyparams.address = params.address;
+    bodyparams.address = addressVal;
     bodyparams.name = nameTagVal;
     bodyparams.website = websiteVal;
     bodyparams.icon = iconContractSource;
@@ -689,7 +642,7 @@ class ContractUpdate extends Component {
     bodyparams.sourceCode = sourceCode;
     bodyparams.abi = abiVal;
     bodyparams.password = passwordVal;
-    reqContractUpdate(bodyparams).then((response) => {
+    reqContractCreate(bodyparams).then((response) => {
       if (response.code === 0) {
         toast.success({
           title: 'app.common.success',
@@ -698,7 +651,7 @@ class ContractUpdate extends Component {
             timeout: 2000,
           },
         });
-        history.replace(`/accountdetail/${params.address}`);
+        history.replace(`/accountdetail/${response.result.address}`);
       }
     });
   }
@@ -710,14 +663,10 @@ class ContractUpdate extends Component {
 
   render() {
     const {
-      match: { params },
-    } = this.props;
-    const {
       iconContractSource,
       iconTokenSource,
       selectedContractTypeCode,
       currentTab,
-      isLoading,
       nameTagVal,
       abiVal,
       websiteVal,
@@ -727,6 +676,7 @@ class ContractUpdate extends Component {
       sourceCode,
       passwordVal,
       canSubmit,
+      addressVal,
     } = this.state;
     const displayNone = {
       display: 'none',
@@ -735,12 +685,9 @@ class ContractUpdate extends Component {
       <div>
         <Wrapper>
           <HeadBar>
-            <h1>{i18n('app.pages.contract.edit')}</h1>
-            <p>{params.address}</p>
+            <h1>{i18n('app.pages.contract.create')}</h1>
           </HeadBar>
-          {isLoading ? (
-            <TableLoading />
-          ) : (
+          {
             <StyledTabel>
               <table className="ui celled structured table">
                 <tbody className="tbodyContainer">
@@ -752,8 +699,8 @@ class ContractUpdate extends Component {
                       </div>
                     </td>
                     <td className="aligned top fixed-first">
-                      <div className="ui input disabled inputContainer">
-                        <input className="inputItem" type="text" placeholder={params.address} />
+                      <div className="ui input inputContainer">
+                        <input className="inputItem" type="text" value={addressVal} onChange={(e) => this.handleAddressChange(e)} />
                       </div>
                     </td>
                     <td rowSpan="3" className="center aligned init">
@@ -1037,7 +984,7 @@ class ContractUpdate extends Component {
                 </div>
               </ContentBottomContainer>
             </StyledTabel>
-          )}
+          }
         </Wrapper>
       </div>
     );
@@ -1047,9 +994,6 @@ ContractUpdate.propTypes = {
   history: PropTypes.shape({
     replace: PropTypes.func,
   }).isRequired,
-  match: PropTypes.objectOf(PropTypes.string),
 };
-ContractUpdate.defaultProps = {
-  match: {},
-};
+ContractUpdate.defaultProps = {};
 export default withRouter(ContractUpdate);

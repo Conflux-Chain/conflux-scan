@@ -199,6 +199,7 @@ export default {
   'Click to enter the official site': '点击进入官方网站',
   // Contract
   'app.pages.contract.edit': '编辑合约',
+  'app.pages.contract.create': '创建合约',
   'app.pages.contract.address': '合约地址',
   'app.pages.contract.uploadIcon': '上传合约图标',
   'app.pages.contract.removePhoto': '移除图片',
