@@ -104,6 +104,10 @@ const Wrapper = styled.div`
       margin-bottom: 10px;
     `}
   }
+
+  .ui.segment[class*='bottom attached']:last-child {
+    margin-bottom: 1rem;
+  }
 `;
 
 const StyledTabel = styled.div`
