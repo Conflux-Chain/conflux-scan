@@ -131,6 +131,8 @@ export default {
   'num.Tokens': 'Tokens',
   'contract.at-txn1': 'at txn',
   'contract.at-txn2': ' ',
+  'app.pages.account.notfound': 'Not Available',
+
   // Contract
   'app.pages.contract.edit': 'Edit Contract',
   'app.pages.contract.create': 'Create Contract',
@@ -155,7 +157,6 @@ export default {
   'app.common.submitTips': 'Please enter all the information',
   'app.common.success': 'Success',
   'app.common.submitSucceed': 'Submit succeed',
-  'account-page-notfound-field': 'Not Available',
   'app.common.sourceCode': 'Source Code',
   'app.common.abi': 'ABI',
   'app.common.officialSite': 'Official Site',

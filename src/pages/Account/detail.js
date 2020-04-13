@@ -75,23 +75,25 @@ class Detail extends Component {
     if (isContract(accountid)) {
       this.fetchContractInfo(accountid);
     }
+    this.autoSwitchTab();
   }
 
   componentDidUpdate(prevProps) {
-    // eslint-disable-next-line react/destructuring-assignment
-    if (this.props.accountid !== prevProps.accountid) {
-      // eslint-disable-next-line react/destructuring-assignment
-      this.switchTabIfNeed();
-      if (isContract(this.props.accountid)) {
-        this.fetchContractInfo(this.props.accountid);
+    if (this.props.match.params.accountid !== prevProps.match.params.accountid) {
+      this.autoSwitchTab();
+      const { accountid } = this.props.match.params;
+      if (isContract(accountid)) {
+        this.fetchContractInfo(accountid);
       }
     }
   }
 
-  switchTabIfNeed() {
+  autoSwitchTab() {
     const { location } = this.props;
     if (location.hash === '#tokentxns') {
       this.setState({ currentTab: tabEnum.tokenTxns });
+    } else {
+      this.setState({ currentTab: tabEnum.transactions });
     }
   }
 
