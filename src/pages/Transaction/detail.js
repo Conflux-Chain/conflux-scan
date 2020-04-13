@@ -513,10 +513,10 @@ class Detail extends Component {
                               />
                               <em>{i18n('For')}</em>
 
-                              <span>{devidedByDecimals(value, contractInfo.decimals)}</span>
-                              <img className="fc-logo" src={`data:image/png;base64,${contractInfo.icon}`} />
+                              <span>{devidedByDecimals(value, contractInfo.tokenDecimal)}</span>
+                              <img className="fc-logo" src={`${contractInfo.tokenIcon}`} />
 
-                              <span>{`${contractInfo.name} (${contractInfo.symbol})`}</span>
+                              <span>{`${contractInfo.tokenName} (${contractInfo.tokenSymbol})`}</span>
                             </TokensDiv>
                           </td>
                         </tr>
@@ -536,10 +536,10 @@ class Detail extends Component {
                               text={contrctToAddress}
                             />
                             <em>For</em>
-                            <span>{devidedByDecimals(value, contractInfo.decimals)}</span>
+                            <span>{devidedByDecimals(value, contractInfo.tokenDecimal)}</span>
 
-                            <img className="fc-logo" src={`data:image/png;base64,${contractInfo.icon}`} />
-                            <span>{`${contractInfo.name} (${contractInfo.symbol})`}</span>
+                            <img className="fc-logo" src={`${contractInfo.tokenIcon}`} />
+                            <span>{`${contractInfo.tokenName} (${contractInfo.tokenSymbol})`}</span>
                           </TokensDiv>
                         </td>
                       </tr>
