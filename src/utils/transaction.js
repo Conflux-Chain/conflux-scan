@@ -1,7 +1,7 @@
 import { isEmpty } from 'lodash';
-import { decodeConstructorArgs } from 'canoe-solidity';
 
-import { Conflux } from 'js-conflux-sdk';
+// eslint-disable-next-line import/extensions
+import { Conflux } from 'js-conflux-sdk/dist/js-conflux-sdk.umd.min.js';
 
 const cfx = new Conflux();
 
@@ -23,18 +23,9 @@ function hex2utf8(pStr) {
   return tempstr;
 }
 
-function decodeinput(bytecode, functionName, abi) {
-  if (functionName && !isEmpty(abi)) {
-    let name = functionName.split('(')[0];
-    let results = decodeConstructorArgs(name, abi, bytecode.substring(10));
-    return results;
-  }
-  return null;
-}
-
 function decodeContract({ abi, address, transacionData }) {
   const contract = cfx.Contract({ abi, address });
   return contract.abi.decodeData(transacionData);
 }
 
-export { decodeinput, hex2utf8, decodeContract };
+export { hex2utf8, decodeContract };

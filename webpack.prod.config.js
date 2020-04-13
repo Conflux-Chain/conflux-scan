@@ -1,6 +1,7 @@
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const merge = require('webpack-merge');
 const WebpackCdnPlugin = require('webpack-cdn-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 const commom = require('./webpack.config.js');
 
 module.exports = merge(commom, {
@@ -9,10 +10,10 @@ module.exports = merge(commom, {
   plugins: [],
   optimization: {
     minimizer: [
-      new UglifyJsPlugin({
+      new TerserPlugin({
         parallel: true,
         sourceMap: true,
-        uglifyOptions: {
+        terserOptions: {
           warnings: false,
           parse: {},
           compress: {
