@@ -172,7 +172,11 @@ class TokenTxns extends Component {
         render: (text, row) => (
           <div>
             <PCell>
-              {text !== accountid ? <EllipsisLine textInout="In" linkTo={`/address/${text}`} text={text} /> : <EllipsisLine text={text} />}
+              {text !== accountid ? (
+                <EllipsisLine textInout="In" linkTo={`/address/${text}#tokentxns`} text={text} />
+              ) : (
+                <EllipsisLine text={text} />
+              )}
             </PCell>
           </div>
         ),
@@ -194,7 +198,7 @@ class TokenTxns extends Component {
             <div>
               <PCell>
                 {text !== accountid ? (
-                  <EllipsisLine textInout="Out" linkTo={`/address/${text}`} text={text} />
+                  <EllipsisLine textInout="Out" linkTo={`/address/${text}#tokentxns`} text={text} />
                 ) : (
                   <EllipsisLine text={text} />
                 )}

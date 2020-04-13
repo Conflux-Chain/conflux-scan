@@ -358,7 +358,7 @@ class AccountHead extends Component {
             <div className="contract-left-info">{i18n('Contract Name')}</div>
             <div className="contract-right-val">
               {contractInfo.icon && <img src={contractInfo.icon} />}
-              {contractInfo.name || i18n('account-page-notfound-field')}
+              {contractInfo.name || i18n('app.pages.account.notfound')}
             </div>
           </div>
           <div className="contract-info-row">

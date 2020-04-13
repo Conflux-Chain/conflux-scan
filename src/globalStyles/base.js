@@ -104,7 +104,7 @@ const BaseStyle = css`
     border-radius: 4px;
     color: #fff;
     position: relative;
-    z-index: 9999;
+    z-index: 9;
   }
   .message-important-light {
     background: #ffebd4;
