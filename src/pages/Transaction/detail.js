@@ -105,9 +105,11 @@ const StyledTabel = styled.table`
     }
     .logo {
       width: 16px;
-      margin-right: 5px;
-      margin-left: 10px;
+      margin-left: 5px;
       vertical-align: middle;
+    }
+    .nameItem {
+      margin-left: 5px;
     }
   }
   tr > td a {
@@ -177,7 +179,7 @@ const TokensDiv = styled.div`
     width: 16px;
     vertical-align: middle;
     margin-top: -1px;
-    margin-right: 5px;
+    margin-left: 5px;
   }
 `;
 
@@ -467,7 +469,9 @@ class Detail extends Component {
                               {i18n('Contract')} &nbsp;
                               <Link to={`/address/${result.to}`}>{result.to}</Link>
                               {imgIcon}
-                              <Link to={`/address/${result.to}`}>{contractInfo.name}</Link>
+                              <Link to={`/address/${result.to}`} className="nameItem">
+                                {contractInfo.name}
+                              </Link>
                               <CopyButton style={copyBtnStyle} txtToCopy={result.to} btnType="three" toolTipId="Copy to clipboard" />
                             </span>
                           );
@@ -496,6 +500,10 @@ class Detail extends Component {
                   if (contractType === contractTypeCodeGeneral) {
                     return null;
                   }
+                  let imgIcon = null;
+                  if (contractInfo.tokenIcon) {
+                    imgIcon = <img className="fc-logo" src={`${contractInfo.tokenIcon}`} />;
+                  }
                   try {
                     let contrctToAddress = decodedData.params[0];
                     let value = decodedData.params[1];
@@ -514,9 +522,8 @@ class Detail extends Component {
                               <em>{i18n('For')}</em>
 
                               <span>{devidedByDecimals(value, contractInfo.tokenDecimal)}</span>
-                              <img className="fc-logo" src={`${contractInfo.tokenIcon}`} />
-
-                              <span>{`${contractInfo.tokenName} (${contractInfo.tokenSymbol})`}</span>
+                              {imgIcon}
+                              <span className="nameItem">{`${contractInfo.tokenName} (${contractInfo.tokenSymbol})`}</span>
                             </TokensDiv>
                           </td>
                         </tr>
@@ -537,9 +544,8 @@ class Detail extends Component {
                             />
                             <em>For</em>
                             <span>{devidedByDecimals(value, contractInfo.tokenDecimal)}</span>
-
-                            <img className="fc-logo" src={`${contractInfo.tokenIcon}`} />
-                            <span>{`${contractInfo.tokenName} (${contractInfo.tokenSymbol})`}</span>
+                            {imgIcon}
+                            <span className="nameItem">{`${contractInfo.tokenName} (${contractInfo.tokenSymbol})`}</span>
                           </TokensDiv>
                         </td>
                       </tr>
