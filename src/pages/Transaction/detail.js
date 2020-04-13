@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import compose from 'lodash/fp/compose';
-
+import lodash from 'lodash';
 import moment from 'moment';
 import TableLoading from '../../components/TableLoading';
 import EllipsisLine from '../../components/EllipsisLine';
@@ -19,7 +19,7 @@ import iconStatusSkip from '../../assets/images/icons/status-skip.svg';
 import CopyButton from '../../components/CopyButton';
 import { reqTransactionDetail, reqContract } from '../../utils/api';
 import { decodeContract } from '../../utils/transaction';
-import { errorCodes, addressTypeContract } from '../../constants';
+import { errorCodes, addressTypeContract, contractTypeCodeFc, contractTypeCodeGeneral } from '../../constants';
 import InputData from '../../components/InputData';
 
 const Wrapper = styled.div`
@@ -247,7 +247,7 @@ class Detail extends Component {
       isContract: false,
       contractInfo: {},
       filterKeys: ['original', 'utf8'],
-      contractType: 0, // 0:general conract, 1:erc20, 2:erc777, 3: fanscoin
+      contractType: contractTypeCodeGeneral, //
       decodedData: {},
     };
   }
@@ -290,6 +290,7 @@ class Detail extends Component {
         case 0:
         default:
           const transactionDetails = body.result;
+          this.setState({ result: transactionDetails });
           let toAddress = transactionDetails.to;
           if (getAddressType(toAddress) === addressTypeContract) {
             this.setState({ isContract: true });
@@ -308,14 +309,14 @@ class Detail extends Component {
               'sourceCode',
               'typeCode',
             ].join(',');
-            reqContract({ address: toAddress, fields: fields }).then((contractResponse) => {
+            reqContract({ address: toAddress, fields: fields }, { showError: false }).then((contractResponse) => {
               switch (contractResponse.code) {
                 case 0:
                   const result = contractResponse.result;
                   const contractType = result.typeCode;
                   let decodedData = {};
                   let filterKeys = [];
-                  if (contractType !== 0) {
+                  if (contractType !== contractTypeCodeGeneral) {
                     decodedData = decodeContract({
                       abi: JSON.parse(result.abi),
                       bytecode: result.bytecode,
@@ -325,7 +326,6 @@ class Detail extends Component {
                     filterKeys = ['original', 'utf8', 'decodeInputData'];
                   }
                   this.setState({
-                    result: transactionDetails,
                     isLoading: false,
                     contractInfo: result,
                     contractType,
@@ -343,7 +343,6 @@ class Detail extends Component {
           } else {
             this.setState({
               isContract: false,
-              result: transactionDetails,
               isLoading: false,
             });
           }
@@ -459,11 +458,15 @@ class Detail extends Component {
                       let toDiv;
                       if (result.to) {
                         if (isContract) {
+                          let imgIcon = null;
+                          if (contractInfo.icon) {
+                            imgIcon = <img className="logo" src={`${contractInfo.icon}`} />;
+                          }
                           toDiv = (
                             <span>
                               {i18n('Contract')} &nbsp;
                               <Link to={`/address/${result.to}`}>{result.to}</Link>
-                              <img className="logo" src={`${contractInfo.icon}`} />
+                              {imgIcon}
                               <Link to={`/address/${result.to}`}>{contractInfo.name}</Link>
                               <CopyButton style={copyBtnStyle} txtToCopy={result.to} btnType="three" toolTipId="Copy to clipboard" />
                             </span>
@@ -490,13 +493,13 @@ class Detail extends Component {
                   </td>
                 </tr>
                 {renderAny(() => {
-                  if (contractType === 0) {
+                  if (contractType === contractTypeCodeGeneral) {
                     return null;
                   }
                   try {
                     let contrctToAddress = decodedData.params[0];
                     let value = decodedData.params[1];
-                    if (contractType === 3 && decodedData.name === 'mint') {
+                    if (contractType === contractTypeCodeFc && decodedData.name === 'mint') {
                       return (
                         <tr className="">
                           <td className="collapsing">{i18n('Token Minted')}</td>
@@ -509,6 +512,7 @@ class Detail extends Component {
                                 text={contrctToAddress}
                               />
                               <em>{i18n('For')}</em>
+
                               <span>{devidedByDecimals(value, contractInfo.decimals)}</span>
                               <img className="fc-logo" src={`data:image/png;base64,${contractInfo.icon}`} />
 
