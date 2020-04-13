@@ -165,7 +165,7 @@ const TxColumns = [
     className: 'two wide aligned',
     dataIndex: 'from',
     title: i18n('From'),
-    render: (text) => <EllipsisLine linkTo={`/accountdetail/${text}`} text={text} />,
+    render: (text) => <EllipsisLine linkTo={`/address/${text}`} text={text} />,
   },
   {
     key: 3,
@@ -180,7 +180,7 @@ const TxColumns = [
           </div>
         );
       }
-      return <EllipsisLine linkTo={`/accountdetail/${text}`} text={text} />;
+      return <EllipsisLine linkTo={`/address/${text}`} text={text} />;
     },
   },
   {
@@ -258,7 +258,7 @@ const RefColumns = [
     className: 'one wide aligned',
     dataIndex: 'miner',
     title: i18n('Miner'),
-    render: (text) => <EllipsisLine linkTo={`/accountdetail/${text}`} text={text} />,
+    render: (text) => <EllipsisLine linkTo={`/address/${text}`} text={text} />,
   },
   {
     key: 6,
@@ -413,7 +413,7 @@ class Detail extends Component {
                   <tr className="">
                     <td className="collapsing">{i18n('Miner')}</td>
                     <td className="">
-                      <Link to={`/accountdetail/${blockDetail.miner}`}>{blockDetail.miner}</Link>
+                      <Link to={`/address/${blockDetail.miner}`}>{blockDetail.miner}</Link>
                     </td>
                   </tr>
                   <tr className="">

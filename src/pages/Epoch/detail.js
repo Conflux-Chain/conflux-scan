@@ -113,7 +113,7 @@ const columns = [
     render: (text) => (
       <div>
         <PCell>
-          <EllipsisLine linkTo={`/accountdetail/${text}`} text={text} />
+          <EllipsisLine linkTo={`/address/${text}`} text={text} />
         </PCell>
       </div>
     ),

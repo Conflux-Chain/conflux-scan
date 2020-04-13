@@ -25,6 +25,7 @@ export default {
   'app.pages.account.detail.viewAll': 'View All',
   'app.pages.account.detail.viewOutGoing': 'View Outgoing Txns',
   'app.pages.account.detail.viewIncoming': 'View Incoming Txns',
+  'app.pages.account.detail.tokenTxns': 'Token Txns',
 
   // blocks
   'app.pages.blocks.position': 'Position',
@@ -36,6 +37,7 @@ export default {
 
   // blocks & txns
   'app.pages.account.detail.transactions': 'Transactions',
+  'app.pages.account.detail.tab.transactions': 'Transactions',
   'app.pages.blockAndTx.blocks': 'Blocks',
   'app.pages.blockAndTx.viewAllBlocks': 'View All Blocks',
   'app.pages.blockAndTx.viewAllTransactions': 'View All Transactions',
@@ -47,9 +49,19 @@ export default {
   'app.pages.txns.Success': 'Success',
   'app.pages.txns.Err': 'Error',
   'app.pages.txns.Skip': 'Skip',
-
+  'app.pages.txns.inputData': 'Input Data',
+  'app.pages.txns.original': 'Original',
+  'app.pages.txns.utf8': 'UTF-8',
+  'app.pages.txns.decodeInputData': 'Decode Input Data',
+  'app.pages.txns.inputTips':
+    'The binary data that formed the input to the transaction, either the input data if it was a message call or the contract initialisation if it was a contract creation',
+  'app.pages.txns.proposedEpoch': 'Proposed Epoch',
+  'app.pages.txns.storageLimit': 'Storage Limit',
+  'app.pages.txns.chainId': 'Chain ID',
+  'app.pages.txns.tokenTransferred': 'Token Transferred',
+  'app.pages.txns.transaction': 'Transaction',
   'app.pages.err-reason.1': 'Transfer Error: Error encountered during contract execution, or out of gas',
-  'app.pages.err-reason.2': 'Transfer Error: Wrong nonce，signature verification failed, or insufficient funds',
+  'app.pages.err-reason.2': 'Transfer Error: Wrong nonce, signature verification failed, or insufficient funds',
 
   'app.pages.block.confirm.title': 'Please Confirm',
   'app.pages.block.confirm.pageWarning': 'page > 10000 is not supported',
@@ -107,4 +119,46 @@ export default {
   'app.directory.contract.title': 'Contract',
   'app.directory.contract.desc': 'Submit Contract Information',
   'app.directory.community.desc': 'Join the Next Generation Decentralized Application Community',
+
+  'network.testnet': 'Conflux Testnet',
+  'network.mainnet': 'Conflux Mainnet',
+  'network-short.mainnet': 'Main',
+  'network-short.testnet': 'Test',
+
+  'pagination.limited': 'A total of <%=total%> records found (Showing the last <%=listLimit%> records)',
+  'pagination.total': 'A total of <%=total%> records found',
+
+  'num.Tokens': 'Tokens',
+  'contract.at-txn1': 'at txn',
+  'contract.at-txn2': ' ',
+  'app.pages.account.notfound': 'Not Available',
+
+  // Contract
+  'app.pages.contract.edit': 'Edit Contract',
+  'app.pages.contract.create': 'Create Contract',
+  'app.pages.contract.address': 'Contract Address',
+  'app.pages.contract.uploadIcon': 'Upload Contract Icon',
+  'app.pages.contract.removePhoto': 'Remove photo',
+  'app.pages.contract.contractType': 'Contract Type',
+  'app.pages.contract.tokenName': 'Token Name',
+  'app.pages.contract.tokenSymbol': 'Token Symbol',
+  'app.pages.contract.decimals': 'Decimals of Precision',
+  'app.pages.contract.uploadTokenIcon': 'Upload Token Icon',
+  'app.pages.contract.sourceCode': 'Contract Source Code',
+  'app.pages.contract.abi': 'Contract ABI',
+  'app.pages.contract.typeinAdminPassword': 'Please enter your admin password',
+  'app.pages.contract.nameTag': 'Name Tag',
+  'app.pages.contract.generalContract': 'General Contract',
+  'app.pages.contract.erc20': 'ERC20',
+  'app.pages.contract.erc777': 'ERC777',
+  'app.pages.contract.fansCoin': 'FansCoin',
+  // Common
+  'app.common.submit': 'Submit',
+  'app.common.submitTips': 'Please enter all the information',
+  'app.common.success': 'Success',
+  'app.common.submitSucceed': 'Submit succeed',
+  'app.common.sourceCode': 'Source Code',
+  'app.common.abi': 'ABI',
+  'app.common.officialSite': 'Official Site',
+  'app.common.contract': 'Contract',
 };

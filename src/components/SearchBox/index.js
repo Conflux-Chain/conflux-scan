@@ -20,7 +20,7 @@ const Input = styled.input`
   margin-left: 10px;
   margin-left: 16px;
   ${media.pad`
-    font-size: 14px;
+    font-size: 10px;
   `}
 `;
 
@@ -84,6 +84,9 @@ const FilterSelector = styled.div.attrs({
 const SearchButton = styled.div`
   height: 100%;
   width: 60px;
+  ${media.mobile`
+    width: 46px;
+  `}
   border: none !important;
   box-shadow: none !important;
   display: flex;
@@ -149,7 +152,7 @@ class SearchBox extends Component {
               history.push(`/transactionsdetail/${value}`);
               break;
             case 2:
-              history.push(`/accountdetail/${value}`);
+              history.push(`/address/${value}`);
               break;
             case 3:
               history.push(`/epochsdetail/${value}`);
@@ -176,7 +179,7 @@ class SearchBox extends Component {
         } else if (filterValue === 3) {
           history.push(`/transactionsdetail/${value}`);
         } else if (filterValue === 4) {
-          history.push(`/accountdetail/${value}`);
+          history.push(`/address/${value}`);
         }
       }
     }

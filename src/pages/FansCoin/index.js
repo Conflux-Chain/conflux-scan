@@ -690,13 +690,10 @@ class FansCoin extends Component {
                       if (row.status === 0) {
                         return line;
                       }
-                      let errtxt;
                       let errIcon;
                       if (row.status === 1) {
-                        errtxt = i18n('app.pages.err-reason.1');
                         errIcon = <img src={iconStatusErr} />;
                       } else if (row.status === 2 || row.status === null) {
-                        errtxt = i18n('app.pages.err-reason.2');
                         errIcon = <img src={iconStatusSkip} />;
                       }
                       return (
@@ -704,7 +701,7 @@ class FansCoin extends Component {
                           {errIcon}
                           <div className="txnhash-err-line1">
                             {line}
-                            <div className="txnhash-err-line2">{errtxt}</div>
+                            {/* <div className="txnhash-err-line2">{errtxt}</div> */}
                           </div>
                         </div>
                       );

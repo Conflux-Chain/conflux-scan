@@ -1,5 +1,5 @@
 import { sendRequest } from './index';
-import { apiPrefix, futurePrefix } from '../constants';
+import { apiPrefix, futurePrefix, contractMangerPrefix } from '../constants';
 
 export const reqFcStat = (param) => {
   return sendRequest({
@@ -119,6 +119,49 @@ export const reqUtilType = (param, extra) => {
   return sendRequest({
     url: `${futurePrefix}/util/type`,
     query: param,
+    ...extra,
+  }).then((res) => res.body);
+};
+
+export const reqContract = (param, extra) => {
+  return sendRequest({
+    url: `${contractMangerPrefix}/api/contract/query`,
+    query: param,
+    ...extra,
+  }).then((res) => res.body);
+};
+
+export const reqTokenList = (param, extra) => {
+  return sendRequest({
+    url: `${contractMangerPrefix}/api/account/token/list`,
+    // url: 'http://yapi.conflux-chain.org/mock/20/account/token/list',
+    query: param,
+    ...extra,
+  }).then((res) => res.body);
+};
+
+export const reqTokenTxnList = (param, extra) => {
+  return sendRequest({
+    url: `${futurePrefix}/account/token/transaction/list`,
+    query: param,
+    ...extra,
+  }).then((res) => res.body);
+};
+
+export const reqContractUpdate = (param, extra) => {
+  return sendRequest({
+    type: 'POST',
+    url: `${contractMangerPrefix}/api/contract/update`,
+    body: param,
+    ...extra,
+  }).then((res) => res.body);
+};
+
+export const reqContractCreate = (param, extra) => {
+  return sendRequest({
+    type: 'POST',
+    url: `${contractMangerPrefix}/api/contract/create`,
+    body: param,
     ...extra,
   }).then((res) => res.body);
 };

@@ -13,6 +13,7 @@ import dashboard3 from '../../assets/images/dashboard3.png';
 import dashboard4 from '../../assets/images/dashboard4.png';
 import media from '../../globalStyles/media';
 import { reqStatistics, reqStatisticsItem } from '../../utils/api';
+import noticeIcon from '../../assets/images/icons/notice-icon.svg';
 
 const Container = styled.div`
   width: 100%;
@@ -127,6 +128,36 @@ const LineContainer = styled.div`
       margin: 0 0 16px 0;
     }
   `}
+`;
+
+const NoticeDiv = styled.div`
+  padding: 12px 24px;
+  margin-top: 16px;
+  background:rgba(255,255,255,1);
+  box-shadow:0px 1px 3px 0px rgba(0,0,0,0.12);
+  border-radius:4px;
+  color: #000;
+  display: flex;
+
+  > .notice-content {
+    flex: 1;
+    font-size: 16px;
+    line-height: 28px;
+  }
+
+  > i {
+    background-image: url("${noticeIcon}");
+    width: 18px;
+    height: 20px;
+    flex-shrink: 0;
+    margin-right: 16px;
+    margin-top: 5px;
+  }
+
+  a {
+    color: #1E3DE4;
+    margin-left: 5px;
+  }
 `;
 
 class Home extends Component {
@@ -305,6 +336,19 @@ class Home extends Component {
             </div>
           </Block>
         </BlockContainer>
+        <NoticeDiv>
+          <i />
+          <div className="notice-content">
+            <div>
+              Conflux official network / test network will be updated in the evening of 25th March Click here
+              <a href="https://confluxnetwork.org/">https://confluxnetwork.org/</a>
+            </div>
+            <div>
+              Conflux official network / test network will be updated in the evening of 25th March Click here
+              <a href="https://confluxnetwork.org/">https://confluxnetwork.org/</a>
+            </div>
+          </div>
+        </NoticeDiv>
         <LineContainer>
           <LineChart
             title={intl.formatMessage({ id: 'app.pages.dashboard.tps' })}
