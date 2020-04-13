@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import superagent from 'superagent';
+import { Popup } from 'semantic-ui-react';
 import Pagination from '../../components/Pagination';
 import DataList from '../../components/DataList';
 import Countdown from '../../components/Countdown';
@@ -11,6 +12,8 @@ import media from '../../globalStyles/media';
 import * as commonCss from '../../globalStyles/common';
 import { reqTransactionList } from '../../utils/api';
 import { TotalDesc } from '../../components/TotalDesc';
+import iconStatusErr from '../../assets/images/icons/status-err.svg';
+import iconStatusSkip from '../../assets/images/icons/status-skip.svg';
 
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -21,6 +24,22 @@ const TabWrapper = styled.div`
   width: 100%;
   display: flex;
   justify-content: flex-end;
+  .txnhash-err {
+    display: flex;
+    > img {
+      align-self: flex-start;
+    }
+    .txnhash-err-line1 {
+      flex: 1;
+      margin-left: 4px;
+    }
+    .txnhash-err-line2 {
+      margin-top: 5px;
+      font-size: 14px;
+      line-height: 14px;
+      color: #8f8f8f;
+    }
+  }
 `;
 
 const StyledTabel = styled.div`
@@ -97,13 +116,32 @@ const ContractCell = styled.div`
   font-weight: normal;
 `;
 
+// todo transaction list error update
 const columns = [
   {
     key: 1,
     className: 'two wide aligned',
     dataIndex: 'hash',
     title: i18n('Hash'),
-    render: (text) => <EllipsisLine isLong linkTo={`/transactionsdetail/${text}`} text={text} />,
+    render: (text, row) => {
+      const line = <EllipsisLine popUpCfg={{ position: 'top left', pinned: true }} linkTo={`/transactionsdetail/${text}`} text={text} />;
+      if (row.status === 0) {
+        return line;
+      }
+      let errIcon;
+      if (row.status === 1) {
+        errIcon = <Popup trigger={<img src={iconStatusErr} />} content={i18n('app.pages.err-reason.1')} position="top left" hoverable />;
+      } else if (row.status === 2 || row.status === null) {
+        errIcon = <Popup trigger={<img src={iconStatusSkip} />} content={i18n('app.pages.err-reason.2')} position="top left" hoverable />;
+      }
+
+      return (
+        <div className="txnhash-err">
+          {errIcon}
+          <div className="txnhash-err-line1">{line}</div>
+        </div>
+      );
+    },
   },
   {
     key: 2,
@@ -121,7 +159,12 @@ const columns = [
       if (row.contractCreated) {
         return (
           <div>
-            <ContractCell>{i18n('Contract Creation')}</ContractCell>
+            <Popup
+              trigger={<ContractCell>{i18n('Contract Creation')}</ContractCell>}
+              content={row.contractCreated}
+              position="top left"
+              hoverable
+            />
           </div>
         );
       }
