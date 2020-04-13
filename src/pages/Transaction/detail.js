@@ -98,6 +98,9 @@ const StyledTabel = styled.table`
   td.bottom {
     padding-bottom: 2em !important;
   }
+  .nameItem {
+    margin-left: 5px;
+  }
   td.to {
     > span {
       display: flex;
@@ -107,9 +110,6 @@ const StyledTabel = styled.table`
       width: 16px;
       margin-left: 5px;
       vertical-align: middle;
-    }
-    .nameItem {
-      margin-left: 5px;
     }
   }
   tr > td a {
