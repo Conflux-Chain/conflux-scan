@@ -294,5 +294,5 @@ export const devidedByDecimals = (number, decimals) => {
 };
 
 export const getAddressType = (address) => {
-  return address.startsWith('0x8') ? addressTypeContract : addressTypeCommon;
+  return address && address.startsWith('0x8') ? addressTypeContract : addressTypeCommon;
 };
