@@ -35,7 +35,6 @@
     "ace-mode-solidity": "^0.1.1",
     "antd": "^3.19.1",
     "bignumber.js": "^9.0.0",
-    "canoe-solidity": "^0.1.0",
     "classnames": "^2.2.6",
     "echarts": "^4.2.1",
     "history": "^4.9.0",
@@ -62,7 +61,8 @@
     "redux-thunk": "^2.3.0",
     "semantic-ui-react": "^0.87.1",
     "styled-components": "^4.2.0",
-    "superagent": "^5.0.5"
+    "superagent": "^5.0.5",
+    "terser-webpack-plugin": "^2.3.5"
   },
   "devDependencies": {
     "@babel/core": "^7.2.2",
