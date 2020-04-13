@@ -157,8 +157,10 @@ export default {
   'app.directory.topholders.desc': '保证社区的公开与透明',
   'app.directory.community.title': '社区',
   'app.directory.community.desc': '成为下一代去中心化社区的一员',
-  'app.directory.fc.title': 'Fc',
+  'app.directory.fc.title': 'FansCoin',
   'app.directory.fc.desc': '测试网代币',
+  'app.directory.contract.title': '合约',
+  'app.directory.contract.desc': '提交合约信息',
   'system maintaining, please visit later': '系统维护中，请稍后访问',
 
   'No Record': '无记录',
