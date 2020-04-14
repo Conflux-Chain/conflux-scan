@@ -120,6 +120,11 @@ const Wrapper = styled.div`
   .ui.segment[class*='bottom attached']:last-child {
     margin-bottom: 1rem;
   }
+
+  .dropdownContainer {
+    margin-left: -1px !important;
+    border: 1px solid rgba(34, 36, 38, 0.15) !important;
+  }
 `;
 
 const StyledTabel = styled.div`
@@ -806,7 +811,7 @@ class ContractUpdate extends Component {
                           <div className="ui dropdown link item">
                             <span>{i18n(contractTypes[selectedContractTypeCode])}</span>
                             <i className="dropdown icon" />
-                            <div className="menu transition visible">
+                            <div className="menu transition visible dropdownContainer">
                               {Object.keys(contractTypes).map((key, index) => (
                                 <div
                                   key={key}
