@@ -57,11 +57,49 @@ sudo cp -r .  /www/explorer-v2/conflux-scan/
 """)
             }
             script {
-              sh (label: 'build n run backend', script: """
+              sh (label: 'build and run backend', script: """
 cd service
 yarn
 yarn stop-test || true
 JENKINS_NODE_COOKIE=dontKillMe yarn start-test
+""")
+            }
+          }
+        }
+
+        stage('debug prod env') {
+          when {
+            beforeAgent true
+            allOf {
+              branch 'master'
+            }
+          }
+          agent {label 'scan-debug-prod-machine'}
+          steps {
+            script {
+              sh (label: 'build front', script: """
+sudo docker build -t conflux-scan .
+mkdir -p `pwd`/dist
+sudo docker run --rm --mount type=bind,src=`pwd`/dist,dst=/conflux-scan/dist conflux-scan build
+""")
+            }
+            script {
+              build 'Conflux-dev/conflux-dag/master'
+              copyArtifacts(projectName: 'Conflux-dev/conflux-dag/master')
+              sh (label: 'move to nginx www', script: """
+sudo rm -rf /www/conflux-scan/
+sudo mkdir /www/conflux-scan/
+sudo cp -r dist/* . /www/conflux-scan/
+""")
+            }
+            script {
+              sh (label: 'build and run backend', script: """
+cd service
+sudo docker build -t conflux-scan-proxy .
+sudo docker stop conflux-scan-proxy || true
+sudo docker rm conflux-scan-proxy || true
+sudo docker rm -f conflux-scan-proxy || true
+sudo docker run -d --expose 127.0.0.1:3000:3000/tcp --name conflux-scan-proxy --restart=always -e SERVER_PREFIX='' -e SERVER_PORT=3000 -e SERVER_HOST=localhost -e API_HOST=http://localhost/api conflux-scan-proxy node index.js
 """)
             }
           }
@@ -93,7 +131,7 @@ sudo cp -r . /www/explorer-v2/conflux-scan
 """)
             }
             script {
-              sh (label: 'build n run backend', script: """
+              sh (label: 'build and run backend', script: """
 cd service
 yarn
 yarn stop || true
