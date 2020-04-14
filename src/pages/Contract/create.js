@@ -255,13 +255,9 @@ const HeadBar = styled.div`
   }
 `;
 
-const IconItem = styled.div`
+const IconItem = styled.img`
   display: inline-block;
-  width: 42px;
-  height: 42px;
-  background-image: url(${(props) => props.url});
-  background-repeat: no-repeat;
-  background-size: cover;
+  width: 41px;
 `;
 const FilterSelector = styled.div.attrs({
   className: 'ui menu compact',

@@ -255,13 +255,9 @@ const HeadBar = styled.div`
   }
 `;
 
-const IconItem = styled.div`
+const IconItem = styled.img`
   display: inline-block;
-  width: 42px;
-  height: 42px;
-  background-image: url(${(props) => props.url});
-  background-repeat: no-repeat;
-  background-size: cover;
+  width: 41px;
 `;
 const FilterSelector = styled.div.attrs({
   className: 'ui menu compact',
@@ -795,7 +791,7 @@ class ContractUpdate extends Component {
                     </td>
                     <td rowSpan="3" className="center aligned init">
                       <div className="iconContainer">
-                        <IconItem url={iconContractSource || defaultContractIcon} />
+                        <IconItem src={iconContractSource || defaultContractIcon} />
                       </div>
                     </td>
                     <td rowSpan="3" className="center aligned init">
@@ -892,7 +888,7 @@ class ContractUpdate extends Component {
                     </td>
                     <td rowSpan="4" className="center aligned init">
                       <div className="iconContainer">
-                        <IconItem url={iconTokenSource || defaultTokenIcon} />
+                        <IconItem src={iconTokenSource || defaultTokenIcon} />
                       </div>
                     </td>
                     <td rowSpan="4" className="center aligned init">

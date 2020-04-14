@@ -195,7 +195,7 @@ const FilterSelector = styled.div.attrs({
 
   .ui.dropdown {
     width: 100%;
-    justify-content: space-around;
+    justify-content: space-between;
     border: 1px solid #e0e1e2;
     border-radius: 4px !important;
 
