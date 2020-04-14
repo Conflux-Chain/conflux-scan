@@ -120,6 +120,11 @@ const Wrapper = styled.div`
   .ui.segment[class*='bottom attached']:last-child {
     margin-bottom: 1rem;
   }
+
+  .dropdownContainer {
+    margin-left: -1px !important;
+    border: 1px solid rgba(34, 36, 38, 0.15) !important;
+  }
 `;
 
 const StyledTabel = styled.div`
@@ -250,13 +255,9 @@ const HeadBar = styled.div`
   }
 `;
 
-const IconItem = styled.div`
+const IconItem = styled.img`
   display: inline-block;
-  width: 42px;
-  height: 42px;
-  background-image: url(${(props) => props.url});
-  background-repeat: no-repeat;
-  background-size: cover;
+  width: 41px;
 `;
 const FilterSelector = styled.div.attrs({
   className: 'ui menu compact',
@@ -355,8 +356,9 @@ const StyledTabelWrapper = styled.div`
   }
 
   .abiContainer {
-    height: 200px;
+    height: 250px;
     width: 100%;
+    border: none;
   }
   .abiItem {
     padding: 0.75rem;
@@ -375,7 +377,6 @@ const StyledTabelWrapper = styled.div`
     width: 100%;
     padding: 15px;
     border-radius: 0px 0px 4px 4px;
-    border: 1px solid rgba(0, 0, 0, 0.08);
     font-size: 16px;
     font-weight: 400;
     color: #585858;
@@ -384,6 +385,7 @@ const StyledTabelWrapper = styled.div`
     max-height: 400px;
     outline: none;
     resize: none;
+    border: none;
   }
   .contentHeader {
     height: 48px;
@@ -737,7 +739,7 @@ class ContractUpdate extends Component {
                     </td>
                     <td rowSpan="3" className="center aligned init">
                       <div className="iconContainer">
-                        <IconItem url={iconContractSource || defaultContractIcon} />
+                        <IconItem src={iconContractSource || defaultContractIcon} />
                       </div>
                     </td>
                     <td rowSpan="3" className="center aligned init">
@@ -806,7 +808,7 @@ class ContractUpdate extends Component {
                           <div className="ui dropdown link item">
                             <span>{i18n(contractTypes[selectedContractTypeCode])}</span>
                             <i className="dropdown icon" />
-                            <div className="menu transition visible">
+                            <div className="menu transition visible dropdownContainer">
                               {Object.keys(contractTypes).map((key, index) => (
                                 <div
                                   key={key}
@@ -834,7 +836,7 @@ class ContractUpdate extends Component {
                     </td>
                     <td rowSpan="4" className="center aligned init">
                       <div className="iconContainer">
-                        <IconItem url={iconTokenSource || defaultTokenIcon} />
+                        <IconItem src={iconTokenSource || defaultTokenIcon} />
                       </div>
                     </td>
                     <td rowSpan="4" className="center aligned init">
