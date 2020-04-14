@@ -43,6 +43,9 @@ const Wrapper = styled.div`
     font-weight: 600;
     color: #df0000;
     line-height: 22px;
+    &.tab {
+      top: -3px;
+    }
   }
   .asteriskContainer {
     display: inline-block;
@@ -184,8 +187,10 @@ const StyledTabel = styled.div`
     cursor: pointer;
     text-overflow: ellipsis;
     white-space: nowrap;
+    outline: none;
     &.disabled {
       color: rgba(0, 0, 0, 0.5);
+      cursor: auto;
     }
     ${media.pad`
       width: auto;
@@ -195,8 +200,10 @@ const StyledTabel = styled.div`
   .removeText {
     color: rgba(64, 90, 231, 1);
     margin-top: 10px;
+    cursor: pointer;
     &.disabled {
       color: rgba(64, 90, 231, 0.5);
+      cursor: auto;
     }
   }
 
@@ -357,7 +364,7 @@ const StyledTabelWrapper = styled.div`
   .textAreaContainer {
     width: 100%;
     padding: 15px;
-    border-radius: 4px;
+    border-radius: 0px 0px 4px 4px;
     border: 1px solid rgba(0, 0, 0, 0.08);
     font-size: 16px;
     font-weight: 400;
@@ -368,6 +375,16 @@ const StyledTabelWrapper = styled.div`
     outline: none;
     resize: none;
   }
+  .contentHeader {
+    height: 48px;
+    line-height: 48px;
+    padding-left: 17px;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 4px 4px 0px 0px;
+    color: rgba(0, 0, 0, 0.87);
+    font-size: 16px;
+    font-weight: bold;
+  }
 `;
 
 const ContentBottomContainer = styled.div`
@@ -377,6 +394,9 @@ const ContentBottomContainer = styled.div`
     flex-direction: column;
     justify-content: center;
   `}
+  .relativeContainer {
+    margin-left: 8px;
+  }
   .leftContainer {
     div {
       display: inline-block;
@@ -602,7 +622,8 @@ class ContractUpdate extends Component {
       passwordVal,
     } = this.state;
     let isSubmitable = false;
-    if (selectedContractTypeCode === contractTypeCodeGeneral) {
+    // eslint-disable-next-line eqeqeq
+    if (selectedContractTypeCode == contractTypeCodeGeneral) {
       if (nameTagVal && sourceCode && abiVal && passwordVal) {
         isSubmitable = true;
       }
@@ -705,7 +726,8 @@ class ContractUpdate extends Component {
 
   isGeneralContractType() {
     const { selectedContractTypeCode } = this.state;
-    return selectedContractTypeCode === contractTypeCodeGeneral;
+    // eslint-disable-next-line eqeqeq
+    return selectedContractTypeCode == contractTypeCodeGeneral;
   }
 
   render() {
@@ -955,7 +977,10 @@ class ContractUpdate extends Component {
                     className={currentTab === 1 ? 'active item' : 'item'}
                     onClick={() => this.setState({ currentTab: 1 })}
                   >
-                    {i18n('app.pages.contract.sourceCode')}
+                    <div className="relativeContainer">
+                      <span className="redAsterisk tab">*</span>
+                      {i18n('app.pages.contract.sourceCode')}
+                    </div>
                   </button>
                   <button
                     className={currentTab === 2 ? 'active item' : 'item'}
@@ -964,7 +989,10 @@ class ContractUpdate extends Component {
                       this.setState({ currentTab: 2 });
                     }}
                   >
-                    {i18n('app.pages.contract.abi')}
+                    <div className="relativeContainer">
+                      <span className="redAsterisk tab">*</span>
+                      {i18n('app.pages.contract.abi')}
+                    </div>
                   </button>
                 </div>
 
@@ -973,6 +1001,7 @@ class ContractUpdate extends Component {
                     <StyledTabelWrapper>
                       <div className="ui fluid card">
                         <div className="content">
+                          <div className="contentHeader" />
                           <AceEditor
                             style={AceEditorStyle}
                             mode="solidity"
@@ -992,6 +1021,7 @@ class ContractUpdate extends Component {
                     <StyledTabelWrapper>
                       <div className="ui fluid card">
                         <div className="content abiContainer">
+                          <div className="contentHeader" />
                           <textarea
                             spellCheck="false"
                             rows="5"
