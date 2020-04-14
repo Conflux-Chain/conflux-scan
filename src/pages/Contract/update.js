@@ -184,8 +184,10 @@ const StyledTabel = styled.div`
     cursor: pointer;
     text-overflow: ellipsis;
     white-space: nowrap;
+    outline: none;
     &.disabled {
       color: rgba(0, 0, 0, 0.5);
+      cursor: auto;
     }
     ${media.pad`
       width: auto;
@@ -195,8 +197,10 @@ const StyledTabel = styled.div`
   .removeText {
     color: rgba(64, 90, 231, 1);
     margin-top: 10px;
+    cursor: pointer;
     &.disabled {
       color: rgba(64, 90, 231, 0.5);
+      cursor: auto;
     }
   }
 
@@ -377,6 +381,9 @@ const ContentBottomContainer = styled.div`
     flex-direction: column;
     justify-content: center;
   `}
+  .relativeContainer {
+    margin-left: 8px;
+  }
   .leftContainer {
     div {
       display: inline-block;
@@ -705,7 +712,8 @@ class ContractUpdate extends Component {
 
   isGeneralContractType() {
     const { selectedContractTypeCode } = this.state;
-    return selectedContractTypeCode === contractTypeCodeGeneral;
+    // eslint-disable-next-line eqeqeq
+    return selectedContractTypeCode == contractTypeCodeGeneral;
   }
 
   render() {
