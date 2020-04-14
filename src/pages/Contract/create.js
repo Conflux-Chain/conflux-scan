@@ -739,7 +739,7 @@ class ContractUpdate extends Component {
                     </td>
                     <td rowSpan="3" className="center aligned init">
                       <div className="iconContainer">
-                        <IconItem url={iconContractSource || defaultContractIcon} />
+                        <IconItem src={iconContractSource || defaultContractIcon} />
                       </div>
                     </td>
                     <td rowSpan="3" className="center aligned init">
@@ -836,7 +836,7 @@ class ContractUpdate extends Component {
                     </td>
                     <td rowSpan="4" className="center aligned init">
                       <div className="iconContainer">
-                        <IconItem url={iconTokenSource || defaultTokenIcon} />
+                        <IconItem src={iconTokenSource || defaultTokenIcon} />
                       </div>
                     </td>
                     <td rowSpan="4" className="center aligned init">
