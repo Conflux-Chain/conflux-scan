@@ -99,7 +99,7 @@ sudo docker build -t conflux-scan-proxy .
 sudo docker stop conflux-scan-proxy || true
 sudo docker rm conflux-scan-proxy || true
 sudo docker rm -f conflux-scan-proxy || true
-sudo docker run -d --expose 127.0.0.1:3000:3000/tcp --name conflux-scan-proxy --restart=always -e SERVER_PREFIX='' -e SERVER_PORT=3000 -e SERVER_HOST=localhost -e API_HOST=http://localhost/api conflux-scan-proxy node index.js
+sudo docker run -d --publish 127.0.0.1:3000:3000/tcp --name conflux-scan-proxy --restart=always -e SERVER_PREFIX='' -e SERVER_PORT=3000 -e SERVER_HOST=localhost -e API_HOST=http://localhost/api conflux-scan-proxy node index.js
 """)
             }
           }
