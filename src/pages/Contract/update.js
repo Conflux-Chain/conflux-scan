@@ -27,6 +27,9 @@ const stylePopup = {
 const Wrapper = styled.div`
   max-width: 1200px;
   margin: 0 auto;
+  button {
+    border: none;
+  }
   ${media.mobile`
     width: 95%;
     margin: 0 auto;
@@ -55,7 +58,10 @@ const Wrapper = styled.div`
   .relativeContainer {
     position: relative;
     &.disabled {
-      opacity: 40%;
+      opacity: 0.4; /* Standard compliant browsers */
+      -moz-opacity: 0.4; /* Firefox and Mozilla browsers */
+      -webkit-opacity: 0.4; /* WebKit browser e.g. Safari */
+      filter: alpha(opacity=40);
     }
     > span:last-child {
       white-space: normal;
@@ -84,6 +90,9 @@ const Wrapper = styled.div`
 
   .ui.disabled.input {
     opacity: 1;
+    -moz-opacity: 1; /* Firefox and Mozilla browsers */
+    -webkit-opacity: 1; /* WebKit browser e.g. Safari */
+    filter: alpha(opacity=100);
   }
 
   .submitBtn {
@@ -188,6 +197,7 @@ const StyledTabel = styled.div`
     text-overflow: ellipsis;
     white-space: nowrap;
     outline: none;
+    background: #fff;
     &.disabled {
       color: rgba(0, 0, 0, 0.5);
       cursor: auto;
@@ -710,7 +720,7 @@ class ContractUpdate extends Component {
     bodyparams.sourceCode = sourceCode;
     bodyparams.abi = abiVal;
     bodyparams.password = passwordVal;
-    reqContractUpdate(bodyparams).then((response) => {
+    reqContractUpdate(bodyparams, { showError: true }).then((response) => {
       if (response.code === 0) {
         toast.success({
           title: 'app.common.success',

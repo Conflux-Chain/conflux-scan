@@ -202,7 +202,7 @@ export const sendRequest = (config) => {
           title = 'app.comp.toast.error.other';
       }
       toast.error({
-        content: result.body.msg || 'app.comp.toast.error.contentDefault',
+        content: result.body.message || 'app.comp.toast.error.contentDefault',
         title: title,
       });
     }
