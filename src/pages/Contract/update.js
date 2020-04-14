@@ -360,8 +360,9 @@ const StyledTabelWrapper = styled.div`
   }
 
   .abiContainer {
-    height: 200px;
+    height: 250px;
     width: 100%;
+    border: none;
   }
   .abiItem {
     padding: 0.75rem;
@@ -380,7 +381,6 @@ const StyledTabelWrapper = styled.div`
     width: 100%;
     padding: 15px;
     border-radius: 0px 0px 4px 4px;
-    border: 1px solid rgba(0, 0, 0, 0.08);
     font-size: 16px;
     font-weight: 400;
     color: #585858;
@@ -389,6 +389,7 @@ const StyledTabelWrapper = styled.div`
     max-height: 400px;
     outline: none;
     resize: none;
+    border: none;
   }
   .contentHeader {
     height: 48px;
