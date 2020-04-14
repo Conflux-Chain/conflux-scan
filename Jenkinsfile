@@ -88,8 +88,8 @@ sudo docker run --rm --mount type=bind,src=`pwd`/dist,dst=/conflux-scan/dist con
               copyArtifacts(projectName: 'Conflux-dev/conflux-dag/master')
               sh (label: 'move to nginx www', script: """
 sudo rm -rf /www/conflux-scan/
-sudo mkdir /www/conflux-scan/
-sudo cp -r dist/* . /www/conflux-scan/
+sudo mkdir -p /www/conflux-scan/
+sudo cp -r . /www/conflux-scan/
 """)
             }
             script {
