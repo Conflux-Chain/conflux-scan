@@ -43,6 +43,9 @@ const Wrapper = styled.div`
     font-weight: 600;
     color: #df0000;
     line-height: 22px;
+    &.tab {
+      top: -3px;
+    }
   }
   .asteriskContainer {
     display: inline-block;
@@ -974,7 +977,10 @@ class ContractUpdate extends Component {
                     className={currentTab === 1 ? 'active item' : 'item'}
                     onClick={() => this.setState({ currentTab: 1 })}
                   >
-                    {i18n('app.pages.contract.sourceCode')}
+                    <div className="relativeContainer">
+                      <span className="redAsterisk tab">*</span>
+                      {i18n('app.pages.contract.sourceCode')}
+                    </div>
                   </button>
                   <button
                     className={currentTab === 2 ? 'active item' : 'item'}
@@ -983,7 +989,10 @@ class ContractUpdate extends Component {
                       this.setState({ currentTab: 2 });
                     }}
                   >
-                    {i18n('app.pages.contract.abi')}
+                    <div className="relativeContainer">
+                      <span className="redAsterisk tab">*</span>
+                      {i18n('app.pages.contract.abi')}
+                    </div>
                   </button>
                 </div>
 
