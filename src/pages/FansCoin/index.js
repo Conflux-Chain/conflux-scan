@@ -3,6 +3,7 @@ import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { injectIntl } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 
 import { Popup } from 'semantic-ui-react';
 import compose from 'lodash/fp/compose';
@@ -449,12 +450,22 @@ class FansCoin extends Component {
       <styledComp.Wrapper>
         <styledComp.HeadBar>
           <img className="fc-logo" src={iconFcLogo} />
-          <h1>{i18n('FC')}</h1>
+          {/* <h1>{i18n('FC')}</h1> */}
           <p>
-            <a href="https://wallet.confluxscan.io/about" target="_blank">
-              Fans Coin
-              <i className="link-open" />
-            </a>
+            {/* <a href="https://wallet.confluxscan.io/about" target="_blank"> */}
+            <h1>{i18n('FansCoin')}</h1>
+            <div className="summary-line-content">
+              <a href="https://wallet.confluxscan.io/about" target="_blank">
+                {/* <i className="link-open" /> */}
+                <Popup
+                  trigger={<div className="link-open" />}
+                  content={<FormattedMessage id={`app.pages.fanscoin.hover`} />}
+                  position="top center"
+                  hoverable
+                />
+              </a>
+            </div>
+            {/* </a> */}
           </p>
         </styledComp.HeadBar>
 
@@ -489,7 +500,11 @@ class FansCoin extends Component {
               <div className="content summary-content">
                 <div className="summary-line">
                   <h6>{i18n('Contract')}:</h6>
-                  <div className="summary-line-content">{fcStat.address}</div>
+                  <div className="summary-line-content">
+                    <a href={`/accountdetail/${fcStat.address}`} target="_blank">
+                      {fcStat.address} <i className="link-open" />
+                    </a>
+                  </div>
                 </div>
                 <div className="summary-line">
                   <h6>{i18n('Official Site')}:</h6>
