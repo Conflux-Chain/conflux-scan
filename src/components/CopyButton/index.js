@@ -2,9 +2,6 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { injectIntl } from 'react-intl';
-import iconCopy from '../../assets/images/icons/icon-copy.svg';
-import copyIn from '../../assets/images/icons/copyin.svg';
-import copyInHover from '../../assets/images/icons/copyin-hover.svg';
 
 const Wrap = styled.div`
   margin-left: 10px;
@@ -16,9 +13,13 @@ const Wrap = styled.div`
     cursor: pointer;
     width: 16px;
     height: 16px;
-    background-image: url("${copyIn}");
     display: block;
-    background-size: contain;
+    &:after {
+      line-height: 16px;
+    }
+  }
+  .icon-copy-light {
+    color: #8f8f8f;
   }
 `;
 
@@ -37,10 +38,10 @@ const IconFace = styled.div`
   &:hover {
     cursor: pointer;
     background: rgba(0, 0, 0, 0.54);
-    .icon-copy {
-      background-image: url("${copyInHover}");
-    }
     svg {
+      color: #fff;
+    }
+    .icon-copy {
       color: #fff;
     }
   }
@@ -213,7 +214,7 @@ CopyButton.defaultProps = {
       );
     }
     if (btnType === 'three') {
-      return <i className="icon-copy" />;
+      return <i className="icon-copy icon-copy-light" />;
     }
     return (
       <IconFace className="iconface">
