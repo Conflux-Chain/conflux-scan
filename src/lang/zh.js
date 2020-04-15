@@ -127,6 +127,8 @@ export default {
   'app.pages.dashboard.blockTimeUnit': '秒',
   'app.pages.dashboard.hashRate': '哈希算力',
 
+  'app.pages.fanscoin.hover': '点击进入官方网站',
+
   // Header Components
   'app.header.lang.en': 'English',
   'app.header.lang.short.en': 'EN',
