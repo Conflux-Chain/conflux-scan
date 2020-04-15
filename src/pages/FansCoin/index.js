@@ -2,8 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { injectIntl } from 'react-intl';
-import { FormattedMessage } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 
 import { Popup } from 'semantic-ui-react';
 import compose from 'lodash/fp/compose';
@@ -459,7 +458,7 @@ class FansCoin extends Component {
                 {/* <i className="link-open" /> */}
                 <Popup
                   trigger={<div className="link-open" />}
-                  content={<FormattedMessage id={`app.pages.fanscoin.hover`} />}
+                  content={<FormattedMessage id="app.pages.fanscoin.hover" />}
                   position="top center"
                   hoverable
                 />
