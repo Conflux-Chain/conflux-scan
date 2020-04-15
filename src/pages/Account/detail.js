@@ -80,6 +80,10 @@ class Detail extends Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.match.params.accountid !== prevProps.match.params.accountid) {
+      // eslint-disable-next-line  react/no-did-update-set-state
+      this.setState({
+        blockCount: 0,
+      });
       this.autoSwitchTab();
       const { accountid } = this.props.match.params;
       if (isContract(accountid)) {
