@@ -498,28 +498,32 @@ class ContractUpdate extends Component {
     e.preventDefault();
     let reader = new FileReader();
     let file = e.target.files[0];
+    if (file) {
+      reader.onloadend = () => {
+        this.setState({
+          iconContractSource: reader.result,
+        });
+      };
 
-    reader.onloadend = () => {
-      this.setState({
-        iconContractSource: reader.result,
-      });
-    };
-
-    reader.readAsDataURL(file);
+      reader.readAsDataURL(file);
+    }
+    e.target.value = '';
   }
 
   handleTokenIconChange(e) {
     e.preventDefault();
     let reader = new FileReader();
     let file = e.target.files[0];
+    if (file) {
+      reader.onloadend = () => {
+        this.setState({
+          iconTokenSource: reader.result,
+        });
+      };
 
-    reader.onloadend = () => {
-      this.setState({
-        iconTokenSource: reader.result,
-      });
-    };
-
-    reader.readAsDataURL(file);
+      reader.readAsDataURL(file);
+    }
+    e.target.value = '';
   }
 
   handleNameChange(e) {
