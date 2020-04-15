@@ -365,7 +365,7 @@ class AccountHead extends Component {
             <div className="contract-left-info">{i18n('Token Tracker')}</div>
             <div className="contract-right-val">
               {contractInfo.tokenIcon && <img src={contractInfo.tokenIcon} />}
-              <a>{contractInfo.tokenName || ''}</a>
+              {contractInfo.tokenName ? <a>{contractInfo.tokenName}</a> : i18n('app.pages.account.notfound')}
             </div>
           </div>
         </div>
