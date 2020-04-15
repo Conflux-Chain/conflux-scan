@@ -73,6 +73,8 @@ export default {
   'app.pages.dashboard.blockTimeUnit': 's',
   'app.pages.dashboard.hashRate': 'Hash Rate',
 
+  'app.pages.fanscoin.hover': 'Click to enter the official site',
+
   // Header Components
   'app.header.lang.en': 'English',
   'app.header.lang.short.en': 'EN',
