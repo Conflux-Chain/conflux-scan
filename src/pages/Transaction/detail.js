@@ -318,15 +318,13 @@ class Detail extends Component {
                   const contractType = result.typeCode;
                   let decodedData = {};
                   let filterKeys = [];
-                  if (contractType !== contractTypeCodeGeneral) {
-                    decodedData = decodeContract({
-                      abi: JSON.parse(result.abi),
-                      bytecode: result.bytecode,
-                      address: result.address,
-                      transacionData: transactionDetails.data,
-                    }); // decode the data of transaction
-                    filterKeys = ['original', 'utf8', 'decodeInputData'];
-                  }
+                  decodedData = decodeContract({
+                    abi: JSON.parse(result.abi),
+                    bytecode: result.bytecode,
+                    address: result.address,
+                    transacionData: transactionDetails.data,
+                  }); // decode the data of transaction
+                  filterKeys = ['original', 'utf8', 'decodeInputData'];
                   this.setState({
                     isLoading: false,
                     contractInfo: result,
