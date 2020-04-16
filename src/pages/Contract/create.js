@@ -451,9 +451,6 @@ class ContractUpdate extends Component {
       nameTagVal: '',
       websiteVal: '',
       selectedContractTypeCode: 0,
-      tokenNameVal: '',
-      tokenSymbolVal: '',
-      tokenDecimalsVal: '',
       sourceCode: '',
       abiVal: '',
       passwordVal: '',
@@ -546,39 +543,6 @@ class ContractUpdate extends Component {
     );
   }
 
-  handleTokenNameChange(e) {
-    this.setState(
-      {
-        tokenNameVal: e.target.value,
-      },
-      () => {
-        this.updateCanSubmit();
-      }
-    );
-  }
-
-  handleTokenSymbolChange(e) {
-    this.setState(
-      {
-        tokenSymbolVal: e.target.value,
-      },
-      () => {
-        this.updateCanSubmit();
-      }
-    );
-  }
-
-  handleTokenDecimalsChange(e) {
-    this.setState(
-      {
-        tokenDecimalsVal: e.target.value,
-      },
-      () => {
-        this.updateCanSubmit();
-      }
-    );
-  }
-
   handleSourceChange(sourceCode) {
     this.setState(
       {
@@ -625,23 +589,10 @@ class ContractUpdate extends Component {
   }
 
   updateCanSubmit() {
-    const {
-      selectedContractTypeCode,
-      nameTagVal,
-      abiVal,
-      tokenNameVal,
-      tokenSymbolVal,
-      tokenDecimalsVal,
-      sourceCode,
-      passwordVal,
-    } = this.state;
+    const { nameTagVal, abiVal, sourceCode, passwordVal, addressVal } = this.state;
     let isSubmitable = false;
     // eslint-disable-next-line eqeqeq
-    if (selectedContractTypeCode == contractTypeCodeGeneral) {
-      if (nameTagVal && sourceCode && abiVal && passwordVal) {
-        isSubmitable = true;
-      }
-    } else if (nameTagVal && sourceCode && abiVal && passwordVal && tokenNameVal && tokenSymbolVal && tokenDecimalsVal) {
+    if (addressVal && nameTagVal && sourceCode && abiVal && passwordVal) {
       isSubmitable = true;
     }
     this.setState({
@@ -655,9 +606,6 @@ class ContractUpdate extends Component {
     const {
       nameTagVal,
       abiVal,
-      tokenNameVal,
-      tokenSymbolVal,
-      tokenDecimalsVal,
       sourceCode,
       passwordVal,
       iconContractSource,
@@ -672,9 +620,6 @@ class ContractUpdate extends Component {
     bodyparams.website = websiteVal;
     bodyparams.icon = iconContractSource;
     bodyparams.typeCode = Number(selectedContractTypeCode);
-    bodyparams.tokenName = tokenNameVal;
-    bodyparams.tokenSymbol = tokenSymbolVal;
-    bodyparams.tokenDecimal = Number(tokenDecimalsVal);
     bodyparams.tokenIcon = iconTokenSource;
     bodyparams.sourceCode = sourceCode;
     bodyparams.abi = abiVal;
@@ -708,9 +653,6 @@ class ContractUpdate extends Component {
       nameTagVal,
       abiVal,
       websiteVal,
-      tokenNameVal,
-      tokenSymbolVal,
-      tokenDecimalsVal,
       sourceCode,
       passwordVal,
       canSubmit,
@@ -800,13 +742,13 @@ class ContractUpdate extends Component {
               <table className="ui celled structured table">
                 <tbody className="tbodyContainer">
                   <tr className="centered">
-                    <td className="collapsing top">
+                    <td className="collapsing">
                       <div className="relativeContainer">
                         <span className="redAsterisk">*</span>
                         {i18n('app.pages.contract.contractType')}
                       </div>
                     </td>
-                    <td className="aligned top fixed-first">
+                    <td className="aligned fixed-first">
                       <div className="ui input disabled inputContainer">
                         <FilterSelector>
                           <div className="ui dropdown link item">
@@ -870,63 +812,6 @@ class ContractUpdate extends Component {
                         >
                           {i18n('app.pages.contract.removePhoto')}
                         </div>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="collapsing">
-                      <div className={this.isGeneralContractType() ? 'relativeContainer disabled' : 'relativeContainer'}>
-                        <span className="redAsterisk">*</span>
-                        {i18n('app.pages.contract.tokenName')}
-                      </div>
-                    </td>
-                    <td className="aligned">
-                      <div className="ui input inputContainer">
-                        <input
-                          className="inputItem"
-                          type="text"
-                          value={tokenNameVal}
-                          onChange={(e) => this.handleTokenNameChange(e)}
-                          readOnly={this.isGeneralContractType()}
-                        />
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="collapsing">
-                      <div className={this.isGeneralContractType() ? 'relativeContainer disabled' : 'relativeContainer'}>
-                        <span className="redAsterisk">*</span>
-                        {i18n('app.pages.contract.tokenSymbol')}
-                      </div>
-                    </td>
-                    <td className="aligned">
-                      <div className="ui input inputContainer">
-                        <input
-                          className="inputItem"
-                          type="text"
-                          value={tokenSymbolVal}
-                          onChange={(e) => this.handleTokenSymbolChange(e)}
-                          readOnly={this.isGeneralContractType()}
-                        />
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="collapsing bottom">
-                      <div className={this.isGeneralContractType() ? 'relativeContainer disabled' : 'relativeContainer'}>
-                        <span className="redAsterisk">*</span>
-                        {i18n('app.pages.contract.decimals')}
-                      </div>
-                    </td>
-                    <td className="aligned bottom">
-                      <div className="ui input inputContainer">
-                        <input
-                          className="inputItem"
-                          type="number"
-                          value={tokenDecimalsVal}
-                          onChange={(e) => this.handleTokenDecimalsChange(e)}
-                          readOnly={this.isGeneralContractType()}
-                        />
                       </div>
                     </td>
                   </tr>
