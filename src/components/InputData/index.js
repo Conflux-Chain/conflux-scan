@@ -3,8 +3,10 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { injectIntl } from 'react-intl';
 import { Popup } from 'semantic-ui-react';
+import JSONPretty from 'react-json-pretty';
 import { hex2utf8 } from '../../utils/transaction';
 import { i18n } from '../../utils';
+import 'react-json-pretty/themes/monikai.css';
 
 const stylePopup = {
   background: '#0B0B0B',
@@ -15,7 +17,8 @@ const stylePopup = {
 };
 const Wrap = styled.div`
   .textAreaContainer {
-    width: 100%;
+    max-width: 100%;
+    max-height: 200px;
     padding: 15px;
     border-radius: 4px;
     border: 1px solid #979797;
@@ -23,8 +26,56 @@ const Wrap = styled.div`
     font-weight: 400;
     color: #585858;
     line-height: 22px;
-    resize: none;
     outline: none;
+    margin-top: 0px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    white-space: pre-wrap; /*css-3*/
+    white-space: -moz-pre-wrap; /*Mozilla,since1999*/
+    white-space: -pre-wrap; /*Opera4-6*/
+    white-space: -o-pre-wrap; /*Opera7*/
+    overflow: auto;
+  }
+  .__json-pretty-error__ {
+    margin-top: 0px;
+    background: #f9f9f9;
+    line-height: 1.3;
+    color: #585858;
+    white-space: pre-wrap; /* Since CSS 2.1 */
+    white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+    white-space: -pre-wrap; /* Opera 4-6 */
+    white-space: -o-pre-wrap;
+    word-wrap: break-word;
+    border-radius: 4px;
+    border: 1px solid #979797;
+    padding: 10px;
+  }
+  .custom-json-pretty {
+    margin-top: 0px;
+    background: #f9f9f9;
+    line-height: 1.3;
+    color: #585858;
+    white-space: pre-wrap; /* Since CSS 2.1 */
+    white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+    white-space: -pre-wrap; /* Opera 4-6 */
+    white-space: -o-pre-wrap;
+    word-wrap: break-word;
+    border-radius: 4px;
+    border: 1px solid #979797;
+    padding: 10px;
+
+    .__json-key__ {
+      color: #000;
+    }
+    .__json-value__ {
+      color: #032f62;
+    }
+    .__json-string__ {
+      color: #032f62;
+    }
+    .__json-boolean__ {
+      color: #1e2022;
+    }
   }
 `;
 class InputData extends PureComponent {
@@ -69,16 +120,24 @@ class InputData extends PureComponent {
 
   render() {
     const { strDecoded } = this.state;
+    let str;
+    try {
+      str = JSON.stringify(JSON.parse(strDecoded), null, 2);
+    } catch (error) {
+      str = strDecoded;
+    }
     return (
       <Wrap>
-        <Popup
-          trigger={<textarea readOnly spellCheck="false" rows="5" name="inputData" value={strDecoded} className="textAreaContainer" />}
+        {/* <Popup
+          trigger={<pre className="textAreaContainer">{str}</pre>}
           content={i18n('app.pages.txns.inputTips')}
           style={stylePopup}
           position="top center"
           wide
           inverted
-        />
+        /> */}
+
+        {<JSONPretty id="json-pretty" data={str} themeClassName="custom-json-pretty" />}
       </Wrap>
     );
   }
