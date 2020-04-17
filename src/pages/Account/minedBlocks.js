@@ -64,7 +64,7 @@ const minedColumns = [
     className: 'one wide aligned',
     dataIndex: 'miner',
     title: i18n('Miner'),
-    render: (text) => <EllipsisLine linkTo={`/address/${text}`} text={text} />,
+    render: (text) => <EllipsisLine linkTo={`/address/${text}#minedBlocks`} text={text} />,
   },
   {
     key: 6,
@@ -94,25 +94,14 @@ class MinedBlocks extends Component {
     super(...args);
 
     this.state = {
-      activated: false,
       curMinedPage: 1,
       minedBlockList: [],
       minedTotalCount: 0,
     };
   }
 
-  componentDidUpdate() {
-    const { isActive } = this.props;
-    if (isActive) {
-      const { activated } = this.state;
-      if (!activated) {
-        this.onMount();
-        // eslint-disable-next-line react/no-did-update-set-state
-        this.setState({
-          activated: true,
-        });
-      }
-    }
+  componentDidMount() {
+    this.onMount();
   }
 
   onMount() {
@@ -139,16 +128,12 @@ class MinedBlocks extends Component {
   }
 
   render() {
-    const { accountid, isActive } = this.props;
+    const { accountid } = this.props;
     const { minedBlockList, minedTotalCount, curMinedPage } = this.state;
-    const { activated, listLimit } = this.state;
-
-    if (!activated) {
-      return null;
-    }
+    const { listLimit } = this.state;
 
     return (
-      <TabPanel className={isActive ? 'ui bottom attached segment active tab' : 'ui bottom attached segment tab'}>
+      <TabPanel className="ui bottom attached segment active tab">
         <StyledTabel>
           <div className="ui fluid card">
             <div className="content">
@@ -217,7 +202,6 @@ class MinedBlocks extends Component {
 
 MinedBlocks.propTypes = {
   accountid: PropTypes.string.isRequired,
-  isActive: PropTypes.bool.isRequired,
 };
 
 MinedBlocks.defaultProps = {};

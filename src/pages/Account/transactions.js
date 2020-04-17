@@ -26,11 +26,11 @@ const ContractCell = styled.div`
 
 const { RangePicker } = DatePicker;
 /* eslint react/destructuring-assignment: 0 */
-
-class Transitions extends Component {
+/* eslint react/no-did-update-set-state: 0 */
+class Transactions extends Component {
   constructor(...args) {
     super(...args);
-    this.state = {
+    this.getInitState = () => ({
       TxList: [],
       TxTotalCount: 0,
       queries: {
@@ -38,38 +38,44 @@ class Transitions extends Component {
         pageSize: 10,
         txType: 'all',
       },
+      activated: false,
       listLimit: undefined,
       startTime: null,
       endTime: null,
-    };
+    });
+    this.state = this.getInitState();
   }
 
-  componentDidMount() {
-    const { accountid } = this.props;
-    // const { queries } = this.state;
+  componentDidUpdate(prevProps) {
+    const { isActive } = this.props;
+    const { activated } = this.state;
+    if (isActive && !activated) {
+      // first mount
+      this.onMount();
+      this.setState({
+        activated: true,
+      });
+      return;
+    }
 
+    if (this.props.accountid !== prevProps.accountid) {
+      this.setState(this.getInitState());
+      if (this.props.isActive) {
+        this.onMount();
+        this.setState({
+          activated: true,
+        });
+      }
+    }
+  }
+
+  onMount() {
+    const { accountid } = this.props;
     this.changePage(accountid, {
       page: 1,
       pageSize: 10,
       txType: 'all',
     });
-  }
-
-  componentDidUpdate(prevProps) {
-    // eslint-disable-next-line react/destructuring-assignment
-    if (this.props.accountid !== prevProps.accountid) {
-      // eslint-disable-next-line react/destructuring-assignment
-      this.changePage(this.props.accountid, {
-        page: 1,
-        pageSize: 10,
-        txType: 'all',
-      });
-      // eslint-disable-next-line react/no-did-update-set-state
-      this.setState({
-        startTime: null,
-        endTime: null,
-      });
-    }
   }
 
   changePage(accountid, queriesRaw) {
@@ -393,7 +399,7 @@ class Transitions extends Component {
   }
 }
 
-Transitions.propTypes = {
+Transactions.propTypes = {
   accountid: PropTypes.string.isRequired,
   isActive: PropTypes.bool.isRequired,
   intl: PropTypes.shape({
@@ -401,6 +407,6 @@ Transitions.propTypes = {
   }).isRequired,
 };
 
-Transitions.defaultProps = {};
+Transactions.defaultProps = {};
 
-export default injectIntl(Transitions);
+export default injectIntl(Transactions);

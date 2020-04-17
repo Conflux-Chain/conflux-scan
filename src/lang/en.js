@@ -25,7 +25,7 @@ export default {
   'app.pages.account.detail.viewAll': 'View All',
   'app.pages.account.detail.viewOutGoing': 'View Outgoing Txns',
   'app.pages.account.detail.viewIncoming': 'View Incoming Txns',
-  'app.pages.account.detail.tokenTxns': 'Token Txns',
+  'app.pages.account.detail.tokentxns': 'Token Txns',
 
   // blocks
   'app.pages.blocks.position': 'Position',
