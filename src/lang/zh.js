@@ -72,7 +72,7 @@ export default {
   'app.pages.account.detail.viewAll': '查看所有交易',
   'app.pages.account.detail.viewOutGoing': '查看发送交易',
   'app.pages.account.detail.viewIncoming': '查看接收交易',
-  'app.pages.account.detail.tokenTxns': '代币交易',
+  'app.pages.account.detail.tokentxns': '代币交易',
   // blocks
   'app.pages.blocks.position': '位置',
   'app.pages.blocks.hash': '哈希',
