@@ -141,6 +141,14 @@ const StyledTabel = styled.div`
     background: #fff !important;
   }
 
+  tr > td.lastTd {
+    padding-right: 70px !important;
+    ${media.pad`
+      padding-right: 24px !important;
+      min-width: 230px;
+    `}
+  }
+
   tr > td.init {
     padding-left: initial !important;
   }
@@ -182,7 +190,9 @@ const StyledTabel = styled.div`
     justify-content: center;
     align-items: center;
     background: #f7f7f7;
-    margin-left: 130px;
+    margin-left: 100px;
+    margin-top: 9px;
+    margin-bottom: 16px;
     ${media.pad`
       margin-left: 30px;
     `}
@@ -209,6 +219,7 @@ const StyledTabel = styled.div`
     }
     ${media.pad`
       width: auto;
+      min-width: 170px;
     `}
   }
 
@@ -222,8 +233,13 @@ const StyledTabel = styled.div`
     }
   }
 
-  .fixed-first {
+  td.fixed-first {
     /* width: 443px; */
+    vertical-align: top;
+    padding-top: 24px !important;
+    ${media.pad`
+      min-width: 230px;
+    `}
   }
 
   .editorContainer {
@@ -715,7 +731,7 @@ class ContractUpdate extends Component {
                         {i18n('app.pages.contract.address')}
                       </div>
                     </td>
-                    <td className="aligned top fixed-first">
+                    <td className="aligned top">
                       <div className="ui input disabled inputContainer">
                         <input className="inputItem" type="text" placeholder={params.address} />
                       </div>
@@ -725,7 +741,7 @@ class ContractUpdate extends Component {
                         <IconItem src={iconContractSource || defaultContractIcon} />
                       </div>
                     </td>
-                    <td rowSpan="3" className="center aligned init">
+                    <td rowSpan="3" className="center aligned init lastTd">
                       <div>
                         <input
                           type="file"
@@ -779,7 +795,7 @@ class ContractUpdate extends Component {
               <table className="ui celled structured table">
                 <tbody className="tbodyContainer">
                   <tr className="centered">
-                    <td className="collapsing top">
+                    <td className="collapsing fixed-first">
                       <div className="relativeContainer">
                         <span className="redAsterisk">*</span>
                         {i18n('app.pages.contract.contractType')}
@@ -817,12 +833,12 @@ class ContractUpdate extends Component {
                         </FilterSelector>
                       </div>
                     </td>
-                    <td rowSpan="4" className="center aligned init">
+                    <td className="center aligned init">
                       <div className="iconContainer">
                         <IconItem src={iconTokenSource || defaultTokenIcon} />
                       </div>
                     </td>
-                    <td rowSpan="4" className="center aligned init">
+                    <td className="center aligned init lastTd">
                       <div>
                         <input
                           type="file"
