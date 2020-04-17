@@ -87,6 +87,7 @@ const StyledTabel = styled.table`
 
   td.zero-padding-bottom {
     padding-bottom: 0em !important;
+    max-width: 500px;
   }
   td.zero-padding-top {
     padding-top: 0em !important;
