@@ -17,7 +17,7 @@ import iconStatusErr from '../../assets/images/icons/status-err.svg';
 import iconStatusSuccess from '../../assets/images/icons/status-success.svg';
 import iconStatusSkip from '../../assets/images/icons/status-skip.svg';
 import CopyButton from '../../components/CopyButton';
-import { reqTransactionDetail, reqContract } from '../../utils/api';
+import { reqTransactionDetail, reqContract, reqTransferList } from '../../utils/api';
 import { decodeContract } from '../../utils/transaction';
 import { errorCodes, addressTypeContract, contractTypeCodeFc, contractTypeCodeGeneral } from '../../constants';
 import InputData from '../../components/InputData';
@@ -137,6 +137,10 @@ const StyledTabel = styled.table`
   .status-skip {
     color: #f09c3a;
   }
+  .transferListContainer {
+    max-height: 120px;
+    overflow: auto;
+  }
 `;
 
 const HeadBar = styled.div`
@@ -162,6 +166,8 @@ const HeadBar = styled.div`
 const TokensDiv = styled.div`
   display: flex;
   align-items: center;
+  line-height: 24px;
+  height: 24px;
   > em {
     font-style: normal;
     margin-right: 8px;
@@ -252,6 +258,7 @@ class Detail extends Component {
       filterKeys: ['original', 'utf8'],
       contractType: contractTypeCodeGeneral, //
       decodedData: {},
+      transferList: [],
     };
   }
 
@@ -312,7 +319,15 @@ class Detail extends Component {
               'sourceCode',
               'typeCode',
             ].join(',');
-            reqContract({ address: toAddress, fields: fields }, { showError: false }).then((contractResponse) => {
+            const proArr = [];
+            proArr.push(reqContract({ address: toAddress, fields: fields }, { showError: false }));
+            proArr.push(reqTransferList({ page: 1, pageSize: 5000, txHash: txnhash }, { showError: false }));
+            Promise.all(proArr).then((proRes) => {
+              this.setState({
+                isLoading: false,
+              });
+              const contractResponse = proRes[0];
+              const transferListReponse = proRes[1];
               switch (contractResponse.code) {
                 case 0:
                   const result = contractResponse.result;
@@ -335,9 +350,31 @@ class Detail extends Component {
                   });
                   break;
                 default:
+                  break;
+              }
+              switch (transferListReponse.code) {
+                case 0:
+                  const result = transferListReponse.result;
+                  const list = result.list;
                   this.setState({
-                    isLoading: false,
+                    transferList: list,
                   });
+                  for (let i = 0; i < list.length; i++) {
+                    reqContract({ address: list[i].address, fields: 'tokenIcon' }, { showError: false }).then((contractRes) => {
+                      switch (contractRes.code) {
+                        case 0:
+                          list[i].token.tokenIcon = contractRes.result.tokenIcon;
+                          this.setState({
+                            transferList: list,
+                          });
+                          break;
+                        default:
+                          break;
+                      }
+                    });
+                  }
+                  break;
+                default:
                   break;
               }
             });
@@ -364,6 +401,7 @@ class Detail extends Component {
       contractType,
       decodedData,
       isContract,
+      transferList,
     } = this.state;
     const {
       match: { params },
@@ -496,62 +534,38 @@ class Detail extends Component {
                   </td>
                 </tr>
                 {renderAny(() => {
-                  if (contractType === contractTypeCodeGeneral) {
-                    return null;
-                  }
-                  let imgIcon = null;
-                  if (contractInfo.tokenIcon) {
-                    imgIcon = <img className="fc-logo" src={`${contractInfo.tokenIcon}`} />;
-                  }
-                  try {
-                    let contrctToAddress = decodedData.params[0];
-                    let value = decodedData.params[1];
-                    if (contractType === contractTypeCodeFc && decodedData.name === 'mint') {
-                      return (
-                        <tr className="">
-                          <td className="collapsing">{i18n('Token Minted')}</td>
-                          <td className="">
-                            <TokensDiv>
-                              <em>{i18n('To')}</em>
-                              <EllipsisLine
-                                ellipsisStyle={{ maxWidth: 152 }}
-                                linkTo={`/address/${contrctToAddress}`}
-                                text={contrctToAddress}
-                              />
-                              <em>{i18n('For')}</em>
-
-                              <span>{devidedByDecimals(value, contractInfo.tokenDecimal)}</span>
-                              {imgIcon}
-                              <span className="nameItem">{`${contractInfo.tokenName} (${contractInfo.tokenSymbol})`}</span>
-                            </TokensDiv>
-                          </td>
-                        </tr>
-                      );
+                  let transferListContainer = [];
+                  for (let i = 0; i < transferList.length; i++) {
+                    const transferItem = transferList[i];
+                    let imgIcon = null;
+                    if (transferItem.token.tokenIcon) {
+                      imgIcon = <img className="fc-logo" src={`${transferItem.token.tokenIcon}`} />;
                     }
-                    return (
-                      <tr className="">
-                        <td className="collapsing">{i18n('app.pages.txns.tokenTransferred')}</td>
-                        <td className="">
-                          <TokensDiv>
-                            <em>{i18n('From')}</em>
-                            <EllipsisLine ellipsisStyle={{ maxWidth: 152 }} linkTo={`/address/${result.from}`} text={result.from} />
-                            <em>{i18n('To')}</em>
-                            <EllipsisLine
-                              ellipsisStyle={{ maxWidth: 152 }}
-                              linkTo={`/address/${contrctToAddress}`}
-                              text={contrctToAddress}
-                            />
-                            <em>For</em>
-                            <span>{devidedByDecimals(value, contractInfo.tokenDecimal)}</span>
-                            {imgIcon}
-                            <span className="nameItem">{`${contractInfo.tokenName} (${contractInfo.tokenSymbol})`}</span>
-                          </TokensDiv>
-                        </td>
-                      </tr>
+                    transferListContainer.push(
+                      <TokensDiv>
+                        <em>{i18n('From')}</em>
+                        <EllipsisLine ellipsisStyle={{ maxWidth: 152 }} linkTo={`/address/${transferItem.from}`} text={transferItem.from} />
+                        <em>{i18n('To')}</em>
+                        <EllipsisLine ellipsisStyle={{ maxWidth: 152 }} linkTo={`/address/${transferItem.to}`} text={transferItem.to} />
+                        <em>For</em>
+                        <span>{devidedByDecimals(transferItem.value, transferItem.token.decimals || 0)}</span>
+                        {imgIcon}
+                        <span className="nameItem">{`${transferItem.token.name} (${transferItem.token.symbol})`}</span>
+                      </TokensDiv>
                     );
-                  } catch {
-                    return null;
                   }
+                  const sty = { paddingTop: '0.5em' };
+                  const countStr = transferList.length > 1 ? `(${transferList.length})` : '';
+                  return (
+                    <tr className="">
+                      <td className="collapsing init-top">
+                        {i18n('app.pages.txns.tokenTransferred')} {`${countStr}`}
+                      </td>
+                      <td style={sty}>
+                        <div className="transferListContainer">{transferListContainer}</div>
+                      </td>
+                    </tr>
+                  );
                 })}
                 <tr className="">
                   <td className="collapsing">{i18n('Value')}</td>
