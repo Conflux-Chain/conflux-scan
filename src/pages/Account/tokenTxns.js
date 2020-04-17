@@ -11,6 +11,7 @@ import PropTypes from 'prop-types';
 import DataList from '../../components/DataList';
 import EllipsisLine from '../../components/EllipsisLine';
 import Countdown from '../../components/Countdown';
+import iconFcLogo from '../../assets/images/icons/fc-logo.svg';
 import { convertToValueorFee, converToGasPrice, i18n, renderAny, valToTokenVal } from '../../utils';
 import { StyledTabel, TabPanel, PCell, TabWrapper, IconFace, CtrlPanel } from './styles';
 import Pagination from '../../components/Pagination';
@@ -220,6 +221,7 @@ class TokenTxns extends Component {
           const txt = `${name} (${symbol})`;
           if (fcStat.address === row.address) {
             tokenLink = <Link to="/fansCoin">{txt}</Link>;
+            tokenImg = <img src={iconFcLogo} />;
           } else {
             tokenLink = <a>{txt}</a>;
           }
