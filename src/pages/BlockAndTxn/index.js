@@ -165,12 +165,16 @@ class BlockAndTxn extends Component {
   }
 
   componentDidMount() {
-    this.fetchInitList().then(() => {
+    this.fetchInitList({ looping: false }).then(() => {
       this.beginCountDown();
     });
 
     this.loopFetchTimer = setInterval(() => {
-      this.fetchInitList();
+      if (window.navigator.onLine) {
+        this.fetchInitList({
+          looping: true,
+        });
+      }
     }, 10 * 1000);
   }
 
@@ -179,11 +183,22 @@ class BlockAndTxn extends Component {
     clearInterval(this.loopFetchTimer);
   }
 
-  fetchInitList() {
-    const req1 = reqBlockList({
-      page: 1,
-      pageSize: 10,
-    }).then((body) => {
+  fetchInitList({ looping = false }) {
+    let extra = {};
+    if (looping) {
+      extra = {
+        showError: false,
+        showNetWorkError: false,
+      };
+    }
+
+    const req1 = reqBlockList(
+      {
+        page: 1,
+        pageSize: 10,
+      },
+      extra
+    ).then((body) => {
       if (body.code === 0) {
         this.setState({
           showLoading: false,
@@ -192,10 +207,13 @@ class BlockAndTxn extends Component {
       }
     });
 
-    const req2 = reqTransactionList({
-      page: 1,
-      pageSize: 10,
-    }).then((body) => {
+    const req2 = reqTransactionList(
+      {
+        page: 1,
+        pageSize: 10,
+      },
+      extra
+    ).then((body) => {
       if (body.code === 0) {
         this.setState({
           TxList: body.result.list.filter((v) => !!v),

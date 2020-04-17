@@ -109,11 +109,13 @@ class TokenSelect extends PureComponent {
       showTag: false,
     });
     setTimeout(() => {
-      const txtElem = this.wrapper.current.querySelector('.text');
-      this.setState({
-        tagLeftPos: txtElem.offsetWidth + 10,
-        showTag: true,
-      });
+      if (this.wrapper.current) {
+        const txtElem = this.wrapper.current.querySelector('.text');
+        this.setState({
+          tagLeftPos: txtElem.offsetWidth + 10,
+          showTag: true,
+        });
+      }
     }, 10);
   }
 

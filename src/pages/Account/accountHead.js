@@ -284,8 +284,6 @@ class AccountHead extends Component {
     this.state = {
       isLoading: false,
       accountDetail: {},
-      tokenList: [],
-      tokenTotal: 0,
 
       // contract 部分
       creatorTransaction: {
@@ -328,18 +326,6 @@ class AccountHead extends Component {
         });
         onFetchErr();
       }
-    });
-
-    reqTokenList({
-      address: accountid,
-    }).then((body) => {
-      const listSorted = (body.result.list || []).sort((a, b) => {
-        return b.balance - a.balance;
-      });
-      this.setState({
-        tokenTotal: body.result.total,
-        tokenList: listSorted,
-      });
     });
   }
 
@@ -390,8 +376,8 @@ class AccountHead extends Component {
   }
 
   render() {
-    const { accountid, intl, contractInfo } = this.props;
-    const { isLoading, accountDetail, tokenTotal, tokenList } = this.state;
+    const { accountid, intl, contractInfo, tokenTotal, tokenList = [] } = this.props;
+    const { isLoading, accountDetail } = this.state;
 
     const isContractAddr = isContract(accountid);
     const tokenOpts = tokenList.map((v) => {
@@ -509,6 +495,10 @@ AccountHead.propTypes = {
     formatMessage: PropTypes.func,
   }).isRequired,
   contractInfo: PropTypes.object,
+  tokenTotal: PropTypes.number,
+  tokenList: PropTypes.arrayOf({
+    balance: PropTypes.number,
+  }).isRequired,
 };
 
 export default injectIntl(AccountHead);

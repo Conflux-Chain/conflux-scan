@@ -3,6 +3,10 @@ import { UPDATE_COMMON } from '../constants';
 const initState = {
   lang: 'zh',
   network: 'testnet',
+
+  fcStat: {
+    // address: ''
+  },
 };
 
 export default (state = initState, action) => {

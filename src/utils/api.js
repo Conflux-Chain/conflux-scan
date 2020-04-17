@@ -86,10 +86,11 @@ export const reqBlockList = (param, extra) => {
   }).then((res) => res.body);
 };
 
-export const reqTransactionList = (param) => {
+export const reqTransactionList = (param, extra) => {
   return sendRequest({
     url: `${futurePrefix}/transaction/list`,
     query: param,
+    ...extra,
   }).then((res) => res.body);
 };
 
@@ -142,7 +143,7 @@ export const reqTokenList = (param, extra) => {
 
 export const reqTokenTxnList = (param, extra) => {
   return sendRequest({
-    url: `${futurePrefix}/account/token/transaction/list`,
+    url: `${futurePrefix}/transfer/list`,
     query: param,
     ...extra,
   }).then((res) => res.body);

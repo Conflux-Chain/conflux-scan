@@ -1,5 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import moment from 'moment';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import BigNumber from 'bignumber.js';
 import { Dropdown, Popup } from 'semantic-ui-react';
@@ -9,16 +11,15 @@ import PropTypes from 'prop-types';
 import DataList from '../../components/DataList';
 import EllipsisLine from '../../components/EllipsisLine';
 import Countdown from '../../components/Countdown';
-import { IMG_PFX } from '../../constants';
-import { convertToValueorFee, converToGasPrice, i18n, renderAny } from '../../utils';
+import iconFcLogo from '../../assets/images/icons/fc-logo.svg';
+import { convertToValueorFee, converToGasPrice, i18n, renderAny, valToTokenVal } from '../../utils';
 import { StyledTabel, TabPanel, PCell, TabWrapper, IconFace, CtrlPanel } from './styles';
 import Pagination from '../../components/Pagination';
-import iconStatusErr from '../../assets/images/icons/status-err.svg';
-import iconStatusSkip from '../../assets/images/icons/status-skip.svg';
-import { reqTokenTxnList } from '../../utils/api';
+import { reqTokenTxnList, reqFcStat } from '../../utils/api';
 import { TotalDesc, getTotalPage } from '../../components/TotalDesc';
+import { UPDATE_COMMON } from '../../constants';
 
-const ContractCell = styled.div`
+const NumCell = styled.div`
   color: rgba(0, 0, 0, 0.87);
   font-size: 16px;
   font-weight: normal;
@@ -38,17 +39,24 @@ const TokenLineDiv = styled.div`
     font-weight: 400;
     color: rgba(66, 146, 250, 1);
     line-height: 19px;
+    &[href^='/'] {
+      &:hover {
+        color: #1e70bf;
+      }
+    }
   }
 `;
 
 const { RangePicker } = DatePicker;
 
 /* eslint react/destructuring-assignment: 0 */
+/* eslint react/no-did-update-set-state: 0 */
 
 class TokenTxns extends Component {
   constructor(...args) {
     super(...args);
-    this.state = {
+
+    this.getInitState = () => ({
       TxList: [],
       TxTotalCount: 0,
       queries: {
@@ -60,40 +68,53 @@ class TokenTxns extends Component {
       listLimit: undefined,
       startTime: null,
       endTime: null,
-    };
+    });
+    this.state = this.getInitState();
   }
 
   componentDidUpdate(prevProps) {
     const { isActive } = this.props;
-    if (isActive) {
-      const { activated } = this.state;
-      if (!activated) {
+    const { activated } = this.state;
+    if (isActive && !activated) {
+      // first mount
+      this.onMount();
+      this.setState({
+        activated: true,
+      });
+      return;
+    }
+
+    if (this.props.accountid !== prevProps.accountid) {
+      this.setState(this.getInitState());
+      if (this.props.isActive) {
         this.onMount();
-        // eslint-disable-next-line react/no-did-update-set-state
         this.setState({
           activated: true,
-        });
-      }
-
-      // eslint-disable-next-line react/destructuring-assignment
-      if (this.props.accountid !== prevProps.accountid) {
-        this.onMount();
-        // eslint-disable-next-line react/no-did-update-set-state
-        this.setState({
-          startTime: null,
-          endTime: null,
         });
       }
     }
   }
 
   onMount() {
-    const { accountid } = this.props;
+    const { accountid, fcStat, dispatch } = this.props;
     this.changePage(accountid, {
       page: 1,
       pageSize: 10,
       txType: 'all',
     });
+
+    if (!fcStat.address) {
+      reqFcStat().then((body) => {
+        if (body.code === 0) {
+          dispatch({
+            type: UPDATE_COMMON,
+            payload: {
+              fcStat: body.result.data,
+            },
+          });
+        }
+      });
+    }
   }
 
   changePage(accountid, queriesRaw) {
@@ -121,7 +142,7 @@ class TokenTxns extends Component {
   }
 
   render() {
-    const { accountid, isActive, intl } = this.props;
+    const { accountid, isActive, intl, tokenMap = {}, fcStat } = this.props;
     const { TxList, TxTotalCount, queries, listLimit, activated } = this.state;
     const { startTime, endTime } = this.state;
 
@@ -132,36 +153,11 @@ class TokenTxns extends Component {
     const columns = [
       {
         key: 1,
-        dataIndex: 'hash',
+        dataIndex: 'transactionHash',
         className: 'two wide aligned',
         title: i18n('Hash'),
         render: (text, row) => {
-          const line = (
-            <EllipsisLine popUpCfg={{ position: 'top left', pinned: true }} linkTo={`/transactionsdetail/${text}`} text={text} />
-          );
-          if (row.status === 0) {
-            return line;
-          }
-          let errIcon;
-          if (row.status === 1) {
-            errIcon = (
-              <Popup trigger={<img src={iconStatusErr} />} content={i18n('app.pages.err-reason.1')} position="top left" hoverable />
-            );
-          } else if (row.status === 2 || row.status === null) {
-            errIcon = (
-              <Popup trigger={<img src={iconStatusSkip} />} content={i18n('app.pages.err-reason.2')} position="top left" hoverable />
-            );
-          }
-
-          return (
-            <div className="txnhash-err">
-              {errIcon}
-              <div className="txnhash-err-line1">
-                {line}
-                {/* <div className="txnhash-err-line2">{errtxt}</div> */}
-              </div>
-            </div>
-          );
+          return <EllipsisLine popUpCfg={{ position: 'top left', pinned: true }} linkTo={`/transactionsdetail/${text}`} text={text} />;
         },
       },
       {
@@ -187,13 +183,6 @@ class TokenTxns extends Component {
         dataIndex: 'to',
         title: i18n('To'),
         render: (text, row) => {
-          if (row.contractCreated) {
-            return (
-              <div>
-                <ContractCell>{i18n('Contract Creation')}</ContractCell>
-              </div>
-            );
-          }
           return (
             <div>
               <PCell>
@@ -212,7 +201,9 @@ class TokenTxns extends Component {
         className: 'two wide aligned',
         dataIndex: 'value',
         title: i18n('Value'),
-        render: (text) => <EllipsisLine unit="CFX" text={convertToValueorFee(text)} />,
+        render: (text, row) => {
+          return <NumCell>{valToTokenVal(text, row.token.decimals)}</NumCell>;
+        },
       },
       {
         key: 5,
@@ -220,11 +211,24 @@ class TokenTxns extends Component {
         dataIndex: '',
         title: i18n('Token'),
         render: (text, row) => {
-          const { tokenName, tokenSymbol, tokenIcon } = row;
+          const { name, symbol } = row.token;
+          let tokenImg;
+          if (tokenMap[row.address] && tokenMap[row.address].tokenIcon) {
+            tokenImg = <img src={tokenMap[row.address].tokenIcon} />;
+          }
+
+          let tokenLink;
+          const txt = `${name} (${symbol})`;
+          if (fcStat.address === row.address) {
+            tokenLink = <Link to="/fansCoin">{txt}</Link>;
+            tokenImg = <img src={iconFcLogo} />;
+          } else {
+            tokenLink = <a>{txt}</a>;
+          }
           return (
             <TokenLineDiv>
-              <img src={tokenIcon} />
-              <a>{`${tokenName} (${tokenSymbol})`}</a>
+              {tokenImg}
+              {tokenLink}
             </TokenLineDiv>
           );
         },
@@ -436,8 +440,23 @@ TokenTxns.propTypes = {
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
   }).isRequired,
+  tokenMap: PropTypes.objectOf(
+    PropTypes.shape({
+      tokenIcon: PropTypes.string,
+    })
+  ).isRequired,
+  fcStat: PropTypes.objectOf({
+    address: PropTypes.string,
+  }).isRequired,
+  dispatch: PropTypes.string.isRequired,
 };
 
 TokenTxns.defaultProps = {};
 
-export default injectIntl(TokenTxns);
+function mapStateToProps(state) {
+  return {
+    fcStat: state.common.fcStat,
+  };
+}
+
+export default connect(mapStateToProps)(injectIntl(TokenTxns));

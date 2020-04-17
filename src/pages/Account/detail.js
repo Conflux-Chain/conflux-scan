@@ -9,11 +9,11 @@ import { i18n, isContract } from '../../utils';
 import * as commonCss from '../../globalStyles/common';
 import media from '../../globalStyles/media';
 import MinedBlocks from './minedBlocks';
-import Transitions from './transitions';
+import Transactions from './transactions';
 import AccountHead from './accountHead';
 import ContractPanel from './contractPanel';
 import TokenTxns from './tokenTxns';
-import { reqContract } from '../../utils/api';
+import { reqContract, reqTokenList } from '../../utils/api';
 import { errorCodes } from '../../constants';
 
 const Wrapper = styled.div`
@@ -51,41 +51,56 @@ const TabZone = styled.div`
 
 const tabEnum = {
   transactions: 'transactions',
-  tokenTxns: 'tokenTxns',
+  tokentxns: 'tokentxns',
   contract: 'contract',
   minedBlocks: 'minedBlocks',
 };
 
+function removeHash() {
+  history.replaceState(null, null, ' ');
+}
+
 class Detail extends Component {
   constructor(...args) {
     super(...args);
+    this.getAccountId = () => {
+      const {
+        match: { params },
+      } = this.props;
+      const { accountid } = params;
+      return accountid;
+    };
+
     this.state = {
       blockCount: 0,
-      currentTab: tabEnum.transactions,
+      currentTab: null,
       showMaintaining: false,
       contractInfo: {},
+      tokenList: [],
+      tokenTotal: 0,
+      accountid: this.getAccountId(),
     };
   }
 
   componentDidMount() {
-    const {
-      match: { params },
-    } = this.props;
-    const { accountid } = params;
+    const accountid = this.getAccountId();
     if (isContract(accountid)) {
       this.fetchContractInfo(accountid);
     }
+    this.fetchTokenList(accountid);
     this.autoSwitchTab();
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.match.params.accountid !== prevProps.match.params.accountid) {
       // eslint-disable-next-line  react/no-did-update-set-state
-      this.setState({
-        blockCount: 0,
-      });
       this.autoSwitchTab();
-      const { accountid } = this.props.match.params;
+      const accountid = this.getAccountId();
+      // eslint-disable-next-line  react/no-did-update-set-state
+      this.setState({
+        accountid,
+      });
+      this.fetchTokenList(accountid);
       if (isContract(accountid)) {
         this.fetchContractInfo(accountid);
       }
@@ -94,11 +109,34 @@ class Detail extends Component {
 
   autoSwitchTab() {
     const { location } = this.props;
-    if (location.hash === '#tokentxns') {
-      this.setState({ currentTab: tabEnum.tokenTxns });
+    if (location.hash === `#${tabEnum.tokentxns}`) {
+      this.setState({ currentTab: tabEnum.tokentxns });
+    } else if (location.hash === `#${tabEnum.minedBlocks}`) {
+      this.setState({ currentTab: tabEnum.minedBlocks });
+    } else if (location.hash === `#${tabEnum.contract}`) {
+      this.setState({ currentTab: tabEnum.contract });
     } else {
       this.setState({ currentTab: tabEnum.transactions });
     }
+  }
+
+  fetchTokenList(accountid) {
+    reqTokenList({
+      address: accountid,
+    }).then((body) => {
+      const listSorted = (body.result.list || []).sort((a, b) => {
+        return b.balance - a.balance;
+      });
+      const tokenMap = {};
+      listSorted.forEach((v) => {
+        tokenMap[v.address] = v;
+      });
+      this.setState({
+        tokenTotal: body.result.list.length,
+        tokenList: listSorted,
+        tokenMap,
+      });
+    });
   }
 
   fetchContractInfo(accountid) {
@@ -135,13 +173,13 @@ class Detail extends Component {
   }
 
   render() {
-    const { currentTab, showMaintaining, blockCount, contractInfo } = this.state;
+    const { currentTab, showMaintaining, blockCount, contractInfo, tokenTotal, tokenList, tokenMap } = this.state;
     const {
       intl,
       match: { params },
     } = this.props;
 
-    const { accountid } = params;
+    const { accountid } = this.state;
     const isContractAddr = isContract(accountid);
 
     return (
@@ -166,6 +204,8 @@ class Detail extends Component {
                 blockCount: num,
               });
             }}
+            tokenTotal={tokenTotal}
+            tokenList={tokenList}
           />
           <TabZone>
             <div className="ui attached tabular menu">
@@ -173,24 +213,35 @@ class Detail extends Component {
                 type="button"
                 className={currentTab === tabEnum.transactions ? 'active item' : 'item'}
                 onKeyUp={() => {}}
-                onClick={() => this.setState({ currentTab: tabEnum.transactions })}
+                onClick={() => {
+                  this.setState({ currentTab: tabEnum.transactions });
+                  if (window.location.hash) {
+                    removeHash();
+                  }
+                }}
               >
                 {i18n('app.pages.account.detail.tab.transactions')}
               </button>
               <button
                 type="button"
-                className={currentTab === tabEnum.tokenTxns ? 'active item' : 'item'}
+                className={currentTab === tabEnum.tokentxns ? 'active item' : 'item'}
                 onKeyUp={() => {}}
-                onClick={() => this.setState({ currentTab: tabEnum.tokenTxns })}
+                onClick={() => {
+                  this.setState({ currentTab: tabEnum.tokentxns });
+                  window.location.replace(`#${tabEnum.tokentxns}`);
+                }}
               >
-                {i18n('app.pages.account.detail.tokenTxns')}
+                {i18n('app.pages.account.detail.tokentxns')}
               </button>
               {isContractAddr && (
                 <button
                   type="button"
                   className={currentTab === tabEnum.contract ? 'active item' : 'item'}
                   onKeyUp={() => {}}
-                  onClick={() => this.setState({ currentTab: tabEnum.contract })}
+                  onClick={() => {
+                    this.setState({ currentTab: tabEnum.contract });
+                    window.location.replace(`#${tabEnum.contract}`);
+                  }}
                 >
                   {i18n('app.common.contract')}
                 </button>
@@ -201,6 +252,7 @@ class Detail extends Component {
                 onKeyUp={() => {}}
                 onClick={() => {
                   this.setState({ currentTab: tabEnum.minedBlocks });
+                  window.location.replace(`#${tabEnum.minedBlocks}`);
                 }}
                 style={{
                   display: blockCount > 0 ? 'block' : 'none',
@@ -210,14 +262,12 @@ class Detail extends Component {
               </button>
             </div>
             <div className="ctrlpanel-wrap">
-              <Transitions isActive={currentTab === tabEnum.transactions} accountid={accountid} />
-              {blockCount > 0 && (
-                <MinedBlocks blockCount={blockCount} isActive={currentTab === tabEnum.minedBlocks} accountid={accountid} />
-              )}
+              <Transactions isActive={currentTab === tabEnum.transactions} accountid={accountid} />
+              {currentTab === tabEnum.minedBlocks && blockCount > 0 ? <MinedBlocks blockCount={blockCount} accountid={accountid} /> : null}
               {isContractAddr && (
                 <ContractPanel isActive={currentTab === tabEnum.contract} accountid={accountid} contractInfo={contractInfo} />
               )}
-              <TokenTxns isActive={currentTab === tabEnum.tokenTxns} accountid={accountid} />
+              <TokenTxns isActive={currentTab === tabEnum.tokentxns} accountid={accountid} tokenMap={tokenMap} />
             </div>
           </TabZone>
         </Wrapper>

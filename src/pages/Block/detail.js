@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import superagent from 'superagent';
 import moment from 'moment';
 import BigNumber from 'bignumber.js';
+import { Popup } from 'semantic-ui-react';
 import Pagination from '../../components/Pagination';
 import Countdown from '../../components/Countdown';
 import TableLoading from '../../components/TableLoading';
@@ -176,7 +177,12 @@ const TxColumns = [
       if (row.contractCreated) {
         return (
           <div>
-            <ContractCell>{i18n('Contract Creation')}</ContractCell>
+            <Popup
+              trigger={<ContractCell>{i18n('Contract Creation')}</ContractCell>}
+              content={row.contractCreated}
+              position="top left"
+              hoverable
+            />
           </div>
         );
       }
