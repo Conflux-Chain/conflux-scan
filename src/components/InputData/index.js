@@ -49,6 +49,8 @@ const Wrap = styled.div`
     border-radius: 4px;
     border: 1px solid #979797;
     padding: 10px;
+    height: 166px;
+    overflow-y: auto;
   }
   .custom-json-pretty {
     margin-top: 0px;
@@ -63,6 +65,8 @@ const Wrap = styled.div`
     border-radius: 4px;
     border: 1px solid #979797;
     padding: 10px;
+    height: 166px;
+    overflow-y: auto;
 
     .__json-key__ {
       color: #000;
