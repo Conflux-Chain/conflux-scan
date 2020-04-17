@@ -116,7 +116,6 @@ const ContractCell = styled.div`
   font-weight: normal;
 `;
 
-// todo transaction list error update
 const columns = [
   {
     key: 1,
