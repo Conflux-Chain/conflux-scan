@@ -166,3 +166,11 @@ export const reqContractCreate = (param, extra) => {
     ...extra,
   }).then((res) => res.body);
 };
+
+export const reqTransferList = (param, extra) => {
+  return sendRequest({
+    url: `${futurePrefix}/transfer/list`,
+    query: param,
+    ...extra,
+  }).then((res) => res.body);
+};
