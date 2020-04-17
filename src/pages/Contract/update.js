@@ -141,6 +141,14 @@ const StyledTabel = styled.div`
     background: #fff !important;
   }
 
+  tr > td.lastTd {
+    padding-right: 70px !important;
+    ${media.pad`
+      padding-right: 24px !important;
+      min-width: 230px;
+    `}
+  }
+
   tr > td.init {
     padding-left: initial !important;
   }
@@ -182,7 +190,9 @@ const StyledTabel = styled.div`
     justify-content: center;
     align-items: center;
     background: #f7f7f7;
-    margin-left: 130px;
+    margin-left: 100px;
+    margin-top: 9px;
+    margin-bottom: 16px;
     ${media.pad`
       margin-left: 30px;
     `}
@@ -209,6 +219,7 @@ const StyledTabel = styled.div`
     }
     ${media.pad`
       width: auto;
+      min-width: 170px;
     `}
   }
 
@@ -222,8 +233,13 @@ const StyledTabel = styled.div`
     }
   }
 
-  .fixed-first {
+  td.fixed-first {
     /* width: 443px; */
+    vertical-align: top;
+    padding-top: 24px !important;
+    ${media.pad`
+      min-width: 230px;
+    `}
   }
 
   .editorContainer {
@@ -452,9 +468,6 @@ class ContractUpdate extends Component {
       nameTagVal: '',
       websiteVal: '',
       selectedContractTypeCode: 0,
-      tokenNameVal: '',
-      tokenSymbolVal: '',
-      tokenDecimalsVal: '',
       sourceCode: '',
       abiVal: '',
       passwordVal: '',
@@ -548,39 +561,6 @@ class ContractUpdate extends Component {
     );
   }
 
-  handleTokenNameChange(e) {
-    this.setState(
-      {
-        tokenNameVal: e.target.value,
-      },
-      () => {
-        this.updateCanSubmit();
-      }
-    );
-  }
-
-  handleTokenSymbolChange(e) {
-    this.setState(
-      {
-        tokenSymbolVal: e.target.value,
-      },
-      () => {
-        this.updateCanSubmit();
-      }
-    );
-  }
-
-  handleTokenDecimalsChange(e) {
-    this.setState(
-      {
-        tokenDecimalsVal: e.target.value,
-      },
-      () => {
-        this.updateCanSubmit();
-      }
-    );
-  }
-
   handleSourceChange(sourceCode) {
     this.setState(
       {
@@ -627,25 +607,13 @@ class ContractUpdate extends Component {
   }
 
   updateCanSubmit() {
-    const {
-      selectedContractTypeCode,
-      nameTagVal,
-      abiVal,
-      tokenNameVal,
-      tokenSymbolVal,
-      tokenDecimalsVal,
-      sourceCode,
-      passwordVal,
-    } = this.state;
+    const { nameTagVal, abiVal, sourceCode, passwordVal } = this.state;
     let isSubmitable = false;
     // eslint-disable-next-line eqeqeq
-    if (selectedContractTypeCode == contractTypeCodeGeneral) {
-      if (nameTagVal && sourceCode && abiVal && passwordVal) {
-        isSubmitable = true;
-      }
-    } else if (nameTagVal && sourceCode && abiVal && passwordVal && tokenNameVal && tokenSymbolVal && tokenDecimalsVal) {
+    if (nameTagVal && sourceCode && abiVal && passwordVal) {
       isSubmitable = true;
     }
+
     this.setState({
       canSubmit: isSubmitable,
     });
@@ -653,21 +621,7 @@ class ContractUpdate extends Component {
   }
 
   fetchContactInfo(address) {
-    const fields = [
-      'address',
-      'type',
-      'name',
-      'website',
-      'tokenName',
-      'tokenSymbol',
-      'tokenDecimal',
-      'tokenIcon',
-      'abi',
-      'bytecode',
-      'icon',
-      'sourceCode',
-      'typeCode',
-    ].join(',');
+    const fields = ['address', 'type', 'name', 'website', 'tokenIcon', 'abi', 'bytecode', 'icon', 'sourceCode', 'typeCode'].join(',');
     reqContract({ address: address, fields: fields }).then((contractResponse) => {
       switch (contractResponse.code) {
         case 0:
@@ -677,9 +631,6 @@ class ContractUpdate extends Component {
             selectedContractTypeCode: result.typeCode,
             nameTagVal: result.name,
             websiteVal: result.website,
-            tokenNameVal: result.tokenName,
-            tokenSymbolVal: result.tokenSymbol,
-            tokenDecimalsVal: result.tokenDecimal,
             iconContractSource: result.icon,
             iconTokenSource: result.tokenIcon,
             sourceCode: result.sourceCode,
@@ -699,9 +650,6 @@ class ContractUpdate extends Component {
     const {
       nameTagVal,
       abiVal,
-      tokenNameVal,
-      tokenSymbolVal,
-      tokenDecimalsVal,
       sourceCode,
       passwordVal,
       iconContractSource,
@@ -719,9 +667,6 @@ class ContractUpdate extends Component {
     bodyparams.website = websiteVal;
     bodyparams.icon = iconContractSource;
     bodyparams.typeCode = Number(selectedContractTypeCode);
-    bodyparams.tokenName = tokenNameVal;
-    bodyparams.tokenSymbol = tokenSymbolVal;
-    bodyparams.tokenDecimal = Number(tokenDecimalsVal);
     bodyparams.tokenIcon = iconTokenSource;
     bodyparams.sourceCode = sourceCode;
     bodyparams.abi = abiVal;
@@ -759,9 +704,6 @@ class ContractUpdate extends Component {
       nameTagVal,
       abiVal,
       websiteVal,
-      tokenNameVal,
-      tokenSymbolVal,
-      tokenDecimalsVal,
       sourceCode,
       passwordVal,
       canSubmit,
@@ -789,7 +731,7 @@ class ContractUpdate extends Component {
                         {i18n('app.pages.contract.address')}
                       </div>
                     </td>
-                    <td className="aligned top fixed-first">
+                    <td className="aligned top">
                       <div className="ui input disabled inputContainer">
                         <input className="inputItem" type="text" placeholder={params.address} />
                       </div>
@@ -799,7 +741,7 @@ class ContractUpdate extends Component {
                         <IconItem src={iconContractSource || defaultContractIcon} />
                       </div>
                     </td>
-                    <td rowSpan="3" className="center aligned init">
+                    <td rowSpan="3" className="center aligned init lastTd">
                       <div>
                         <input
                           type="file"
@@ -853,7 +795,7 @@ class ContractUpdate extends Component {
               <table className="ui celled structured table">
                 <tbody className="tbodyContainer">
                   <tr className="centered">
-                    <td className="collapsing top">
+                    <td className="collapsing fixed-first">
                       <div className="relativeContainer">
                         <span className="redAsterisk">*</span>
                         {i18n('app.pages.contract.contractType')}
@@ -891,12 +833,12 @@ class ContractUpdate extends Component {
                         </FilterSelector>
                       </div>
                     </td>
-                    <td rowSpan="4" className="center aligned init">
+                    <td className="center aligned init">
                       <div className="iconContainer">
                         <IconItem src={iconTokenSource || defaultTokenIcon} />
                       </div>
                     </td>
-                    <td rowSpan="4" className="center aligned init">
+                    <td className="center aligned init lastTd">
                       <div>
                         <input
                           type="file"
@@ -923,63 +865,6 @@ class ContractUpdate extends Component {
                         >
                           {i18n('app.pages.contract.removePhoto')}
                         </div>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="collapsing">
-                      <div className={this.isGeneralContractType() ? 'relativeContainer disabled' : 'relativeContainer'}>
-                        <span className="redAsterisk">*</span>
-                        {i18n('app.pages.contract.tokenName')}
-                      </div>
-                    </td>
-                    <td className="aligned">
-                      <div className="ui input inputContainer">
-                        <input
-                          className="inputItem"
-                          type="text"
-                          value={tokenNameVal}
-                          onChange={(e) => this.handleTokenNameChange(e)}
-                          readOnly={this.isGeneralContractType()}
-                        />
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="collapsing">
-                      <div className={this.isGeneralContractType() ? 'relativeContainer disabled' : 'relativeContainer'}>
-                        <span className="redAsterisk">*</span>
-                        {i18n('app.pages.contract.tokenSymbol')}
-                      </div>
-                    </td>
-                    <td className="aligned">
-                      <div className="ui input inputContainer">
-                        <input
-                          className="inputItem"
-                          type="text"
-                          value={tokenSymbolVal}
-                          onChange={(e) => this.handleTokenSymbolChange(e)}
-                          readOnly={this.isGeneralContractType()}
-                        />
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="collapsing bottom">
-                      <div className={this.isGeneralContractType() ? 'relativeContainer disabled' : 'relativeContainer'}>
-                        <span className="redAsterisk">*</span>
-                        {i18n('app.pages.contract.decimals')}
-                      </div>
-                    </td>
-                    <td className="aligned bottom">
-                      <div className="ui input inputContainer">
-                        <input
-                          className="inputItem"
-                          type="number"
-                          value={tokenDecimalsVal}
-                          onChange={(e) => this.handleTokenDecimalsChange(e)}
-                          readOnly={this.isGeneralContractType()}
-                        />
                       </div>
                     </td>
                   </tr>
