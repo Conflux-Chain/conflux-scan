@@ -29,8 +29,11 @@ function fetchDagData() {
   });
 }
 
+let fetchTimer;
 function startFechingDagData() {
-  setInterval(fetchDagData.bind(this), 5000);
+  if (window.navigator.onLine) {
+    fetchTimer = setInterval(fetchDagData.bind(this), 5000);
+  }
 }
 
 const Container = styled.div``;
@@ -138,6 +141,9 @@ function Dag({ id = 'dag-viewer', children } = {}) {
       if (player) {
         player.destroy();
         player = null;
+      }
+      if (fetchTimer) {
+        clearInterval(fetchTimer);
       }
     }
   );

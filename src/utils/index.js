@@ -40,6 +40,11 @@ export const converToGasPrice3Fixed = (bigNumber) => {
   return result.toFixed(3);
 };
 
+export const valToTokenVal = (bigNumber, decimals) => {
+  const result = new BigNumber(bigNumber).dividedBy(10 ** decimals);
+  return result.toString(10);
+};
+
 export const getXmlHttpRequest = () => {
   try {
     // 主流浏览器提供了XMLHttpRequest对象
@@ -210,10 +215,12 @@ export const sendRequest = (config) => {
   reqPromise.catch((error) => {
     if (config && config.url.match(/dashboard\/dag$/)) return;
     console.log(error);
-    toast.error({
-      content: 'app.comp.toast.error.networkErr',
-      title: 'app.comp.toast.error.other',
-    });
+    if (config.showNetWorkError !== false) {
+      toast.error({
+        content: 'app.comp.toast.error.networkErr',
+        title: 'app.comp.toast.error.other',
+      });
+    }
   });
 
   return reqPromise;
