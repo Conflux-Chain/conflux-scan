@@ -390,9 +390,6 @@ class AccountHead extends Component {
       };
     });
 
-    const toolTip3 = intl.formatMessage({
-      id: 'Click to edit contract',
-    });
     const toolTip4 = intl.formatMessage({
       id: 'Click to enter the official site',
     });
@@ -408,10 +405,24 @@ class AccountHead extends Component {
           {isContractAddr && (
             <Fragment>
               <Link
-                to={`/contract/update/${accountid}`}
+                to={renderAny(() => {
+                  if (Object.keys(contractInfo).length === 0) {
+                    return `/contract/create/${accountid}`;
+                  }
+                  return `/contract/update/${accountid}`;
+                })}
                 className="address-righticon"
                 data-inverted=""
-                data-tooltip={toolTip3}
+                data-tooltip={renderAny(() => {
+                  if (Object.keys(contractInfo).length === 0) {
+                    return intl.formatMessage({
+                      id: 'Click to create contract',
+                    });
+                  }
+                  return intl.formatMessage({
+                    id: 'Click to edit contract',
+                  });
+                })}
                 data-position="bottom left"
               >
                 <i className="edit-icon" />
