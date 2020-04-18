@@ -19,7 +19,7 @@ import iconStatusSkip from '../../assets/images/icons/status-skip.svg';
 import CopyButton from '../../components/CopyButton';
 import { reqTransactionDetail, reqContract, reqTransferList } from '../../utils/api';
 import { decodeContract } from '../../utils/transaction';
-import { errorCodes, addressTypeContract, contractTypeCodeFc, contractTypeCodeGeneral } from '../../constants';
+import { errorCodes, addressTypeContract, contractTypeCodeFc, contractTypeCodeGeneral, defaultTokenIcon } from '../../constants';
 import InputData from '../../components/InputData';
 
 const Wrapper = styled.div`
@@ -540,10 +540,8 @@ class Detail extends Component {
                   let transferListContainer = [];
                   for (let i = 0; i < transferList.length; i++) {
                     const transferItem = transferList[i];
-                    let imgIcon = null;
-                    if (transferItem.token.tokenIcon) {
-                      imgIcon = <img className="fc-logo" src={`${transferItem.token.tokenIcon}`} />;
-                    }
+                    let imgSrc = transferItem.token.tokenIcon || defaultTokenIcon;
+                    const imgIcon = <img className="fc-logo" src={`${imgSrc}`} />;
                     transferListContainer.push(
                       <TokensDiv>
                         <em>{i18n('From')}</em>
