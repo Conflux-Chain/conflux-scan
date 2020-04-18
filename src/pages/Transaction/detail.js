@@ -553,8 +553,7 @@ class Detail extends Component {
                     let imgSrc = transferItem.token.tokenIcon || defaultTokenIcon;
                     const imgIcon = <img className="fc-logo" src={`${imgSrc}`} />;
                     let nameContainer = <span className="nameItem">{`${transferItem.token.name} (${transferItem.token.symbol})`}</span>;
-                    // eslint-disable-next-line eqeqeq
-                    if (transferItem.token.name == 'FansCoin' && transferItem.address == fansCoinAddress) {
+                    if (transferItem.token.name === 'FansCoin' && transferItem.address === fansCoinAddress) {
                       nameContainer = (
                         <Link to="/fansCoin" className="nameItem">
                           {`${transferItem.token.name} (${transferItem.token.symbol})`}
