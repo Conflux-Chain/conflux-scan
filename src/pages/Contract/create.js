@@ -476,7 +476,14 @@ class ContractUpdate extends Component {
     this.handleSourceChange = this.handleSourceChange.bind(this);
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    const {
+      match: { params },
+    } = this.props;
+    this.setState({
+      addressVal: params.address,
+    });
+  }
 
   componentDidUpdate() {}
 
@@ -941,6 +948,9 @@ ContractUpdate.propTypes = {
   history: PropTypes.shape({
     replace: PropTypes.func,
   }).isRequired,
+  match: PropTypes.objectOf(PropTypes.string),
 };
-ContractUpdate.defaultProps = {};
+ContractUpdate.defaultProps = {
+  match: {},
+};
 export default withRouter(ContractUpdate);
