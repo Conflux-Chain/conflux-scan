@@ -17,7 +17,7 @@ import { StyledTabel, TabPanel, PCell, TabWrapper, IconFace, CtrlPanel } from '.
 import Pagination from '../../components/Pagination';
 import { reqTokenTxnList, reqFcStat } from '../../utils/api';
 import { TotalDesc, getTotalPage } from '../../components/TotalDesc';
-import { UPDATE_COMMON } from '../../constants';
+import { UPDATE_COMMON, defaultTokenIcon } from '../../constants';
 
 const NumCell = styled.div`
   color: rgba(0, 0, 0, 0.87);
@@ -215,6 +215,8 @@ class TokenTxns extends Component {
           let tokenImg;
           if (tokenMap[row.address] && tokenMap[row.address].tokenIcon) {
             tokenImg = <img src={tokenMap[row.address].tokenIcon} />;
+          } else {
+            tokenImg = <img src={defaultTokenIcon} />;
           }
 
           let tokenLink;
