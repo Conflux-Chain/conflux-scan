@@ -534,6 +534,9 @@ class Detail extends Component {
                   </td>
                 </tr>
                 {renderAny(() => {
+                  if (!isContract) {
+                    return null;
+                  }
                   let transferListContainer = [];
                   for (let i = 0; i < transferList.length; i++) {
                     const transferItem = transferList[i];
