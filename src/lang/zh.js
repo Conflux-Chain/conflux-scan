@@ -198,6 +198,7 @@ export default {
   'contract.at-txn1': ' 在 ',
   'contract.at-txn2': ' 交易',
   'Click to edit contract': '点击编辑合约',
+  'Click to create contract': '点击创建合约',
   'Click to enter the official site': '点击进入官方网站',
   'app.pages.account.notfound': '暂无',
   'app.pages.account.notfound.tokenTracker': '暂无信息或尚未注册',
