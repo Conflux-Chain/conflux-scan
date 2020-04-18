@@ -50,3 +50,4 @@ export const contractTypeFc = contractTypeFcStr;
 export const contractTypeCodeFc = contractTypeCodeFcNum;
 export const contractTypeERC721 = contractTypeERC721Str;
 export const contractTypeDEX = contractTypeDEXStr;
+export const fansCoinAddress = '0x84206cf2696cbbf856beae72003abc271766e023';

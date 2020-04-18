@@ -19,7 +19,14 @@ import iconStatusSkip from '../../assets/images/icons/status-skip.svg';
 import CopyButton from '../../components/CopyButton';
 import { reqTransactionDetail, reqContract, reqTransferList } from '../../utils/api';
 import { decodeContract } from '../../utils/transaction';
-import { errorCodes, addressTypeContract, contractTypeCodeFc, contractTypeCodeGeneral } from '../../constants';
+import {
+  errorCodes,
+  addressTypeContract,
+  contractTypeCodeFc,
+  contractTypeCodeGeneral,
+  defaultTokenIcon,
+  fansCoinAddress,
+} from '../../constants';
 import InputData from '../../components/InputData';
 
 const Wrapper = styled.div`
@@ -537,12 +544,21 @@ class Detail extends Component {
                   if (!isContract) {
                     return null;
                   }
+                  if (transferList.length <= 0) {
+                    return null;
+                  }
                   let transferListContainer = [];
                   for (let i = 0; i < transferList.length; i++) {
                     const transferItem = transferList[i];
-                    let imgIcon = null;
-                    if (transferItem.token.tokenIcon) {
-                      imgIcon = <img className="fc-logo" src={`${transferItem.token.tokenIcon}`} />;
+                    let imgSrc = transferItem.token.tokenIcon || defaultTokenIcon;
+                    const imgIcon = <img className="fc-logo" src={`${imgSrc}`} />;
+                    let nameContainer = <span className="nameItem">{`${transferItem.token.name} (${transferItem.token.symbol})`}</span>;
+                    if (transferItem.token.name === 'FansCoin' && transferItem.address === fansCoinAddress) {
+                      nameContainer = (
+                        <Link to="/fansCoin" className="nameItem">
+                          {`${transferItem.token.name} (${transferItem.token.symbol})`}
+                        </Link>
+                      );
                     }
                     transferListContainer.push(
                       <TokensDiv>
@@ -553,7 +569,7 @@ class Detail extends Component {
                         <em>For</em>
                         <span>{devidedByDecimals(transferItem.value, transferItem.token.decimals || 0)}</span>
                         {imgIcon}
-                        <span className="nameItem">{`${transferItem.token.name} (${transferItem.token.symbol})`}</span>
+                        {nameContainer}
                       </TokensDiv>
                     );
                   }

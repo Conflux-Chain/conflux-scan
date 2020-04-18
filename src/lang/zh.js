@@ -215,7 +215,7 @@ export default {
   'app.pages.contract.sourceCode': '合约源码',
   'app.pages.contract.abi': '合约ABI',
   'app.pages.contract.typeinAdminPassword': '请输入管理员口令',
-  'app.pages.contract.nameTag': '名字标签',
+  'app.pages.contract.nameTag': '合约名称标签',
   'app.pages.contract.generalContract': '普通合约',
   'app.pages.contract.erc20': 'ERC20',
   'app.pages.contract.erc777': 'ERC777',

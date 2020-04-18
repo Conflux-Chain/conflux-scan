@@ -147,7 +147,7 @@ export default {
   'app.pages.contract.sourceCode': 'Contract Source Code',
   'app.pages.contract.abi': 'Contract ABI',
   'app.pages.contract.typeinAdminPassword': 'Please enter your admin password',
-  'app.pages.contract.nameTag': 'Name Tag',
+  'app.pages.contract.nameTag': 'Contract Name Tag',
   'app.pages.contract.generalContract': 'General Contract',
   'app.pages.contract.erc20': 'ERC20',
   'app.pages.contract.erc777': 'ERC777',
