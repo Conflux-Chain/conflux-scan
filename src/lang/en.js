@@ -132,6 +132,7 @@ export default {
   'contract.at-txn1': 'at txn',
   'contract.at-txn2': ' ',
   'app.pages.account.notfound': 'Not Available',
+  'app.pages.account.notfound.tokenTracker': 'Not Available or Verified',
 
   // Contract
   'app.pages.contract.edit': 'Edit Contract',

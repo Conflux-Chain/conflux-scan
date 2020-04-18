@@ -200,6 +200,7 @@ export default {
   'Click to edit contract': '点击编辑合约',
   'Click to enter the official site': '点击进入官方网站',
   'app.pages.account.notfound': '暂无',
+  'app.pages.account.notfound.tokenTracker': '暂无信息或尚未注册',
 
   // Contract
   'app.pages.contract.edit': '编辑合约',

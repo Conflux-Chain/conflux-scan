@@ -341,7 +341,7 @@ class AccountHead extends Component {
       <ContractInfoPanel>
         <div>
           <div className="contract-info-row">
-            <div className="contract-left-info">{i18n('Contract Name')}</div>
+            <div className="contract-left-info">{i18n('app.pages.contract.nameTag')}</div>
             <div className="contract-right-val">
               {contractInfo.icon && <img src={contractInfo.icon} />}
               {contractInfo.name || i18n('app.pages.account.notfound')}
@@ -351,7 +351,7 @@ class AccountHead extends Component {
             <div className="contract-left-info">{i18n('Token Tracker')}</div>
             <div className="contract-right-val">
               {contractInfo.tokenIcon && <img src={contractInfo.tokenIcon} />}
-              {contractInfo.tokenName ? <a>{contractInfo.tokenName}</a> : i18n('app.pages.account.notfound')}
+              {contractInfo.tokenName ? <a>{contractInfo.tokenName}</a> : i18n('app.pages.account.notfound.tokenTracker')}
             </div>
           </div>
         </div>
@@ -454,7 +454,17 @@ class AccountHead extends Component {
               </svg>
               <div>
                 <h2>{i18n('Balance')}</h2>
-                {convertToValueorFee(accountDetail.balance)}
+                {renderAny(() => {
+                  const val = convertToValueorFee(accountDetail.balance);
+                  if (val.length > 21) {
+                    return (
+                      <span style={{ display: 'inline-block' }}>
+                        <EllipsisLine text={val} />
+                      </span>
+                    );
+                  }
+                  return val;
+                })}
                 <span style={{ marginLeft: 5 }}>CFX</span>
               </div>
             </div>
