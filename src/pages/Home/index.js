@@ -6,7 +6,7 @@ import { injectIntl, FormattedMessage, intlShape } from 'react-intl';
 import moreBlue from '../../assets/images/icons/more_blue.svg';
 import moreRed from '../../assets/images/icons/more_red.svg';
 import LineChart from '../../components/LineChart';
-import { toFixed, toThousands } from '../../utils';
+import { toFixed, toThousands, i18n } from '../../utils';
 import dashboard1 from '../../assets/images/dashboard1.png';
 import dashboard2 from '../../assets/images/dashboard2.png';
 import dashboard3 from '../../assets/images/dashboard3.png';
@@ -340,12 +340,14 @@ class Home extends Component {
           <i />
           <div className="notice-content">
             <div>
-              Conflux official network / test network will be updated in the evening of 25th March Click here
-              <a href="https://confluxnetwork.org/">https://confluxnetwork.org/</a>
+              {i18n('app.pages.index.notice1', {
+                html: true,
+              })}
             </div>
             <div>
-              Conflux official network / test network will be updated in the evening of 25th March Click here
-              <a href="https://confluxnetwork.org/">https://confluxnetwork.org/</a>
+              {i18n('app.pages.index.notice2', {
+                html: true,
+              })}
             </div>
           </div>
         </NoticeDiv>
