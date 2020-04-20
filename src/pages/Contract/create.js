@@ -10,7 +10,7 @@ import { FormattedMessage } from 'react-intl';
 import { Icon, Popup } from 'semantic-ui-react';
 import AceEditor from 'react-ace';
 import media from '../../globalStyles/media';
-import { i18n } from '../../utils';
+import { i18n, getQuery } from '../../utils';
 import TableLoading from '../../components/TableLoading';
 import { reqContractCreate } from '../../utils/api';
 import { defaultContractIcon, defaultTokenIcon, contractTypes, contractTypeCodeGeneral } from '../../constants';
@@ -477,12 +477,15 @@ class ContractUpdate extends Component {
   }
 
   componentDidMount() {
-    const {
-      match: { params },
-    } = this.props;
-    this.setState({
-      addressVal: params.address,
-    });
+    let { address, location } = this.props;
+    if (!address) {
+      const parsed = getQuery(location.search);
+      if (parsed.address) {
+        this.setState({
+          addressVal: parsed.address,
+        });
+      }
+    }
   }
 
   componentDidUpdate() {}
@@ -948,9 +951,15 @@ ContractUpdate.propTypes = {
   history: PropTypes.shape({
     replace: PropTypes.func,
   }).isRequired,
-  match: PropTypes.objectOf(PropTypes.string),
+  address: PropTypes.string,
+  location: PropTypes.shape({
+    search: PropTypes.string,
+  }),
 };
 ContractUpdate.defaultProps = {
-  match: {},
+  address: '',
+  location: {
+    search: '',
+  },
 };
 export default withRouter(ContractUpdate);

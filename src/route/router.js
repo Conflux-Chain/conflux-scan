@@ -53,7 +53,7 @@ function Router() {
         <Route path="/notfoundtx" component={NotFoundTx} />
         <Route path="/fansCoin" component={FansCoin} />
         <Route path="/contract/update/:address" component={ContractUpdate} />
-        <Route path="/contract/create/:address" component={ContractCreate} />
+        <Route path="/contract/create" component={ContractCreate} />
         <Route component={NotFound} />
       </Switch>
     </Suspense>

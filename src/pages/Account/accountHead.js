@@ -407,7 +407,7 @@ class AccountHead extends Component {
               <Link
                 to={renderAny(() => {
                   if (Object.keys(contractInfo).length === 0) {
-                    return `/contract/create/${accountid}`;
+                    return `/contract/create?address=${accountid}`;
                   }
                   return `/contract/update/${accountid}`;
                 })}
