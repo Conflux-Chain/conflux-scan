@@ -139,7 +139,7 @@ function Footer() {
           {/*  <FormattedMessage id="app.footer.address" /> */}
           {/* </span> */}
         </Info>
-        <Copyright className="copyright-in">Copyright © 2019 Conflux. All Rights Reserved</Copyright>
+        <Copyright className="copyright-in">Copyright © 2020 Conflux. All Rights Reserved</Copyright>
       </Content>
       <Links>
         <a href="https://twitter.com/ConfluxChain" target="_blank" title="Twitter">
