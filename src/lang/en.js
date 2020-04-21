@@ -60,8 +60,8 @@ export default {
   'app.pages.txns.chainId': 'Chain ID',
   'app.pages.txns.tokenTransferred': 'Token Transferred',
   'app.pages.txns.transaction': 'Transaction',
-  'app.pages.err-reason.1': 'Transfer Error: Error encountered during contract execution, or out of gas',
-  'app.pages.err-reason.2': 'Transfer Error: Wrong nonce, signature verification failed, or insufficient funds',
+  'app.pages.err-reason.1': 'Error encountered during contract execution, or out of gas',
+  'app.pages.err-reason.2': 'Wrong nonce, signature verification failed, or insufficient funds',
 
   'app.pages.block.confirm.title': 'Please Confirm',
   'app.pages.block.confirm.pageWarning': 'page > 10000 is not supported',
@@ -162,4 +162,6 @@ export default {
   'app.common.abi': 'ABI',
   'app.common.officialSite': 'Official Site',
   'app.common.contract': 'Contract',
+  'app.pages.index.notice1': '1. ConfluxScan is currently on the testnet network, all data shown are from the testnet.',
+  'app.pages.index.notice2': '2. Conflux Mainnet Phase I will be launched on April 27, 2020.',
 };
