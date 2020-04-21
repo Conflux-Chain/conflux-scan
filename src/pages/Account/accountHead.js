@@ -467,7 +467,7 @@ class AccountHead extends Component {
                 <h2>{i18n('Balance')}</h2>
                 {renderAny(() => {
                   const val = convertToValueorFee(accountDetail.balance);
-                  if (val.length > 21) {
+                  if (val.length > 18) {
                     return (
                       <span style={{ display: 'inline-block' }}>
                         <EllipsisLine text={val} />
