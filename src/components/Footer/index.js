@@ -158,7 +158,7 @@ function Footer() {
           </svg>
         </a>
       </Links>
-      <Copyright className="copyright">Copyright©2020 Conflux. All Rights Reserved</Copyright>
+      <Copyright className="copyright">Copyright © 2020 Conflux. All Rights Reserved</Copyright>
     </Wrapper>
   );
 }

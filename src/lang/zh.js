@@ -102,8 +102,8 @@ export default {
   'app.pages.txns.chainId': '区块链编号',
   'app.pages.txns.tokenTransferred': '代币转移',
   'app.pages.txns.transaction': '交易',
-  'app.pages.err-reason.1': '交易错误：智能合约执行错误，或gas fee不足',
-  'app.pages.err-reason.2': '交易错误：nonce错误，签名验证失败，或余额不足',
+  'app.pages.err-reason.1': '智能合约执行错误，或gas fee不足',
+  'app.pages.err-reason.2': 'Nonce错误，签名验证失败，或余额不足',
 
   'app.pages.block.confirm.title': '请确认',
   'app.pages.block.confirm.pageWarning': '暂不支持10000分页',
@@ -180,8 +180,8 @@ export default {
   'Token Burned': '代币承兑',
   'Copy to clipboard': '复制到剪切板',
 
-  'network.testnet': 'Conflux测试网',
-  'network.mainnet': 'Conflux主网',
+  'network.testnet': 'Conflux 测试网',
+  'network.mainnet': 'Conflux 主网',
   'network-short.mainnet': '主网',
   'network-short.testnet': '测试网',
 
