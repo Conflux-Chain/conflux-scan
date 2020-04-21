@@ -530,9 +530,9 @@ class Detail extends Component {
                       } else if (result.contractCreated) {
                         toDiv = (
                           <span>
-                            [{i18n('Contract')} &nbsp;
+                            {i18n('Contract')} &nbsp;
                             <Link to={`/accountdetail/${result.contractCreated}`}>{result.contractCreated}</Link>
-                            &nbsp; {i18n('Created')}]
+                            &nbsp; {i18n('Created')}
                           </span>
                         );
                       }
