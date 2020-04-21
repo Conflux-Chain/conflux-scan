@@ -339,16 +339,8 @@ class Home extends Component {
         <NoticeDiv>
           <i />
           <div className="notice-content">
-            <div>
-              {i18n('app.pages.index.notice1', {
-                html: true,
-              })}
-            </div>
-            <div>
-              {i18n('app.pages.index.notice2', {
-                html: true,
-              })}
-            </div>
+            <div>{i18n('app.pages.index.notice1')}</div>
+            <div>{i18n('app.pages.index.notice2')}</div>
           </div>
         </NoticeDiv>
         <LineContainer>

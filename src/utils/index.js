@@ -231,17 +231,8 @@ function I18nComp({ id, html, param }) {
   if (html) {
     return (
       <FormattedHTMLMessage id={id}>
-        {(str) => {
-          if (str === id) {
-            return null;
-          }
-          return (
-            <div
-              dangerouslySetInnerHTML={{
-                __html: str,
-              }}
-            />
-          );
+        {(s) => {
+          return <div />;
         }}
       </FormattedHTMLMessage>
     );
