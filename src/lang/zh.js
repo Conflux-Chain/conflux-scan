@@ -180,9 +180,9 @@ export default {
   'Token Burned': '代币承兑',
   'Copy to clipboard': '复制到剪切板',
 
+  'network.mainnet': 'Conflux Pontus',
   'network.testnet': 'Conflux 测试网',
-  'network.mainnet': 'Conflux 主网',
-  'network-short.mainnet': '主网',
+  'network-short.mainnet': 'Pontus',
   'network-short.testnet': '测试网',
 
   'pagination.limited': '共计找到<%=total%>条记录（仅显示最后<%=listLimit%>条记录）',
