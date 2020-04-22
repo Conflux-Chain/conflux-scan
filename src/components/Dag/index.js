@@ -22,15 +22,18 @@ function appendAllSubChain(player, subChains) {
 }
 
 function fetchDagData() {
-  return reqRecentDagBlock().then(({ code = 0, message = '', result = { epochNumber: null, data: [] } } = {}) => {
+  return reqRecentDagBlock().then(({ code = 0, message = '', result = { epochNumber: null, list: [] } } = {}) => {
     if (code) throw new Error(`Error while fetching dag data:\n${message}`);
-    if (this && this instanceof window.ConfluxDagPlayer) return appendAllSubChain(this, result.data);
-    return result.data;
+    if (this && this instanceof window.ConfluxDagPlayer) return appendAllSubChain(this, result.list);
+    return result.list;
   });
 }
 
+let fetchTimer;
 function startFechingDagData() {
-  setInterval(fetchDagData.bind(this), 5000);
+  if (window.navigator.onLine) {
+    fetchTimer = setInterval(fetchDagData.bind(this), 5000);
+  }
 }
 
 const Container = styled.div``;
@@ -91,6 +94,7 @@ function Dag({ id = 'dag-viewer', children } = {}) {
       const Player = window.ConfluxDagPlayer;
       const container = document.getElementById(id);
       const initialSubChains = await fetchDagData();
+
       player = await new Player({
         backgroundColor: '0x0B3560',
         doc: container,
@@ -137,6 +141,9 @@ function Dag({ id = 'dag-viewer', children } = {}) {
       if (player) {
         player.destroy();
         player = null;
+      }
+      if (fetchTimer) {
+        clearInterval(fetchTimer);
       }
     }
   );

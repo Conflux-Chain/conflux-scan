@@ -1,11 +1,13 @@
 import React from 'react';
 import BigNumber from 'bignumber.js';
+import template from 'lodash/template';
 import superagent from 'superagent';
 import querystring from 'querystring';
 import huNum from 'humanize-number';
 import { injectIntl, FormattedMessage, FormattedHTMLMessage } from 'react-intl';
 import { toast } from '../components/Toast';
 import { notice } from '../components/Message/notice';
+import { errorCodes, addressTypeContract, addressTypeCommon } from '../constants';
 
 let errorId = null;
 let source = null;
@@ -36,6 +38,11 @@ export const converToGasPrice3Fixed = (bigNumber) => {
   if (result.toFixed() < 0.001) return 0;
   if (result.toFixed(3) >= 1) return result.toFixed();
   return result.toFixed(3);
+};
+
+export const valToTokenVal = (bigNumber, decimals) => {
+  const result = new BigNumber(bigNumber).dividedBy(10 ** decimals);
+  return result.toString(10);
 };
 
 export const getXmlHttpRequest = () => {
@@ -190,38 +197,37 @@ export const sendRequest = (config) => {
     if (result.body.code !== 0 && config.showError !== false) {
       let title;
       switch (result.body.code) {
-        case 1:
+        case errorCodes.ParameterError:
           title = 'app.comp.toast.error.1';
           break;
-        case 2:
+        case errorCodes.DBError:
           title = 'app.comp.toast.error.2';
-          break;
-        case 3:
-          title = 'app.comp.toast.error.3';
           break;
         default:
           title = 'app.comp.toast.error.other';
       }
       toast.error({
-        content: result.body.msg || 'app.comp.toast.error.contentDefault',
+        content: result.body.message || 'app.comp.toast.error.contentDefault',
         title: title,
       });
     }
   });
   reqPromise.catch((error) => {
-    if (config && config.url === '/api/block/recent') return;
+    if (config && config.url.match(/dashboard\/dag$/)) return;
     console.log(error);
-    toast.error({
-      content: 'app.comp.toast.error.networkErr',
-      title: 'app.comp.toast.error.other',
-    });
+    if (config.showNetWorkError !== false) {
+      toast.error({
+        content: 'app.comp.toast.error.networkErr',
+        title: 'app.comp.toast.error.other',
+      });
+    }
   });
 
   return reqPromise;
 };
 
 /* eslint react/prop-types: 0 */
-function I18nComp({ id, html }) {
+function I18nComp({ id, html, param }) {
   if (html) {
     return (
       <FormattedHTMLMessage id={id}>
@@ -231,12 +237,24 @@ function I18nComp({ id, html }) {
       </FormattedHTMLMessage>
     );
   }
+
+  if (param) {
+    return (
+      <FormattedHTMLMessage id={id}>
+        {(s) => {
+          // console.log(s)
+          return template(s)(param);
+        }}
+      </FormattedHTMLMessage>
+    );
+  }
+
   return <FormattedMessage id={id} />;
 }
 const I18nComp1 = injectIntl(I18nComp);
 
 export function i18n(id, config = {}) {
-  return <I18nComp1 id={id} html={config.html} />;
+  return <I18nComp1 id={id} html={config.html} param={config.param} />;
 }
 
 export function renderAny(cb) {
@@ -258,3 +276,30 @@ export const humanizeNum = (a) => {
 };
 
 export { notice };
+
+export const getTotalPage = (count, limit) => {
+  return Math.ceil(count / limit);
+};
+
+let store;
+export const updateStore = (s) => {
+  store = s;
+};
+
+export const getStore = () => {
+  return store;
+};
+
+export function isContract(a) {
+  const strip = a.replace(/^0x/, '');
+  return strip[0] === '8';
+}
+export const devidedByDecimals = (number, decimals) => {
+  const bignumber = number instanceof BigNumber ? number : new BigNumber(number);
+  const result = bignumber.dividedBy(10 ** decimals);
+  return result.toString(10);
+};
+
+export const getAddressType = (address) => {
+  return address && address.startsWith('0x8') ? addressTypeContract : addressTypeCommon;
+};

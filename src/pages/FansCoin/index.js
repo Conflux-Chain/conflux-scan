@@ -678,11 +678,7 @@ class FansCoin extends Component {
                     render: (text, row) => {
                       const line = (
                         <EllipsisLine
-                          popUpCfg={{
-                            position: 'top left',
-                            pinned: true,
-                          }}
-                          ellipsisStyle={{ maxWidth: 152 }}
+                          popUpCfg={{ position: 'top left', pinned: true }}
                           linkTo={`/transactionsdetail/${text}`}
                           text={text}
                         />
@@ -690,22 +686,31 @@ class FansCoin extends Component {
                       if (row.status === 0) {
                         return line;
                       }
-                      let errtxt;
                       let errIcon;
                       if (row.status === 1) {
-                        errtxt = i18n('app.pages.err-reason.1');
-                        errIcon = <img src={iconStatusErr} />;
+                        errIcon = (
+                          <Popup
+                            trigger={<img src={iconStatusErr} />}
+                            content={i18n('app.pages.err-reason.1')}
+                            position="top left"
+                            hoverable
+                          />
+                        );
                       } else if (row.status === 2 || row.status === null) {
-                        errtxt = i18n('app.pages.err-reason.2');
-                        errIcon = <img src={iconStatusSkip} />;
+                        errIcon = (
+                          <Popup
+                            trigger={<img src={iconStatusSkip} />}
+                            content={i18n('app.pages.err-reason.2')}
+                            position="top left"
+                            hoverable
+                          />
+                        );
                       }
+
                       return (
                         <div className="txnhash-err">
                           {errIcon}
-                          <div className="txnhash-err-line1">
-                            {line}
-                            <div className="txnhash-err-line2">{errtxt}</div>
-                          </div>
+                          <div className="txnhash-err-line1">{line}</div>
                         </div>
                       );
                     },

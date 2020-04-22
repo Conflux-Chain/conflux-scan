@@ -8,6 +8,7 @@ import { Dimmer, Loader, Image, Segment } from 'semantic-ui-react';
 
 import compose from 'lodash/fp/compose';
 import media from '../../globalStyles/media';
+import { reqUtilType } from '../../utils/api';
 
 const Input = styled.input`
   height: 100%;
@@ -19,7 +20,7 @@ const Input = styled.input`
   margin-left: 10px;
   margin-left: 16px;
   ${media.pad`
-    font-size: 14px;
+    font-size: 10px;
   `}
 `;
 
@@ -83,6 +84,9 @@ const FilterSelector = styled.div.attrs({
 const SearchButton = styled.div`
   height: 100%;
   width: 60px;
+  ${media.mobile`
+    width: 46px;
+  `}
   border: none !important;
   box-shadow: none !important;
   display: flex;
@@ -134,13 +138,13 @@ class SearchBox extends Component {
 
       if (filterValue === 0) {
         try {
-          const { code, result } = (await superagent.get(`/api/util/type/${value}`)).body;
+          const { code, result } = await reqUtilType({ value }, { showError: false });
           if (code !== 0) {
             history.push(`/search-notfound?searchId=${value}`);
             hideLoading();
             return;
           }
-          switch (result.data) {
+          switch (result.typeCode) {
             case 0:
               history.push(`/blocksdetail/${value}`);
               break;
@@ -148,7 +152,7 @@ class SearchBox extends Component {
               history.push(`/transactionsdetail/${value}`);
               break;
             case 2:
-              history.push(`/accountdetail/${value}`);
+              history.push(`/address/${value}`);
               break;
             case 3:
               history.push(`/epochsdetail/${value}`);
@@ -175,7 +179,7 @@ class SearchBox extends Component {
         } else if (filterValue === 3) {
           history.push(`/transactionsdetail/${value}`);
         } else if (filterValue === 4) {
-          history.push(`/accountdetail/${value}`);
+          history.push(`/address/${value}`);
         }
       }
     }
