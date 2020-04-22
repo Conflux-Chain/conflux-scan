@@ -181,9 +181,9 @@ export default {
   'Copy to clipboard': '复制到剪切板',
 
   'network.testnet': 'Conflux 测试网',
-  'network.mainnet': 'Conflux 主网',
+  'network.mainnet': 'Conflux Pontus',
   'network-short.mainnet': '主网',
-  'network-short.testnet': '测试网',
+  'network-short.testnet': 'Pontus',
 
   'pagination.limited': '共计找到<%=total%>条记录（仅显示最后<%=listLimit%>条记录）',
   'pagination.total': '共计找到<%=total%>条记录',

@@ -121,9 +121,9 @@ export default {
   'app.directory.community.desc': 'Join the Next Generation Decentralized Application Community',
 
   'network.testnet': 'Conflux Testnet',
-  'network.mainnet': 'Conflux Mainnet',
+  'network.mainnet': 'Conflux Pontus',
   'network-short.mainnet': 'Main',
-  'network-short.testnet': 'Test',
+  'network-short.testnet': 'Pontus',
 
   'pagination.limited': 'A total of <%=total%> records found (Showing the last <%=listLimit%> records)',
   'pagination.total': 'A total of <%=total%> records found',
