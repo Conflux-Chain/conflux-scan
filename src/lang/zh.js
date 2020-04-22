@@ -234,5 +234,5 @@ export default {
   'app.common.officialSite': '官方网站',
   'app.common.contract': '合约',
   'app.pages.index.notice1': '1. 当前网络为 ConfluxScan Testnet，所有数据均为 Conflux 测试网数据。',
-  'app.pages.index.notice2': '2. Conflux Mainnet 主网第一阶段将于 2020.4.27 上线，欢迎体验。',
+  'app.pages.index.notice2': '2. Conflux Mainnet 主网第一阶段 Pontus 将于 2020.4.27 上线，欢迎体验。',
 };
