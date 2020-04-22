@@ -163,5 +163,5 @@ export default {
   'app.common.officialSite': 'Official Site',
   'app.common.contract': 'Contract',
   'app.pages.index.notice1': '1. ConfluxScan is currently on the testnet network, all data shown are from the testnet.',
-  'app.pages.index.notice2': '2. Conflux Mainnet Phase I will be launched on April 27, 2020.',
+  'app.pages.index.notice2': '2. Conflux Mainnet Phase I Pontus will be launched on April 27, 2020.',
 };
