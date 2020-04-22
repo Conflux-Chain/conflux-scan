@@ -132,16 +132,14 @@ class InputData extends PureComponent {
     }
     return (
       <Wrap>
-        {/* <Popup
-          trigger={<pre className="textAreaContainer">{str}</pre>}
+        <Popup
+          trigger={<JSONPretty id="json-pretty" data={str} themeClassName="custom-json-pretty" />}
           content={i18n('app.pages.txns.inputTips')}
           style={stylePopup}
           position="top center"
           wide
           inverted
-        /> */}
-
-        {<JSONPretty id="json-pretty" data={str} themeClassName="custom-json-pretty" />}
+        />
       </Wrap>
     );
   }
