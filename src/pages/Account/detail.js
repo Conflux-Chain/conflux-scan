@@ -93,7 +93,9 @@ class Detail extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.match.params.accountid !== prevProps.match.params.accountid) {
+    const currentAccountId = this.props.match.params.accountid ? this.props.match.params.accountid.toLowerCase() : '';
+    const prevAccountId = prevProps.match.params.accountid ? prevProps.match.params.accountid.toLowerCase() : '';
+    if (currentAccountId !== prevAccountId) {
       // eslint-disable-next-line  react/no-did-update-set-state
       this.autoSwitchTab();
       const accountid = this.getAccountId();

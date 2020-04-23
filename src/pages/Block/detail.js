@@ -325,8 +325,9 @@ class Detail extends Component {
   componentDidUpdate(prevProps) {
     // eslint-disable-next-line react/destructuring-assignment
     const { blockhash } = this.props.match.params;
+    const prevBlockHash = prevProps.match.params.blockhash ? prevProps.match.params.blockhash.toLowerCase() : '';
     // eslint-disable-next-line react/destructuring-assignment
-    if (blockhash !== prevProps.match.params.blockhash) {
+    if (blockhash !== prevBlockHash) {
       this.fetchBlockDetail(this.getBlockHash(), { activePage: 1 });
       this.fetchReffereBlock(this.getBlockHash(), { refBlockCurPage: 1 });
     }
