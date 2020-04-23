@@ -92,19 +92,18 @@ class Detail extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const currentAccountId = this.props.match.params.accountid ? this.props.match.params.accountid.toLowerCase() : '';
-    const prevAccountId = prevProps.match.params.accountid ? prevProps.match.params.accountid.toLowerCase() : '';
+    const currentAccountId = this.getAccountId();
+    const prevAccountId = tranferToLowerCase(prevProps.match.params.accountid);
     if (currentAccountId !== prevAccountId) {
       // eslint-disable-next-line  react/no-did-update-set-state
       this.autoSwitchTab();
-      const accountid = this.getAccountId();
       // eslint-disable-next-line  react/no-did-update-set-state
       this.setState({
-        accountid,
+        accountid: currentAccountId,
       });
-      this.fetchTokenList(accountid);
-      if (isContract(accountid)) {
-        this.fetchContractInfo(accountid);
+      this.fetchTokenList(currentAccountId);
+      if (isContract(currentAccountId)) {
+        this.fetchContractInfo(currentAccountId);
       }
     }
   }
@@ -178,10 +177,7 @@ class Detail extends Component {
 
   render() {
     const { currentTab, showMaintaining, blockCount, contractInfo, tokenTotal, tokenList, tokenMap } = this.state;
-    const {
-      intl,
-      match: { params },
-    } = this.props;
+    const { intl } = this.props;
 
     const { accountid } = this.state;
     const isContractAddr = isContract(accountid);

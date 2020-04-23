@@ -488,13 +488,10 @@ class ContractUpdate extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const {
-      match: { params },
-    } = this.props;
-    const address = tranferToLowerCase(params.address);
+    const address = this.getAddress();
     const prevAddress = tranferToLowerCase(prevProps.match.params.address);
     if (address !== prevAddress) {
-      this.fetchContactInfo(this.getAddress());
+      this.fetchContactInfo(address);
     }
   }
 
