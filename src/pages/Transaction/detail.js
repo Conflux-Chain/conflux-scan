@@ -296,16 +296,7 @@ class Detail extends Component {
       { showError: false }
     ).then((body) => {
       switch (body.code) {
-        case errorCodes.ParameterError:
-          history.push(`/search-notfound?searchId=${txnhash}`);
-          break;
-        case errorCodes.TxNotFoundError:
-          this.setState({
-            isPacking: true,
-          });
-          break;
         case 0:
-        default:
           const transactionDetails = body.result;
           this.setState({ result: transactionDetails });
           let toAddress = transactionDetails.to;
@@ -391,6 +382,16 @@ class Detail extends Component {
               isLoading: false,
             });
           }
+          break;
+        case errorCodes.ParameterError:
+          history.push(`/search-notfound?searchId=${txnhash}`);
+          break;
+        case errorCodes.TxNotFoundError:
+          this.setState({
+            isPacking: true,
+          });
+          break;
+        default:
           break;
       }
     });
