@@ -198,7 +198,7 @@ function Header(props) {
         <SearchBox />
       </SearchBoxContainer>
 
-      <LangSelector className="network-select" style={{ display: 'none' }}>
+      <LangSelector className="network-select">
         <div className="ui dropdown link item">
           <span className="text">{i18n(`network.${network}`)}</span>
           <span className="text-short">{i18n(`network-short.${network}`)}</span>
@@ -214,11 +214,11 @@ function Header(props) {
                       network: v.name,
                     },
                   });
-                  // if (v.name === 'mainnet') {
-                  //   window.location.href = 'https://etherscan.io';
-                  // } else {
-                  //   window.location.href = 'https://ropsten.etherscan.io';
-                  // }
+                  if (v.name === 'mainnet') {
+                    window.location.href = 'https://confluxscan.io';
+                  } else {
+                    window.location.href = 'https://testnet.confluxscan.io';
+                  }
                 };
 
                 return (
