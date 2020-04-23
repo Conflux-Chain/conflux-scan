@@ -481,7 +481,7 @@ class ContractUpdate extends Component {
     if (!address) {
       const parsed = getQuery(location.search);
       if (parsed.address) {
-        let addressParam = parsed.address ? parsed.address.toLowerCase() : '';
+        const addressParam = parsed.address ? parsed.address.toLowerCase() : '';
         this.setState({
           addressVal: addressParam,
         });

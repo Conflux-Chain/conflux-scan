@@ -684,7 +684,7 @@ class ContractUpdate extends Component {
             timeout: 2000,
           },
         });
-        let addressParams = this.getAddress();
+        const addressParams = this.getAddress();
         history.replace(`/accountdetail/${addressParams}`);
       }
     });
