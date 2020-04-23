@@ -63,14 +63,6 @@ function removeHash() {
 class Detail extends Component {
   constructor(...args) {
     super(...args);
-    this.getAccountId = () => {
-      const {
-        match: { params },
-      } = this.props;
-      let { accountid } = params;
-      return tranferToLowerCase(accountid);
-    };
-
     this.state = {
       blockCount: 0,
       currentTab: null,
@@ -80,6 +72,7 @@ class Detail extends Component {
       tokenTotal: 0,
       accountid: this.getAccountId(),
     };
+    this.getAccountId = this.getAccountId.bind(this);
   }
 
   componentDidMount() {
@@ -92,12 +85,11 @@ class Detail extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const currentAccountId = this.props.match.params.accountid ? this.props.match.params.accountid.toLowerCase() : '';
-    const prevAccountId = prevProps.match.params.accountid ? prevProps.match.params.accountid.toLowerCase() : '';
-    if (currentAccountId !== prevAccountId) {
+    const accountid = this.getAccountId();
+    const prevAccountId = tranferToLowerCase(prevProps.match.params.accountid);
+    if (accountid !== prevAccountId) {
       // eslint-disable-next-line  react/no-did-update-set-state
       this.autoSwitchTab();
-      const accountid = this.getAccountId();
       // eslint-disable-next-line  react/no-did-update-set-state
       this.setState({
         accountid,
@@ -107,6 +99,14 @@ class Detail extends Component {
         this.fetchContractInfo(accountid);
       }
     }
+  }
+
+  getAccountId() {
+    const {
+      match: { params },
+    } = this.props;
+    const { accountid } = params;
+    return tranferToLowerCase(accountid);
   }
 
   autoSwitchTab() {
@@ -178,10 +178,7 @@ class Detail extends Component {
 
   render() {
     const { currentTab, showMaintaining, blockCount, contractInfo, tokenTotal, tokenList, tokenMap } = this.state;
-    const {
-      intl,
-      match: { params },
-    } = this.props;
+    const { intl } = this.props;
 
     const { accountid } = this.state;
     const isContractAddr = isContract(accountid);
