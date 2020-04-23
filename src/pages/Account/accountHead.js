@@ -15,7 +15,7 @@ import EllipsisLine from '../../components/EllipsisLine';
 import { reqContract, reqAccount, reqTokenList } from '../../utils/api';
 import { errorCodes } from '../../constants';
 import media from '../../globalStyles/media';
-import { convertToValueorFee, i18n, renderAny, isContract } from '../../utils';
+import { convertToValueorFee, valToTokenVal, i18n, renderAny, isContract } from '../../utils';
 import TokenSelect from '../../components/TokenSelect';
 import imgtokenIcon from '../../assets/images/icons/token-icon.svg';
 import contractNameIcon from '../../assets/images/icons/contract-nameicon.svg';
@@ -387,7 +387,7 @@ class AccountHead extends Component {
         value: v.address,
         imgSrc: v.tokenIcon,
         label1: `${v.tokenName} (${v.tokenSymbol})`,
-        label2: `${v.balance} ${v.tokenSymbol}`,
+        label2: `${valToTokenVal(v.balance, v.tokenDecimal)} ${v.tokenSymbol}`,
       };
     });
 
