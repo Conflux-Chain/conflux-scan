@@ -10,7 +10,7 @@ import { FormattedMessage } from 'react-intl';
 import { Icon, Popup } from 'semantic-ui-react';
 import AceEditor from 'react-ace';
 import media from '../../globalStyles/media';
-import { i18n } from '../../utils';
+import { i18n, tranferToLowerCase } from '../../utils';
 import TableLoading from '../../components/TableLoading';
 import { reqContract, reqContractUpdate } from '../../utils/api';
 import { defaultContractIcon, defaultTokenIcon, contractTypes, contractTypeCodeGeneral } from '../../constants';
@@ -464,7 +464,7 @@ class ContractUpdate extends Component {
       const {
         match: { params },
       } = this.props;
-      return params.address ? params.address.toLowerCase() : '';
+      return tranferToLowerCase(params.address);
     };
 
     this.state = {
@@ -491,8 +491,8 @@ class ContractUpdate extends Component {
     const {
       match: { params },
     } = this.props;
-    const { address } = params;
-    const prevAddress = prevProps.match.params.address ? prevProps.match.params.address.toLowerCase() : '';
+    const address = tranferToLowerCase(params.address);
+    const prevAddress = tranferToLowerCase(prevProps.match.params.address);
     if (address !== prevAddress) {
       this.fetchContactInfo(this.getAddress());
     }

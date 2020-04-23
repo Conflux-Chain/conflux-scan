@@ -11,7 +11,7 @@ import Countdown from '../../components/Countdown';
 import TableLoading from '../../components/TableLoading';
 import DataList from '../../components/DataList';
 import EllipsisLine from '../../components/EllipsisLine';
-import { convertToValueorFee, converToGasPrice, i18n, sendRequest } from '../../utils';
+import { convertToValueorFee, converToGasPrice, i18n, sendRequest, tranferToLowerCase } from '../../utils';
 import media from '../../globalStyles/media';
 import * as commonCss from '../../globalStyles/common';
 import { reqBlock, reqBlockTransactionList, reqBlockRefereeBlockList } from '../../utils/api';
@@ -299,7 +299,7 @@ class Detail extends Component {
     } = this.props;
     this.getBlockHash = () => {
       const { blockhash } = params;
-      return blockhash ? blockhash.toLowerCase() : '';
+      return tranferToLowerCase(blockhash);
     };
     this.state = {
       currentTab: 1,
@@ -324,8 +324,8 @@ class Detail extends Component {
 
   componentDidUpdate(prevProps) {
     // eslint-disable-next-line react/destructuring-assignment
-    const { blockhash } = this.props.match.params;
-    const prevBlockHash = prevProps.match.params.blockhash ? prevProps.match.params.blockhash.toLowerCase() : '';
+    const blockhash = tranferToLowerCase(this.props.match.params.blockHash);
+    const prevBlockHash = tranferToLowerCase(prevProps.match.params.blockhash);
     // eslint-disable-next-line react/destructuring-assignment
     if (blockhash !== prevBlockHash) {
       this.fetchBlockDetail(this.getBlockHash(), { activePage: 1 });

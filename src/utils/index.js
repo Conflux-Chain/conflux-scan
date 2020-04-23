@@ -305,3 +305,7 @@ export const devidedByDecimals = (number, decimals) => {
 export const getAddressType = (address) => {
   return address && address.startsWith('0x8') ? addressTypeContract : addressTypeCommon;
 };
+
+export const tranferToLowerCase = (str) => {
+  return str ? str.toLowerCase() : '';
+};

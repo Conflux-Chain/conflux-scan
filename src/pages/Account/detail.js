@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
 import compose from 'lodash/fp/compose';
-import { i18n, isContract } from '../../utils';
+import { i18n, isContract, tranferToLowerCase } from '../../utils';
 import * as commonCss from '../../globalStyles/common';
 import media from '../../globalStyles/media';
 import MinedBlocks from './minedBlocks';
@@ -68,8 +68,7 @@ class Detail extends Component {
         match: { params },
       } = this.props;
       let { accountid } = params;
-      accountid = accountid ? accountid.toLowerCase() : '';
-      return accountid;
+      return tranferToLowerCase(accountid);
     };
 
     this.state = {

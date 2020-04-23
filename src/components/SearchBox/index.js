@@ -9,6 +9,7 @@ import { Dimmer, Loader, Image, Segment } from 'semantic-ui-react';
 import compose from 'lodash/fp/compose';
 import media from '../../globalStyles/media';
 import { reqUtilType } from '../../utils/api';
+import { tranferToLowerCase } from '../../utils';
 
 const Input = styled.input`
   height: 100%;
@@ -138,9 +139,7 @@ class SearchBox extends Component {
 
       if (filterValue === 0) {
         try {
-          // eslint-disable-next-line no-param-reassign
-          value = value ? value.toLowerCase() : '';
-          const { code, result } = await reqUtilType({ value }, { showError: false });
+          const { code, result } = await reqUtilType({ value: tranferToLowerCase(value) }, { showError: false });
           if (code !== 0) {
             history.push(`/search-notfound?searchId=${value}`);
             hideLoading();
