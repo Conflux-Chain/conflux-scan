@@ -198,7 +198,7 @@ function Header(props) {
         <SearchBox />
       </SearchBoxContainer>
 
-      <LangSelector className="network-select">
+      <LangSelector className="network-select" style={{ display: 'none' }}>
         <div className="ui dropdown link item">
           <span className="text">{i18n(`network.${network}`)}</span>
           <span className="text-short">{i18n(`network-short.${network}`)}</span>
