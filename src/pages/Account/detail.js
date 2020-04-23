@@ -124,18 +124,20 @@ class Detail extends Component {
     reqTokenList({
       address: accountid,
     }).then((body) => {
-      const listSorted = (body.result.list || []).sort((a, b) => {
-        return b.balance - a.balance;
-      });
-      const tokenMap = {};
-      listSorted.forEach((v) => {
-        tokenMap[v.address] = v;
-      });
-      this.setState({
-        tokenTotal: body.result.list.length,
-        tokenList: listSorted,
-        tokenMap,
-      });
+      if (body.code === 0) {
+        const listSorted = (body.result.list || []).sort((a, b) => {
+          return b.balance - a.balance;
+        });
+        const tokenMap = {};
+        listSorted.forEach((v) => {
+          tokenMap[v.address] = v;
+        });
+        this.setState({
+          tokenTotal: body.result.list.length,
+          tokenList: listSorted,
+          tokenMap,
+        });
+      }
     });
   }
 

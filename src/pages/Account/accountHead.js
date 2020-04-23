@@ -3,9 +3,10 @@
 import React, { Component, Fragment } from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
+import compose from 'lodash/fp/compose';
 import * as commonCss from '../../globalStyles/common';
 import CopyButton from '../../components/CopyButton';
 import QrcodeButton from '../../components/QrcodeButton';
@@ -522,4 +523,9 @@ AccountHead.propTypes = {
   }).isRequired,
 };
 
-export default injectIntl(AccountHead);
+const hoc = compose(
+  injectIntl,
+  withRouter
+);
+
+export default hoc(AccountHead);
