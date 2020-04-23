@@ -699,9 +699,6 @@ class ContractUpdate extends Component {
 
   render() {
     const {
-      match: { params },
-    } = this.props;
-    const {
       iconContractSource,
       iconTokenSource,
       selectedContractTypeCode,
