@@ -297,6 +297,10 @@ class Detail extends Component {
     const {
       match: { params },
     } = this.props;
+    this.getBlockHash = () => {
+      const { blockhash } = params;
+      return blockhash ? blockhash.toLowerCase() : '';
+    };
     this.state = {
       currentTab: 1,
       TxTotalCount: 0,
@@ -314,8 +318,8 @@ class Detail extends Component {
     const {
       match: { params },
     } = this.props;
-    this.fetchBlockDetail(params.blockhash, { activePage: 1 });
-    this.fetchReffereBlock(params.blockhash, { refBlockCurPage: 1 });
+    this.fetchBlockDetail(this.getBlockHash(), { activePage: 1 });
+    this.fetchReffereBlock(this.getBlockHash(), { refBlockCurPage: 1 });
   }
 
   componentDidUpdate(prevProps) {
@@ -323,8 +327,8 @@ class Detail extends Component {
     const { blockhash } = this.props.match.params;
     // eslint-disable-next-line react/destructuring-assignment
     if (blockhash !== prevProps.match.params.blockhash) {
-      this.fetchBlockDetail(blockhash, { activePage: 1 });
-      this.fetchReffereBlock(blockhash, { refBlockCurPage: 1 });
+      this.fetchBlockDetail(this.getBlockHash(), { activePage: 1 });
+      this.fetchReffereBlock(this.getBlockHash(), { refBlockCurPage: 1 });
     }
   }
 
@@ -394,7 +398,7 @@ class Detail extends Component {
         <Wrapper>
           <HeadBar>
             <h1>{i18n('Block')}</h1>
-            <p>{params.blockhash}</p>
+            <p>{this.getBlockHash()}</p>
           </HeadBar>
           {isLoading ? (
             <TableLoading />
@@ -492,7 +496,7 @@ class Detail extends Component {
                       }}
                       onPageChange={(e, data) => {
                         e.preventDefault();
-                        this.fetchBlockDetail(params.blockhash, data);
+                        this.fetchBlockDetail(this.getBlockHash(), data);
                       }}
                       activePage={curPage}
                       totalPages={Math.ceil(TxTotalCount / pageSize)}
@@ -512,7 +516,7 @@ class Detail extends Component {
                       activePage={curPage}
                       onPageChange={(e, data) => {
                         e.preventDefault();
-                        this.fetchBlockDetail(params.blockhash, data);
+                        this.fetchBlockDetail(this.getBlockHash(), data);
                       }}
                       ellipsisItem={null}
                       firstItem={null}
@@ -544,7 +548,7 @@ class Detail extends Component {
                       }}
                       onPageChange={(e, data) => {
                         e.preventDefault();
-                        this.fetchReffereBlock(params.blockhash, { refBlockCurPage: data.activePage });
+                        this.fetchReffereBlock(this.getBlockHash(), { refBlockCurPage: data.activePage });
                       }}
                       activePage={refBlockCurPage}
                       totalPages={Math.ceil(refTotal / pageSize)}
@@ -564,7 +568,7 @@ class Detail extends Component {
                       activePage={refBlockCurPage}
                       onPageChange={(e, data) => {
                         e.preventDefault();
-                        this.fetchReffereBlock(params.blockhash, { refBlockCurPage: data.activePage });
+                        this.fetchReffereBlock(this.getBlockHash(), { refBlockCurPage: data.activePage });
                       }}
                       ellipsisItem={null}
                       firstItem={null}
