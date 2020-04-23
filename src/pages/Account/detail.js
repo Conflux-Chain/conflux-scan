@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
 import compose from 'lodash/fp/compose';
-import { i18n, isContract } from '../../utils';
+import { i18n, isContract, tranferToLowerCase } from '../../utils';
 import * as commonCss from '../../globalStyles/common';
 import media from '../../globalStyles/media';
 import MinedBlocks from './minedBlocks';
@@ -67,8 +67,8 @@ class Detail extends Component {
       const {
         match: { params },
       } = this.props;
-      const { accountid } = params;
-      return accountid;
+      let { accountid } = params;
+      return tranferToLowerCase(accountid);
     };
 
     this.state = {
@@ -92,7 +92,9 @@ class Detail extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.match.params.accountid !== prevProps.match.params.accountid) {
+    const currentAccountId = this.props.match.params.accountid ? this.props.match.params.accountid.toLowerCase() : '';
+    const prevAccountId = prevProps.match.params.accountid ? prevProps.match.params.accountid.toLowerCase() : '';
+    if (currentAccountId !== prevAccountId) {
       // eslint-disable-next-line  react/no-did-update-set-state
       this.autoSwitchTab();
       const accountid = this.getAccountId();
