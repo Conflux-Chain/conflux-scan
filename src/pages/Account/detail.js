@@ -67,7 +67,8 @@ class Detail extends Component {
       const {
         match: { params },
       } = this.props;
-      const { accountid } = params;
+      let { accountid } = params;
+      accountid = accountid ? accountid.toLowerCase() : '';
       return accountid;
     };
 
@@ -95,7 +96,7 @@ class Detail extends Component {
     if (this.props.match.params.accountid !== prevProps.match.params.accountid) {
       // eslint-disable-next-line  react/no-did-update-set-state
       this.autoSwitchTab();
-      const accountid = this.getAccountId();
+      let accountid = this.getAccountId();
       // eslint-disable-next-line  react/no-did-update-set-state
       this.setState({
         accountid,

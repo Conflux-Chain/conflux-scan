@@ -138,6 +138,8 @@ class SearchBox extends Component {
 
       if (filterValue === 0) {
         try {
+          // eslint-disable-next-line no-param-reassign
+          value = value ? value.toLowerCase() : '';
           const { code, result } = await reqUtilType({ value }, { showError: false });
           if (code !== 0) {
             history.push(`/search-notfound?searchId=${value}`);
