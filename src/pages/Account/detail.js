@@ -96,7 +96,7 @@ class Detail extends Component {
     if (this.props.match.params.accountid !== prevProps.match.params.accountid) {
       // eslint-disable-next-line  react/no-did-update-set-state
       this.autoSwitchTab();
-      let accountid = this.getAccountId();
+      const accountid = this.getAccountId();
       // eslint-disable-next-line  react/no-did-update-set-state
       this.setState({
         accountid,
