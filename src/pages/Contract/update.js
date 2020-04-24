@@ -460,12 +460,6 @@ class ContractUpdate extends Component {
 
   constructor(...args) {
     super(...args);
-    this.getAddress = () => {
-      const {
-        match: { params },
-      } = this.props;
-      return tranferToLowerCase(params.address);
-    };
 
     this.state = {
       iconContractSource: '',
@@ -481,6 +475,7 @@ class ContractUpdate extends Component {
       canSubmit: false,
     };
     this.handleSourceChange = this.handleSourceChange.bind(this);
+    this.getAddress = this.getAddress.bind(this);
   }
 
   componentDidMount() {
@@ -493,6 +488,14 @@ class ContractUpdate extends Component {
     if (address !== prevAddress) {
       this.fetchContactInfo(address);
     }
+  }
+
+  getAddress() {
+    const {
+      match: { params },
+    } = this.props;
+    const { address } = params;
+    return tranferToLowerCase(address);
   }
 
   getContractStrByType(type) {

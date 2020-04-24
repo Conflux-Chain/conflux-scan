@@ -63,14 +63,6 @@ function removeHash() {
 class Detail extends Component {
   constructor(...args) {
     super(...args);
-    this.getAccountId = () => {
-      const {
-        match: { params },
-      } = this.props;
-      let { accountid } = params;
-      return tranferToLowerCase(accountid);
-    };
-
     this.state = {
       blockCount: 0,
       currentTab: null,
@@ -80,6 +72,7 @@ class Detail extends Component {
       tokenTotal: 0,
       accountid: this.getAccountId(),
     };
+    this.getAccountId = this.getAccountId.bind(this);
   }
 
   componentDidMount() {
@@ -92,20 +85,28 @@ class Detail extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const currentAccountId = this.getAccountId();
+    const accountid = this.getAccountId();
     const prevAccountId = tranferToLowerCase(prevProps.match.params.accountid);
-    if (currentAccountId !== prevAccountId) {
+    if (accountid !== prevAccountId) {
       // eslint-disable-next-line  react/no-did-update-set-state
       this.autoSwitchTab();
       // eslint-disable-next-line  react/no-did-update-set-state
       this.setState({
-        accountid: currentAccountId,
+        accountid,
       });
-      this.fetchTokenList(currentAccountId);
-      if (isContract(currentAccountId)) {
-        this.fetchContractInfo(currentAccountId);
+      this.fetchTokenList(accountid);
+      if (isContract(accountid)) {
+        this.fetchContractInfo(accountid);
       }
     }
+  }
+
+  getAccountId() {
+    const {
+      match: { params },
+    } = this.props;
+    const { accountid } = params;
+    return tranferToLowerCase(accountid);
   }
 
   autoSwitchTab() {
