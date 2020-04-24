@@ -214,11 +214,11 @@ function Header(props) {
                       network: v.name,
                     },
                   });
-                  // if (v.name === 'mainnet') {
-                  //   window.location.href = 'https://etherscan.io';
-                  // } else {
-                  //   window.location.href = 'https://ropsten.etherscan.io';
-                  // }
+                  if (v.name === 'mainnet') {
+                    window.location.href = 'https://confluxscan.io';
+                  } else {
+                    window.location.href = 'https://testnet.confluxscan.io';
+                  }
                 };
 
                 return (

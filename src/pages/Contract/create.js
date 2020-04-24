@@ -10,7 +10,7 @@ import { FormattedMessage } from 'react-intl';
 import { Icon, Popup } from 'semantic-ui-react';
 import AceEditor from 'react-ace';
 import media from '../../globalStyles/media';
-import { i18n, getQuery } from '../../utils';
+import { i18n, getQuery, tranferToLowerCase } from '../../utils';
 import TableLoading from '../../components/TableLoading';
 import { reqContractCreate } from '../../utils/api';
 import { defaultContractIcon, defaultTokenIcon, contractTypes, contractTypeCodeGeneral } from '../../constants';
@@ -482,7 +482,7 @@ class ContractUpdate extends Component {
       const parsed = getQuery(location.search);
       if (parsed.address) {
         this.setState({
-          addressVal: parsed.address,
+          addressVal: tranferToLowerCase(parsed.address),
         });
       }
     }
@@ -641,7 +641,7 @@ class ContractUpdate extends Component {
       addressVal,
     } = this.state;
     const bodyparams = {};
-    bodyparams.address = addressVal;
+    bodyparams.address = tranferToLowerCase(addressVal);
     bodyparams.name = nameTagVal;
     bodyparams.website = websiteVal;
     bodyparams.icon = iconContractSource;

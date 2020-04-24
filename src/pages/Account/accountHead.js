@@ -3,9 +3,10 @@
 import React, { Component, Fragment } from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
+import compose from 'lodash/fp/compose';
 import * as commonCss from '../../globalStyles/common';
 import CopyButton from '../../components/CopyButton';
 import QrcodeButton from '../../components/QrcodeButton';
@@ -14,7 +15,7 @@ import EllipsisLine from '../../components/EllipsisLine';
 import { reqContract, reqAccount, reqTokenList } from '../../utils/api';
 import { errorCodes } from '../../constants';
 import media from '../../globalStyles/media';
-import { convertToValueorFee, i18n, renderAny, isContract } from '../../utils';
+import { convertToValueorFee, valToTokenVal, i18n, renderAny, isContract } from '../../utils';
 import TokenSelect from '../../components/TokenSelect';
 import imgtokenIcon from '../../assets/images/icons/token-icon.svg';
 import contractNameIcon from '../../assets/images/icons/contract-nameicon.svg';
@@ -386,7 +387,7 @@ class AccountHead extends Component {
         value: v.address,
         imgSrc: v.tokenIcon,
         label1: `${v.tokenName} (${v.tokenSymbol})`,
-        label2: `${v.balance} ${v.tokenSymbol}`,
+        label2: `${valToTokenVal(v.balance, v.tokenDecimal)} ${v.tokenSymbol}`,
       };
     });
 
@@ -522,4 +523,9 @@ AccountHead.propTypes = {
   }).isRequired,
 };
 
-export default injectIntl(AccountHead);
+const hoc = compose(
+  injectIntl,
+  withRouter
+);
+
+export default hoc(AccountHead);

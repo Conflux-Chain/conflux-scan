@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
 import compose from 'lodash/fp/compose';
-import { i18n, isContract } from '../../utils';
+import { i18n, isContract, tranferToLowerCase } from '../../utils';
 import * as commonCss from '../../globalStyles/common';
 import media from '../../globalStyles/media';
 import MinedBlocks from './minedBlocks';
@@ -63,14 +63,6 @@ function removeHash() {
 class Detail extends Component {
   constructor(...args) {
     super(...args);
-    this.getAccountId = () => {
-      const {
-        match: { params },
-      } = this.props;
-      const { accountid } = params;
-      return accountid;
-    };
-
     this.state = {
       blockCount: 0,
       currentTab: null,
@@ -80,6 +72,7 @@ class Detail extends Component {
       tokenTotal: 0,
       accountid: this.getAccountId(),
     };
+    this.getAccountId = this.getAccountId.bind(this);
   }
 
   componentDidMount() {
@@ -92,10 +85,11 @@ class Detail extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.match.params.accountid !== prevProps.match.params.accountid) {
+    const accountid = this.getAccountId();
+    const prevAccountId = tranferToLowerCase(prevProps.match.params.accountid);
+    if (accountid !== prevAccountId) {
       // eslint-disable-next-line  react/no-did-update-set-state
       this.autoSwitchTab();
-      const accountid = this.getAccountId();
       // eslint-disable-next-line  react/no-did-update-set-state
       this.setState({
         accountid,
@@ -105,6 +99,14 @@ class Detail extends Component {
         this.fetchContractInfo(accountid);
       }
     }
+  }
+
+  getAccountId() {
+    const {
+      match: { params },
+    } = this.props;
+    const { accountid } = params;
+    return tranferToLowerCase(accountid);
   }
 
   autoSwitchTab() {
@@ -124,18 +126,20 @@ class Detail extends Component {
     reqTokenList({
       address: accountid,
     }).then((body) => {
-      const listSorted = (body.result.list || []).sort((a, b) => {
-        return b.balance - a.balance;
-      });
-      const tokenMap = {};
-      listSorted.forEach((v) => {
-        tokenMap[v.address] = v;
-      });
-      this.setState({
-        tokenTotal: body.result.list.length,
-        tokenList: listSorted,
-        tokenMap,
-      });
+      if (body.code === 0) {
+        const listSorted = (body.result.list || []).sort((a, b) => {
+          return b.balance - a.balance;
+        });
+        const tokenMap = {};
+        listSorted.forEach((v) => {
+          tokenMap[v.address] = v;
+        });
+        this.setState({
+          tokenTotal: body.result.list.length,
+          tokenList: listSorted,
+          tokenMap,
+        });
+      }
     });
   }
 
@@ -174,10 +178,7 @@ class Detail extends Component {
 
   render() {
     const { currentTab, showMaintaining, blockCount, contractInfo, tokenTotal, tokenList, tokenMap } = this.state;
-    const {
-      intl,
-      match: { params },
-    } = this.props;
+    const { intl } = this.props;
 
     const { accountid } = this.state;
     const isContractAddr = isContract(accountid);

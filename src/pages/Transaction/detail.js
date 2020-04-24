@@ -10,7 +10,7 @@ import moment from 'moment';
 import TableLoading from '../../components/TableLoading';
 import EllipsisLine from '../../components/EllipsisLine';
 import media from '../../globalStyles/media';
-import { i18n, renderAny, dripTocfx, dripToGdrip, getAddressType, devidedByDecimals } from '../../utils';
+import { i18n, renderAny, dripTocfx, dripToGdrip, getAddressType, devidedByDecimals, tranferToLowerCase } from '../../utils';
 import NotFoundTx from '../NotFoundTx';
 import Countdown from '../../components/Countdown';
 import iconStatusErr from '../../assets/images/icons/status-err.svg';
@@ -254,7 +254,6 @@ class Detail extends Component {
   constructor() {
     super();
     this.state = {
-      txnhash: '',
       result: {},
       isLoading: true,
       isPacking: false,
@@ -270,25 +269,28 @@ class Detail extends Component {
   }
 
   componentDidMount() {
-    const {
-      match: { params },
-    } = this.props;
-    this.fetchTxDetail(params.txnhash);
+    this.fetchTxDetail(this.getTxnHash());
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
+    const txnhash = this.getTxnHash();
+    const prevTxnHash = tranferToLowerCase(prevProps.match.params.txnhash);
+    if (txnhash !== prevTxnHash) {
+      this.fetchTxDetail(txnhash);
+    }
+  }
+
+  getTxnHash() {
     const {
       match: { params },
     } = this.props;
-    const { txnhash } = this.state;
-    if (params.txnhash !== txnhash) {
-      this.fetchTxDetail(params.txnhash);
-    }
+    const { txnhash } = params;
+    return tranferToLowerCase(txnhash);
   }
 
   fetchTxDetail(txnhash) {
     const { history } = this.props;
-    this.setState({ isLoading: true, txnhash });
+    this.setState({ isLoading: true });
     return reqTransactionDetail(
       {
         hash: txnhash,
@@ -296,16 +298,7 @@ class Detail extends Component {
       { showError: false }
     ).then((body) => {
       switch (body.code) {
-        case errorCodes.ParameterError:
-          history.push(`/search-notfound?searchId=${txnhash}`);
-          break;
-        case errorCodes.TxNotFoundError:
-          this.setState({
-            isPacking: true,
-          });
-          break;
         case 0:
-        default:
           const transactionDetails = body.result;
           this.setState({ result: transactionDetails });
           let toAddress = transactionDetails.to;
@@ -392,6 +385,16 @@ class Detail extends Component {
             });
           }
           break;
+        case errorCodes.ParameterError:
+          history.push(`/search-notfound?searchId=${txnhash}`);
+          break;
+        case errorCodes.TxNotFoundError:
+          this.setState({
+            isPacking: true,
+          });
+          break;
+        default:
+          break;
       }
     });
   }
@@ -399,7 +402,6 @@ class Detail extends Component {
   render() {
     const {
       isLoading,
-      txnhash,
       isPacking,
       selectedLangKey,
       inputDataType,
@@ -410,12 +412,9 @@ class Detail extends Component {
       isContract,
       transferList,
     } = this.state;
-    const {
-      match: { params },
-    } = this.props;
 
     if (isPacking) {
-      return <NotFoundTx searchId={txnhash} />;
+      return <NotFoundTx searchId={this.getTxnHash()} />;
     }
     let { result } = this.state;
     result = result || {};
@@ -430,7 +429,7 @@ class Detail extends Component {
         <Wrapper>
           <HeadBar>
             <h1>{i18n('app.pages.txns.transaction')}</h1>
-            <p>{params.txnhash}</p>
+            <p>{this.getTxnHash()}</p>
           </HeadBar>
           {isLoading ? (
             <TableLoading />

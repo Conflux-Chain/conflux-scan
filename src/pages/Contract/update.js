@@ -10,7 +10,7 @@ import { FormattedMessage } from 'react-intl';
 import { Icon, Popup } from 'semantic-ui-react';
 import AceEditor from 'react-ace';
 import media from '../../globalStyles/media';
-import { i18n } from '../../utils';
+import { i18n, tranferToLowerCase } from '../../utils';
 import TableLoading from '../../components/TableLoading';
 import { reqContract, reqContractUpdate } from '../../utils/api';
 import { defaultContractIcon, defaultTokenIcon, contractTypes, contractTypeCodeGeneral } from '../../constants';
@@ -460,6 +460,7 @@ class ContractUpdate extends Component {
 
   constructor(...args) {
     super(...args);
+
     this.state = {
       iconContractSource: '',
       iconTokenSource: '',
@@ -474,23 +475,27 @@ class ContractUpdate extends Component {
       canSubmit: false,
     };
     this.handleSourceChange = this.handleSourceChange.bind(this);
+    this.getAddress = this.getAddress.bind(this);
   }
 
   componentDidMount() {
-    const {
-      match: { params },
-    } = this.props;
-    this.fetchContactInfo(params.address);
+    this.fetchContactInfo(this.getAddress());
   }
 
   componentDidUpdate(prevProps) {
+    const address = this.getAddress();
+    const prevAddress = tranferToLowerCase(prevProps.match.params.address);
+    if (address !== prevAddress) {
+      this.fetchContactInfo(address);
+    }
+  }
+
+  getAddress() {
     const {
       match: { params },
     } = this.props;
     const { address } = params;
-    if (address !== prevProps.match.params.address) {
-      this.fetchContactInfo(params.address);
-    }
+    return tranferToLowerCase(address);
   }
 
   getContractStrByType(type) {
@@ -657,12 +662,9 @@ class ContractUpdate extends Component {
       websiteVal,
       selectedContractTypeCode,
     } = this.state;
-    const {
-      match: { params },
-      history,
-    } = this.props;
+    const { history } = this.props;
     const bodyparams = {};
-    bodyparams.address = params.address;
+    bodyparams.address = this.getAddress();
     bodyparams.name = nameTagVal;
     bodyparams.website = websiteVal;
     bodyparams.icon = iconContractSource;
@@ -680,7 +682,8 @@ class ContractUpdate extends Component {
             timeout: 2000,
           },
         });
-        history.replace(`/accountdetail/${params.address}`);
+        const addressParams = this.getAddress();
+        history.replace(`/accountdetail/${addressParams}`);
       }
     });
   }
@@ -692,9 +695,6 @@ class ContractUpdate extends Component {
   }
 
   render() {
-    const {
-      match: { params },
-    } = this.props;
     const {
       iconContractSource,
       iconTokenSource,
@@ -716,7 +716,7 @@ class ContractUpdate extends Component {
         <Wrapper>
           <HeadBar>
             <h1>{i18n('app.pages.contract.edit')}</h1>
-            <p>{params.address}</p>
+            <p>{this.getAddress()}</p>
           </HeadBar>
           {isLoading ? (
             <TableLoading />
@@ -733,7 +733,7 @@ class ContractUpdate extends Component {
                     </td>
                     <td className="aligned top">
                       <div className="ui input disabled inputContainer">
-                        <input className="inputItem" type="text" placeholder={params.address} />
+                        <input className="inputItem" type="text" placeholder={this.getAddress()} />
                       </div>
                     </td>
                     <td rowSpan="3" className="center aligned init">

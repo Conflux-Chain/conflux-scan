@@ -5,6 +5,7 @@ import superagent from 'superagent';
 import querystring from 'querystring';
 import huNum from 'humanize-number';
 import { injectIntl, FormattedMessage, FormattedHTMLMessage } from 'react-intl';
+import * as Sentry from '@sentry/browser';
 import { toast } from '../components/Toast';
 import { notice } from '../components/Message/notice';
 import { errorCodes, addressTypeContract, addressTypeCommon } from '../constants';
@@ -214,6 +215,7 @@ export const sendRequest = (config) => {
   });
   reqPromise.catch((error) => {
     if (config && config.url.match(/dashboard\/dag$/)) return;
+    Sentry.captureException(error);
     console.log(error);
     if (config.showNetWorkError !== false) {
       toast.error({
@@ -302,4 +304,8 @@ export const devidedByDecimals = (number, decimals) => {
 
 export const getAddressType = (address) => {
   return address && address.startsWith('0x8') ? addressTypeContract : addressTypeCommon;
+};
+
+export const tranferToLowerCase = (str) => {
+  return str ? str.toLowerCase() : '';
 };
