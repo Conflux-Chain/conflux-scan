@@ -486,7 +486,7 @@ class ContractUpdate extends Component {
     const address = this.getAddress();
     const prevAddress = tranferToLowerCase(prevProps.match.params.address);
     if (address !== prevAddress) {
-      this.fetchContactInfo(this.getAddress());
+      this.fetchContactInfo(address);
     }
   }
 
@@ -662,12 +662,9 @@ class ContractUpdate extends Component {
       websiteVal,
       selectedContractTypeCode,
     } = this.state;
-    const {
-      match: { params },
-      history,
-    } = this.props;
+    const { history } = this.props;
     const bodyparams = {};
-    bodyparams.address = params.address;
+    bodyparams.address = this.getAddress();
     bodyparams.name = nameTagVal;
     bodyparams.website = websiteVal;
     bodyparams.icon = iconContractSource;

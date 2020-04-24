@@ -641,7 +641,7 @@ class ContractUpdate extends Component {
       addressVal,
     } = this.state;
     const bodyparams = {};
-    bodyparams.address = addressVal;
+    bodyparams.address = tranferToLowerCase(addressVal);
     bodyparams.name = nameTagVal;
     bodyparams.website = websiteVal;
     bodyparams.icon = iconContractSource;
