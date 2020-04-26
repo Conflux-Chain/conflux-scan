@@ -9,7 +9,7 @@ import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 import styled from 'styled-components';
 import media from '../../globalStyles/media';
 import { i18n } from '../../utils';
-import { UPDATE_COMMON } from '../../constants';
+import { UPDATE_COMMON, isProdEnv } from '../../constants';
 
 import SearchBox from '../SearchBox';
 import LogoImage from '../../assets/images/logo-b@2.png';
@@ -214,13 +214,13 @@ function Header(props) {
                       network: v.name,
                     },
                   });
-                  if (window.location.href.indexOf('scantest') !== -1) {
+                  if (!isProdEnv) {
                     if (v.name === 'mainnet') {
                       window.location.href = 'http://scantest.confluxscan.io';
                     } else {
                       window.location.href = 'http://testnet-scantest.confluxscan.io';
                     }
-                  } else if (window.location.href.indexOf('scantest') === -1) {
+                  } else if (isProdEnv) {
                     if (v.name === 'mainnet') {
                       window.location.href = 'https://confluxscan.io';
                     } else {
