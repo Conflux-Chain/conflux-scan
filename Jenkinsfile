@@ -59,34 +59,6 @@ sudo cp -r .  /www/explorer-v2/conflux-scan/
           }
         }
 
-        stage('debug dev env') {
-          when {
-            beforeAgent true
-            allOf {
-              branch 'dev'
-            }
-          }
-          agent {label 'scan-debug-prod-machine'}
-          steps {
-            script {
-              sh (label: 'build front', script: """
-sudo docker build -t conflux-scan .
-mkdir -p `pwd`/dist
-sudo docker run --rm --mount type=bind,src=`pwd`/dist,dst=/conflux-scan/dist conflux-scan build
-""")
-            }
-            script {
-              build 'Conflux-dev/conflux-dag/master'
-              copyArtifacts(projectName: 'Conflux-dev/conflux-dag/master')
-              sh (label: 'move to nginx www', script: """
-sudo rm -rf /www/conflux-scan/
-sudo mkdir -p /www/conflux-scan/
-sudo cp -r . /www/conflux-scan/
-""")
-            }
-          }
-        }
-
         stage('prod env') {
           when {
             beforeAgent true
