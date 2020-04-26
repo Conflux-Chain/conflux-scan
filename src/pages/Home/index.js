@@ -14,6 +14,7 @@ import dashboard4 from '../../assets/images/dashboard4.png';
 import media from '../../globalStyles/media';
 import { reqStatistics, reqStatisticsItem } from '../../utils/api';
 import noticeIcon from '../../assets/images/icons/notice-icon.svg';
+import { isMainnet } from '../../constants';
 
 const Container = styled.div`
   width: 100%;
@@ -338,7 +339,7 @@ class Home extends Component {
             </div>
           </Block>
         </BlockContainer>
-        {window.location.href.indexOf('testnet-scantest') !== -1 || window.location.href.indexOf('testnet') !== -1 ? (
+        {!isMainnet ? (
           <NoticeDiv>
             <i />
             <div className="notice-content">
