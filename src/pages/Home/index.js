@@ -338,13 +338,15 @@ class Home extends Component {
             </div>
           </Block>
         </BlockContainer>
-        <NoticeDiv>
-          <i />
-          <div className="notice-content">
-            <div>{i18n('app.pages.index.notice1')}</div>
-            <div>{i18n('app.pages.index.notice2')}</div>
-          </div>
-        </NoticeDiv>
+        {window.location.href.indexOf('testnet-scantest') !== -1 || window.location.href.indexOf('testnet') !== -1 ? (
+          <NoticeDiv>
+            <i />
+            <div className="notice-content">
+              <div>{i18n('app.pages.index.notice1')}</div>
+              <div>{i18n('app.pages.index.notice2')}</div>
+            </div>
+          </NoticeDiv>
+        ) : null}
         <LineContainer>
           <LineChart
             title={intl.formatMessage({ id: 'app.pages.dashboard.tps' })}
