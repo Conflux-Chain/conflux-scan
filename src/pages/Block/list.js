@@ -207,13 +207,15 @@ class List extends Component {
       page: activePage,
       pageSize: 10,
     }).then((body) => {
-      const { list } = body.result;
-      this.setState({
-        isLoading: false,
-        curPage: activePage,
-        BlockList: list.filter((v) => !!v),
-        TotalCount: body.result.total,
-      });
+      if (body.code === 0) {
+        const { list } = body.result;
+        this.setState({
+          isLoading: false,
+          curPage: activePage,
+          BlockList: list.filter((v) => !!v),
+          TotalCount: body.result.total,
+        });
+      }
     });
   }
 
