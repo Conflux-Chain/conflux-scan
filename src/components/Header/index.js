@@ -198,7 +198,7 @@ function Header(props) {
         <SearchBox />
       </SearchBoxContainer>
 
-      <LangSelector className="network-select" style={{ display: 'none' }}>
+      <LangSelector className="network-select">
         <div className="ui dropdown link item">
           <span className="text">{i18n(`network.${network}`)}</span>
           <span className="text-short">{i18n(`network-short.${network}`)}</span>
@@ -215,9 +215,11 @@ function Header(props) {
                     },
                   });
                   if (v.name === 'mainnet') {
-                    window.location.href = 'https://confluxscan.io';
+                    // window.location.href = 'https://confluxscan.io';
+                    window.location.href = 'http://scantest.confluxscan.io';
                   } else {
-                    window.location.href = 'https://testnet.confluxscan.io';
+                    // window.location.href = 'https://testnet.confluxscan.io';
+                    window.location.href = 'http://testnet-scantest.confluxscan.io';
                   }
                 };
 
