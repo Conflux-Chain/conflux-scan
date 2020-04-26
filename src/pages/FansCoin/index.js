@@ -492,7 +492,7 @@ class FansCoin extends Component {
               </div>
               <div className="content summary-content">
                 <div className="summary-line">
-                  <h6>{i18n('Contract')}:</h6>
+                  <h6 style={{ userSelect: 'none' }}>{i18n('Contract')}:</h6>
                   <div className="summary-line-content">{fcStat.address}</div>
                 </div>
                 <div className="summary-line">
