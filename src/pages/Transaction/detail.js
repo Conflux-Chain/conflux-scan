@@ -363,7 +363,9 @@ class Detail extends Component {
                     reqContract({ address: list[i].address, fields: 'tokenIcon' }, { showError: false }).then((contractRes) => {
                       switch (contractRes.code) {
                         case 0:
-                          list[i].token.tokenIcon = contractRes.result.tokenIcon;
+                          if (list[i].token) {
+                            list[i].token.tokenIcon = contractRes.result.tokenIcon;
+                          }
                           this.setState({
                             transferList: list,
                           });
@@ -549,13 +551,22 @@ class Detail extends Component {
                   let transferListContainer = [];
                   for (let i = 0; i < transferList.length; i++) {
                     const transferItem = transferList[i];
-                    let imgSrc = transferItem.token.tokenIcon || defaultTokenIcon;
+                    let imgSrc = defaultTokenIcon;
+                    let tokenName = '';
+                    let tokenSymbol = '';
+                    let tokenDecimals = 0;
+                    if (transferItem.token) {
+                      imgSrc = transferItem.token.tokenIcon;
+                      tokenName = transferItem.token.name;
+                      tokenSymbol = transferItem.token.symbol;
+                      tokenDecimals = transferItem.token.decimals;
+                    }
                     const imgIcon = <img className="fc-logo" src={`${imgSrc}`} />;
-                    let nameContainer = <span className="nameItem">{`${transferItem.token.name} (${transferItem.token.symbol})`}</span>;
-                    if (transferItem.token.name === 'FansCoin' && transferItem.address === fansCoinAddress) {
+                    let nameContainer = <span className="nameItem">{`${tokenName} (${tokenSymbol})`}</span>;
+                    if (tokenName === 'FansCoin' && transferItem.address === fansCoinAddress) {
                       nameContainer = (
                         <Link to="/fansCoin" className="nameItem">
-                          {`${transferItem.token.name} (${transferItem.token.symbol})`}
+                          {`${tokenName} (${tokenSymbol})`}
                         </Link>
                       );
                     }
@@ -566,7 +577,7 @@ class Detail extends Component {
                         <em>{i18n('To')}</em>
                         <EllipsisLine ellipsisStyle={{ maxWidth: 152 }} linkTo={`/address/${transferItem.to}`} text={transferItem.to} />
                         <em>For</em>
-                        <span>{devidedByDecimals(transferItem.value, transferItem.token.decimals || 0)}</span>
+                        <span>{devidedByDecimals(transferItem.value, tokenDecimals)}</span>
                         {imgIcon}
                         {nameContainer}
                       </TokensDiv>
