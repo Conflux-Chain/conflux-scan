@@ -214,29 +214,31 @@ class Home extends Component {
   }
 
   async fetchLineDataAll(duration = 'day') {
-    const { result } = await reqStatisticsItem({
+    const { code, result = {} } = await reqStatisticsItem({
       duration,
     });
-    const tpsList = result.list.map((v) => ({ time: v.timestamp, value: v.tps }));
-    const difficultyList = result.list.map((v) => ({ time: v.timestamp, value: v.difficulty }));
-    const blockTimeList = result.list.map((v) => ({ time: v.timestamp, value: v.blockTime }));
-    const hashRateList = result.list.map((v) => ({ time: v.timestamp, value: v.hashRate }));
+    if (code === 0) {
+      const tpsList = result.list.map((v) => ({ time: v.timestamp, value: v.tps }));
+      const difficultyList = result.list.map((v) => ({ time: v.timestamp, value: v.difficulty }));
+      const blockTimeList = result.list.map((v) => ({ time: v.timestamp, value: v.blockTime }));
+      const hashRateList = result.list.map((v) => ({ time: v.timestamp, value: v.hashRate }));
 
-    const data = Immutable.fromJS({
-      tps: tpsList,
-      difficulty: difficultyList,
-      blockTime: blockTimeList,
-      hashRate: hashRateList,
-    });
-
-    this.setState({
-      data,
-    });
-
-    if (tpsList.length === 0) {
-      this.setState({
-        showMaintaining: true,
+      const data = Immutable.fromJS({
+        tps: tpsList,
+        difficulty: difficultyList,
+        blockTime: blockTimeList,
+        hashRate: hashRateList,
       });
+
+      this.setState({
+        data,
+      });
+
+      if (tpsList.length === 0) {
+        this.setState({
+          showMaintaining: true,
+        });
+      }
     }
     return result;
   }

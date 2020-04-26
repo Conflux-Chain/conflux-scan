@@ -351,9 +351,11 @@ class FansCoin extends Component {
     };
 
     reqFcStat().then((body) => {
-      this.setState({
-        fcStat: body.result.data,
-      });
+      if (body.code === 0) {
+        this.setState({
+          fcStat: body.result.data,
+        });
+      }
     });
 
     const { pageNum } = this.state;
@@ -423,9 +425,11 @@ class FansCoin extends Component {
       reqFcByAddress({
         address,
       }).then((res) => {
-        this.setState({
-          addressData: res.result.data,
-        });
+        if (res.code === 0) {
+          this.setState({
+            addressData: res.result.data,
+          });
+        }
       });
     }
   }
