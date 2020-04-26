@@ -214,12 +214,18 @@ function Header(props) {
                       network: v.name,
                     },
                   });
-                  if (v.name === 'mainnet') {
-                    // window.location.href = 'https://confluxscan.io';
-                    window.location.href = 'http://scantest.confluxscan.io';
-                  } else {
-                    // window.location.href = 'https://testnet.confluxscan.io';
-                    window.location.href = 'http://testnet-scantest.confluxscan.io';
+                  if (window.location.href.indexOf('scantest') !== -1) {
+                    if (v.name === 'mainnet') {
+                      window.location.href = 'http://scantest.confluxscan.io';
+                    } else {
+                      window.location.href = 'http://testnet-scantest.confluxscan.io';
+                    }
+                  } else if (window.location.href.indexOf('scantest') === -1) {
+                    if (v.name === 'mainnet') {
+                      window.location.href = 'https://confluxscan.io';
+                    } else {
+                      window.location.href = 'https://testnet.confluxscan.io';
+                    }
                   }
                 };
 
