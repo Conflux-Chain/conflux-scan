@@ -13,10 +13,14 @@ const DropDownDiv = styled.div`
   }
   .ui.selection.dropdown .menu {
     max-height: 200px;
+    overflow: auto;
   }
   .ui.selection.dropdown .menu > .item {
     padding: 13px 13px 13px 11px !important;
     color: #212121;
+    white-space: nowrap;
+    width: auto;
+    min-width: fit-content;
   }
   .ui.dropdown:not(.button) > .default.text {
     color: rgba(0, 0, 0, 0.87);
@@ -40,6 +44,7 @@ const DropDownDiv = styled.div`
     }
     .token-content-left {
       flex: 1;
+      margin-right: 20px;
     }
     .token-content-right {
       flex-shrink: 0;
