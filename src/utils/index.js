@@ -39,7 +39,7 @@ export const converToGasPrice3Fixed = (bigNumber) => {
   const convertedNum = result.toNumber();
   if (convertedNum < 0.001) return 0;
   if (convertedNum >= 1) return convertedNum;
-  return result.toString(10);
+  return result.toFixed(3);
 };
 
 export const valToTokenVal = (bigNumber, decimals) => {
