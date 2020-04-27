@@ -1,23 +1,21 @@
 import React, { Component, Fragment } from 'react';
 import moment from 'moment';
-import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import BigNumber from 'bignumber.js';
-import { Dropdown, Popup } from 'semantic-ui-react';
+import { Dropdown } from 'semantic-ui-react';
 import { DatePicker } from 'antd';
 import { injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import DataList from '../../components/DataList';
 import EllipsisLine from '../../components/EllipsisLine';
 import Countdown from '../../components/Countdown';
-import iconFcLogo from '../../assets/images/icons/fc-logo.svg';
-import { convertToValueorFee, converToGasPrice, i18n, renderAny, valToTokenVal } from '../../utils';
+// import iconFcLogo from '../../assets/images/icons/fc-logo.svg';
+import { i18n, renderAny, valToTokenVal } from '../../utils';
 import { StyledTabel, TabPanel, PCell, TabWrapper, IconFace, CtrlPanel } from './styles';
 import Pagination from '../../components/Pagination';
-import { reqTokenTxnList, reqFcStat } from '../../utils/api';
+import { reqTokenTxnList } from '../../utils/api';
 import { TotalDesc, getTotalPage } from '../../components/TotalDesc';
-import { UPDATE_COMMON, defaultTokenIcon } from '../../constants';
+import { defaultTokenIcon, fansCoinAddress } from '../../constants';
 
 const NumCell = styled.div`
   color: rgba(0, 0, 0, 0.87);
@@ -96,25 +94,12 @@ class TokenTxns extends Component {
   }
 
   onMount() {
-    const { accountid, fcStat, dispatch } = this.props;
+    const { accountid } = this.props;
     this.changePage(accountid, {
       page: 1,
       pageSize: 10,
       txType: 'all',
     });
-
-    if (!fcStat.address) {
-      reqFcStat().then((body) => {
-        if (body.code === 0) {
-          dispatch({
-            type: UPDATE_COMMON,
-            payload: {
-              fcStat: body.result.data,
-            },
-          });
-        }
-      });
-    }
   }
 
   changePage(accountid, queriesRaw) {
@@ -142,7 +127,7 @@ class TokenTxns extends Component {
   }
 
   render() {
-    const { accountid, isActive, intl, tokenMap = {}, fcStat } = this.props;
+    const { accountid, isActive, intl, tokenMap = {} } = this.props;
     const { TxList, TxTotalCount, queries, listLimit, activated } = this.state;
     const { startTime, endTime } = this.state;
 
@@ -202,7 +187,13 @@ class TokenTxns extends Component {
         dataIndex: 'value',
         title: i18n('Value'),
         render: (text, row) => {
-          return <NumCell>{valToTokenVal(text, row.token.decimals)}</NumCell>;
+          if (row.token) {
+            if (row.token.decimals) {
+              return <NumCell>{valToTokenVal(text, row.token.decimals)}</NumCell>;
+            }
+            return <NumCell>{text}</NumCell>;
+          }
+          return null;
         },
       },
       {
@@ -211,6 +202,9 @@ class TokenTxns extends Component {
         dataIndex: '',
         title: i18n('Token'),
         render: (text, row) => {
+          if (!row.token) {
+            return null;
+          }
           const { name, symbol } = row.token;
           let tokenImg;
           if (tokenMap[row.address] && tokenMap[row.address].tokenIcon) {
@@ -221,9 +215,9 @@ class TokenTxns extends Component {
 
           let tokenLink;
           const txt = `${name} (${symbol})`;
-          if (fcStat.address === row.address) {
+          if (fansCoinAddress === row.address) {
             tokenLink = <Link to="/fansCoin">{txt}</Link>;
-            tokenImg = <img src={iconFcLogo} />;
+            // tokenImg = <img src={iconFcLogo} />;
           } else {
             tokenLink = <a>{txt}</a>;
           }
@@ -447,18 +441,8 @@ TokenTxns.propTypes = {
       tokenIcon: PropTypes.string,
     })
   ).isRequired,
-  fcStat: PropTypes.objectOf({
-    address: PropTypes.string,
-  }).isRequired,
-  dispatch: PropTypes.string.isRequired,
 };
 
 TokenTxns.defaultProps = {};
 
-function mapStateToProps(state) {
-  return {
-    fcStat: state.common.fcStat,
-  };
-}
-
-export default connect(mapStateToProps)(injectIntl(TokenTxns));
+export default injectIntl(TokenTxns);

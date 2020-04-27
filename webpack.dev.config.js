@@ -19,17 +19,17 @@ module.exports = merge(commom, {
       });
     },
     proxy: {
-      '/proxy': 'http://127.0.0.1:3000',
+      // '/proxy': 'http://127.0.0.1:3000',
       '/api': {
-        target: 'http://testnet-jsonrpc.conflux-chain.org:18084',
+        target: 'http://101.201.103.131:8885',
         // target: 'http://13.75.69.106',
         // pathRewrite: { '^/api': '' },
       },
       '/future': {
-        target: 'http://13.75.69.106',
+        target: 'http://101.201.103.131:8885',
       },
       '/contract-manager': {
-        target: 'http://13.75.69.106:8886',
+        target: 'http://101.201.103.131:8886',
         pathRewrite: { '^/contract-manager': '' },
       },
       // for developing dag locally

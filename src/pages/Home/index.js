@@ -14,6 +14,7 @@ import dashboard4 from '../../assets/images/dashboard4.png';
 import media from '../../globalStyles/media';
 import { reqStatistics, reqStatisticsItem } from '../../utils/api';
 import noticeIcon from '../../assets/images/icons/notice-icon.svg';
+import { isMainnet } from '../../constants';
 
 const Container = styled.div`
   width: 100%;
@@ -214,29 +215,31 @@ class Home extends Component {
   }
 
   async fetchLineDataAll(duration = 'day') {
-    const { result } = await reqStatisticsItem({
+    const { code, result = {} } = await reqStatisticsItem({
       duration,
     });
-    const tpsList = result.list.map((v) => ({ time: v.timestamp, value: v.tps }));
-    const difficultyList = result.list.map((v) => ({ time: v.timestamp, value: v.difficulty }));
-    const blockTimeList = result.list.map((v) => ({ time: v.timestamp, value: v.blockTime }));
-    const hashRateList = result.list.map((v) => ({ time: v.timestamp, value: v.hashRate }));
+    if (code === 0) {
+      const tpsList = result.list.map((v) => ({ time: v.timestamp, value: v.tps }));
+      const difficultyList = result.list.map((v) => ({ time: v.timestamp, value: v.difficulty }));
+      const blockTimeList = result.list.map((v) => ({ time: v.timestamp, value: v.blockTime }));
+      const hashRateList = result.list.map((v) => ({ time: v.timestamp, value: v.hashRate }));
 
-    const data = Immutable.fromJS({
-      tps: tpsList,
-      difficulty: difficultyList,
-      blockTime: blockTimeList,
-      hashRate: hashRateList,
-    });
-
-    this.setState({
-      data,
-    });
-
-    if (tpsList.length === 0) {
-      this.setState({
-        showMaintaining: true,
+      const data = Immutable.fromJS({
+        tps: tpsList,
+        difficulty: difficultyList,
+        blockTime: blockTimeList,
+        hashRate: hashRateList,
       });
+
+      this.setState({
+        data,
+      });
+
+      if (tpsList.length === 0) {
+        this.setState({
+          showMaintaining: true,
+        });
+      }
     }
     return result;
   }
@@ -336,13 +339,15 @@ class Home extends Component {
             </div>
           </Block>
         </BlockContainer>
-        <NoticeDiv>
-          <i />
-          <div className="notice-content">
-            <div>{i18n('app.pages.index.notice1')}</div>
-            <div>{i18n('app.pages.index.notice2')}</div>
-          </div>
-        </NoticeDiv>
+        {!isMainnet ? (
+          <NoticeDiv>
+            <i />
+            <div className="notice-content">
+              <div>{i18n('app.pages.index.notice1')}</div>
+              <div>{i18n('app.pages.index.notice2')}</div>
+            </div>
+          </NoticeDiv>
+        ) : null}
         <LineContainer>
           <LineChart
             title={intl.formatMessage({ id: 'app.pages.dashboard.tps' })}

@@ -9,7 +9,7 @@ import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 import styled from 'styled-components';
 import media from '../../globalStyles/media';
 import { i18n } from '../../utils';
-import { UPDATE_COMMON } from '../../constants';
+import { UPDATE_COMMON, isProdEnv } from '../../constants';
 
 import SearchBox from '../SearchBox';
 import LogoImage from '../../assets/images/logo-b@2.png';
@@ -198,7 +198,7 @@ function Header(props) {
         <SearchBox />
       </SearchBoxContainer>
 
-      <LangSelector className="network-select" style={{ display: 'none' }}>
+      <LangSelector className="network-select">
         <div className="ui dropdown link item">
           <span className="text">{i18n(`network.${network}`)}</span>
           <span className="text-short">{i18n(`network-short.${network}`)}</span>
@@ -214,10 +214,18 @@ function Header(props) {
                       network: v.name,
                     },
                   });
-                  if (v.name === 'mainnet') {
-                    window.location.href = 'https://confluxscan.io';
-                  } else {
-                    window.location.href = 'https://testnet.confluxscan.io';
+                  if (!isProdEnv) {
+                    if (v.name === 'mainnet') {
+                      window.location.href = 'http://scantest.confluxscan.io';
+                    } else {
+                      window.location.href = 'http://testnet-scantest.confluxscan.io';
+                    }
+                  } else if (isProdEnv) {
+                    if (v.name === 'mainnet') {
+                      window.location.href = 'https://confluxscan.io';
+                    } else {
+                      window.location.href = 'https://testnet.confluxscan.io';
+                    }
                   }
                 };
 
