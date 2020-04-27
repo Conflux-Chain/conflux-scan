@@ -551,7 +551,7 @@ class Detail extends Component {
                   let transferListContainer = [];
                   for (let i = 0; i < transferList.length; i++) {
                     const transferItem = transferList[i];
-                    let imgSrc = defaultTokenIcon;
+                    let imgSrc = '';
                     let tokenName = '';
                     let tokenSymbol = '';
                     let tokenDecimals = 0;
@@ -561,7 +561,7 @@ class Detail extends Component {
                       tokenSymbol = transferItem.token.symbol;
                       tokenDecimals = transferItem.token.decimals;
                     }
-                    const imgIcon = <img className="fc-logo" src={`${imgSrc}`} />;
+                    const imgIcon = <img className="fc-logo" src={`${imgSrc || defaultTokenIcon}`} />;
                     let nameContainer = <span className="nameItem">{`${tokenName} (${tokenSymbol})`}</span>;
                     if (tokenName === 'FansCoin' && transferItem.address === fansCoinAddress) {
                       nameContainer = (
