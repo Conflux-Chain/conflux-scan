@@ -145,8 +145,6 @@ const StyledTabel = styled.table`
     color: #f09c3a;
   }
   .transferListContainer {
-    max-height: 120px;
-    overflow: auto;
   }
 `;
 
@@ -549,6 +547,7 @@ class Detail extends Component {
                     return null;
                   }
                   let transferListContainer = [];
+                  let transferListContainerStyle = {};
                   for (let i = 0; i < transferList.length; i++) {
                     const transferItem = transferList[i];
                     let imgSrc = '';
@@ -573,7 +572,12 @@ class Detail extends Component {
                     transferListContainer.push(
                       <TokensDiv>
                         <em>{i18n('From')}</em>
-                        <EllipsisLine ellipsisStyle={{ maxWidth: 152 }} linkTo={`/address/${transferItem.from}`} text={transferItem.from} />
+                        <EllipsisLine
+                          ellipsisStyle={{ maxWidth: 152 }}
+                          linkTo={`/address/${transferItem.from}`}
+                          text={transferItem.from}
+                          popUpCfg={{ position: 'top left' }}
+                        />
                         <em>{i18n('To')}</em>
                         <EllipsisLine ellipsisStyle={{ maxWidth: 152 }} linkTo={`/address/${transferItem.to}`} text={transferItem.to} />
                         <em>For</em>
@@ -583,6 +587,9 @@ class Detail extends Component {
                       </TokensDiv>
                     );
                   }
+                  if (transferList.length > 5) {
+                    transferListContainerStyle = { height: '120px', overflow: 'auto' };
+                  }
                   const sty = { paddingTop: '0.5em' };
                   const countStr = transferList.length > 1 ? `(${transferList.length})` : '';
                   return (
@@ -591,7 +598,7 @@ class Detail extends Component {
                         {i18n('app.pages.txns.tokenTransferred')} {`${countStr}`}
                       </td>
                       <td style={sty}>
-                        <div className="transferListContainer">{transferListContainer}</div>
+                        <div style={transferListContainerStyle}>{transferListContainer}</div>
                       </td>
                     </tr>
                   );
