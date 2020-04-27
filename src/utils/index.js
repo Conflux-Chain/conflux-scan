@@ -16,7 +16,7 @@ let source = null;
 export const convertToValueorFee = (bigNumber) => {
   const result = new BigNumber(bigNumber).dividedBy(10 ** 18);
   if (result.toFixed() < 0.00001) return `< 0.00001`;
-  return `${result.toFixed(4)}`;
+  return `${result.toString(10)}`;
 };
 export const dripTocfx = (bigNumber) => {
   const result = new BigNumber(bigNumber).dividedBy(10 ** 18);
@@ -30,7 +30,7 @@ export const dripToGdrip = (bigNumber) => {
 export const converToGasPrice = (bigNumber) => {
   const result = new BigNumber(bigNumber).dividedBy(10 ** 9);
   if (result.toFixed() < 0.00001) return `< 0.00001`;
-  return `${result.toFixed(5)}`;
+  return `${result.toString(10)}`;
 };
 
 export const converToGasPrice3Fixed = (bigNumber) => {
@@ -38,7 +38,7 @@ export const converToGasPrice3Fixed = (bigNumber) => {
   // console.log(result.toNumber());
   if (result.toFixed() < 0.001) return 0;
   if (result.toFixed(3) >= 1) return result.toFixed();
-  return result.toFixed(3);
+  return result.toString(10);
 };
 
 export const valToTokenVal = (bigNumber, decimals) => {

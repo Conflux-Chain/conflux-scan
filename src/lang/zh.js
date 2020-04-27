@@ -158,7 +158,7 @@ export default {
   'app.directory.community.title': '社区',
   'app.directory.community.desc': '成为下一代去中心化社区的一员',
   'app.directory.fc.title': 'FansCoin',
-  'app.directory.fc.desc': '测试网代币',
+  'app.directory.fc.desc': '社区代币',
   'app.directory.contract.title': '合约',
   'app.directory.contract.desc': '提交合约信息',
   'system maintaining, please visit later': '系统维护中，请稍后访问',

@@ -115,7 +115,7 @@ export default {
   'app.directory.topholders.desc': 'Publicity & Transparency for the Community',
   'app.directory.community.title': 'Community',
   'app.directory.fc.title': 'FansCoin',
-  'app.directory.fc.desc': 'TestNet token',
+  'app.directory.fc.desc': 'Community Token',
   'app.directory.contract.title': 'Contract',
   'app.directory.contract.desc': 'Submit Contract Information',
   'app.directory.community.desc': 'Join the Next Generation Decentralized Application Community',

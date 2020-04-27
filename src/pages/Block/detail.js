@@ -213,13 +213,13 @@ const TxColumns = [
     title: i18n('Gas Price'),
     render: (text) => <EllipsisLine unit="Gdrip" text={converToGasPrice(text)} />,
   },
-  {
-    key: 7,
-    className: 'three wide aligned',
-    dataIndex: 'timestamp',
-    title: i18n('Age'),
-    render: (text) => <Countdown timestamp={text * 1000} />,
-  },
+  // {
+  //   key: 7,
+  //   className: 'three wide aligned',
+  //   dataIndex: 'timestamp',
+  //   title: i18n('Age'),
+  //   render: (text) => <Countdown timestamp={text * 1000} />,
+  // },
 ];
 
 const RefColumns = [
