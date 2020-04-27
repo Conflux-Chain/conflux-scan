@@ -96,7 +96,7 @@ export default {
   'app.pages.txns.original': '原始数据',
   'app.pages.txns.utf8': 'UTF-8',
   'app.pages.txns.decodeInputData': '解码输入数据',
-  'app.pages.txns.inputTips': '构成交易输入数据的二进制数据如果是消息调用，则为输入数据；如果是合同创建，则为合同初始化',
+  'app.pages.txns.inputTips': '构成交易输入数据的二进制数据，如果是消息调用，则为输入数据；如果是合同创建，则为合同初始化',
   'app.pages.txns.proposedEpoch': '目标纪元',
   'app.pages.txns.storageLimit': '存储限制',
   'app.pages.txns.chainId': '区块链编号',
