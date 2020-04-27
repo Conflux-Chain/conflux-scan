@@ -456,7 +456,7 @@ class FansCoin extends Component {
           <h1>{i18n('FC')}</h1>
           <p>
             <a href="https://wallet.confluxscan.io/about" target="_blank">
-              Fans Coin
+              FansCoin
               <i className="link-open" />
             </a>
           </p>
