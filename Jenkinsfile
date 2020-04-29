@@ -66,7 +66,7 @@ sudo cp -r .  /www/explorer-v2/conflux-scan/
               branch 'master'
             }
           }
-          agent {label 'scan-wallet-prod-machine'}
+          agent {label 'bounty-frontend-production'}
           steps {
             script {
               sh (label: 'build front', script: """
@@ -79,8 +79,8 @@ sudo docker run --rm --mount type=bind,src=`pwd`/dist,dst=/conflux-scan/dist con
               build 'Conflux-dev/conflux-dag/master'
               copyArtifacts(projectName: 'Conflux-dev/conflux-dag/master')
               sh (label: 'move to nginx www', script: """
-sudo rm -rf /www/explorer-v2/conflux-scan
-sudo mkdir /www/explorer-v2/conflux-scan
+sudo rm -rf /www/explorer-v2/conflux-scan || true
+sudo mkdir -p /www/explorer-v2/conflux-scan
 sudo cp -r . /www/explorer-v2/conflux-scan
 """)
             }
