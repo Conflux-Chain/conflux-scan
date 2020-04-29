@@ -162,6 +162,8 @@ export default {
   'app.common.abi': 'ABI',
   'app.common.officialSite': 'Official Site',
   'app.common.contract': 'Contract',
-  'app.pages.index.notice1': '1. ConfluxScan is currently on the testnet network, all data shown are from the testnet.',
-  'app.pages.index.notice2': '2. Conflux Mainnet Phase I Pontus will be launched on April 27, 2020.',
+  'app.pages.index.testnet.notice1':
+    '1. ConfluxScan is currently on the testnet network, Conflux-Rust version: v0.5.1-alpha-1, all data shown are from the testnet.',
+  'app.pages.index.testnet.notice2': '2. Conflux Pontus is now live.',
+  'app.pages.index.mainnet.notice1': 'ConfluxScan is currently on the Mainnet Phase I - Pontus, Conflux-Rust version: v0.5.0',
 };
