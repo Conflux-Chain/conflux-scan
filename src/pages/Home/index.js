@@ -343,11 +343,18 @@ class Home extends Component {
           <NoticeDiv>
             <i />
             <div className="notice-content">
-              <div>{i18n('app.pages.index.notice1')}</div>
-              <div>{i18n('app.pages.index.notice2')}</div>
+              <div>{i18n('app.pages.index.testnet.notice1')}</div>
+              <div>{i18n('app.pages.index.testnet.notice2')}</div>
             </div>
           </NoticeDiv>
-        ) : null}
+        ) : (
+          <NoticeDiv>
+            <i />
+            <div className="notice-content">
+              <div>{i18n('app.pages.index.mainnet.notice1')}</div>
+            </div>
+          </NoticeDiv>
+        )}
         <LineContainer>
           <LineChart
             title={intl.formatMessage({ id: 'app.pages.dashboard.tps' })}
