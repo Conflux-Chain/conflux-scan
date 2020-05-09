@@ -146,7 +146,7 @@ export default {
 
   // Directory Page
   'app.directory.exchange.title': '交易所',
-  'app.directory.exchange.desc': '区块链资产交易平台',
+  'app.directory.exchange.desc': '加密货币交易所',
   'app.directory.wallet.title': '钱包',
   'app.directory.wallet.desc': '区块链资产管理与安全储存',
   'app.directory.website.title': '官网',
@@ -161,6 +161,8 @@ export default {
   'app.directory.fc.desc': '社区代币',
   'app.directory.contract.title': '合约',
   'app.directory.contract.desc': '提交合约信息',
+  'app.directory.ConfluxPortal.title': 'ConfluxPortal',
+  'app.directory.ConfluxPortal.desc': 'Conflux DApp 入口与资产管理',
   'system maintaining, please visit later': '系统维护中，请稍后访问',
 
   'No Record': '无记录',

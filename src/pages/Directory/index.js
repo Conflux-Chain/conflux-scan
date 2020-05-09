@@ -6,6 +6,8 @@ import styled from 'styled-components';
 import media from '../../globalStyles/media';
 import iconFcLogo from '../../assets/images/icons/fc-logo.svg';
 import contractLogo from '../../assets/images/icons/contract.svg';
+import portalLogo from '../../assets/images/icons/portal-logo.png';
+import exchangeLogo from '../../assets/images/icons/icon-exchange.png';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -18,7 +20,6 @@ const Wrapper = styled.div`
   `}
 
   .ui.cards {
-    justify-content: center;
   }
 
   .ui.card {
@@ -74,16 +75,18 @@ const Wrapper = styled.div`
       transition: 1.5s ease-out;
     }
 
-    .header {
-      font-size: 24px;
+    .content > .header {
+      font-size: 24px !important;
       font-weight: 700;
       color: #000;
       margin-top: 10px !important;
+      color: rgba(0, 0, 0);
     }
 
-    .description {
+    .content > .header + .description {
       font-size: 16px;
-      color: rgba(0, 0, 0, 0.54);
+      margin-top: 8px;
+      color: rgba(0, 0, 0);
     }
 
     .icon {
@@ -118,8 +121,8 @@ const Wrapper = styled.div`
       }
     }
   }
-  .fc-logo {
-    width: 32px;
+  .png-icon {
+    width: 72px;
     animation: animate 0.6s ease;
     animation-iteration-count: 1;
   }
@@ -127,13 +130,16 @@ const Wrapper = styled.div`
 
 const links = [
   {
-    key: 'fc',
-    icon: <img className="fc-logo" src={iconFcLogo} />,
-    href: '',
+    key: 'website',
+    icon: 'iconwangluo',
+    href: 'https://www.conflux-chain.org/',
     disable: false,
-    onClick: (history) => {
-      history.push('/fansCoin');
-    },
+  },
+  {
+    key: 'ConfluxPortal',
+    icon: <img className="png-icon" src={portalLogo} />,
+    href: 'https://portal.conflux-chain.org/',
+    disable: false,
   },
   {
     key: 'wallet',
@@ -142,15 +148,9 @@ const links = [
     disable: false,
   },
   {
-    key: 'website',
-    icon: 'iconwangluo',
-    href: 'https://www.conflux-chain.org/',
-    disable: false,
-  },
-  {
-    key: 'news',
-    icon: 'iconnews',
-    href: 'https://www.conflux-chain.org/blog/',
+    key: 'exchange',
+    icon: <img className="png-icon" src={exchangeLogo} />,
+    href: '',
     disable: false,
   },
   {
@@ -161,6 +161,12 @@ const links = [
     onClick: (history) => {
       history.push('/contract/create');
     },
+  },
+  {
+    key: 'news',
+    icon: 'iconnews',
+    href: 'https://www.conflux-chain.org/blog/',
+    disable: false,
   },
   {
     key: 'community',

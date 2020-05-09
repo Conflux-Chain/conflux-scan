@@ -104,7 +104,7 @@ export default {
 
   // Directory Page
   'app.directory.exchange.title': 'Exchange',
-  'app.directory.exchange.desc': 'Blockchain & Crypto Asset Exchange',
+  'app.directory.exchange.desc': 'Places to buy and sell cryptocurrencies',
   'app.directory.wallet.title': 'Wallet',
   'app.directory.wallet.desc': 'Crypto Asset Management & Protection',
   'app.directory.website.title': 'Official Website',
@@ -119,6 +119,8 @@ export default {
   'app.directory.contract.title': 'Contract',
   'app.directory.contract.desc': 'Submit Contract Information',
   'app.directory.community.desc': 'Join the Next Generation Decentralized Application Community',
+  'app.directory.ConfluxPortal.title': 'ConfluxPortal',
+  'app.directory.ConfluxPortal.desc': 'Conflux DApp Portal & Crypto Asset Management',
 
   'network.mainnet': 'Conflux Pontus',
   'network.testnet': 'Conflux Testnet',
