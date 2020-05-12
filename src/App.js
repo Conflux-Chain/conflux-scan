@@ -42,8 +42,9 @@ const Wrapper = styled.div`
 const Container = styled.div`
   position: relative;
   padding: 20px 0 0;
-  padding-left: 120px;
+  padding-left: 0;
   margin: 0;
+  margin-left: 120px;
   max-height: calc(100vh - 72px);
   overflow-x: hidden;
   overflow-y: auto;

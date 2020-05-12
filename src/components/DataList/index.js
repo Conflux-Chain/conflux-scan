@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import media from '../../globalStyles/media';
 
 const StyledTable = styled.div`
-  overflow: auto;
   th.plain_th {
     font-size: 16px;
     color: rgba(0, 0, 0, 0.87);
@@ -51,7 +50,7 @@ function DataList({ isMobile, rowStyle, showHeader, columns, dataSource }) {
               <tr style={rowStyle} key={item.hash || index}>
                 {columns.map((unit) => (
                   <th className={unit.className ? unit.className : ''} key={unit.key}>
-                    {!unit.render ? item[unit.dataIndex] : unit.render(item[unit.dataIndex], item)}
+                    {!unit.render ? item[unit.dataIndex] : unit.render(item[unit.dataIndex], item, index)}
                   </th>
                 ))}
               </tr>
@@ -59,7 +58,7 @@ function DataList({ isMobile, rowStyle, showHeader, columns, dataSource }) {
               <tr style={rowStyle} key={item.hash || index}>
                 {columns.map((unit) => (
                   <th style={{ borderTop: '1px solid rgba(34,36,38,.1)' }} className={unit.className ? unit.className : ''} key={unit.key}>
-                    {!unit.render ? item[unit.dataIndex] : unit.render(item[unit.dataIndex], item)}
+                    {!unit.render ? item[unit.dataIndex] : unit.render(item[unit.dataIndex], item, index)}
                   </th>
                 ))}
               </tr>
