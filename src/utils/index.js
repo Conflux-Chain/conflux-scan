@@ -1,5 +1,6 @@
 import React from 'react';
 import BigNumber from 'bignumber.js';
+import uniq from 'lodash/uniq';
 import template from 'lodash/template';
 import superagent from 'superagent';
 import querystring from 'querystring';
@@ -309,4 +310,17 @@ export const getAddressType = (address) => {
 
 export const tranferToLowerCase = (str) => {
   return str ? str.toLowerCase() : '';
+};
+
+export const getContractList = (txList) => {
+  const addrList = [];
+  txList.forEach((v) => {
+    if (v.to && isContract(v.to)) {
+      addrList.push(v.to);
+    }
+    if (v.from && isContract(v.from)) {
+      addrList.push(v.from);
+    }
+  });
+  return uniq(addrList);
 };

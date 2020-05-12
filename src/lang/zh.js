@@ -46,6 +46,10 @@ export default {
   Created: '已创建',
   'Contract Creation': '合约创建',
   WeSign: '画押',
+  Transfer: '转移',
+  addresses: '地址',
+  Decimals: '小数精度',
+  'Filtered by Token Holder': '按代币持有者筛选',
 
   'app.head.menu.home': '首页',
   'app.head.menu.dashboard': 'Dashboard',
@@ -143,6 +147,7 @@ export default {
   'app.navbar.blocksAndTxs': '区块 & 交易',
   'app.navbar.directory': '目录',
   'app.navbar.more': '更多',
+  'app.navbar.token': '代币',
 
   // Directory Page
   'app.directory.exchange.title': '交易所',

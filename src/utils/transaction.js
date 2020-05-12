@@ -1,9 +1,15 @@
 import { isEmpty } from 'lodash';
-
 // eslint-disable-next-line import/extensions
 import { Conflux } from 'js-conflux-sdk/dist/js-conflux-sdk.umd.min.js';
 
-const cfx = new Conflux();
+const cfx = new Conflux({
+  url: 'http://testnet-jsonrpc.conflux-chain.org:12537',
+  logger: {
+    ...console,
+    log: () => {},
+    info: () => {},
+  },
+});
 
 function hex2asc(pStr) {
   let tempstr = '';
@@ -28,4 +34,4 @@ function decodeContract({ abi, address, transacionData }) {
   return contract.abi.decodeData(transacionData);
 }
 
-export { hex2utf8, decodeContract };
+export { hex2utf8, decodeContract, cfx };

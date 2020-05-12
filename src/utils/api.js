@@ -1,5 +1,7 @@
-import { sendRequest } from './index';
-import { apiPrefix, futurePrefix, contractMangerPrefix } from '../constants';
+import { sendRequest, getStore } from './index';
+import { futurePrefix, contractMangerPrefix, UPDATE_CONTRACT_MANAGER_CACHE, errorCodes } from '../constants';
+import { cfx } from './transaction';
+import { toast } from '../components/Toast';
 
 export const reqFcStat = (param) => {
   return sendRequest({
@@ -132,7 +134,7 @@ export const reqContract = (param, extra) => {
   }).then((res) => res.body);
 };
 
-export const reqTokenList = (param, extra) => {
+export const reqAccountTokenList = (param, extra) => {
   return sendRequest({
     url: `${contractMangerPrefix}/api/account/token/list`,
     // url: 'http://yapi.conflux-chain.org/mock/20/account/token/list',
@@ -173,4 +175,157 @@ export const reqTransferList = (param, extra) => {
     query: param,
     ...extra,
   }).then((res) => res.body);
+};
+
+export const reqTokenList = (param, extra) => {
+  return sendRequest({
+    url: `${futurePrefix}/token/list`,
+    query: param,
+    ...extra,
+  }).then((res) => res.body);
+};
+
+export const reqContractMangerList = (param, extra) => {
+  return sendRequest({
+    url: `${contractMangerPrefix}/api/contract/list`,
+    query: param,
+    ...extra,
+  }).then((res) => res.body);
+};
+
+export const reqTokenQuery = (param, extra) => {
+  return sendRequest({
+    url: `${futurePrefix}/token/query`,
+    query: param,
+    ...extra,
+  }).then((res) => res.body);
+};
+
+export const reqContractListInfo = async (addrList) => {
+  const store = getStore();
+  const { contractManagerCache } = store.getState().common;
+  const addressList = [];
+  addrList.forEach((addr) => {
+    if (!contractManagerCache[addr]) {
+      addressList.push(addr);
+    }
+  });
+
+  const fields = ['address', 'name', 'tokenIcon', 'icon', 'website'].join(',');
+
+  for (let i = 0; i < addressList.length; i++) {
+    const address = addressList[i];
+    // eslint-disable-next-line no-await-in-loop
+    await reqContract(
+      {
+        fields,
+        address,
+      },
+      { showError: false }
+    ).then((body) => {
+      if (body.code === 0) {
+        store.dispatch({
+          type: UPDATE_CONTRACT_MANAGER_CACHE,
+          payload: {
+            ...body.result,
+            address,
+          },
+        });
+      } else if (body.code === errorCodes.ContractNotFound) {
+        store.dispatch({
+          type: UPDATE_CONTRACT_MANAGER_CACHE,
+          payload: {
+            address,
+            notfound: true,
+          },
+        });
+      }
+    });
+  }
+};
+
+export const reqContractInfo = (address) => (dispatch, getState) => {
+  const { contractManagerCache } = getState().common;
+  if (contractManagerCache[address]) {
+    return;
+  }
+
+  const fields = ['address', 'name', 'tokenIcon', 'icon', 'website'].join(',');
+
+  reqContract(
+    {
+      fields,
+      address,
+    },
+    { showError: false }
+  ).then((body) => {
+    if (body.code === 0) {
+      dispatch({
+        type: UPDATE_CONTRACT_MANAGER_CACHE,
+        payload: body.result,
+      });
+    } else if (body.code === errorCodes.ContractNotFound) {
+      dispatch({
+        type: UPDATE_CONTRACT_MANAGER_CACHE,
+        payload: {
+          address,
+          notfound: true,
+        },
+      });
+    }
+  });
+};
+
+const cfxSend = async (abi, fnName, address, callback) => {
+  const contract = cfx.Contract({
+    address,
+    abi,
+  });
+
+  try {
+    const result = await callback(contract[fnName]);
+    return result.toString();
+  } catch (e) {
+    toast.error({
+      content: e.message,
+      title: 'app.comp.toast.error.other',
+    });
+    return Promise.reject(e);
+  }
+};
+
+export const reqTotalSupply = async (opts) => {
+  return cfxSend(
+    [
+      {
+        type: 'function',
+        name: 'totalSupply',
+        inputs: [],
+        outputs: [{ type: 'uint256' }],
+      },
+    ],
+    'totalSupply',
+    opts.address,
+    async (contractFn) => {
+      return contractFn();
+    }
+  );
+};
+
+export const reqBalanceOf = async (opts) => {
+  return cfxSend(
+    [
+      {
+        type: 'function',
+        name: 'balanceOf',
+        inputs: [{ type: 'address' }],
+        outputs: [{ type: 'uint256' }],
+      },
+    ],
+    'balanceOf',
+    opts.address,
+    async (contractFn) => {
+      return contractFn(opts.params[0]);
+    }
+  );
 };

@@ -32,6 +32,9 @@ const NotFoundTx = lazy(() => import('../pages/NotFoundTx'));
 const FansCoin = lazy(() => import('../pages/FansCoin'));
 const ContractUpdate = lazy(() => import('../pages/Contract/update'));
 const ContractCreate = lazy(() => import('../pages/Contract/create'));
+const TokenList = lazy(() => import('../pages/Token/list'));
+const TokenDetail = lazy(() => import('../pages/Token/detail'));
+
 function Router() {
   return (
     <Suspense fallback={<div className="ui active loader" />}>
@@ -54,6 +57,8 @@ function Router() {
         <Route path="/fansCoin" component={FansCoin} />
         <Route path="/contract/update/:address" component={ContractUpdate} />
         <Route path="/contract/create" component={ContractCreate} />
+        <Route path="/token" component={TokenList} exact />
+        <Route path="/token/:address" component={TokenDetail} exact />
         <Route component={NotFound} />
       </Switch>
     </Suspense>

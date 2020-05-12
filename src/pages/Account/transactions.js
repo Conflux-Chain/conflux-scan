@@ -17,6 +17,7 @@ import iconStatusSkip from '../../assets/images/icons/status-skip.svg';
 import { reqAccountTransactionList } from '../../utils/api';
 import media from '../../globalStyles/media';
 import { TotalDesc, getTotalPage } from '../../components/TotalDesc';
+import AddressEllipseLine from '../../components/AddressEllipseLine';
 
 const ContractCell = styled.div`
   color: rgba(0, 0, 0, 0.87);
@@ -150,7 +151,7 @@ class Transactions extends Component {
         render: (text, row) => (
           <div>
             <PCell>
-              {text !== accountid ? <EllipsisLine textInout="In" linkTo={`/address/${text}`} text={text} /> : <EllipsisLine text={text} />}
+              {text !== accountid ? <AddressEllipseLine address={text} textInout="In" /> : <AddressEllipseLine noLink address={text} />}
             </PCell>
           </div>
         ),
@@ -161,25 +162,13 @@ class Transactions extends Component {
         dataIndex: 'to',
         title: i18n('To'),
         render: (text, row) => {
-          if (row.contractCreated) {
-            return (
-              <div>
-                <Popup
-                  trigger={<ContractCell>{i18n('Contract Creation')}</ContractCell>}
-                  content={row.contractCreated}
-                  position="top left"
-                  hoverable
-                />
-              </div>
-            );
-          }
           return (
             <div>
               <PCell>
                 {text !== accountid ? (
-                  <EllipsisLine textInout="Out" linkTo={`/address/${text}`} text={text} />
+                  <AddressEllipseLine contractCreated={row.contractCreated} textInout="Out" address={text} />
                 ) : (
-                  <EllipsisLine text={text} />
+                  <AddressEllipseLine contractCreated={row.contractCreated} address={text} noLink />
                 )}
               </PCell>
             </div>

@@ -101,6 +101,7 @@ export default {
   'app.navbar.blocksAndTxs': 'Blocks & Transactions',
   'app.navbar.directory': 'Directory',
   'app.navbar.more': 'More',
+  'app.navbar.token': 'Token',
 
   // Directory Page
   'app.directory.exchange.title': 'Exchange',
@@ -168,4 +169,5 @@ export default {
     '1. ConfluxScan is currently on the testnet network, Conflux-Rust version: v0.5.1-alpha-1, all data shown are from the testnet.',
   'app.pages.index.testnet.notice2': '2. Conflux Pontus is now live.',
   'app.pages.index.mainnet.notice1': 'ConfluxScan is currently on the Mainnet Phase I - Pontus, Conflux-Rust version: v0.5.0.1',
+  'No Info': '暂无信息',
 };

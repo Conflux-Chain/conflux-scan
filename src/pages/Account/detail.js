@@ -13,7 +13,7 @@ import Transactions from './transactions';
 import AccountHead from './accountHead';
 import ContractPanel from './contractPanel';
 import TokenTxns from './tokenTxns';
-import { reqContract, reqTokenList } from '../../utils/api';
+import { reqContract, reqAccountTokenList } from '../../utils/api';
 import { errorCodes } from '../../constants';
 
 const Wrapper = styled.div`
@@ -123,7 +123,7 @@ class Detail extends Component {
   }
 
   fetchTokenList(accountid) {
-    reqTokenList({
+    reqAccountTokenList({
       address: accountid,
     }).then((body) => {
       if (body.code === 0) {
@@ -171,6 +171,10 @@ class Detail extends Component {
       if (body.code === 0) {
         this.setState({
           contractInfo: body.result,
+        });
+      } else {
+        this.setState({
+          contractInfo: {},
         });
       }
     });

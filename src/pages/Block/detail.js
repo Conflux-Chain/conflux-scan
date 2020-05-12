@@ -11,11 +11,12 @@ import Countdown from '../../components/Countdown';
 import TableLoading from '../../components/TableLoading';
 import DataList from '../../components/DataList';
 import EllipsisLine from '../../components/EllipsisLine';
-import { convertToValueorFee, converToGasPrice, i18n, sendRequest, tranferToLowerCase } from '../../utils';
+import { convertToValueorFee, converToGasPrice, i18n, getContractList, tranferToLowerCase } from '../../utils';
 import media from '../../globalStyles/media';
 import * as commonCss from '../../globalStyles/common';
-import { reqBlock, reqBlockTransactionList, reqBlockRefereeBlockList } from '../../utils/api';
+import { reqBlock, reqBlockTransactionList, reqBlockRefereeBlockList, reqContractListInfo } from '../../utils/api';
 import { errorCodes } from '../../constants';
+import AddressEllipseLine from '../../components/AddressEllipseLine';
 
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -159,14 +160,14 @@ const TxColumns = [
     className: 'two wide',
     dataIndex: 'hash',
     title: i18n('Hash'),
-    render: (text) => <EllipsisLine linkTo={`/transactionsdetail/${text}`} text={text} />,
+    render: (text) => <EllipsisLine popUpCfg={{ position: 'top left' }} linkTo={`/transactionsdetail/${text}`} text={text} />,
   },
   {
     key: 2,
     className: 'two wide aligned',
     dataIndex: 'from',
     title: i18n('From'),
-    render: (text) => <EllipsisLine linkTo={`/address/${text}`} text={text} />,
+    render: (text) => <AddressEllipseLine address={text} />,
   },
   {
     key: 3,
@@ -174,19 +175,7 @@ const TxColumns = [
     dataIndex: 'to',
     title: i18n('To'),
     render: (text, row) => {
-      if (row.contractCreated) {
-        return (
-          <div>
-            <Popup
-              trigger={<ContractCell>{i18n('Contract Creation')}</ContractCell>}
-              content={row.contractCreated}
-              position="top left"
-              hoverable
-            />
-          </div>
-        );
-      }
-      return <EllipsisLine linkTo={`/address/${text}`} text={text} />;
+      return <AddressEllipseLine contractCreated={row.contractCreated} type="to" address={row.to} />;
     },
   },
   {
@@ -355,11 +344,13 @@ class Detail extends Component {
       { showError: false }
     ).then((body) => {
       if (body.code === 0) {
+        const txList = body.result.list.filter((v) => !!v);
         this.setState({
-          TxList: body.result.list.filter((v) => !!v),
+          TxList: txList,
           TxTotalCount: body.result.total,
           curPage: activePage,
         });
+        reqContractListInfo(getContractList(txList));
       }
     });
   }
