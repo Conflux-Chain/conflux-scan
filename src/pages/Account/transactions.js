@@ -167,9 +167,9 @@ class Transactions extends Component {
             <div>
               <PCell>
                 {text !== accountid ? (
-                  <AddressEllipseLine contractCreated={row.contractCreated} textInout="Out" address={text} />
+                  <AddressEllipseLine contractCreated={row.contractCreated} textInout="Out" address={text} type="to" />
                 ) : (
-                  <AddressEllipseLine contractCreated={row.contractCreated} address={text} noLink />
+                  <AddressEllipseLine contractCreated={row.contractCreated} address={text} noLink type="to" />
                 )}
               </PCell>
             </div>

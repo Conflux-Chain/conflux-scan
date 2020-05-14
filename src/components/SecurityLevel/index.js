@@ -69,7 +69,7 @@ function SecurityLevel(props) {
   }
 
   const riskSvg = (
-    <svg viewbox="0 0 50 10" width="50px" height="10px" className={`risk-svg ${riskLevel}`}>
+    <svg viewBox="0 0 50 10" width="50px" height="10px" className={`risk-svg ${riskLevel}`}>
       <defs>
         <mask id="mask" x="0" y="0" width="50" height="10">
           <rect x="-5" y="-5" width="55" height="15" fill="#fff" />
