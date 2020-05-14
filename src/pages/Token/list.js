@@ -294,11 +294,6 @@ class List extends Component {
     return (
       <Wrapper>
         <HeadBar>
-          {/* <IconFace>
-            <svg className="icon" aria-hidden="true">
-              <use xlinkHref="#iconjinrijiaoyiliang" />
-            </svg>
-          </IconFace> */}
           <img src={tokenIcon} />
           <h1>{i18n('Token')}</h1>
         </HeadBar>
@@ -310,50 +305,9 @@ class List extends Component {
                 <DataList isMobile showHeader columns={columns} dataSource={tokenList} />
               </div>
             </div>
-            <div className="page-pc">
-              <TotalDesc total={TotalCount} />
-              {/* <Pagination
-                style={{ float: 'right' }}
-                ellipsisItem={null}
-                prevItem={{
-                  'aria-label': 'Previous item',
-                  content: i18n('lastPage'),
-                }}
-                nextItem={{
-                  'aria-label': 'Next item',
-                  content: i18n('nextPage'),
-                }}
-                onPageChange={(e, data) => {
-                  e.preventDefault();
-                  this.fetchTxList(data);
-                }}
-                activePage={curPage}
-                totalPages={Math.ceil(TotalCount / pageSize)}
-              /> */}
-            </div>
+            <div className="page-pc" />
             <div className="page-h5">
               <TotalDesc total={TotalCount} />
-              {/* <Pagination
-                prevItem={{
-                  'aria-label': 'Previous item',
-                  content: i18n('lastPage'),
-                }}
-                nextItem={{
-                  'aria-label': 'Next item',
-                  content: i18n('nextPage'),
-                }}
-                boundaryRange={0}
-                activePage={curPage}
-                onPageChange={(e, data) => {
-                  e.preventDefault();
-                  this.fetchTxList(data);
-                }}
-                ellipsisItem={null}
-                firstItem={null}
-                lastItem={null}
-                siblingRange={1}
-                totalPages={Math.ceil(TotalCount / pageSize)}
-              /> */}
             </div>
           </StyledTabel>
         </TabWrapper>

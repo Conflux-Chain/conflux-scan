@@ -192,13 +192,13 @@ class BlockAndTxn extends Component {
       this.beginCountDown();
     });
 
-    // this.loopFetchTimer = setInterval(() => {
-    //   if (window.navigator.onLine) {
-    //     this.fetchInitList({
-    //       looping: true,
-    //     });
-    //   }
-    // }, 10 * 1000);
+    this.loopFetchTimer = setInterval(() => {
+      if (window.navigator.onLine) {
+        this.fetchInitList({
+          looping: true,
+        });
+      }
+    }, 10 * 1000);
   }
 
   componentWillUnmount() {
