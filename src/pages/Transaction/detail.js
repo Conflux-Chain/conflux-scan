@@ -307,7 +307,9 @@ class Detail extends Component {
     ).then((body) => {
       switch (body.code) {
         case 0:
-          this.getConfirmRisk(body.result.blockHash);
+          if (body.result.blockHash) {
+            this.getConfirmRisk(body.result.blockHash);
+          }
           const transactionDetails = body.result;
           this.setState({ result: transactionDetails });
           let toAddress = transactionDetails.to;

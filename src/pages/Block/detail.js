@@ -344,7 +344,7 @@ class Detail extends Component {
           blockDetail: body.result,
           isLoading: false,
         });
-        this.getConfirmRisk(body.result.hash);
+        this.getConfirmRisk(blockHash);
       } else if (body.code === errorCodes.BlockNotFoundError) {
         history.push(`/search-notfound?searchId=${blockHash}`);
       }
