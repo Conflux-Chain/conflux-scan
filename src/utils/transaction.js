@@ -2,9 +2,15 @@
 import { Conflux, util as cfxUtil } from 'js-conflux-sdk/dist/js-conflux-sdk.umd.min.js';
 import { isMainnet } from '../constants';
 
+let netUrl;
+if (process.env.NODE_ENV === 'production') {
+  netUrl = isMainnet ? 'http://wallet-mainnet-jsonrpc.conflux-chain.org:12537' : 'http://testnet-jsonrpc.conflux-chain.org:12537';
+} else {
+  netUrl = 'http://testnet-jsonrpc.conflux-chain.org:12537';
+}
+
 const cfx = new Conflux({
-  // url: isMainnet ? 'http://wallet-mainnet-jsonrpc.conflux-chain.org:12537' : 'http://testnet-jsonrpc.conflux-chain.org:12537',
-  url: 'http://testnet-jsonrpc.conflux-chain.org:12537',
+  url: netUrl,
   logger: {
     ...console,
     log: () => {},
