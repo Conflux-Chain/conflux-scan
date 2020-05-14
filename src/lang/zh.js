@@ -49,6 +49,7 @@ export default {
   Transfer: '转移',
   addresses: '地址',
   Decimals: '小数精度',
+  Security: '安全等级',
   'Filtered by Token Holder': '按代币持有者筛选',
 
   'app.head.menu.home': '首页',
@@ -106,6 +107,7 @@ export default {
   'app.pages.txns.chainId': '区块链编号',
   'app.pages.txns.tokenTransferred': '代币转移',
   'app.pages.txns.transaction': '交易',
+  'app.pages.txns.Unexecuted': '尚未执行',
   'app.pages.err-reason.1': '智能合约执行错误，或gas fee不足',
   'app.pages.err-reason.2': 'Nonce错误，签名验证失败，或余额不足',
 
@@ -244,4 +246,9 @@ export default {
     '1. 当前网络为 Conflux Testnet，Conflux-Rust 版本号：v0.5.1-alpha-1，所有数据均为 Conflux 测试网数据。',
   'app.pages.index.testnet.notice2': '2. Conflux 主网第一阶段 Conflux Pontus 已于 2020.4.27 上线，欢迎体验。',
   'app.pages.index.mainnet.notice1': '当前网络为 Conflux 主网第一阶段 Conflux Pontus，Conflux-Rust 版本号：v0.5.0.1',
+
+  'security.High': '高',
+  'security.Medium': '中等',
+  'security.Low': '低',
+  'security.Very low': '很低',
 };

@@ -1,5 +1,4 @@
-import url from 'url';
-import { UPDATE_COMMON, UPDATE_CONTRACT_MANAGER_CACHE, isMainnet } from '../constants';
+import { UPDATE_COMMON, UPDATE_CONTRACT_MANAGER_CACHE, isMainnet, CLEAR_CONTRACT_MANAGER_CACHE } from '../constants';
 
 const initState = {
   lang: 'zh',
@@ -24,6 +23,17 @@ export default (state = initState, action) => {
       contractManagerCache: {
         ...state.contractManagerCache,
         [action.payload.address]: action.payload,
+      },
+    };
+  }
+
+  if (action.type === CLEAR_CONTRACT_MANAGER_CACHE) {
+    const contractManagerCacheCopy = { ...state.contractManagerCache };
+    delete contractManagerCacheCopy[action.payload.address];
+    return {
+      ...state,
+      contractManagerCache: {
+        ...contractManagerCacheCopy,
       },
     };
   }

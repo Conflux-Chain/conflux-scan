@@ -14,9 +14,16 @@ import EllipsisLine from '../../components/EllipsisLine';
 import { convertToValueorFee, converToGasPrice, i18n, getContractList, tranferToLowerCase } from '../../utils';
 import media from '../../globalStyles/media';
 import * as commonCss from '../../globalStyles/common';
-import { reqBlock, reqBlockTransactionList, reqBlockRefereeBlockList, reqContractListInfo } from '../../utils/api';
+import {
+  reqBlock,
+  reqBlockTransactionList,
+  reqBlockRefereeBlockList,
+  reqContractListInfo,
+  reqConfirmationRiskByHash,
+} from '../../utils/api';
 import { errorCodes } from '../../constants';
 import AddressEllipseLine from '../../components/AddressEllipseLine';
+import SecurityLevel from '../../components/SecurityLevel';
 
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -312,6 +319,13 @@ class Detail extends Component {
     }
   }
 
+  async getConfirmRisk(blockHash) {
+    const riskLevel = await reqConfirmationRiskByHash(blockHash);
+    this.setState({
+      riskLevel,
+    });
+  }
+
   getBlockHash() {
     const {
       match: { params },
@@ -330,6 +344,7 @@ class Detail extends Component {
           blockDetail: body.result,
           isLoading: false,
         });
+        this.getConfirmRisk(body.result.hash);
       } else if (body.code === errorCodes.BlockNotFoundError) {
         history.push(`/search-notfound?searchId=${blockHash}`);
       }
@@ -378,7 +393,18 @@ class Detail extends Component {
   }
 
   render() {
-    const { blockDetail, TxList, TxTotalCount, isLoading, currentTab, refereeBlockList, curPage, refBlockCurPage, refTotal } = this.state;
+    const {
+      blockDetail,
+      TxList,
+      TxTotalCount,
+      isLoading,
+      currentTab,
+      refereeBlockList,
+      curPage,
+      refBlockCurPage,
+      refTotal,
+      riskLevel,
+    } = this.state;
 
     return (
       <div className="page-block-detail">
@@ -411,6 +437,12 @@ class Detail extends Component {
                     <td className="collapsing">{i18n('Miner')}</td>
                     <td className="">
                       <Link to={`/address/${blockDetail.miner}`}>{blockDetail.miner}</Link>
+                    </td>
+                  </tr>
+                  <tr className="">
+                    <td className="collapsing">{i18n('Security')}</td>
+                    <td className="">
+                      <SecurityLevel riskLevel={riskLevel} />
                     </td>
                   </tr>
                   <tr className="">

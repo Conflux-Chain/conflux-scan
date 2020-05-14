@@ -60,6 +60,7 @@ export default {
   'app.pages.txns.chainId': 'Chain ID',
   'app.pages.txns.tokenTransferred': 'Token Transferred',
   'app.pages.txns.transaction': 'Transaction',
+  'app.pages.txns.Unexecuted': 'Unexecuted',
   'app.pages.err-reason.1': 'Error encountered during contract execution, or out of gas',
   'app.pages.err-reason.2': 'Wrong nonce, signature verification failed, or insufficient funds',
 
@@ -170,4 +171,8 @@ export default {
   'app.pages.index.testnet.notice2': '2. Conflux Pontus is now live.',
   'app.pages.index.mainnet.notice1': 'ConfluxScan is currently on the Mainnet Phase I - Pontus, Conflux-Rust version: v0.5.0.1',
   'No Info': '暂无信息',
+  'security.High': 'High',
+  'security.Medium': 'Medium',
+  'security.Low': 'Low',
+  'security.Very low': 'Very low',
 };

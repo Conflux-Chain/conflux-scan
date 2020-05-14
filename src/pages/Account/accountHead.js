@@ -13,7 +13,7 @@ import QrcodeButton from '../../components/QrcodeButton';
 import TableLoading from '../../components/TableLoading';
 import EllipsisLine from '../../components/EllipsisLine';
 import { reqContract, reqAccount, reqTokenList } from '../../utils/api';
-import { errorCodes } from '../../constants';
+import { errorCodes, defaultTokenIcon } from '../../constants';
 import media from '../../globalStyles/media';
 import { convertToValueorFee, valToTokenVal, i18n, renderAny, isContract } from '../../utils';
 import TokenSelect from '../../components/TokenSelect';
@@ -351,8 +351,10 @@ class AccountHead extends Component {
           <div className="contract-info-row">
             <div className="contract-left-info">{i18n('Token Tracker')}</div>
             <div className="contract-right-val">
-              {contractInfo.tokenIcon && <img src={contractInfo.tokenIcon} />}
-              {contractInfo.tokenName ? <a>{contractInfo.tokenName}</a> : i18n('app.pages.account.notfound.tokenTracker')}
+              <Link to={`/token/${accountid}`}>
+                {contractInfo.tokenIcon && <img src={contractInfo.tokenIcon} />}
+                {contractInfo.tokenName ? <a>{contractInfo.tokenName}</a> : i18n('app.pages.account.notfound.tokenTracker')}
+              </Link>
             </div>
           </div>
         </div>
@@ -365,7 +367,11 @@ class AccountHead extends Component {
                 <div className="contract-right-val">
                   <EllipsisLine linkTo={`/address/${creatorTransaction.from}`} text={creatorTransaction.from} />
                   {i18n('contract.at-txn1')}
-                  <EllipsisLine linkTo={`/transactionsdetail/${creatorTransaction.hash}`} text={creatorTransaction.hash} />
+                  <EllipsisLine
+                    popUpCfg={{ position: 'top right' }}
+                    linkTo={`/transactionsdetail/${creatorTransaction.hash}`}
+                    text={creatorTransaction.hash}
+                  />
                   {i18n('contract.at-txn2')}
                 </div>
               )}
@@ -385,7 +391,7 @@ class AccountHead extends Component {
       return {
         key: v.address,
         value: v.address,
-        imgSrc: v.tokenIcon,
+        imgSrc: v.tokenIcon || defaultTokenIcon,
         label1: `${v.tokenName} (${v.tokenSymbol})`,
         label2: `${valToTokenVal(v.balance, v.tokenDecimal)} ${v.tokenSymbol}`,
       };

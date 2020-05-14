@@ -15,6 +15,7 @@ import { i18n, renderAny, humanizeNum, getQuery, dripTocfx, notice, tranferToLow
 
 import TableLoading from '../../components/TableLoading';
 import { reqContractListInfo, reqTokenQuery, reqTransferList, reqTotalSupply, reqBalanceOf } from '../../utils/api';
+import { defaultTokenIcon } from '../../constants';
 
 /* eslint jsx-a11y/click-events-have-key-events: 0 */
 /* eslint jsx-a11y/no-static-element-interactions: 0 */
@@ -194,6 +195,8 @@ class TokenDetail extends Component {
             let tokenIcon;
             if (contractManagerCache[address] && contractManagerCache[address].tokenIcon) {
               tokenIcon = <img className="token-logo" src={contractManagerCache[address].tokenIcon} />;
+            } else {
+              tokenIcon = <img className="token-logo" src={defaultTokenIcon} />;
             }
 
             let contractIcon;
@@ -205,15 +208,7 @@ class TokenDetail extends Component {
               );
             }
 
-            // if (contractManagerCache[address] && contractManagerCache[address].website) {
-            //   content = (
-            //     <a href={contractManagerCache[address].website} target="_blank">
-            //       {content}
-            //     </a>
-            //   );
-            // }
-
-            let content = (
+            return (
               <Fragment>
                 {tokenIcon}
                 <h1>{tokenDetail.symbol}</h1>
@@ -223,8 +218,6 @@ class TokenDetail extends Component {
                 </p>
               </Fragment>
             );
-
-            return content;
           })}
         </styledComp.HeadBar>
 
@@ -289,19 +282,20 @@ class TokenDetail extends Component {
                       </h5>
 
                       <div className="filter-item-2">
-                        <a
-                          onClick={() => {
-                            history.replace(`${basePath}?address=${query.address}`);
-                            this.setState({
-                              searchInput: '',
-                            });
-                            this.getFcList({
-                              pageNum: 1,
-                            });
-                          }}
+                        <Link
+                          // onClick={() => {
+                          //   history.replace(`${basePath}?address=${query.address}`);
+                          //   this.setState({
+                          //     searchInput: '',
+                          //   });
+                          //   this.getFcList({
+                          //     pageNum: 1,
+                          //   });
+                          // }}
+                          to={`/address/${query.address}`}
                         >
                           {query.address}
-                        </a>
+                        </Link>
                       </div>
                     </div>
 

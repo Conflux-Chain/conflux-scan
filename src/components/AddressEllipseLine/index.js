@@ -25,6 +25,10 @@ const ContractCell = styled.div`
   font-weight: bold;
   display: inline-block;
 `;
+const ContractCellNormal = styled.div`
+  color: rgba(0, 0, 0, 0.87);
+  font-weight: normal;
+`;
 
 class AddressEllipseLine extends PureComponent {
   render() {
@@ -59,7 +63,7 @@ class AddressEllipseLine extends PureComponent {
       if (contractManagerCache[address] && contractManagerCache[address].name) {
         let trigger;
         if (noLink) {
-          trigger = <span>{contractManagerCache[address].name}</span>;
+          trigger = <ContractCellNormal>{contractManagerCache[address].name}</ContractCellNormal>;
         } else {
           trigger = <Link to={`/address/${address}`}>{contractManagerCache[address].name}</Link>;
         }

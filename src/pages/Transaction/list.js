@@ -131,7 +131,7 @@ const columns = [
       let errIcon;
       if (row.status === 1) {
         errIcon = <Popup trigger={<img src={iconStatusErr} />} content={i18n('app.pages.err-reason.1')} position="top left" hoverable />;
-      } else if (row.status === 2 || row.status === null) {
+      } else if (row.status === 2) {
         errIcon = <Popup trigger={<img src={iconStatusSkip} />} content={i18n('app.pages.err-reason.2')} position="top left" hoverable />;
       }
 

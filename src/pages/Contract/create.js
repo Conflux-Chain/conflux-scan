@@ -183,19 +183,30 @@ const StyledTabel = styled.div`
   }
 
   .iconContainer {
-    width: 79px;
-    height: 79px;
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
     background: #f7f7f7;
-    margin-left: 100px;
-    margin-top: 9px;
-    margin-bottom: 16px;
+    margin-left: 80px;
+    margin-right: 36px;
     ${media.pad`
       margin-left: 30px;
     `}
+  }
+
+  .upload-container {
+    display: flex;
+    align-items: center;
+  }
+
+  .upload-Wrapper {
+    display: flex;
+    &:first-child {
+      margin-bottom: 16px;
+    }
   }
 
   .customBtn {
@@ -225,7 +236,7 @@ const StyledTabel = styled.div`
 
   .removeText {
     color: rgba(64, 90, 231, 1);
-    margin-top: 10px;
+    margin-left: 16px;
     cursor: pointer;
     &.disabled {
       color: rgba(64, 90, 231, 0.5);
@@ -273,7 +284,7 @@ const HeadBar = styled.div`
 
 const IconItem = styled.img`
   display: inline-block;
-  width: 41px;
+  width: 25px;
 `;
 const FilterSelector = styled.div.attrs({
   className: 'ui menu compact',
@@ -645,7 +656,7 @@ class ContractUpdate extends Component {
     bodyparams.name = nameTagVal;
     bodyparams.website = websiteVal;
     bodyparams.icon = iconContractSource;
-    bodyparams.typeCode = Number(selectedContractTypeCode);
+    bodyparams.typeCode = 1;
     bodyparams.tokenIcon = iconTokenSource;
     bodyparams.sourceCode = sourceCode;
     bodyparams.abi = abiVal;
@@ -662,12 +673,6 @@ class ContractUpdate extends Component {
         history.replace(`/accountdetail/${response.result.address}`);
       }
     });
-  }
-
-  isGeneralContractType() {
-    const { selectedContractTypeCode } = this.state;
-    // eslint-disable-next-line eqeqeq
-    return selectedContractTypeCode == contractTypeCodeGeneral;
   }
 
   render() {
@@ -709,33 +714,62 @@ class ContractUpdate extends Component {
                         <input className="inputItem" type="text" value={addressVal} onChange={(e) => this.handleAddressChange(e)} />
                       </div>
                     </td>
-                    <td rowSpan="3" className="center aligned init">
-                      <div className="iconContainer">
-                        <IconItem src={iconContractSource || defaultContractIcon} />
-                      </div>
-                    </td>
+
                     <td rowSpan="3" className="center aligned init lastTd">
-                      <div>
-                        <input
-                          type="file"
-                          name="File"
-                          style={displayNone}
-                          accept="image/*"
-                          ref={this.fileContractInputRef}
-                          onChange={(e) => {
-                            this.handleContractIconChange(e);
-                          }}
-                        />
-                        <button type="button" className="customBtn" onClick={() => this.fileContractInputRef.current.click()}>
-                          {i18n('app.pages.contract.uploadIcon')}
-                        </button>
-                        <div
-                          className="removeText"
-                          onClick={() => {
-                            this.removeContractPhoto();
-                          }}
-                        >
-                          {i18n('app.pages.contract.removePhoto')}
+                      <div className="upload-Wrapper">
+                        <div className="iconContainer">
+                          <IconItem src={iconContractSource || defaultContractIcon} />
+                        </div>
+                        <div className="upload-container">
+                          <input
+                            type="file"
+                            name="File"
+                            style={displayNone}
+                            accept="image/*"
+                            ref={this.fileContractInputRef}
+                            onChange={(e) => {
+                              this.handleContractIconChange(e);
+                            }}
+                          />
+                          <button type="button" className="customBtn" onClick={() => this.fileContractInputRef.current.click()}>
+                            {i18n('app.pages.contract.uploadIcon')}
+                          </button>
+                          <div
+                            className="removeText"
+                            onClick={() => {
+                              this.removeContractPhoto();
+                            }}
+                          >
+                            {i18n('app.pages.contract.removePhoto')}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="upload-Wrapper">
+                        <div className="iconContainer">
+                          <IconItem src={iconTokenSource || defaultTokenIcon} />
+                        </div>
+                        <div className="upload-container">
+                          <input
+                            type="file"
+                            name="File"
+                            style={displayNone}
+                            accept="image/*"
+                            ref={this.fileTokenInputRef}
+                            onChange={(e) => {
+                              this.handleTokenIconChange(e);
+                            }}
+                          />
+                          <button type="button" className="customBtn" onClick={() => this.fileTokenInputRef.current.click()}>
+                            {i18n('app.pages.contract.uploadTokenIcon')}
+                          </button>
+                          <div
+                            className="removeText"
+                            onClick={() => {
+                              this.removeTokenPhoto();
+                            }}
+                          >
+                            {i18n('app.pages.contract.removePhoto')}
+                          </div>
                         </div>
                       </div>
                     </td>
@@ -760,84 +794,6 @@ class ContractUpdate extends Component {
                     <td className="aligned bottom">
                       <div className="ui input inputContainer">
                         <input className="inputItem" type="text" value={websiteVal} onChange={(e) => this.handleWebsiteChange(e)} />
-                      </div>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              <table className="ui celled structured table">
-                <tbody className="tbodyContainer">
-                  <tr className="centered">
-                    <td className="collapsing fixed-first">
-                      <div className="relativeContainer">
-                        <span className="redAsterisk">*</span>
-                        {i18n('app.pages.contract.contractType')}
-                      </div>
-                    </td>
-                    <td className="aligned fixed-first">
-                      <div className="ui input disabled inputContainer">
-                        <FilterSelector>
-                          <div className="ui dropdown link item">
-                            <span>{i18n(contractTypes[selectedContractTypeCode])}</span>
-                            <i className="dropdown icon" />
-                            <div className="menu transition visible dropdownContainer">
-                              {Object.keys(contractTypes).map((key, index) => (
-                                <div
-                                  key={key}
-                                  className="item priority"
-                                  role="button"
-                                  tabIndex={index}
-                                  onClick={() =>
-                                    this.setState({ selectedContractTypeCode: key }, () => {
-                                      this.updateCanSubmit();
-                                    })
-                                  }
-                                  onKeyPress={() =>
-                                    this.setState({ selectedContractTypeCode: key }, () => {
-                                      this.updateCanSubmit();
-                                    })
-                                  }
-                                >
-                                  {i18n(contractTypes[key])}
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        </FilterSelector>
-                      </div>
-                    </td>
-                    <td className="center aligned init">
-                      <div className="iconContainer">
-                        <IconItem src={iconTokenSource || defaultTokenIcon} />
-                      </div>
-                    </td>
-                    <td className="center aligned init lastTd">
-                      <div>
-                        <input
-                          type="file"
-                          name="File"
-                          style={displayNone}
-                          accept="image/*"
-                          ref={this.fileTokenInputRef}
-                          onChange={(e) => {
-                            this.handleTokenIconChange(e);
-                          }}
-                        />
-                        <button
-                          type="button"
-                          className={this.isGeneralContractType() ? 'customBtn disabled' : 'customBtn'}
-                          onClick={() => (this.isGeneralContractType() ? false : this.fileTokenInputRef.current.click())}
-                        >
-                          {i18n('app.pages.contract.uploadTokenIcon')}
-                        </button>
-                        <div
-                          className={this.isGeneralContractType() ? 'removeText disabled' : 'removeText'}
-                          onClick={() => {
-                            this.isGeneralContractType() ? false : this.removeTokenPhoto();
-                          }}
-                        >
-                          {i18n('app.pages.contract.removePhoto')}
-                        </div>
                       </div>
                     </td>
                   </tr>

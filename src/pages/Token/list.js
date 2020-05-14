@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import sortBy from 'lodash/sortBy';
 import { Popup } from 'semantic-ui-react';
 import Pagination from '../../components/Pagination';
 import DataList from '../../components/DataList';
 import TableLoading from '../../components/TableLoading';
 import EllipsisLine from '../../components/EllipsisLine';
 import { i18n, devidedByDecimals } from '../../utils';
+import { defaultTokenIcon } from '../../constants';
 import media from '../../globalStyles/media';
 import * as commonCss from '../../globalStyles/common';
 import { reqContractMangerList, reqTotalSupply, reqTokenQuery } from '../../utils/api';
@@ -86,11 +88,32 @@ const CellTxt = styled.div`
   color: rgba(0, 0, 0, 0.87);
   font-size: 16px;
   font-weight: normal;
+  .ellipse-11 {
+    display: inline-block;
+    vertical-align: middle;
+    max-width: 94px;
+    text-overflow: hidden;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .ellipse-14 {
+    display: inline-block;
+    vertical-align: middle;
+    max-width: 130px;
+    text-overflow: hidden;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
   > img {
     max-width: 24px;
     max-height: 24px;
     margin-right: 5px;
   }
+`;
+const CellTxtBold = styled(CellTxt)`
+  font-weight: bold;
 `;
 
 /* eslint react/destructuring-assignment: 0 */
@@ -99,7 +122,7 @@ document.addEventListener('clean_state', () => {
   curPageBase = 1;
 });
 
-const pageSize = 10;
+const pageSize = 500;
 /* eslint react/no-access-state-in-setstate: 0 */
 class List extends Component {
   constructor() {
@@ -130,7 +153,7 @@ class List extends Component {
       page: activePage,
       pageSize,
       fields: ['tokenIcon', 'tokenName', 'tokenSymbol', 'icon'],
-    }).then((body) => {
+    }).then(async (body) => {
       if (body.code === 0) {
         this.setState({
           tokenList: body.result.list,
@@ -140,7 +163,7 @@ class List extends Component {
         document.dispatchEvent(new Event('scroll-to-top'));
       }
 
-      body.result.list.forEach(async (v) => {
+      const mapPromise = body.result.list.map(async (v) => {
         const tokenResult = await reqTokenQuery({ address: v.address }, { showError: false });
         if (tokenResult.code === 0) {
           this.setState({
@@ -158,9 +181,35 @@ class List extends Component {
           });
         }
       });
+      await Promise.all(mapPromise);
 
-      this.setState({ isLoading: false });
+      const { tokenList } = this.state;
+      const tokenListSort = tokenList.sort((a, b) => {
+        const totalSupplya = this.state.totalSupplyMaps[a.address];
+        const totalSupplyb = this.state.totalSupplyMaps[b.address];
+        if (!totalSupplya && !totalSupplyb) {
+          return 0;
+        }
+        if (!totalSupplya) {
+          return 1;
+        }
+        if (!totalSupplyb) {
+          return -1;
+        }
+        return this.state.totalSupplyMaps[b.address] - this.state.totalSupplyMaps[a.address];
+      });
+      this.setState({ isLoading: false, tokenList: tokenListSort });
     });
+  }
+
+  renderEllipse(text, num) {
+    let txt = text || '';
+    txt = txt.toString();
+
+    if (txt.replace('.', '').length > num) {
+      return <Popup trigger={<div className="ellipse-11">{text}</div>} content={text} />;
+    }
+    return <span style={{ verticalAlign: 'middle' }}>{txt}</span>;
   }
 
   render() {
@@ -182,10 +231,10 @@ class List extends Component {
         title: i18n('Token'),
         render: (text, row) => {
           return (
-            <CellTxt>
-              {row.tokenIcon && <img src={row.tokenIcon} />}
+            <CellTxtBold>
+              {<img src={row.tokenIcon || defaultTokenIcon} />}
               <Link to={`/token/${row.address}`}>{text}</Link>
-            </CellTxt>
+            </CellTxtBold>
           );
         },
       },
@@ -196,22 +245,9 @@ class List extends Component {
         title: i18n('Transfer'),
         render: (text, row) => {
           if (tokenMaps[row.address]) {
-            return <span>{tokenMaps[row.address].transferCount}</span>;
+            return <CellTxt>{this.renderEllipse(tokenMaps[row.address].transferCount, 11)}</CellTxt>;
           }
           return null;
-          // if (row.contractCreated) {
-          //   return (
-          //     <div>
-          //       <Popup
-          //         trigger={<ContractCell>{i18n('Contract Creation')}</ContractCell>}
-          //         content={row.contractCreated}
-          //         position="top left"
-          //         hoverable
-          //       />
-          //     </div>
-          //   );
-          // }
-          // return <EllipsisLine linkTo={`/address/${text}`} text={text} />;
         },
       },
       {
@@ -222,9 +258,13 @@ class List extends Component {
         render: (text, row) => {
           if (tokenMaps[row.address] && totalSupplyMaps[row.address]) {
             return (
-              <span>
-                {totalSupplyMaps[row.address]}&nbsp;{tokenMaps[row.address].symbol}
-              </span>
+              <CellTxt>
+                {this.renderEllipse(totalSupplyMaps[row.address], 11)}
+                <span style={{ verticalAlign: 'middle' }}>
+                  &nbsp;
+                  {tokenMaps[row.address].symbol}
+                </span>
+              </CellTxt>
             );
           }
           return null;
@@ -237,7 +277,7 @@ class List extends Component {
         title: i18n('Holders'),
         render: (text, row) => {
           if (tokenMaps[row.address]) {
-            return <span>{tokenMaps[row.address].accountCount}</span>;
+            return <CellTxt>{this.renderEllipse(tokenMaps[row.address].accountCount, 11)}</CellTxt>;
           }
           return null;
         },
@@ -272,7 +312,7 @@ class List extends Component {
             </div>
             <div className="page-pc">
               <TotalDesc total={TotalCount} />
-              <Pagination
+              {/* <Pagination
                 style={{ float: 'right' }}
                 ellipsisItem={null}
                 prevItem={{
@@ -289,11 +329,11 @@ class List extends Component {
                 }}
                 activePage={curPage}
                 totalPages={Math.ceil(TotalCount / pageSize)}
-              />
+              /> */}
             </div>
             <div className="page-h5">
               <TotalDesc total={TotalCount} />
-              <Pagination
+              {/* <Pagination
                 prevItem={{
                   'aria-label': 'Previous item',
                   content: i18n('lastPage'),
@@ -313,7 +353,7 @@ class List extends Component {
                 lastItem={null}
                 siblingRange={1}
                 totalPages={Math.ceil(TotalCount / pageSize)}
-              />
+              /> */}
             </div>
           </StyledTabel>
         </TabWrapper>

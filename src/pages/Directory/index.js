@@ -201,7 +201,7 @@ function Directory(props) {
                 }
               }}
               className={`ui card ${link.disable ? 'disabled' : ''}`}
-              href={link.href}
+              href={link.href || undefined}
               key={link.key}
             >
               <div className="content">

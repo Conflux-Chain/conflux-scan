@@ -1,8 +1,9 @@
-import { isEmpty } from 'lodash';
 // eslint-disable-next-line import/extensions
-import { Conflux } from 'js-conflux-sdk/dist/js-conflux-sdk.umd.min.js';
+import { Conflux, util as cfxUtil } from 'js-conflux-sdk/dist/js-conflux-sdk.umd.min.js';
+import { isMainnet } from '../constants';
 
 const cfx = new Conflux({
+  // url: isMainnet ? 'http://wallet-mainnet-jsonrpc.conflux-chain.org:12537' : 'http://testnet-jsonrpc.conflux-chain.org:12537',
   url: 'http://testnet-jsonrpc.conflux-chain.org:12537',
   logger: {
     ...console,
@@ -34,4 +35,4 @@ function decodeContract({ abi, address, transacionData }) {
   return contract.abi.decodeData(transacionData);
 }
 
-export { hex2utf8, decodeContract, cfx };
+export { hex2utf8, decodeContract, cfx, cfxUtil };

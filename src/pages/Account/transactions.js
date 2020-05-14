@@ -9,12 +9,12 @@ import PropTypes from 'prop-types';
 import DataList from '../../components/DataList';
 import EllipsisLine from '../../components/EllipsisLine';
 import Countdown from '../../components/Countdown';
-import { convertToValueorFee, converToGasPrice, i18n, renderAny } from '../../utils';
+import { convertToValueorFee, converToGasPrice, i18n, renderAny, getContractList } from '../../utils';
 import { StyledTabel, TabPanel, PCell, TabWrapper, IconFace, CtrlPanel } from './styles';
 import Pagination from '../../components/Pagination';
 import iconStatusErr from '../../assets/images/icons/status-err.svg';
 import iconStatusSkip from '../../assets/images/icons/status-skip.svg';
-import { reqAccountTransactionList } from '../../utils/api';
+import { reqAccountTransactionList, reqContractListInfo } from '../../utils/api';
 import media from '../../globalStyles/media';
 import { TotalDesc, getTotalPage } from '../../components/TotalDesc';
 import AddressEllipseLine from '../../components/AddressEllipseLine';
@@ -98,6 +98,7 @@ class Transactions extends Component {
           listLimit: body.result.listLimit,
           queries,
         });
+        reqContractListInfo(getContractList(body.result.list));
         document.dispatchEvent(new Event('scroll-to-top'));
       }
     });
@@ -126,7 +127,7 @@ class Transactions extends Component {
             errIcon = (
               <Popup trigger={<img src={iconStatusErr} />} content={i18n('app.pages.err-reason.1')} position="top left" hoverable />
             );
-          } else if (row.status === 2 || row.status === null) {
+          } else if (row.status === 2) {
             errIcon = (
               <Popup trigger={<img src={iconStatusSkip} />} content={i18n('app.pages.err-reason.2')} position="top left" hoverable />
             );
