@@ -33,6 +33,9 @@ const Wrapper = styled.div`
   .risk-svg-last-circle {
     animation: blinker 1s linear infinite;
   }
+  .lv0 .risk-svg-last-circle {
+    animation: none;
+  }
 
   .risk-status {
     vertical-align: middle;
