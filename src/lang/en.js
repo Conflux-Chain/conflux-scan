@@ -60,6 +60,7 @@ export default {
   'app.pages.txns.chainId': 'Chain ID',
   'app.pages.txns.tokenTransferred': 'Token Transferred',
   'app.pages.txns.transaction': 'Transaction',
+  'app.pages.txns.Unexecuted': 'Unexecuted',
   'app.pages.err-reason.1': 'Error encountered during contract execution, or out of gas',
   'app.pages.err-reason.2': 'Wrong nonce, signature verification failed, or insufficient funds',
 
@@ -101,10 +102,11 @@ export default {
   'app.navbar.blocksAndTxs': 'Blocks & Transactions',
   'app.navbar.directory': 'Directory',
   'app.navbar.more': 'More',
+  'app.navbar.token': 'Token',
 
   // Directory Page
   'app.directory.exchange.title': 'Exchange',
-  'app.directory.exchange.desc': 'Blockchain & Crypto Asset Exchange',
+  'app.directory.exchange.desc': 'Places to buy and sell cryptocurrencies',
   'app.directory.wallet.title': 'Wallet',
   'app.directory.wallet.desc': 'Crypto Asset Management & Protection',
   'app.directory.website.title': 'Official Website',
@@ -119,6 +121,8 @@ export default {
   'app.directory.contract.title': 'Contract',
   'app.directory.contract.desc': 'Submit Contract Information',
   'app.directory.community.desc': 'Join the Next Generation Decentralized Application Community',
+  'app.directory.ConfluxPortal.title': 'ConfluxPortal',
+  'app.directory.ConfluxPortal.desc': 'Conflux DApp Portal & Crypto Asset Management',
 
   'network.mainnet': 'Conflux Pontus',
   'network.testnet': 'Conflux Testnet',
@@ -166,4 +170,9 @@ export default {
     '1. ConfluxScan is currently on the testnet network, Conflux-Rust version: v0.5.1-alpha-1, all data shown are from the testnet.',
   'app.pages.index.testnet.notice2': '2. Conflux Pontus is now live.',
   'app.pages.index.mainnet.notice1': 'ConfluxScan is currently on the Mainnet Phase I - Pontus, Conflux-Rust version: v0.5.0.1',
+  'No Info': '暂无信息',
+  'security.High': 'High',
+  'security.Medium': 'Medium',
+  'security.Low': 'Low',
+  'security.Very low': 'Very low',
 };

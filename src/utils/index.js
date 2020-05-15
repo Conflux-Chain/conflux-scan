@@ -1,5 +1,6 @@
 import React from 'react';
 import BigNumber from 'bignumber.js';
+import uniq from 'lodash/uniq';
 import template from 'lodash/template';
 import superagent from 'superagent';
 import querystring from 'querystring';
@@ -310,3 +311,40 @@ export const getAddressType = (address) => {
 export const tranferToLowerCase = (str) => {
   return str ? str.toLowerCase() : '';
 };
+
+export const getContractList = (txList) => {
+  const addrList = [];
+  txList.forEach((v) => {
+    if (v.to && isContract(v.to)) {
+      addrList.push(v.to);
+    }
+    if (v.from && isContract(v.from)) {
+      addrList.push(v.from);
+    }
+  });
+  return uniq(addrList);
+};
+
+const riskDivided = new BigNumber(2).pow(256).minus(1);
+const eps = new BigNumber(1e-6);
+
+export function fmtConfirmationRisk(riskStr) {
+  const riskNum = new BigNumber(riskStr, 16).dividedBy(riskDivided);
+  if (riskNum.isNaN()) {
+    return '';
+  }
+  // if risk > 1e-4*(1+eps) => 最低等级
+  if (riskNum.isGreaterThan(new BigNumber(1e-4).times(eps.plus(1)))) {
+    return 'lv3';
+  }
+  // risk > 1e-6*(1+eps)
+  if (riskNum.isGreaterThan(new BigNumber(1e-6).times(eps.plus(1)))) {
+    return 'lv2';
+  }
+  // risk > 1e-8*(1+eps)
+  if (riskNum.isGreaterThan(new BigNumber(1e-8).times(eps.plus(1)))) {
+    return 'lv1';
+  }
+
+  return 'lv0';
+}

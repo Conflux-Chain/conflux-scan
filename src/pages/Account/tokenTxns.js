@@ -28,8 +28,8 @@ const TokenLineDiv = styled.div`
   align-items: center;
 
   img {
-    width: 21px;
-    height: 21px;
+    max-width: 24px;
+    max-height: 24px;
   }
   a {
     margin-left: 8px;
@@ -213,14 +213,8 @@ class TokenTxns extends Component {
             tokenImg = <img src={defaultTokenIcon} />;
           }
 
-          let tokenLink;
           const txt = `${name} (${symbol})`;
-          if (fansCoinAddress === row.address) {
-            tokenLink = <Link to="/fansCoin">{txt}</Link>;
-            // tokenImg = <img src={iconFcLogo} />;
-          } else {
-            tokenLink = <a>{txt}</a>;
-          }
+          const tokenLink = <Link to={`/token/${row.address}`}>{txt}</Link>;
           return (
             <TokenLineDiv>
               {tokenImg}

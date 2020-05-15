@@ -7,13 +7,14 @@ import DataList from '../../components/DataList';
 import Countdown from '../../components/Countdown';
 import TableLoading from '../../components/TableLoading';
 import EllipsisLine from '../../components/EllipsisLine';
-import { convertToValueorFee, converToGasPrice, i18n, sendRequest } from '../../utils';
+import { convertToValueorFee, converToGasPrice, i18n, getContractList } from '../../utils';
 import media from '../../globalStyles/media';
 import * as commonCss from '../../globalStyles/common';
-import { reqTransactionList } from '../../utils/api';
+import { reqTransactionList, reqContractListInfo } from '../../utils/api';
 import { TotalDesc } from '../../components/TotalDesc';
 import iconStatusErr from '../../assets/images/icons/status-err.svg';
 import iconStatusSkip from '../../assets/images/icons/status-skip.svg';
+import AddressEllipseLine from '../../components/AddressEllipseLine';
 
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -130,7 +131,7 @@ const columns = [
       let errIcon;
       if (row.status === 1) {
         errIcon = <Popup trigger={<img src={iconStatusErr} />} content={i18n('app.pages.err-reason.1')} position="top left" hoverable />;
-      } else if (row.status === 2 || row.status === null) {
+      } else if (row.status === 2) {
         errIcon = <Popup trigger={<img src={iconStatusSkip} />} content={i18n('app.pages.err-reason.2')} position="top left" hoverable />;
       }
 
@@ -147,7 +148,7 @@ const columns = [
     className: 'two wide aligned',
     dataIndex: 'from',
     title: i18n('From'),
-    render: (text) => <EllipsisLine linkTo={`/address/${text}`} text={text} />,
+    render: (text) => <AddressEllipseLine address={text} />,
   },
   {
     key: 3,
@@ -155,19 +156,7 @@ const columns = [
     dataIndex: 'to',
     title: i18n('To'),
     render: (text, row) => {
-      if (row.contractCreated) {
-        return (
-          <div>
-            <Popup
-              trigger={<ContractCell>{i18n('Contract Creation')}</ContractCell>}
-              content={row.contractCreated}
-              position="top left"
-              hoverable
-            />
-          </div>
-        );
-      }
-      return <EllipsisLine linkTo={`/address/${text}`} text={text} />;
+      return <AddressEllipseLine contractCreated={row.contractCreated} type="to" address={row.to} />;
     },
   },
   {
@@ -233,6 +222,7 @@ class List extends Component {
           TotalCount: body.result.total,
           curPage: activePage,
         });
+        reqContractListInfo(getContractList(body.result.list));
         document.dispatchEvent(new Event('scroll-to-top'));
       }
       this.setState({ isLoading: false });
