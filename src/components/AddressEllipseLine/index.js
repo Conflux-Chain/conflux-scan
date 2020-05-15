@@ -1,4 +1,4 @@
-import React, { PureComponent, Fragment } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { Popup } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
@@ -10,6 +10,7 @@ import { defaultContractIcon, defaultTokenIcon } from '../../constants';
 
 const ContractName = styled.div`
   display: inline-block;
+  font-weight: normal;
   img {
     width: 20px;
     height: 20px;
@@ -30,7 +31,7 @@ const ContractCellNormal = styled.div`
   font-weight: normal;
 `;
 
-class AddressEllipseLine extends PureComponent {
+class AddressEllipseLine extends Component {
   render() {
     const { contractManagerCache, contractCreated, address, type, textInout, noLink } = this.props;
     if (type === 'to' && !address) {

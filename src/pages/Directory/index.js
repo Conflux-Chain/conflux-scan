@@ -147,12 +147,12 @@ const links = [
     href: 'https://wallet.confluxscan.io/',
     disable: false,
   },
-  {
-    key: 'exchange',
-    icon: <img className="png-icon" src={exchangeLogo} />,
-    href: '',
-    disable: false,
-  },
+  // {
+  //   key: 'exchange',
+  //   icon: <img className="png-icon" src={exchangeLogo} />,
+  //   href: '',
+  //   disable: false,
+  // },
   {
     key: 'contract',
     icon: <img src={contractLogo} />,

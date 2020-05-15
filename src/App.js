@@ -1,10 +1,13 @@
 import * as Sentry from '@sentry/browser';
+import PropTypes from 'prop-types';
 import React, { Component, useState, useEffect } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { addLocaleData, IntlProvider } from 'react-intl';
 import enLocaleData from 'react-intl/locale-data/en';
 import zhLocaleData from 'react-intl/locale-data/zh';
 import styled from 'styled-components';
+import { connect } from 'react-redux';
+import { UPDATE_COMMON } from './constants';
 import media from './globalStyles/media';
 
 // components
@@ -104,15 +107,7 @@ document.addEventListener('hide-nav-bar', () => {
   }
 });
 
-let curLang = navigator.language;
-if (curLang.indexOf('zh') === 0) {
-  curLang = 'zh';
-} else {
-  curLang = 'en';
-}
-
-function App() {
-  const [lang, setLang] = useState(curLang);
+function App({ dispatch, lang }) {
   const [showNavbar, setShowNavbar] = useState(false);
   setShowNavbarGlobal = setShowNavbar;
 
@@ -123,7 +118,12 @@ function App() {
           <Header
             changeLanguage={(l) => {
               document.title = l === 'en' ? 'Conflux Blockchain Explorer' : 'Conflux 区块链浏览器';
-              setLang(l);
+              dispatch({
+                type: UPDATE_COMMON,
+                payload: {
+                  lang: l,
+                },
+              });
             }}
             toggleNavbar={() => setShowNavbar(!showNavbar)}
           />
@@ -148,4 +148,15 @@ function App() {
   );
 }
 
-export default App;
+function mapStateToProps(state) {
+  return {
+    lang: state.common.lang,
+  };
+}
+
+App.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+  lang: PropTypes.string.isRequired,
+};
+
+export default connect(mapStateToProps)(App);

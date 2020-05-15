@@ -237,6 +237,8 @@ const StyledTabel = styled.div`
   .removeText {
     color: rgba(64, 90, 231, 1);
     margin-left: 16px;
+    white-space: nowrap;
+    font-weight: bold;
     cursor: pointer;
     &.disabled {
       color: rgba(64, 90, 231, 0.5);

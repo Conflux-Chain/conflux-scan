@@ -158,6 +158,7 @@ const EllipsisLinewrap = styled.div`
   .prefix-tag {
     font-style: normal;
     margin-right: 5px;
+    min-width: 32px;
     font-size: 14px !important;
     font-weight: 400;
     color: rgba(0, 0, 0, 0.87);

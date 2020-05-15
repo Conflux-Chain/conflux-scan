@@ -1,7 +1,14 @@
 import { UPDATE_COMMON, UPDATE_CONTRACT_MANAGER_CACHE, isMainnet, CLEAR_CONTRACT_MANAGER_CACHE } from '../constants';
 
+let curLang = navigator.language;
+if (curLang.indexOf('zh') === 0) {
+  curLang = 'zh';
+} else {
+  curLang = 'en';
+}
+
 const initState = {
-  lang: 'zh',
+  lang: curLang,
   network: isMainnet ? 'mainnet' : 'testnet',
 
   fcStat: {
