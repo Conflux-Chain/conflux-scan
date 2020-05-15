@@ -248,7 +248,7 @@ export default {
   'app.pages.index.mainnet.notice1': '当前网络为 Conflux 主网第一阶段 Conflux Pontus，Conflux-Rust 版本号：v0.5.0.1',
 
   'security.High': '高',
-  'security.Medium': '中等',
-  'security.Low': '低',
-  'security.Very low': '很低',
+  'security.Medium': '中',
+  'security.Low': '偏低',
+  'security.Very low': '低',
 };
