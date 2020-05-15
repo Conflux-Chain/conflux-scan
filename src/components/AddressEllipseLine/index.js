@@ -10,7 +10,6 @@ import { defaultContractIcon, defaultTokenIcon } from '../../constants';
 
 const ContractName = styled.div`
   display: inline-block;
-  font-weight: normal;
   img {
     width: 20px;
     height: 20px;
@@ -19,6 +18,10 @@ const ContractName = styled.div`
   > div {
     display: inline-block;
   }
+`;
+
+const ContractNameNormal = styled(ContractName)`
+  font-weight: normal;
 `;
 const ContractCell = styled.div`
   color: rgba(0, 0, 0, 0.87);
@@ -34,9 +37,26 @@ const ContractCellNormal = styled.div`
 class AddressEllipseLine extends Component {
   render() {
     const { contractManagerCache, contractCreated, address, type, textInout, noLink } = this.props;
+
+    // no to address
     if (type === 'to' && !address) {
-      // no to address
-      return <ContractName>{i18n('Contract Creation')}</ContractName>;
+      if (contractCreated) {
+        return (
+          <ContractNameNormal>
+            <Popup
+              trigger={
+                <ContractCell>
+                  <Link to={`/address/${contractCreated}`}>{i18n('Contract Creation')}</Link>
+                </ContractCell>
+              }
+              content={contractCreated}
+              position="top center"
+              hoverable
+            />
+          </ContractNameNormal>
+        );
+      }
+      return <ContractNameNormal>{i18n('Contract Creation')}</ContractNameNormal>;
     }
 
     let linkTo = `/address/${address}`;
@@ -45,22 +65,7 @@ class AddressEllipseLine extends Component {
     }
 
     let line2;
-    if (contractCreated) {
-      line2 = (
-        <ContractName>
-          <Popup
-            trigger={
-              <ContractCell>
-                <Link to={`/address/${contractCreated}`}>{i18n('Contract Creation')}</Link>
-              </ContractCell>
-            }
-            content={contractCreated}
-            position="top center"
-            hoverable
-          />
-        </ContractName>
-      );
-    } else if (address && isContract(address)) {
+    if (address && isContract(address)) {
       if (contractManagerCache[address] && contractManagerCache[address].name) {
         let trigger;
         if (noLink) {
