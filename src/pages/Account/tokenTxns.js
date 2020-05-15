@@ -254,8 +254,8 @@ class TokenTxns extends Component {
         >
           <RangePicker
             className="date-picker"
-            showTime={{ format: 'HH:mm' }}
-            format="YYYY-MM-DD HH:mm"
+            showTime={{ format: 'HH:mm:ss', defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss')] }}
+            format="YYYY-MM-DD HH:mm:ss"
             placeholder={[
               intl.formatMessage({
                 id: 'StartTime',
@@ -291,8 +291,8 @@ class TokenTxns extends Component {
                 });
               } else {
                 this.setState({
-                  startTime: value[0].startOf('days'),
-                  endTime: value[1].endOf('days'),
+                  startTime: value[0],
+                  endTime: value[1],
                 });
               }
             }}
