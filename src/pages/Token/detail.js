@@ -202,9 +202,16 @@ class TokenDetail extends Component {
             let contractIcon;
             if (contractManagerCache[address] && contractManagerCache[address].website) {
               contractIcon = (
-                <a href={contractManagerCache[address].website} target="_blank">
-                  <i className="link-open" />
-                </a>
+                <Popup
+                  trigger={
+                    <a href={contractManagerCache[address].website} target="_blank">
+                      <i className="open-icon" />
+                    </a>
+                  }
+                  content={i18n('Enter the official site')}
+                  position="top center"
+                  hoverable
+                />
               );
             }
 

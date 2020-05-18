@@ -268,6 +268,11 @@ const ContractInfoPanel = styled.div`
     align-items: center;
     display: flex;
     flex-wrap: wrap;
+    > a {
+      align-items: center;
+      display: flex;
+      font-weight: bold;
+    }
     > span {
       margin-right: 5px;
     }

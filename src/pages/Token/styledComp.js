@@ -2,6 +2,8 @@ import styled from 'styled-components';
 import media from '../../globalStyles/media';
 import iconCloseSmall from '../../assets/images/icons/close-small.svg';
 import iconCloseMd from '../../assets/images/icons/close-md.svg';
+import iconOpen from '../../assets/images/icons/icon-open.svg';
+import iconOpenHover from '../../assets/images/icons/icon-open-hover.svg';
 
 export const HeadBar = styled.div`
   width: 100%;
@@ -11,6 +13,18 @@ export const HeadBar = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;
+
+    .open-icon {
+      cursor: pointer;
+      margin-left: 10px;
+      width: 32px;
+      height: 32px;
+      display: block;
+      background-image: url("${iconOpen}");
+      &:hover {
+        background-image: url("${iconOpenHover}");
+      }
+    }
 
   .link-open {
     margin-left: 5px;

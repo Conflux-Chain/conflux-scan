@@ -1,6 +1,8 @@
 import React from 'react';
 import BigNumber from 'bignumber.js';
 import uniq from 'lodash/uniq';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
 import template from 'lodash/template';
 import superagent from 'superagent';
 import querystring from 'querystring';

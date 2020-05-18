@@ -37,7 +37,12 @@ function DataList({ isMobile, rowStyle, showHeader, columns, dataSource }) {
           <thead>
             <tr>
               {columns.map((item) => (
-                <th className={item.className ? item.className : ''} colSpan={item.colSpan ? item.colSpan : 1} key={item.key}>
+                <th
+                  style={item.style}
+                  className={item.className ? item.className : ''}
+                  colSpan={item.colSpan ? item.colSpan : 1}
+                  key={item.key}
+                >
                   {item.title}
                 </th>
               ))}

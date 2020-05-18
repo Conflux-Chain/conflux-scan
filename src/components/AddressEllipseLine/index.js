@@ -1,4 +1,5 @@
-import React, { PureComponent, Fragment } from 'react';
+import React, { Component, Fragment } from 'react';
+import { injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import { Popup } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
@@ -19,6 +20,10 @@ const ContractName = styled.div`
     display: inline-block;
   }
 `;
+
+const ContractNameNormal = styled(ContractName)`
+  font-weight: normal;
+`;
 const ContractCell = styled.div`
   color: rgba(0, 0, 0, 0.87);
   /* font-size: 15px; */
@@ -30,12 +35,29 @@ const ContractCellNormal = styled.div`
   font-weight: normal;
 `;
 
-class AddressEllipseLine extends PureComponent {
+class AddressEllipseLine extends Component {
   render() {
     const { contractManagerCache, contractCreated, address, type, textInout, noLink } = this.props;
+
+    // no to address
     if (type === 'to' && !address) {
-      // no to address
-      return <ContractName>{i18n('Contract Creation')}</ContractName>;
+      if (contractCreated) {
+        return (
+          <ContractNameNormal>
+            <Popup
+              trigger={
+                <ContractCell>
+                  <Link to={`/address/${contractCreated}`}>{i18n('Contract Creation')}</Link>
+                </ContractCell>
+              }
+              content={contractCreated}
+              position="top center"
+              hoverable
+            />
+          </ContractNameNormal>
+        );
+      }
+      return <ContractNameNormal>{i18n('Contract Creation')}</ContractNameNormal>;
     }
 
     let linkTo = `/address/${address}`;
@@ -44,22 +66,7 @@ class AddressEllipseLine extends PureComponent {
     }
 
     let line2;
-    if (contractCreated) {
-      line2 = (
-        <ContractName>
-          <Popup
-            trigger={
-              <ContractCell>
-                <Link to={`/address/${contractCreated}`}>{i18n('Contract Creation')}</Link>
-              </ContractCell>
-            }
-            content={contractCreated}
-            position="top center"
-            hoverable
-          />
-        </ContractName>
-      );
-    } else if (address && isContract(address)) {
+    if (address && isContract(address)) {
       if (contractManagerCache[address] && contractManagerCache[address].name) {
         let trigger;
         if (noLink) {
@@ -110,4 +117,4 @@ AddressEllipseLine.defaultProps = {
   noLink: false,
 };
 
-export default connect(mapStateToProps)(AddressEllipseLine);
+export default injectIntl(connect(mapStateToProps)(AddressEllipseLine));
