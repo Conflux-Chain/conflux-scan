@@ -257,16 +257,7 @@ function I18nComp({ id, html, param }) {
 
   return <FormattedMessage id={id} />;
 }
-function mapStateToPropsLang(state) {
-  return {
-    lang: state.common.lang,
-  };
-}
-const hoc = compose(
-  connect(mapStateToPropsLang),
-  injectIntl
-);
-const I18nComp1 = hoc(I18nComp);
+const I18nComp1 = injectIntl(I18nComp);
 
 export function i18n(id, config = {}) {
   return <I18nComp1 id={id} html={config.html} param={config.param} />;

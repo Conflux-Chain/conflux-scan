@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import { injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import { Popup } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
@@ -116,4 +117,4 @@ AddressEllipseLine.defaultProps = {
   noLink: false,
 };
 
-export default connect(mapStateToProps)(AddressEllipseLine);
+export default injectIntl(connect(mapStateToProps)(AddressEllipseLine));
