@@ -116,7 +116,7 @@ const CellTxtBold = styled(CellTxt)`
   font-weight: bold;
 `;
 const CellTxtCenter = styled(CellTxt)`
-  text-align: center;
+  /* text-align: center; */
 `;
 
 /* eslint react/destructuring-assignment: 0 */
@@ -233,10 +233,20 @@ class List extends Component {
         dataIndex: 'name',
         title: i18n('Token'),
         render: (text, row) => {
+          let txt = text;
+          if (tokenMaps[row.address]) {
+            txt = (
+              <span>
+                {text}
+                &nbsp; ({tokenMaps[row.address].symbol})
+              </span>
+            );
+          }
+
           return (
             <CellTxtBold>
               {<img src={row.tokenIcon || defaultTokenIcon} />}
-              <Link to={`/token/${row.address}`}>{text}</Link>
+              <Link to={`/token/${row.address}`}>{txt}</Link>
             </CellTxtBold>
           );
         },
@@ -247,7 +257,7 @@ class List extends Component {
         dataIndex: '',
         title: i18n('Transfer'),
         style: {
-          textAlign: 'center',
+          // textAlign: 'center',
         },
         render: (text, row) => {
           if (tokenMaps[row.address]) {
@@ -261,7 +271,7 @@ class List extends Component {
         className: 'two wide aligned',
         dataIndex: 'totalSupply',
         style: {
-          textAlign: 'center',
+          // textAlign: 'center',
         },
         title: i18n('Total Supply'),
         render: (text, row) => {
@@ -284,7 +294,7 @@ class List extends Component {
         className: 'two wide aligned',
         dataIndex: 'accountCount',
         style: {
-          textAlign: 'center',
+          // textAlign: 'center',
         },
         title: i18n('Holders'),
         render: (text, row) => {

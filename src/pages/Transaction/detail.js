@@ -290,10 +290,27 @@ class Detail extends Component {
   }
 
   async getConfirmRisk(blockHash) {
-    const riskLevel = await reqConfirmationRiskByHash(blockHash);
-    this.setState({
-      riskLevel,
-    });
+    let looping = true;
+    const delay5s = () => {
+      return new Promise((resolve) => {
+        setTimeout(resolve, 5000);
+      });
+    };
+
+    let riskLevel;
+    while (looping) {
+      // eslint-disable-next-line no-await-in-loop
+      riskLevel = await reqConfirmationRiskByHash(blockHash);
+      this.setState({
+        riskLevel,
+      });
+      if (riskLevel === 'lv0' || riskLevel === '') {
+        looping = false;
+      } else {
+        // eslint-disable-next-line no-await-in-loop
+        await delay5s();
+      }
+    }
   }
 
   fetchTxDetail(txnhash) {
