@@ -149,12 +149,13 @@ const pageSize = 10;
 class Detail extends Component {
   constructor() {
     super();
-    this.state = {
+    this.getInitState = () => ({
       BlockList: [],
       curPage: 1,
       totalCount: 0,
       isLoading: false,
-    };
+    });
+    this.state = this.getInitState();
   }
 
   componentDidMount() {
@@ -175,6 +176,8 @@ class Detail extends Component {
       const {
         match: { params },
       } = this.props;
+      // eslint-disable-next-line  react/no-did-update-set-state
+      this.setState(this.getInitState());
       this.fetchInitList({
         epochid: params.epochid,
         curPage,

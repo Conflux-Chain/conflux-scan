@@ -294,7 +294,7 @@ const pageSize = 10;
 class Detail extends Component {
   constructor(...args) {
     super(...args);
-    this.state = {
+    this.getInitstate = () => ({
       currentTab: 1,
       TxTotalCount: 0,
       refereeBlockList: [],
@@ -304,7 +304,8 @@ class Detail extends Component {
       curPage: 1,
       refBlockCurPage: 1,
       refTotal: 0,
-    };
+    });
+    this.state = this.getInitstate();
     this.getBlockHash = this.getBlockHash.bind(this);
   }
 
@@ -318,6 +319,8 @@ class Detail extends Component {
     const prevBlockHash = tranferToLowerCase(prevProps.match.params.blockhash);
     // eslint-disable-next-line react/destructuring-assignment
     if (blockhash !== prevBlockHash) {
+      // eslint-disable-next-line  react/no-did-update-set-state
+      this.setState(this.getInitstate());
       this.fetchBlockDetail(blockhash, { activePage: 1 });
       this.fetchReffereBlock(blockhash, { refBlockCurPage: 1 });
     }
