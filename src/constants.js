@@ -11,6 +11,7 @@ export const errorCodes = {
   BlockNotFoundError: 20404,
   TxNotFoundError: 30404,
   ContractNotFound: 40404,
+  TokenNotFound: 50404,
 };
 
 export const UPDATE_COMMON = 'UPDATE_COMMON';

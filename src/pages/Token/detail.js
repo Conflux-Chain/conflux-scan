@@ -15,7 +15,7 @@ import { i18n, renderAny, humanizeNum, getQuery, dripTocfx, notice, tranferToLow
 
 import TableLoading from '../../components/TableLoading';
 import { reqContractListInfo, reqTokenQuery, reqTransferList, reqTotalSupply, reqBalanceOf } from '../../utils/api';
-import { defaultTokenIcon } from '../../constants';
+import { defaultTokenIcon, errorCodes } from '../../constants';
 
 /* eslint jsx-a11y/click-events-have-key-events: 0 */
 /* eslint jsx-a11y/no-static-element-interactions: 0 */
@@ -50,9 +50,14 @@ class TokenDetail extends Component {
 
   componentDidMount() {
     const address = this.getAddress();
-    this.reqTokenPromise = reqTokenQuery({
-      address,
-    }).then((body) => {
+    this.reqTokenPromise = reqTokenQuery(
+      {
+        address,
+      },
+      {
+        showError: false,
+      }
+    ).then((body) => {
       if (body.code === 0) {
         this.setState({
           tokenDetail: body.result,
@@ -63,6 +68,7 @@ class TokenDetail extends Component {
     reqTotalSupply({
       address,
       params: [],
+      showError: false,
     }).then(async (result) => {
       await this.reqTokenPromise;
       const { tokenDetail } = this.state;

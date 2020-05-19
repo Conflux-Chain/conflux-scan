@@ -253,26 +253,10 @@ export const reqContractListInfo = async (addrList) => {
   }
 };
 
-const cfxSend = async (abi, fnName, address, callback) => {
-  const contract = cfx.Contract({
-    address,
-    abi,
-  });
-  try {
-    const result = await callback(contract[fnName]);
-    return result.toString();
-  } catch (e) {
-    toast.error({
-      content: e.message,
-      title: 'app.comp.toast.error.other',
-    });
-    return Promise.reject(e);
-  }
-};
-
 export const reqTotalSupply = async (opts) => {
-  return cfxSend(
-    [
+  const contract = cfx.Contract({
+    address: opts.address,
+    abi: [
       {
         type: 'function',
         name: 'totalSupply',
@@ -280,17 +264,25 @@ export const reqTotalSupply = async (opts) => {
         outputs: [{ type: 'uint256' }],
       },
     ],
-    'totalSupply',
-    opts.address,
-    async (contractFn) => {
-      return contractFn();
+  });
+  try {
+    const result = await contract.totalSupply();
+    return result.toString();
+  } catch (e) {
+    if (opts.showError !== false) {
+      toast.error({
+        content: e.message,
+        title: 'app.comp.toast.error.other',
+      });
     }
-  );
+    return Promise.reject(e);
+  }
 };
 
 export const reqBalanceOf = async (opts) => {
-  return cfxSend(
-    [
+  const contract = cfx.Contract({
+    address: opts.address,
+    abi: [
       {
         type: 'function',
         name: 'balanceOf',
@@ -298,23 +290,30 @@ export const reqBalanceOf = async (opts) => {
         outputs: [{ type: 'uint256' }],
       },
     ],
-    'balanceOf',
-    opts.address,
-    async (contractFn) => {
-      return contractFn(opts.params[0]);
+  });
+
+  try {
+    const result = await contract.balanceOf(opts.params[0]);
+    return result.toString();
+  } catch (e) {
+    if (opts.showError !== false) {
+      toast.error({
+        content: e.message,
+        title: 'app.comp.toast.error.other',
+      });
     }
-  );
+    return Promise.reject(e);
+  }
 };
 
 export const reqConfirmationRiskByHash = async (blockHash) => {
   try {
     const result = await cfx.provider.call('cfx_getConfirmationRiskByHash', cfxUtil.format.blockHash(blockHash));
-    return fmtConfirmationRisk(result.toString());
+    if (result) {
+      return fmtConfirmationRisk(result.toString());
+    }
+    return '';
   } catch (e) {
-    toast.error({
-      content: e.message,
-      title: 'app.comp.toast.error.other',
-    });
-    return Promise.reject(e);
+    return '';
   }
 };

@@ -115,9 +115,6 @@ const CellTxt = styled.div`
 const CellTxtBold = styled(CellTxt)`
   font-weight: bold;
 `;
-const CellTxtCenter = styled(CellTxt)`
-  text-align: center;
-`;
 
 /* eslint react/destructuring-assignment: 0 */
 let curPageBase = 1;
@@ -233,10 +230,20 @@ class List extends Component {
         dataIndex: 'name',
         title: i18n('Token'),
         render: (text, row) => {
+          let txt = text;
+          if (tokenMaps[row.address]) {
+            txt = (
+              <span>
+                {text}
+                &nbsp; ({tokenMaps[row.address].symbol})
+              </span>
+            );
+          }
+
           return (
             <CellTxtBold>
               {<img src={row.tokenIcon || defaultTokenIcon} />}
-              <Link to={`/token/${row.address}`}>{text}</Link>
+              <Link to={`/token/${row.address}`}>{txt}</Link>
             </CellTxtBold>
           );
         },
@@ -246,12 +253,9 @@ class List extends Component {
         className: 'two wide aligned',
         dataIndex: '',
         title: i18n('Transfer'),
-        style: {
-          textAlign: 'center',
-        },
         render: (text, row) => {
           if (tokenMaps[row.address]) {
-            return <CellTxtCenter>{this.renderEllipse(tokenMaps[row.address].transferCount, 11)}</CellTxtCenter>;
+            return <CellTxt>{this.renderEllipse(tokenMaps[row.address].transferCount, 11)}</CellTxt>;
           }
           return null;
         },
@@ -260,20 +264,17 @@ class List extends Component {
         key: 4,
         className: 'two wide aligned',
         dataIndex: 'totalSupply',
-        style: {
-          textAlign: 'center',
-        },
         title: i18n('Total Supply'),
         render: (text, row) => {
           if (tokenMaps[row.address] && totalSupplyMaps[row.address]) {
             return (
-              <CellTxtCenter>
+              <CellTxt>
                 {this.renderEllipse(totalSupplyMaps[row.address], 11)}
                 <span style={{ verticalAlign: 'middle' }}>
                   &nbsp;
                   {tokenMaps[row.address].symbol}
                 </span>
-              </CellTxtCenter>
+              </CellTxt>
             );
           }
           return null;
@@ -283,13 +284,10 @@ class List extends Component {
         key: 5,
         className: 'two wide aligned',
         dataIndex: 'accountCount',
-        style: {
-          textAlign: 'center',
-        },
         title: i18n('Holders'),
         render: (text, row) => {
           if (tokenMaps[row.address]) {
-            return <CellTxtCenter>{this.renderEllipse(tokenMaps[row.address].accountCount, 11)}</CellTxtCenter>;
+            return <CellTxt>{this.renderEllipse(tokenMaps[row.address].accountCount, 11)}</CellTxt>;
           }
           return null;
         },
