@@ -226,7 +226,7 @@ class List extends Component {
       },
       {
         key: 2,
-        className: 'two wide aligned',
+        className: 'three wide aligned',
         dataIndex: 'name',
         title: i18n('Token'),
         render: (text, row) => {

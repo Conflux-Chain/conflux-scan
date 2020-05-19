@@ -11,6 +11,7 @@ import { defaultContractIcon, defaultTokenIcon } from '../../constants';
 
 const ContractName = styled.div`
   display: inline-block;
+  line-height: 1;
   img {
     width: 20px;
     height: 20px;
