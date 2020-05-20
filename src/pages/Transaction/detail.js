@@ -254,7 +254,7 @@ const baseLangId = 'app.pages.txns.';
 class Detail extends Component {
   constructor() {
     super();
-    this.state = {
+    this.getInitState = () => ({
       result: {},
       isLoading: true,
       isPacking: false,
@@ -266,7 +266,8 @@ class Detail extends Component {
       contractType: contractTypeCodeGeneral, //
       decodedData: {},
       transferList: [],
-    };
+    });
+    this.state = this.getInitState();
   }
 
   componentDidMount() {
@@ -277,6 +278,8 @@ class Detail extends Component {
     const txnhash = this.getTxnHash();
     const prevTxnHash = tranferToLowerCase(prevProps.match.params.txnhash);
     if (txnhash !== prevTxnHash) {
+      // eslint-disable-next-line react/no-did-update-set-state
+      this.setState(this.getInitState());
       this.fetchTxDetail(txnhash);
     }
   }
