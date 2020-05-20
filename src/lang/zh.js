@@ -50,6 +50,7 @@ export default {
   addresses: '地址',
   Decimals: '小数精度',
   Security: '安全等级',
+  'Not Available': '暂无',
   'Filtered by Token Holder': '按代币持有者筛选',
 
   'app.head.menu.home': '首页',
@@ -78,6 +79,8 @@ export default {
   'app.pages.account.detail.viewOutGoing': '查看发送交易',
   'app.pages.account.detail.viewIncoming': '查看接收交易',
   'app.pages.account.detail.tokentxns': '代币交易',
+  'app.pages.account.transaction.age': '时间戳',
+
   // blocks
   'app.pages.blocks.position': '位置',
   'app.pages.blocks.hash': '哈希',

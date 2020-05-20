@@ -284,6 +284,12 @@ class Detail extends Component {
     }
   }
 
+  componentWillUnmount() {
+    if (this.fetchDetailTimer) {
+      clearTimeout(this.fetchDetailTimer);
+    }
+  }
+
   getTxnHash() {
     const {
       match: { params },
@@ -294,9 +300,9 @@ class Detail extends Component {
 
   async getConfirmRisk(blockHash) {
     let looping = true;
-    const delay5s = () => {
+    const delay10s = () => {
       return new Promise((resolve) => {
-        setTimeout(resolve, 5000);
+        setTimeout(resolve, 10 * 1000);
       });
     };
 
@@ -311,24 +317,34 @@ class Detail extends Component {
         looping = false;
       } else {
         // eslint-disable-next-line no-await-in-loop
-        await delay5s();
+        await delay10s();
       }
     }
   }
 
-  fetchTxDetail(txnhash) {
+  fetchTxDetail(txnhash, params = { showLoading: true }) {
     const { history } = this.props;
-    this.setState({ isLoading: true });
+    if (params.showLoading) {
+      this.setState({ isLoading: true });
+    }
     return reqTransactionDetail(
       {
         hash: txnhash,
       },
       { showError: false }
     ).then((body) => {
+      if (txnhash !== this.getTxnHash()) {
+        return;
+      }
+
       switch (body.code) {
         case 0:
           if (body.result.blockHash) {
             this.getConfirmRisk(body.result.blockHash);
+          } else {
+            this.fetchDetailTimer = setTimeout(() => {
+              this.fetchTxDetail(this.getTxnHash(), { showLoading: false });
+            }, 3000);
           }
           const transactionDetails = body.result;
           this.setState({ result: transactionDetails });

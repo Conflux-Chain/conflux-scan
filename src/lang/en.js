@@ -26,6 +26,7 @@ export default {
   'app.pages.account.detail.viewOutGoing': 'View Outgoing Txns',
   'app.pages.account.detail.viewIncoming': 'View Incoming Txns',
   'app.pages.account.detail.tokentxns': 'Token Txns',
+  'app.pages.account.transaction.age': 'TimeStamp',
 
   // blocks
   'app.pages.blocks.position': 'Position',

@@ -350,3 +350,9 @@ export function fmtConfirmationRisk(riskStr) {
 
   return 'lv0';
 }
+
+export function wait(time) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, time);
+  });
+}
