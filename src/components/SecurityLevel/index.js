@@ -39,10 +39,15 @@ const Wrapper = styled.div`
 
   .risk-status {
     vertical-align: middle;
-    margin-left: 8px;
     font-size: 16px;
-    font-weight: 600;
     display: inline-block;
+    &.lv0,
+    &.lv1,
+    &.lv2,
+    &.lv3 {
+      margin-left: 8px;
+      font-weight: 600;
+    }
     &.lv0 {
       color: #59bf9c;
     }
@@ -60,7 +65,7 @@ const Wrapper = styled.div`
 
 function SecurityLevel(props) {
   const { riskLevel } = props;
-  let securityLevel = '';
+  let securityLevel = i18n('Not Available');
   if (riskLevel === 'lv0') {
     securityLevel = i18n('security.High');
   } else if (riskLevel === 'lv1') {
@@ -89,7 +94,7 @@ function SecurityLevel(props) {
   return (
     <Wrapper>
       <div className="risk-wrapper">
-        {riskSvg}
+        {riskLevel && riskSvg}
         <div className="risk-opacity-filter" />
       </div>
       <div className={`risk-status ${riskLevel}`}>{securityLevel}</div>

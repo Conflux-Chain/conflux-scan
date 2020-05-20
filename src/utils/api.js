@@ -1,4 +1,4 @@
-import { sendRequest, getStore, fmtConfirmationRisk } from './index';
+import { sendRequest, getStore, fmtConfirmationRisk, wait } from './index';
 import { futurePrefix, contractMangerPrefix, UPDATE_CONTRACT_MANAGER_CACHE, errorCodes, CLEAR_CONTRACT_MANAGER_CACHE } from '../constants';
 import { cfx, cfxUtil } from './transaction';
 import { toast } from '../components/Toast';
@@ -230,7 +230,7 @@ export const reqContractListInfo = async (addrList) => {
         fields,
         address,
       },
-      { showError: false }
+      { showError: false, showNetWorkError: false }
     ).then((body) => {
       if (body.code === 0) {
         store.dispatch({
@@ -308,7 +308,15 @@ export const reqBalanceOf = async (opts) => {
 
 export const reqConfirmationRiskByHash = async (blockHash) => {
   try {
-    const result = await cfx.provider.call('cfx_getConfirmationRiskByHash', cfxUtil.format.blockHash(blockHash));
+    const callProvider = () => {
+      return cfx.provider.call('cfx_getConfirmationRiskByHash', cfxUtil.format.blockHash(blockHash));
+    };
+    let result = await callProvider();
+    if (!result) {
+      // retry when result is null or empty
+      await wait(3000);
+      result = await callProvider();
+    }
     if (result) {
       return fmtConfirmationRisk(result.toString());
     }

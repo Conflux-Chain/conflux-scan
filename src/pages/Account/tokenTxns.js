@@ -1,8 +1,9 @@
 import React, { Component, Fragment } from 'react';
+import { Popup, Dropdown } from 'semantic-ui-react';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { Dropdown } from 'semantic-ui-react';
+
 import { DatePicker } from 'antd';
 import { injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
@@ -21,6 +22,15 @@ const NumCell = styled.div`
   color: rgba(0, 0, 0, 0.87);
   font-size: 16px;
   font-weight: normal;
+  .ellipse-11 {
+    display: inline-block;
+    vertical-align: middle;
+    max-width: 94px;
+    text-overflow: hidden;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 `;
 
 const TokenLineDiv = styled.div`
@@ -126,6 +136,16 @@ class TokenTxns extends Component {
     });
   }
 
+  renderEllipse(text) {
+    let txt = text || '';
+    txt = txt.toString();
+
+    if (txt.replace('.', '').length > 11) {
+      return <Popup trigger={<div className="ellipse-11">{text}</div>} content={text} />;
+    }
+    return <span style={{ verticalAlign: 'middle' }}>{txt}</span>;
+  }
+
   render() {
     const { accountid, isActive, intl, tokenMap = {} } = this.props;
     const { TxList, TxTotalCount, queries, listLimit, activated } = this.state;
@@ -188,10 +208,22 @@ class TokenTxns extends Component {
         title: i18n('Value'),
         render: (text, row) => {
           if (row.token) {
+            const { symbol } = row.token;
             if (row.token.decimals) {
-              return <NumCell>{valToTokenVal(text, row.token.decimals)}</NumCell>;
+              return (
+                <NumCell>
+                  {this.renderEllipse(valToTokenVal(text, row.token.decimals))}
+                  &nbsp;{symbol}
+                </NumCell>
+              );
             }
-            return <NumCell>{text}</NumCell>;
+            return (
+              <NumCell>
+                {this.renderEllipse(text)}
+                &nbsp;
+                {symbol}
+              </NumCell>
+            );
           }
           return null;
         },
@@ -248,8 +280,8 @@ class TokenTxns extends Component {
         >
           <RangePicker
             className="date-picker"
-            showTime={{ format: 'HH:mm' }}
-            format="YYYY-MM-DD HH:mm"
+            showTime={{ format: 'HH:mm:ss', defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss')] }}
+            format="YYYY-MM-DD HH:mm:ss"
             placeholder={[
               intl.formatMessage({
                 id: 'StartTime',
@@ -285,8 +317,8 @@ class TokenTxns extends Component {
                 });
               } else {
                 this.setState({
-                  startTime: value[0].startOf('days'),
-                  endTime: value[1].endOf('days'),
+                  startTime: value[0],
+                  endTime: value[1],
                 });
               }
             }}
