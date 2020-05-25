@@ -186,7 +186,7 @@ export default {
   Quantity: '数量',
   'Txn Hash/Holder Address': '交易哈希值/持有人地址',
   'Profile Summary': '资料概要',
-  'Search paremeter incorrect': '查询参数有误',
+  'Invalid format': '输入格式错误',
   'Token Transfered': '代币转移',
   'Token Minted': '代币铸造',
   'Token Burned': '代币承兑',

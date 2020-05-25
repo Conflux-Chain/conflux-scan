@@ -150,12 +150,6 @@ class TokenDetail extends Component {
             transferList: res.result.list,
             transferTotal: res.result.total,
           });
-        } else if (res.code === 1) {
-          notice.show({
-            type: 'message-error-light',
-            content: i18n('Search paremeter incorrect'),
-            timeout: 3000,
-          });
         } else {
           notice.show({
             type: 'message-error-light',
@@ -372,7 +366,7 @@ class TokenDetail extends Component {
                         if (!isAddress(searchInput) && !isHash(searchInput)) {
                           notice.show({
                             type: 'message-error-light',
-                            content: i18n('Search paremeter incorrect'),
+                            content: i18n('Invalid format'),
                             timeout: 3000,
                           });
                           return;
