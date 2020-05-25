@@ -344,7 +344,7 @@ class Detail extends Component {
         looping = false;
       } else {
         // eslint-disable-next-line no-await-in-loop
-        await delay(5000);
+        await delay(10 * 1000);
       }
     }
   }
