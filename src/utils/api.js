@@ -228,6 +228,20 @@ export const reqContractListInfo = async (addrList) => {
   }
 };
 
+const callWithRetry = async (callFn) => {
+  try {
+    return await callFn();
+  } catch (e) {
+    await wait(1000);
+    try {
+      return await callFn();
+    } catch (e1) {
+      await wait(1000);
+      return callFn();
+    }
+  }
+};
+
 export const reqTotalSupply = async (opts) => {
   const contract = cfx.Contract({
     address: opts.address,
@@ -241,7 +255,7 @@ export const reqTotalSupply = async (opts) => {
     ],
   });
   try {
-    const result = await contract.totalSupply();
+    const result = await callWithRetry(() => contract.totalSupply());
     if (typeof result === 'undefined' || result === null) {
       return Promise.reject(new Error('totalSupply=null'));
     }
@@ -271,7 +285,7 @@ export const reqBalanceOf = async (opts) => {
   });
 
   try {
-    const result = await contract.balanceOf(opts.params[0]);
+    const result = await callWithRetry(() => contract.balanceOf(opts.params[0]));
     if (typeof result === 'undefined' || result === null) {
       return Promise.reject(new Error('balanceOf=null'));
     }

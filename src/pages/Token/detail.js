@@ -581,7 +581,12 @@ class TokenDetail extends Component {
                   },
                 ];
 
-                return <DataList showHeader columns={columns} dataSource={transferList} />;
+                const contractAddress = this.getAddress();
+                const transferListFiltered = transferList.filter((v) => {
+                  return v.address === contractAddress;
+                });
+
+                return <DataList showHeader columns={columns} dataSource={transferListFiltered} />;
               })}
             </div>
           </div>

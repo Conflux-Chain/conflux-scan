@@ -11,7 +11,7 @@ import moment from 'moment';
 import TableLoading from '../../components/TableLoading';
 import EllipsisLine from '../../components/EllipsisLine';
 import media from '../../globalStyles/media';
-import { i18n, renderAny, dripTocfx, dripToGdrip, getAddressType, devidedByDecimals, tranferToLowerCase } from '../../utils';
+import { i18n, renderAny, dripTocfx, dripToGdrip, getAddressType, devidedByDecimals, tranferToLowerCase, wait } from '../../utils';
 import NotFoundTx from '../NotFoundTx';
 import Countdown from '../../components/Countdown';
 import iconStatusErr from '../../assets/images/icons/status-err.svg';
@@ -300,12 +300,6 @@ class Detail extends Component {
 
   async getConfirmRisk(blockHash) {
     let looping = true;
-    const delay10s = () => {
-      return new Promise((resolve) => {
-        setTimeout(resolve, 10 * 1000);
-      });
-    };
-
     let riskLevel;
     while (looping) {
       // eslint-disable-next-line no-await-in-loop
@@ -313,11 +307,14 @@ class Detail extends Component {
       this.setState({
         riskLevel,
       });
-      if (riskLevel === 'lv0' || riskLevel === '') {
+      if (riskLevel === '') {
+        // eslint-disable-next-line no-await-in-loop
+        await wait(1000);
+      } else if (riskLevel === 'lv0') {
         looping = false;
       } else {
         // eslint-disable-next-line no-await-in-loop
-        await delay10s();
+        await wait(10 * 1000);
       }
     }
   }
