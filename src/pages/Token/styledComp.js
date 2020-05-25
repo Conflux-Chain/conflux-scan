@@ -207,6 +207,7 @@ export const TransfersDiv = styled.div`
       border: 1px solid rgb(204, 204, 204);
     }
     input {
+      transition: 0.2s all ease-out;
       min-width: 200px;
       outline: none;
       font-size: 16px;

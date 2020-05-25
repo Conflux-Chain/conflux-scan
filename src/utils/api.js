@@ -3,31 +3,6 @@ import { futurePrefix, contractMangerPrefix, UPDATE_CONTRACT_MANAGER_CACHE, erro
 import { cfx, cfxUtil } from './transaction';
 import { toast } from '../components/Toast';
 
-export const reqFcStat = (param) => {
-  return sendRequest({
-    // url: 'http://yapi.conflux-chain.org/mock/4/dashboard/fc/statistics',
-    url: '/api/dashboard/fc/statistics',
-    query: param,
-  }).then((res) => res.body);
-};
-
-export const reqFcList = (param, options = {}) => {
-  return sendRequest({
-    // url: 'http://yapi.conflux-chain.org/mock/4/transaction/fc/list',
-    url: '/api/transaction/fc/list',
-    query: param,
-    showError: options.showError,
-  }).then((res) => res.body);
-};
-
-export const reqFcByAddress = (param) => {
-  return sendRequest({
-    url: `/api/account/${param.address}/fc`,
-    // url: 'http://yapi.conflux-chain.org/mock/4/account/:address/fc',
-    query: param,
-  }).then((res) => res.body);
-};
-
 export const reqRecentDagBlock = () => {
   return sendRequest({ url: `${futurePrefix}/dashboard/dag` }).then((res) => res.body);
 };
@@ -267,6 +242,9 @@ export const reqTotalSupply = async (opts) => {
   });
   try {
     const result = await contract.totalSupply();
+    if (typeof result === 'undefined' || result === null) {
+      return Promise.reject(new Error('totalSupply=null'));
+    }
     return result.toString();
   } catch (e) {
     if (opts.showError !== false) {
@@ -294,6 +272,9 @@ export const reqBalanceOf = async (opts) => {
 
   try {
     const result = await contract.balanceOf(opts.params[0]);
+    if (typeof result === 'undefined' || result === null) {
+      return Promise.reject(new Error('balanceOf=null'));
+    }
     return result.toString();
   } catch (e) {
     if (opts.showError !== false) {

@@ -10,10 +10,6 @@ if (curLang.indexOf('zh') === 0) {
 const initState = {
   lang: curLang,
   network: isMainnet ? 'mainnet' : 'testnet',
-
-  fcStat: {
-    // address: ''
-  },
   contractManagerCache: {},
 };
 

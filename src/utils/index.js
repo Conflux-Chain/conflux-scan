@@ -356,3 +356,19 @@ export function wait(time) {
     setTimeout(resolve, time);
   });
 }
+
+export function isAddress(str) {
+  return /^0x[0-9a-fA-F]{40}$/.test(str);
+}
+
+export function isHash(str) {
+  return /^0x[0-9a-fA-F]{64}$/.test(str);
+}
+
+const isMobileQuery = `(orientation: portrait) and (max-width: 576px)`;
+export const isMobile = () => {
+  if (!window.matchMedia) {
+    return false;
+  }
+  return window.matchMedia(isMobileQuery).matches;
+};

@@ -172,7 +172,7 @@ class List extends Component {
               [v.address]: tokenResult.result,
             },
           });
-          const totalSupply = await reqTotalSupply({ address: v.address });
+          const totalSupply = await reqTotalSupply({ address: v.address, params: [], showError: false });
           this.setState({
             totalSupplyMaps: {
               ...this.state.totalSupplyMaps,
@@ -181,6 +181,12 @@ class List extends Component {
           });
         }
       });
+
+      Promise.all(mapPromise)
+        .catch(() => {})
+        .then(() => {
+          this.setState({ isLoading: false });
+        });
       await Promise.all(mapPromise);
 
       const { tokenList } = this.state;
@@ -198,7 +204,7 @@ class List extends Component {
         }
         return this.state.totalSupplyMaps[b.address] - this.state.totalSupplyMaps[a.address];
       });
-      this.setState({ isLoading: false, tokenList: tokenListSort });
+      this.setState({ tokenList: tokenListSort });
     });
   }
 

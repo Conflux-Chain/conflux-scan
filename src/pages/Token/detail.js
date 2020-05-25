@@ -11,7 +11,19 @@ import EllipsisLine from '../../components/EllipsisLine';
 import DataList from '../../components/DataList';
 import Countdown from '../../components/Countdown';
 import Pagination from '../../components/Pagination';
-import { i18n, renderAny, humanizeNum, getQuery, dripTocfx, notice, tranferToLowerCase, devidedByDecimals } from '../../utils';
+import {
+  i18n,
+  renderAny,
+  humanizeNum,
+  getQuery,
+  dripTocfx,
+  notice,
+  tranferToLowerCase,
+  devidedByDecimals,
+  isAddress,
+  isHash,
+  isMobile,
+} from '../../utils';
 
 import TableLoading from '../../components/TableLoading';
 import { reqContractListInfo, reqTokenQuery, reqTransferList, reqTotalSupply, reqBalanceOf } from '../../utils/api';
@@ -120,7 +132,11 @@ class TokenDetail extends Component {
       contractAddress,
     };
     if (filter) {
-      params.address = filter;
+      if (isAddress(filter)) {
+        params.address = tranferToLowerCase(filter);
+      } else {
+        params.txHash = tranferToLowerCase(filter);
+      }
     }
 
     reqTransferList(params, options).then(
@@ -133,12 +149,6 @@ class TokenDetail extends Component {
             pageNum,
             transferList: res.result.list,
             transferTotal: res.result.total,
-          });
-        } else if (res.code === 1) {
-          notice.show({
-            type: 'message-error-light',
-            content: i18n('Search paremeter incorrect'),
-            timeout: 3000,
           });
         } else {
           notice.show({
@@ -353,6 +363,17 @@ class TokenDetail extends Component {
                   <div className="transfer-search-input">
                     {renderAny(() => {
                       const doSearch = () => {
+                        if (searchInput) {
+                          if (!isAddress(searchInput) && !isHash(searchInput)) {
+                            notice.show({
+                              type: 'message-error-light',
+                              content: i18n('Invalid format'),
+                              timeout: 3000,
+                            });
+                            return;
+                          }
+                        }
+
                         if (searchInput.length === 42) {
                           history.replace(`${basePath}?address=${searchInput}`);
                           this.setState({
@@ -373,6 +394,12 @@ class TokenDetail extends Component {
                           );
                         }
                       };
+                      let inputStyle;
+                      if (!isMobile() && searchInput.length > 22) {
+                        inputStyle = {
+                          minWidth: searchInput.length * 8.5 + 7,
+                        };
+                      }
                       return (
                         <Fragment>
                           <input
@@ -385,6 +412,7 @@ class TokenDetail extends Component {
                                 searchInput: e.target.value,
                               });
                             }}
+                            style={inputStyle}
                             value={searchInput}
                             onKeyPress={(e) => {
                               if (e.which === 13) {
