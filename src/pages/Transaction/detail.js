@@ -316,8 +316,7 @@ class Detail extends Component {
       if (riskLevel === '') {
         // eslint-disable-next-line no-await-in-loop
         await delay(1000);
-      }
-      if (riskLevel === 'lv0') {
+      } else if (riskLevel === 'lv0') {
         looping = false;
       } else {
         // eslint-disable-next-line no-await-in-loop

@@ -324,9 +324,9 @@ class Detail extends Component {
 
   async getConfirmRisk(blockHash) {
     let looping = true;
-    const delay5s = () => {
+    const delay = (time) => {
       return new Promise((resolve) => {
-        setTimeout(resolve, 5000);
+        setTimeout(resolve, time);
       });
     };
 
@@ -337,11 +337,14 @@ class Detail extends Component {
       this.setState({
         riskLevel,
       });
-      if (riskLevel === 'lv0' || riskLevel === '') {
+      if (riskLevel === '') {
+        // eslint-disable-next-line no-await-in-loop
+        await delay(1000);
+      } else if (riskLevel === 'lv0') {
         looping = false;
       } else {
         // eslint-disable-next-line no-await-in-loop
-        await delay5s();
+        await delay();
       }
     }
   }
