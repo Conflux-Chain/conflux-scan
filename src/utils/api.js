@@ -267,6 +267,9 @@ export const reqTotalSupply = async (opts) => {
   });
   try {
     const result = await contract.totalSupply();
+    if (typeof result === 'undefined' || result === null) {
+      return Promise.reject(new Error('totalSupply=null'));
+    }
     return result.toString();
   } catch (e) {
     if (opts.showError !== false) {
@@ -294,6 +297,9 @@ export const reqBalanceOf = async (opts) => {
 
   try {
     const result = await contract.balanceOf(opts.params[0]);
+    if (typeof result === 'undefined' || result === null) {
+      return Promise.reject(new Error('balanceOf=null'));
+    }
     return result.toString();
   } catch (e) {
     if (opts.showError !== false) {

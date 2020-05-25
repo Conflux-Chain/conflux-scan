@@ -1,5 +1,5 @@
 /* eslint-disable no-case-declarations */
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
@@ -27,7 +27,7 @@ import {
   contractTypeCodeFc,
   contractTypeCodeGeneral,
   defaultTokenIcon,
-  fansCoinAddress,
+  defaultContractIcon,
 } from '../../constants';
 import InputData from '../../components/InputData';
 import SecurityLevel from '../../components/SecurityLevel';
@@ -558,15 +558,21 @@ class Detail extends Component {
                           let imgIcon = null;
                           if (contractInfo.icon) {
                             imgIcon = <img className="logo" src={`${contractInfo.icon}`} />;
+                          } else {
+                            imgIcon = <img className="logo" src={defaultContractIcon} />;
                           }
                           toDiv = (
                             <span>
                               {i18n('Contract')} &nbsp;
                               <Link to={`/address/${result.to}`}>{result.to}</Link>
-                              {imgIcon}
-                              <Link to={`/address/${result.to}`} className="nameItem">
-                                {contractInfo.name}
-                              </Link>
+                              {contractInfo.name && (
+                                <Fragment>
+                                  {imgIcon}
+                                  <Link to={`/address/${result.to}`} className="nameItem">
+                                    {contractInfo.name}
+                                  </Link>
+                                </Fragment>
+                              )}
                               <CopyButton style={copyBtnStyle} txtToCopy={result.to} btnType="three" toolTipId="Copy to clipboard" />
                             </span>
                           );
