@@ -11,7 +11,7 @@ import Countdown from '../../components/Countdown';
 import TableLoading from '../../components/TableLoading';
 import DataList from '../../components/DataList';
 import EllipsisLine from '../../components/EllipsisLine';
-import { convertToValueorFee, converToGasPrice, i18n, getContractList, tranferToLowerCase } from '../../utils';
+import { convertToValueorFee, converToGasPrice, i18n, getContractList, tranferToLowerCase, wait } from '../../utils';
 import media from '../../globalStyles/media';
 import * as commonCss from '../../globalStyles/common';
 import {
@@ -324,12 +324,6 @@ class Detail extends Component {
 
   async getConfirmRisk(blockHash) {
     let looping = true;
-    const delay = (time) => {
-      return new Promise((resolve) => {
-        setTimeout(resolve, time);
-      });
-    };
-
     let riskLevel;
     while (looping) {
       // eslint-disable-next-line no-await-in-loop
@@ -339,12 +333,12 @@ class Detail extends Component {
       });
       if (riskLevel === '') {
         // eslint-disable-next-line no-await-in-loop
-        await delay(1000);
+        await wait(1000);
       } else if (riskLevel === 'lv0') {
         looping = false;
       } else {
         // eslint-disable-next-line no-await-in-loop
-        await delay(10 * 1000);
+        await wait(10 * 1000);
       }
     }
   }
