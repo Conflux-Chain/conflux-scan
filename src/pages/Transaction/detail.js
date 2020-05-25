@@ -313,7 +313,7 @@ class Detail extends Component {
       this.setState({
         riskLevel,
       });
-      if (riskLevel === 'lv0' || riskLevel === '') {
+      if (riskLevel === 'lv0') {
         looping = false;
       } else {
         // eslint-disable-next-line no-await-in-loop
