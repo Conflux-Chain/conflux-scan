@@ -363,14 +363,17 @@ class TokenDetail extends Component {
                   <div className="transfer-search-input">
                     {renderAny(() => {
                       const doSearch = () => {
-                        if (!isAddress(searchInput) && !isHash(searchInput)) {
-                          notice.show({
-                            type: 'message-error-light',
-                            content: i18n('Invalid format'),
-                            timeout: 3000,
-                          });
-                          return;
+                        if (searchInput) {
+                          if (!isAddress(searchInput) && !isHash(searchInput)) {
+                            notice.show({
+                              type: 'message-error-light',
+                              content: i18n('Invalid format'),
+                              timeout: 3000,
+                            });
+                            return;
+                          }
                         }
+
                         if (searchInput.length === 42) {
                           history.replace(`${basePath}?address=${searchInput}`);
                           this.setState({
