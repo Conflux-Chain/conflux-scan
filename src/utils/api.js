@@ -232,7 +232,13 @@ const callWithRetry = async (callFn) => {
   try {
     return await callFn();
   } catch (e) {
-    return callFn();
+    await wait(1000);
+    try {
+      return await callFn();
+    } catch (e1) {
+      await wait(1000);
+      return callFn();
+    }
   }
 };
 
