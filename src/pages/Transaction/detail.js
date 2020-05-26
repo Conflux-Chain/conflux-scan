@@ -110,6 +110,7 @@ const StyledTabel = styled.table`
     padding-bottom: 2em !important;
   }
   .nameItem {
+    white-space: nowrap;
     margin-left: 5px;
   }
   td.to {
