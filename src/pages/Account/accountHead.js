@@ -143,7 +143,7 @@ const Statistic = styled.div`
     width: 346px;
     margin-top: -10px;
     position: relative;
-    z-index: 100;
+    z-index: 15;
     ${media.mobile`
       width: auto;
       margin-left: 20px;
