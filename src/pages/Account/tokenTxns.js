@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { Popup, Dropdown } from 'semantic-ui-react';
 import moment from 'moment';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -11,10 +12,10 @@ import DataList from '../../components/DataList';
 import EllipsisLine from '../../components/EllipsisLine';
 import Countdown from '../../components/Countdown';
 // import iconFcLogo from '../../assets/images/icons/fc-logo.svg';
-import { i18n, renderAny, valToTokenVal } from '../../utils';
+import { i18n, renderAny, valToTokenVal, getContractList } from '../../utils';
 import { StyledTabel, TabPanel, PCell, TabWrapper, IconFace, CtrlPanel } from './styles';
 import Pagination from '../../components/Pagination';
-import { reqTokenTxnList } from '../../utils/api';
+import { reqTokenTxnList, reqContractListInfo } from '../../utils/api';
 import { TotalDesc, getTotalPage } from '../../components/TotalDesc';
 import { defaultTokenIcon, fansCoinAddress } from '../../constants';
 
@@ -131,6 +132,7 @@ class TokenTxns extends Component {
           listLimit: body.result.listLimit,
           queries,
         });
+        reqContractListInfo(body.result.list.map((v) => v.address));
         document.dispatchEvent(new Event('scroll-to-top'));
       }
     });
@@ -147,7 +149,7 @@ class TokenTxns extends Component {
   }
 
   render() {
-    const { accountid, isActive, intl, tokenMap = {} } = this.props;
+    const { accountid, isActive, intl, contractManagerCache = {} } = this.props;
     const { TxList, TxTotalCount, queries, listLimit, activated } = this.state;
     const { startTime, endTime } = this.state;
 
@@ -239,8 +241,8 @@ class TokenTxns extends Component {
           }
           const { name, symbol } = row.token;
           let tokenImg;
-          if (tokenMap[row.address] && tokenMap[row.address].tokenIcon) {
-            tokenImg = <img src={tokenMap[row.address].tokenIcon} />;
+          if (contractManagerCache[row.address] && contractManagerCache[row.address].tokenIcon) {
+            tokenImg = <img src={contractManagerCache[row.address].tokenIcon} />;
           } else {
             tokenImg = <img src={defaultTokenIcon} />;
           }
@@ -462,7 +464,7 @@ TokenTxns.propTypes = {
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
   }).isRequired,
-  tokenMap: PropTypes.objectOf(
+  contractManagerCache: PropTypes.objectOf(
     PropTypes.shape({
       tokenIcon: PropTypes.string,
     })
@@ -471,4 +473,10 @@ TokenTxns.propTypes = {
 
 TokenTxns.defaultProps = {};
 
-export default injectIntl(TokenTxns);
+function mapStateToProps(state) {
+  return {
+    contractManagerCache: state.common.contractManagerCache,
+  };
+}
+
+export default injectIntl(connect(mapStateToProps)(TokenTxns));

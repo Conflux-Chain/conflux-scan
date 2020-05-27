@@ -87,6 +87,10 @@ const StyledTabel = styled.div`
     margin: 0 auto;
     display: block;
     margin-bottom: 16px;
+
+    .content table {
+      margin-left: -1em;
+    }
   `}
 `;
 const IconFace = styled.div`

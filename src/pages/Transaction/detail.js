@@ -158,6 +158,7 @@ const HeadBar = styled.div`
   font-size: 16px;
   margin-bottom: 10px;
   display: flex;
+  flex-wrap: wrap;
   justify-content: flex-start;
   align-items: center;
 
