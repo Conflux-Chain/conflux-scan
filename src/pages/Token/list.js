@@ -220,6 +220,14 @@ class List extends Component {
 
   render() {
     const { tokenList, TotalCount, isLoading, curPage, totalSupplyMaps, tokenMaps } = this.state;
+    const tokenListShow = tokenList.filter((v) => {
+      if (tokenMaps[v.address]) {
+        // token/query found
+        return true;
+      }
+      return false;
+    });
+
     const columns = [
       {
         key: 1,
@@ -327,7 +335,7 @@ class List extends Component {
             <div className="ui fluid card">
               <div className="content">
                 {isLoading && <TableLoading />}
-                <DataList isMobile showHeader columns={columns} dataSource={tokenList} />
+                <DataList isMobile showHeader columns={columns} dataSource={tokenListShow} />
               </div>
             </div>
             <div className="page-pc" />
