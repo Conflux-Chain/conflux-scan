@@ -123,21 +123,21 @@ class Detail extends Component {
   }
 
   fetchTokenList(accountid) {
-    reqAccountTokenList({
-      address: accountid,
-    }).then((body) => {
+    reqAccountTokenList(
+      {
+        address: accountid,
+      },
+      {
+        showError: false,
+      }
+    ).then((body) => {
       if (body.code === 0) {
         const listSorted = (body.result.list || []).sort((a, b) => {
           return b.balance - a.balance;
         });
-        const tokenMap = {};
-        listSorted.forEach((v) => {
-          tokenMap[v.address] = v;
-        });
         this.setState({
           tokenTotal: body.result.list.length,
           tokenList: listSorted,
-          tokenMap,
         });
       }
     });
@@ -181,7 +181,7 @@ class Detail extends Component {
   }
 
   render() {
-    const { currentTab, showMaintaining, blockCount, contractInfo, tokenTotal, tokenList, tokenMap } = this.state;
+    const { currentTab, showMaintaining, blockCount, contractInfo, tokenTotal, tokenList } = this.state;
     const { intl } = this.props;
 
     const { accountid } = this.state;
@@ -272,7 +272,7 @@ class Detail extends Component {
               {isContractAddr && (
                 <ContractPanel isActive={currentTab === tabEnum.contract} accountid={accountid} contractInfo={contractInfo} />
               )}
-              <TokenTxns isActive={currentTab === tabEnum.tokentxns} accountid={accountid} tokenMap={tokenMap} />
+              <TokenTxns isActive={currentTab === tabEnum.tokentxns} accountid={accountid} />
             </div>
           </TabZone>
         </Wrapper>
