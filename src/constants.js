@@ -14,6 +14,10 @@ export const errorCodes = {
   TokenNotFound: 50404,
 };
 
+export const fullNodeErrCodes = {
+  notReady: -32016,
+};
+
 export const UPDATE_COMMON = 'UPDATE_COMMON';
 export const UPDATE_CONTRACT_MANAGER_CACHE = 'UPDATE_CONTRACT_MANAGER_CACHE';
 export const CLEAR_CONTRACT_MANAGER_CACHE = 'CLEAR_CONTRACT_MANAGER_CACHE';

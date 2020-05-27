@@ -1,5 +1,12 @@
 import { sendRequest, getStore, fmtConfirmationRisk, wait } from './index';
-import { futurePrefix, contractMangerPrefix, UPDATE_CONTRACT_MANAGER_CACHE, errorCodes, CLEAR_CONTRACT_MANAGER_CACHE } from '../constants';
+import {
+  futurePrefix,
+  contractMangerPrefix,
+  UPDATE_CONTRACT_MANAGER_CACHE,
+  errorCodes,
+  CLEAR_CONTRACT_MANAGER_CACHE,
+  fullNodeErrCodes,
+} from '../constants';
 import { cfx, cfxUtil } from './transaction';
 import { toast } from '../components/Toast';
 
@@ -236,8 +243,16 @@ const callWithRetry = async (callFn) => {
     try {
       return await callFn();
     } catch (e1) {
-      await wait(1000);
-      return callFn();
+      if (e1 && e1.code === fullNodeErrCodes.notReady) {
+        await wait(2000);
+      } else {
+        await wait(1000);
+      }
+      try {
+        return await callFn();
+      } catch (e2) {
+        return callFn();
+      }
     }
   }
 };
