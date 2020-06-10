@@ -166,6 +166,17 @@ function Navbar(props) {
         </li>
         <li>
           <NavLink
+            to="/token"
+            activeClassName="actived"
+            onClick={cleanState}
+            isActive={() => !!tokenPaths.find((v) => location.pathname.indexOf('/' + v) === 0)}
+          >
+            <img src={tokenMenu} />
+            <FormattedMessage id="app.navbar.token" />
+          </NavLink>
+        </li>
+        <li>
+          <NavLink
             to="/directory"
             activeClassName="actived"
             onClick={cleanState}
@@ -175,17 +186,6 @@ function Navbar(props) {
               <use xlinkHref="#iconbaipishu" />
             </svg>
             <FormattedMessage id="app.navbar.directory" />
-          </NavLink>
-        </li>
-        <li>
-          <NavLink
-            to="/token"
-            activeClassName="actived"
-            onClick={cleanState}
-            isActive={() => !!tokenPaths.find((v) => location.pathname.indexOf('/' + v) === 0)}
-          >
-            <img src={tokenMenu} />
-            <FormattedMessage id="app.navbar.token" />
           </NavLink>
         </li>
       </Menu>
