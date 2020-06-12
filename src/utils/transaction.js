@@ -2,15 +2,8 @@
 import { Conflux, util as cfxUtil } from 'js-conflux-sdk/dist/js-conflux-sdk.umd.min.js';
 import { isMainnet } from '../constants';
 
-let netUrl;
-if (process.env.NODE_ENV === 'production') {
-  netUrl = '/rpc';
-} else {
-  netUrl = 'http://scantest.confluxscan.io/fullnode/';
-}
-
 const cfx = new Conflux({
-  url: netUrl,
+  url: window.location.origin + '/rpc',
   logger: {
     ...console,
     log: () => {},
