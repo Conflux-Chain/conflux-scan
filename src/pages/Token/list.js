@@ -11,7 +11,7 @@ import { i18n, devidedByDecimals } from '../../utils';
 import { defaultTokenIcon } from '../../constants';
 import media from '../../globalStyles/media';
 import * as commonCss from '../../globalStyles/common';
-import { reqContractMangerList, reqTotalSupply, reqTokenQuery } from '../../utils/api';
+import { reqContractMangerList, reqTokenQuery } from '../../utils/api';
 import { TotalDesc } from '../../components/TotalDesc';
 import tokenIcon from '../../assets/images/icons/tokenIcon.png';
 
@@ -152,7 +152,7 @@ class List extends Component {
     reqContractMangerList({
       page: activePage,
       pageSize,
-      fields: ['tokenIcon', 'tokenName', 'tokenSymbol', 'icon'],
+      fields: ['token', 'tokenIcon', 'tokenName', 'tokenSymbol', 'icon'].join(','),
     }).then(async (body) => {
       if (body.code === 0) {
         this.setState({
@@ -170,13 +170,6 @@ class List extends Component {
             tokenMaps: {
               ...this.state.tokenMaps,
               [v.address]: tokenResult.result,
-            },
-          });
-          const totalSupply = await reqTotalSupply({ address: v.address, params: [], showError: false });
-          this.setState({
-            totalSupplyMaps: {
-              ...this.state.totalSupplyMaps,
-              [v.address]: devidedByDecimals(totalSupply, tokenResult.result.decimals),
             },
           });
         }
@@ -208,9 +201,8 @@ class List extends Component {
     });
   }
 
-  renderEllipse(text, num) {
-    let txt = text || '';
-    txt = txt.toString();
+  renderEllipse(text = 0, num) {
+    const txt = text.toString();
 
     if (txt.replace('.', '').length > num) {
       return <Popup trigger={<div className="ellipse-11">{text}</div>} content={text} />;
@@ -221,7 +213,7 @@ class List extends Component {
   render() {
     const { tokenList, TotalCount, isLoading, curPage, totalSupplyMaps, tokenMaps } = this.state;
     const tokenListShow = tokenList.filter((v) => {
-      if (tokenMaps[v.address]) {
+      if (v.token) {
         // token/query found
         return true;
       }
@@ -245,11 +237,11 @@ class List extends Component {
         title: i18n('Token'),
         render: (text, row) => {
           let txt = text;
-          if (tokenMaps[row.address]) {
+          if (row.token && row.token.symbol) {
             txt = (
               <span>
-                {text}
-                &nbsp; ({tokenMaps[row.address].symbol})
+                {row.token.name}
+                &nbsp; ({row.token.symbol})
               </span>
             );
           }
@@ -268,7 +260,7 @@ class List extends Component {
         dataIndex: '',
         title: i18n('Transfer'),
         render: (text, row) => {
-          if (tokenMaps[row.address]) {
+          if (typeof tokenMaps[row.address] !== 'undefined') {
             return <CellTxt>{this.renderEllipse(tokenMaps[row.address].transferCount, 11)}</CellTxt>;
           }
           return null;
@@ -280,13 +272,14 @@ class List extends Component {
         dataIndex: 'totalSupply',
         title: i18n('Total Supply'),
         render: (text, row) => {
-          if (tokenMaps[row.address] && totalSupplyMaps[row.address]) {
+          if (row.token && row.token.totalSupply && row.token.decimals) {
+            const totalSupply = devidedByDecimals(row.token.totalSupply, row.token.decimals);
             return (
               <CellTxt>
-                {this.renderEllipse(totalSupplyMaps[row.address], 11)}
+                {this.renderEllipse(totalSupply, 11)}
                 <span style={{ verticalAlign: 'middle' }}>
                   &nbsp;
-                  {tokenMaps[row.address].symbol}
+                  {row.token.symbol}
                 </span>
               </CellTxt>
             );
@@ -297,11 +290,11 @@ class List extends Component {
       {
         key: 5,
         className: 'two wide aligned',
-        dataIndex: 'accountCount',
+        dataIndex: 'accountTotal',
         title: i18n('Holders'),
         render: (text, row) => {
           if (tokenMaps[row.address]) {
-            return <CellTxt>{this.renderEllipse(tokenMaps[row.address].accountCount, 11)}</CellTxt>;
+            return <CellTxt>{this.renderEllipse(tokenMaps[row.address].accountTotal, 11)}</CellTxt>;
           }
           return null;
         },

@@ -122,7 +122,8 @@ class TokenTxns extends Component {
       delete queries.endTime;
     }
     reqTokenTxnList({
-      address: accountid,
+      accountAddress: accountid,
+      fields: 'token',
       ...queries,
     }).then((body) => {
       if (body.code === 0) {
@@ -239,6 +240,9 @@ class TokenTxns extends Component {
           if (!row.token) {
             return null;
           }
+          if (!row.token.name) {
+            return null;
+          }
           const { name, symbol } = row.token;
           let tokenImg;
           if (contractManagerCache[row.address] && contractManagerCache[row.address].tokenIcon) {
@@ -280,7 +284,7 @@ class TokenTxns extends Component {
             display: isActive ? 'flex' : 'none',
           }}
         >
-          <RangePicker
+          {/* <RangePicker
             className="date-picker"
             showTime={{ format: 'HH:mm:ss', defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss')] }}
             format="YYYY-MM-DD HH:mm:ss"
@@ -387,7 +391,7 @@ class TokenTxns extends Component {
                 }}
               />
             </Dropdown.Menu>
-          </Dropdown>
+          </Dropdown> */}
         </CtrlPanel>
 
         <TabPanel className={isActive ? 'ui bottom attached segment active tab' : 'ui bottom attached segment tab'}>

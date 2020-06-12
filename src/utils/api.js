@@ -1,6 +1,6 @@
 import { sendRequest, getStore, fmtConfirmationRisk, wait } from './index';
 import {
-  futurePrefix,
+  apiPrefix,
   contractMangerPrefix,
   UPDATE_CONTRACT_MANAGER_CACHE,
   errorCodes,
@@ -11,12 +11,12 @@ import { cfx, cfxUtil } from './transaction';
 import { toast } from '../components/Toast';
 
 export const reqRecentDagBlock = () => {
-  return sendRequest({ url: `${futurePrefix}/dashboard/dag` }).then((res) => res.body);
+  return sendRequest({ url: `${apiPrefix}/dashboard/dag` }).then((res) => res.body);
 };
 
 export const reqAccount = (param, extra) => {
   return sendRequest({
-    url: `${futurePrefix}/account/query`,
+    url: `${apiPrefix}/address/query`,
     query: param,
     ...extra,
   }).then((res) => res.body);
@@ -24,14 +24,14 @@ export const reqAccount = (param, extra) => {
 
 export const reqAccountTransactionList = (param) => {
   return sendRequest({
-    url: `${futurePrefix}/transaction/list`,
+    url: `${apiPrefix}/transaction/list`,
     query: param,
   }).then((res) => res.body);
 };
 
 export const reqMinedBlockList = (param, extra) => {
   return sendRequest({
-    url: `${futurePrefix}/block/list`,
+    url: `${apiPrefix}/block/list`,
     query: param,
     ...extra,
   }).then((res) => res.body);
@@ -39,7 +39,7 @@ export const reqMinedBlockList = (param, extra) => {
 
 export const reqBlock = (param, extra) => {
   return sendRequest({
-    url: `${futurePrefix}/block/query`,
+    url: `${apiPrefix}/block/query`,
     query: param,
     ...extra,
   }).then((res) => res.body);
@@ -47,8 +47,7 @@ export const reqBlock = (param, extra) => {
 
 export const reqBlockTransactionList = (param, extra) => {
   return sendRequest({
-    url: `${futurePrefix}/transaction/list`,
-    // url: `${apiPrefix}/block/${param.blockHash}/transactionList`,
+    url: `${apiPrefix}/transaction/list`,
     query: param,
     ...extra,
   }).then((res) => res.body);
@@ -56,7 +55,7 @@ export const reqBlockTransactionList = (param, extra) => {
 
 export const reqBlockRefereeBlockList = (param, extra) => {
   return sendRequest({
-    url: `${futurePrefix}/block/list`,
+    url: `${apiPrefix}/block/list`,
     query: param,
     ...extra,
   }).then((res) => res.body);
@@ -64,7 +63,7 @@ export const reqBlockRefereeBlockList = (param, extra) => {
 
 export const reqBlockList = (param, extra) => {
   return sendRequest({
-    url: `${futurePrefix}/block/list`,
+    url: `${apiPrefix}/block/list`,
     query: param,
     ...extra,
   }).then((res) => res.body);
@@ -72,7 +71,7 @@ export const reqBlockList = (param, extra) => {
 
 export const reqTransactionList = (param, extra) => {
   return sendRequest({
-    url: `${futurePrefix}/transaction/list`,
+    url: `${apiPrefix}/transaction/list`,
     query: param,
     ...extra,
   }).then((res) => res.body);
@@ -80,21 +79,21 @@ export const reqTransactionList = (param, extra) => {
 
 export const reqStatistics = (param) => {
   return sendRequest({
-    url: `${futurePrefix}/dashboard/trend`,
+    url: `${apiPrefix}/dashboard/trend`,
     query: param,
   }).then((res) => res.body);
 };
 
 export const reqStatisticsItem = (param) => {
   return sendRequest({
-    url: `${futurePrefix}/dashboard/plot`,
+    url: `${apiPrefix}/dashboard/plot`,
     query: param,
   }).then((res) => res.body);
 };
 
 export const reqTransactionDetail = (param, extra) => {
   return sendRequest({
-    url: `${futurePrefix}/transaction/query`,
+    url: `${apiPrefix}/transaction/query`,
     query: param,
     ...extra,
   }).then((res) => res.body);
@@ -102,7 +101,7 @@ export const reqTransactionDetail = (param, extra) => {
 
 export const reqUtilType = (param, extra) => {
   return sendRequest({
-    url: `${futurePrefix}/util/type`,
+    url: `${apiPrefix}/util/type`,
     query: param,
     ...extra,
   }).then((res) => res.body);
@@ -111,6 +110,14 @@ export const reqUtilType = (param, extra) => {
 export const reqContract = (param, extra) => {
   return sendRequest({
     url: `${contractMangerPrefix}/api/contract/query`,
+    query: param,
+    ...extra,
+  }).then((res) => res.body);
+};
+
+export const reqContractManagerContractList = (param, extra) => {
+  return sendRequest({
+    url: `${contractMangerPrefix}/api/contract/list`,
     query: param,
     ...extra,
   }).then((res) => res.body);
@@ -127,7 +134,7 @@ export const reqAccountTokenList = (param, extra) => {
 
 export const reqTokenTxnList = (param, extra) => {
   return sendRequest({
-    url: `${futurePrefix}/transfer/list`,
+    url: `${apiPrefix}/transfer/list`,
     query: param,
     ...extra,
   }).then((res) => res.body);
@@ -162,7 +169,7 @@ export const reqContractCreate = (param, extra) => {
 
 export const reqTransferList = (param, extra) => {
   return sendRequest({
-    url: `${futurePrefix}/transfer/list`,
+    url: `${apiPrefix}/transfer/list`,
     query: param,
     ...extra,
   }).then((res) => res.body);
@@ -170,7 +177,7 @@ export const reqTransferList = (param, extra) => {
 
 export const reqTokenList = (param, extra) => {
   return sendRequest({
-    url: `${futurePrefix}/token/list`,
+    url: `${apiPrefix}/token/list`,
     query: param,
     ...extra,
   }).then((res) => res.body);
@@ -186,13 +193,13 @@ export const reqContractMangerList = (param, extra) => {
 
 export const reqTokenQuery = (param, extra) => {
   return sendRequest({
-    url: `${futurePrefix}/token/query`,
+    url: `${apiPrefix}/token/query`,
     query: param,
     ...extra,
   }).then((res) => res.body);
 };
 
-export const reqContractListInfo = async (addrList) => {
+export const reqContractListInfo = (addrList) => {
   const store = getStore();
   const { contractManagerCache } = store.getState().common;
   const addressList = [];
@@ -202,37 +209,41 @@ export const reqContractListInfo = async (addrList) => {
     }
   });
 
+  if (addressList.length === 0) {
+    return;
+  }
+
   const fields = ['address', 'name', 'tokenIcon', 'icon', 'website'].join(',');
 
-  for (let i = 0; i < addressList.length; i++) {
-    const address = addressList[i];
-    // eslint-disable-next-line no-await-in-loop
-    await reqContract(
-      {
-        fields,
-        address,
-      },
-      { showError: false, showNetWorkError: false }
-    ).then((body) => {
-      if (body.code === 0) {
-        store.dispatch({
-          type: UPDATE_CONTRACT_MANAGER_CACHE,
-          payload: {
-            ...body.result,
-            address,
-          },
-        });
-      } else if (body.code === errorCodes.ContractNotFound) {
-        store.dispatch({
-          type: UPDATE_CONTRACT_MANAGER_CACHE,
-          payload: {
-            address,
-            notfound: true,
-          },
-        });
-      }
-    });
-  }
+  reqContractManagerContractList(
+    {
+      fields,
+      address: addressList.join(','),
+    },
+    { showError: false, showNetWorkError: false }
+  ).then((body) => {
+    if (body.code === 0) {
+      body.result.list.forEach((v) => {
+        if (v.name) {
+          store.dispatch({
+            type: UPDATE_CONTRACT_MANAGER_CACHE,
+            payload: {
+              ...v,
+              address: v.address,
+            },
+          });
+        } else {
+          store.dispatch({
+            type: UPDATE_CONTRACT_MANAGER_CACHE,
+            payload: {
+              address: v.address,
+              notfound: true,
+            },
+          });
+        }
+      });
+    }
+  });
 };
 
 const callWithRetry = async (callFn) => {
@@ -254,35 +265,6 @@ const callWithRetry = async (callFn) => {
         return callFn();
       }
     }
-  }
-};
-
-export const reqTotalSupply = async (opts) => {
-  const contract = cfx.Contract({
-    address: opts.address,
-    abi: [
-      {
-        type: 'function',
-        name: 'totalSupply',
-        inputs: [],
-        outputs: [{ type: 'uint256' }],
-      },
-    ],
-  });
-  try {
-    const result = await callWithRetry(() => contract.totalSupply());
-    if (typeof result === 'undefined' || result === null) {
-      return Promise.reject(new Error('totalSupply=null'));
-    }
-    return result.toString();
-  } catch (e) {
-    if (opts.showError !== false) {
-      toast.error({
-        content: e.message,
-        title: 'app.comp.toast.error.other',
-      });
-    }
-    return Promise.reject(e);
   }
 };
 

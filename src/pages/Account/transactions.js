@@ -88,7 +88,7 @@ class Transactions extends Component {
       delete queries.endTime;
     }
     reqAccountTransactionList({
-      address: accountid,
+      accountAddress: accountid,
       ...queries,
     }).then((body) => {
       if (body.code === 0) {

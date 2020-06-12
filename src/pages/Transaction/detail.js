@@ -367,7 +367,7 @@ class Detail extends Component {
             ].join(',');
             const proArr = [];
             proArr.push(reqContract({ address: toAddress, fields: fields }, { showError: false }));
-            proArr.push(reqTransferList({ page: 1, pageSize: 5000, txHash: txnhash }, { showError: false }));
+            proArr.push(reqTransferList({ transactionHash: txnhash, fields: 'token' }, { showError: false }));
             Promise.all(proArr).then((proRes) => {
               this.setState({
                 isLoading: false,
@@ -641,7 +641,9 @@ class Detail extends Component {
                         <em>{i18n('To')}</em>
                         <EllipsisLine ellipsisStyle={{ maxWidth: 152 }} linkTo={`/address/${transferItem.to}`} text={transferItem.to} />
                         <em>For</em>
-                        <span>{devidedByDecimals(transferItem.value, tokenDecimals)}</span>
+                        <span>
+                          {typeof tokenDecimals !== 'undefined' ? devidedByDecimals(transferItem.value, tokenDecimals) : transferItem.value}
+                        </span>
                         {imgIcon}
                         {nameContainer}
                       </TokensDiv>
