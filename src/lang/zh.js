@@ -249,10 +249,11 @@ export default {
   'app.pages.index.testnet.notice1':
     '1. 当前网络为 Conflux Testnet，Conflux-Rust 版本号：v0.5.2-alpha-2，所有数据均为 Conflux 测试网数据。',
   'app.pages.index.testnet.notice2': '2. Conflux 主网第一阶段 Conflux Pontus 已于 2020.4.27 上线，欢迎体验。',
-  'app.pages.index.mainnet.notice1': '当前网络为 Conflux 主网第一阶段 Conflux Pontus，Conflux-Rust 版本号：v0.5.0.4',
+  'app.pages.index.mainnet.notice1': '当前网络为 Conflux 主网第一阶段 Conflux Pontus，Conflux-Rust 版本号：v0.5.0.5',
 
   'security.High': '高',
   'security.Medium': '中',
   'security.Low': '偏低',
   'security.Very low': '低',
+  'No Info': '暂无信息',
 };
