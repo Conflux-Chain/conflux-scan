@@ -26,7 +26,7 @@ import {
 } from '../../utils';
 
 import TableLoading from '../../components/TableLoading';
-import { reqContractListInfo, reqTokenQuery, reqTransferList, reqTotalSupply, reqBalanceOf } from '../../utils/api';
+import { reqContractListInfo, reqTokenQuery, reqTransferList, reqBalanceOf } from '../../utils/api';
 import { defaultTokenIcon, errorCodes } from '../../constants';
 
 /* eslint jsx-a11y/click-events-have-key-events: 0 */
@@ -46,7 +46,7 @@ class TokenDetail extends Component {
       transferList: [],
       transferTotal: 0,
       tokenDetail: {
-        accountCount: 0,
+        accountTotal: 0,
         transferCount: 0,
       },
       totalSupply: 0,
@@ -71,26 +71,16 @@ class TokenDetail extends Component {
       }
     ).then((body) => {
       if (body.code === 0) {
+        const tokenDetail = body.result;
+        let totalSupply;
+        if (typeof tokenDetail.decimals === 'undefined') {
+          totalSupply = tokenDetail.totalSupply;
+        } else {
+          totalSupply = devidedByDecimals(tokenDetail.totalSupply, tokenDetail.decimals);
+        }
         this.setState({
-          tokenDetail: body.result,
-        });
-      }
-    });
-
-    reqTotalSupply({
-      address,
-      params: [],
-      showError: false,
-    }).then(async (result) => {
-      await this.reqTokenPromise;
-      const { tokenDetail } = this.state;
-      if (tokenDetail.decimals) {
-        this.setState({
-          totalSupply: devidedByDecimals(result, tokenDetail.decimals),
-        });
-      } else {
-        this.setState({
-          totalSupply: result,
+          tokenDetail,
+          totalSupply,
         });
       }
     });
@@ -124,18 +114,18 @@ class TokenDetail extends Component {
       listLoading: true,
     });
     const filter = searchInput || address;
-    const contractAddress = this.getAddress();
+    const tokenAddress = this.getAddress();
 
     const params = {
       page: pageNum,
       pageSize,
-      contractAddress,
+      tokenAddress,
     };
     if (filter) {
       if (isAddress(filter)) {
-        params.address = tranferToLowerCase(filter);
+        params.accountAddress = tranferToLowerCase(filter);
       } else {
-        params.txHash = tranferToLowerCase(filter);
+        params.transactionHash = tranferToLowerCase(filter);
       }
     }
 
@@ -172,7 +162,7 @@ class TokenDetail extends Component {
 
     if (address) {
       reqBalanceOf({
-        address: contractAddress,
+        address: tokenAddress,
         params: [address],
       }).then(async (result) => {
         await this.reqTokenPromise;
@@ -260,7 +250,7 @@ class TokenDetail extends Component {
                 <div className="summary-line">
                   <h6>{i18n('Holders')}:</h6>
                   <div className="summary-line-content">
-                    {humanizeNum(tokenDetail.accountCount || 0)} &nbsp; {i18n('addresses')}
+                    {humanizeNum(tokenDetail.accountTotal || 0)} &nbsp; {i18n('addresses')}
                   </div>
                 </div>
                 <div className="summary-line">

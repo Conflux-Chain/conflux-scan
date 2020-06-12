@@ -168,10 +168,10 @@ export default {
   'app.common.officialSite': 'Official Site',
   'app.common.contract': 'Contract',
   'app.pages.index.testnet.notice1':
-    '1. ConfluxScan is currently on the testnet network, Conflux-Rust version: v0.5.1-alpha-7, all data shown are from the testnet.',
+    '1. ConfluxScan is currently on the testnet network, Conflux-Rust version: v0.5.2-alpha-2, all data shown are from the testnet.',
   'app.pages.index.testnet.notice2': '2. Conflux Pontus is now live.',
-  'app.pages.index.mainnet.notice1': 'ConfluxScan is currently on the Mainnet Phase I - Pontus, Conflux-Rust version: v0.5.0.4',
-  'No Info': '暂无信息',
+  'app.pages.index.mainnet.notice1': 'ConfluxScan is currently on the Mainnet Phase I - Pontus, Conflux-Rust version: v0.5.0.5',
+
   'security.High': 'Great',
   'security.Medium': 'Good',
   'security.Low': 'Weak',

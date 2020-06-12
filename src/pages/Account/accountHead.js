@@ -321,11 +321,17 @@ class AccountHead extends Component {
     reqAccount({ address: accountid }).then((body) => {
       if (body.code === 0) {
         this.setState({
-          accountDetail: body.result,
-          creatorTransaction: body.result.creatorTransaction || {},
+          accountDetail: {
+            transactionCount: body.result.account.all,
+            balance: body.result.balance,
+          },
+          creatorTransaction: {
+            hash: body.result.contract.transactionHash,
+            from: body.result.contract.from,
+          },
           isLoading: false,
         });
-        updateBlockCount(body.result.blockCount);
+        updateBlockCount(body.result.account.mined);
       } else if (body.code === errorCodes.ParameterError) {
         history.push(`/search-notfound?searchId=${accountid}`);
       } else {
@@ -395,12 +401,13 @@ class AccountHead extends Component {
 
     const isContractAddr = isContract(accountid);
     const tokenOpts = tokenList.map((v) => {
+      const token = v.token || {};
       return {
         key: v.address,
         value: v.address,
         imgSrc: v.tokenIcon || defaultTokenIcon,
-        label1: `${v.tokenName} (${v.tokenSymbol})`,
-        label2: `${valToTokenVal(v.balance, v.tokenDecimal)} ${v.tokenSymbol}`,
+        label1: `${token.name} (${token.symbol})`,
+        label2: `${valToTokenVal(v.balance, token.decimals)} ${token.symbol}`,
       };
     });
 

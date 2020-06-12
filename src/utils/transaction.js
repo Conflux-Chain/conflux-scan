@@ -4,9 +4,9 @@ import { isMainnet } from '../constants';
 
 let netUrl;
 if (process.env.NODE_ENV === 'production') {
-  netUrl = isMainnet ? 'http://wallet-mainnet-jsonrpc.conflux-chain.org:12537' : 'http://testnet-jsonrpc.conflux-chain.org:12537';
+  netUrl = '/rpc';
 } else {
-  netUrl = 'http://testnet-jsonrpc.conflux-chain.org:12537';
+  netUrl = 'http://scantest.confluxscan.io/fullnode/';
 }
 
 const cfx = new Conflux({
