@@ -88,15 +88,14 @@ function Dag({ id = 'dag-viewer', children } = {}) {
       left: 0,
     },
   });
-  let isUnmounted = false;
   useLifecycles(
     async () => {
       await loadDagJs();
       const Player = window.ConfluxDagPlayer;
-      const container = document.getElementById(id);
       const initialSubChains = await fetchDagData();
 
-      if (isUnmounted) {
+      const container = document.getElementById(id);
+      if (!container) {
         return;
       }
       player = await new Player({
@@ -142,7 +141,6 @@ function Dag({ id = 'dag-viewer', children } = {}) {
       startFechingDagData.call(player);
     },
     () => {
-      isUnmounted = true;
       if (player) {
         player.destroy();
         player = null;
