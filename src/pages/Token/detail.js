@@ -57,6 +57,7 @@ class TokenDetail extends Component {
       listLoading: false,
       pageSize: 10,
       pageNum: curPageBase,
+      txServerTimestamp: 0,
     };
   }
 
@@ -139,6 +140,7 @@ class TokenDetail extends Component {
             pageNum,
             transferList: res.result.list,
             transferTotal: res.result.total,
+            txServerTimestamp: res.result.serverTimestamp,
           });
         } else {
           notice.show({
@@ -178,7 +180,7 @@ class TokenDetail extends Component {
 
   render() {
     const { transferList, pageNum, pageSize, transferTotal, listLoading, addressData, searchInput } = this.state;
-    const { tokenDetail, totalSupply } = this.state;
+    const { tokenDetail, totalSupply, txServerTimestamp } = this.state;
     const { history, intl, contractManagerCache } = this.props;
     const query = getQuery(window.location.search);
     const address = this.getAddress();
@@ -450,7 +452,7 @@ class TokenDetail extends Component {
                     className: 'two wide aligned',
                     dataIndex: 'timestamp',
                     title: i18n('Age'),
-                    render: (text) => <Countdown timestamp={text * 1000} />,
+                    render: (text, row) => <Countdown baseTime={txServerTimestamp * 1000} timestamp={row.syncTimestamp * 1000} />,
                   },
                   {
                     key: 3,
