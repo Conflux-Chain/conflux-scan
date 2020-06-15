@@ -88,6 +88,7 @@ function Dag({ id = 'dag-viewer', children } = {}) {
       left: 0,
     },
   });
+  let isUnmounted = false;
   useLifecycles(
     async () => {
       await loadDagJs();
@@ -95,6 +96,9 @@ function Dag({ id = 'dag-viewer', children } = {}) {
       const container = document.getElementById(id);
       const initialSubChains = await fetchDagData();
 
+      if (isUnmounted) {
+        return;
+      }
       player = await new Player({
         backgroundColor: '0x0B3560',
         doc: container,
@@ -138,6 +142,7 @@ function Dag({ id = 'dag-viewer', children } = {}) {
       startFechingDagData.call(player);
     },
     () => {
+      isUnmounted = true;
       if (player) {
         player.destroy();
         player = null;
