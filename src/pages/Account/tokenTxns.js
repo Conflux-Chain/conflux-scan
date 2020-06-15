@@ -77,6 +77,7 @@ class TokenTxns extends Component {
       listLimit: undefined,
       startTime: null,
       endTime: null,
+      txServerTimestamp: 0,
     });
     this.state = this.getInitState();
   }
@@ -131,6 +132,7 @@ class TokenTxns extends Component {
           TxList: body.result.list,
           TxTotalCount: body.result.total,
           listLimit: body.result.listLimit,
+          txServerTimestamp: body.result.serverTimestamp,
           queries,
         });
         reqContractListInfo(body.result.list.map((v) => v.address));
@@ -152,7 +154,7 @@ class TokenTxns extends Component {
   render() {
     const { accountid, isActive, intl, contractManagerCache = {} } = this.props;
     const { TxList, TxTotalCount, queries, listLimit, activated } = this.state;
-    const { startTime, endTime } = this.state;
+    const { startTime, endTime, txServerTimestamp } = this.state;
 
     if (!activated) {
       return null;
@@ -273,7 +275,7 @@ class TokenTxns extends Component {
         className: 'three wide aligned',
         dataIndex: 'timestamp',
         title: i18n('Age'),
-        render: (text) => <Countdown timestamp={text * 1000} />,
+        render: (text, row) => <Countdown baseTime={txServerTimestamp * 1000} timestamp={row.syncTimestamp * 1000} />,
       },
     ];
 

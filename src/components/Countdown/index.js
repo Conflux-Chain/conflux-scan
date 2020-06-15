@@ -13,7 +13,7 @@ function Countdown(props) {
   const {
     timestamp,
     intl: { locale },
-    baseTime = Date.now(),
+    baseTime,
   } = props;
   let nowTime = moment(timestamp);
   const beforeTime = moment(baseTime);
@@ -46,12 +46,11 @@ Countdown.propTypes = {
     lang: PropTypes.string,
     locale: PropTypes.string,
   }),
-  baseTime: PropTypes.number,
+  baseTime: PropTypes.number.isRequired,
 };
 Countdown.defaultProps = {
   timestamp: new Date().getTime(),
   intl: { lang: 'zh' },
-  baseTime: undefined,
 };
 
 export default injectIntl(Countdown);
