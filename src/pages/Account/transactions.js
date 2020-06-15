@@ -43,6 +43,7 @@ class Transactions extends Component {
       listLimit: undefined,
       startTime: null,
       endTime: null,
+      txServerTimestamp: 0,
     });
     this.state = this.getInitState();
   }
@@ -97,6 +98,7 @@ class Transactions extends Component {
           TxTotalCount: body.result.total,
           listLimit: body.result.listLimit,
           queries,
+          txServerTimestamp: body.result.serverTimestamp,
         });
         reqContractListInfo(getContractList(body.result.list));
         document.dispatchEvent(new Event('scroll-to-top'));
@@ -107,7 +109,7 @@ class Transactions extends Component {
   render() {
     const { accountid, isActive, intl } = this.props;
     const { TxList, TxTotalCount, queries, listLimit } = this.state;
-    const { startTime, endTime } = this.state;
+    const { startTime, endTime, txServerTimestamp } = this.state;
 
     const columns = [
       {
@@ -205,7 +207,7 @@ class Transactions extends Component {
         className: 'three wide aligned',
         dataIndex: 'timestamp',
         title: i18n('Age'),
-        render: (text) => <Countdown timestamp={text * 1000} />,
+        render: (text, row) => <Countdown baseTime={txServerTimestamp * 1000} timestamp={row.syncTimestamp * 1000} />,
       },
     ];
 

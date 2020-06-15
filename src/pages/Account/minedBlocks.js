@@ -22,73 +22,6 @@ const MinedWrap = styled.div`
   ${commonCss.paginatorMixin}
 `;
 
-const minedColumns = [
-  {
-    key: 1,
-    dataIndex: 'epochNumber',
-    className: 'one wide aligned',
-    title: i18n('Epoch'),
-    render: (text) => <EllipsisLine linkTo={`/epochsdetail/${text}`} text={text} />,
-  },
-  {
-    key: 2,
-    dataIndex: 'blockIndex',
-    className: 'one wide aligned plain_th',
-    title: i18n('Position'),
-    render: (text, row) => (
-      <div>
-        <PCell>{1 + text}</PCell>
-      </div>
-    ),
-  },
-  {
-    key: 3,
-    dataIndex: 'hash',
-    className: 'two wide aligned',
-    title: i18n('Hash'),
-    render: (text, row) => (
-      <div>
-        <EllipsisLine isLong linkTo={`/blocksdetail/${text}`} isPivot={row.pivotHash === row.hash} text={text} />
-      </div>
-    ),
-  },
-  {
-    key: 4,
-    dataIndex: 'difficulty',
-    className: 'one wide aligned plain_th',
-    title: i18n('Difficulty'),
-    render: (text) => <PCell>{text}</PCell>,
-  },
-  {
-    key: 5,
-    className: 'one wide aligned',
-    dataIndex: 'miner',
-    title: i18n('Miner'),
-    render: (text) => <EllipsisLine linkTo={`/address/${text}#minedBlocks`} text={text} />,
-  },
-  {
-    key: 6,
-    className: 'one wide aligned plain_th',
-    dataIndex: 'gasLimit',
-    title: i18n('Gas Limit'),
-    render: (text) => <PCell>{text}</PCell>,
-  },
-  {
-    key: 7,
-    className: 'three wide aligned',
-    dataIndex: 'timestamp',
-    title: i18n('Age'),
-    render: (text) => <Countdown timestamp={text * 1000} />,
-  },
-  {
-    key: 8,
-    className: 'two wide aligned plain_th',
-    dataIndex: 'transactionCount',
-    title: i18n('Tx Count'),
-    render: (text) => <PCell>{text}</PCell>,
-  },
-];
-
 class MinedBlocks extends Component {
   constructor(...args) {
     super(...args);
@@ -97,6 +30,7 @@ class MinedBlocks extends Component {
       curMinedPage: 1,
       minedBlockList: [],
       minedTotalCount: 0,
+      blockServerTimestamp: 0,
     };
   }
 
@@ -122,6 +56,7 @@ class MinedBlocks extends Component {
           curMinedPage,
           minedTotalCount: total,
           listLimit,
+          blockServerTimestamp: body.result.serverTimestamp,
         });
       }
     });
@@ -130,7 +65,74 @@ class MinedBlocks extends Component {
   render() {
     const { accountid } = this.props;
     const { minedBlockList, minedTotalCount, curMinedPage } = this.state;
-    const { listLimit } = this.state;
+    const { listLimit, blockServerTimestamp } = this.state;
+
+    const minedColumns = [
+      {
+        key: 1,
+        dataIndex: 'epochNumber',
+        className: 'one wide aligned',
+        title: i18n('Epoch'),
+        render: (text) => <EllipsisLine linkTo={`/epochsdetail/${text}`} text={text} />,
+      },
+      {
+        key: 2,
+        dataIndex: 'blockIndex',
+        className: 'one wide aligned plain_th',
+        title: i18n('Position'),
+        render: (text, row) => (
+          <div>
+            <PCell>{1 + text}</PCell>
+          </div>
+        ),
+      },
+      {
+        key: 3,
+        dataIndex: 'hash',
+        className: 'two wide aligned',
+        title: i18n('Hash'),
+        render: (text, row) => (
+          <div>
+            <EllipsisLine isLong linkTo={`/blocksdetail/${text}`} isPivot={row.pivotHash === row.hash} text={text} />
+          </div>
+        ),
+      },
+      {
+        key: 4,
+        dataIndex: 'difficulty',
+        className: 'one wide aligned plain_th',
+        title: i18n('Difficulty'),
+        render: (text) => <PCell>{text}</PCell>,
+      },
+      {
+        key: 5,
+        className: 'one wide aligned',
+        dataIndex: 'miner',
+        title: i18n('Miner'),
+        render: (text) => <EllipsisLine linkTo={`/address/${text}#minedBlocks`} text={text} />,
+      },
+      {
+        key: 6,
+        className: 'one wide aligned plain_th',
+        dataIndex: 'gasLimit',
+        title: i18n('Gas Limit'),
+        render: (text) => <PCell>{text}</PCell>,
+      },
+      {
+        key: 7,
+        className: 'three wide aligned',
+        dataIndex: 'timestamp',
+        title: i18n('Age'),
+        render: (text, row) => <Countdown baseTime={blockServerTimestamp * 1000} timestamp={row.syncTimestamp * 1000} />,
+      },
+      {
+        key: 8,
+        className: 'two wide aligned plain_th',
+        dataIndex: 'transactionCount',
+        title: i18n('Tx Count'),
+        render: (text) => <PCell>{text}</PCell>,
+      },
+    ];
 
     return (
       <TabPanel className="ui bottom attached segment active tab">

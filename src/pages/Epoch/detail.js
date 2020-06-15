@@ -73,78 +73,6 @@ const PagerWrap = styled.div`
   ${commonCss.paginatorMixin}
 `;
 
-const columns = [
-  {
-    key: 1,
-    dataIndex: 'blockIndex',
-    title: i18n('Position'),
-    className: 'one wide aligned plain_th',
-    render: (text) => 1 + text,
-  },
-  {
-    key: 2,
-    dataIndex: 'hash',
-    title: i18n('Hash'),
-    className: 'two wide aligned',
-    render: (text, row) => (
-      <div>
-        <PCell>
-          <EllipsisLine linkTo={`/blocksdetail/${text}`} isPivot={row.pivotHash === row.hash} isLong text={text} />
-        </PCell>
-      </div>
-    ),
-  },
-  {
-    key: 3,
-    dataIndex: 'difficulty',
-    title: i18n('Difficulty'),
-    className: 'one wide aligned plain_th',
-    render: (text) => (
-      <div>
-        <PCell>{text}</PCell>
-      </div>
-    ),
-  },
-  {
-    key: 4,
-    dataIndex: 'miner',
-    title: i18n('Miner'),
-    className: 'one wide aligned',
-    render: (text) => (
-      <div>
-        <PCell>
-          <EllipsisLine linkTo={`/address/${text}`} text={text} />
-        </PCell>
-      </div>
-    ),
-  },
-  {
-    key: 5,
-    dataIndex: 'gasLimit',
-    title: i18n('Gas Limit'),
-    className: 'one wide aligned plain_th',
-    render: (text) => text,
-  },
-  {
-    key: 6,
-    dataIndex: 'timestamp',
-    title: i18n('Age'),
-    className: 'three wide aligned plain_th',
-    render: (text) => (
-      <PCell>
-        <Countdown timestamp={text * 1000} />
-      </PCell>
-    ),
-  },
-  {
-    key: 7,
-    className: 'one wide left aligned plain_th',
-    dataIndex: 'transactionCount',
-    title: i18n('Tx Count'),
-    render: (text) => text,
-  },
-];
-
 const pageSize = 10;
 class Detail extends Component {
   constructor() {
@@ -154,6 +82,7 @@ class Detail extends Component {
       curPage: 1,
       totalCount: 0,
       isLoading: false,
+      blockServerTimestamp: 0,
     });
     this.state = this.getInitState();
   }
@@ -204,6 +133,7 @@ class Detail extends Component {
           totalCount: body.result.total,
           isLoading: false,
           curPage,
+          blockServerTimestamp: body.result.serverTimestamp,
         });
       } else if (body.code === errorCodes.ParameterError) {
         history.push(`/search-notfound?searchId=${epochid}`);
@@ -212,10 +142,82 @@ class Detail extends Component {
   }
 
   render() {
-    const { BlockList, curPage, totalCount, isLoading } = this.state;
+    const { BlockList, curPage, totalCount, isLoading, blockServerTimestamp } = this.state;
     const {
       match: { params },
     } = this.props;
+
+    const columns = [
+      {
+        key: 1,
+        dataIndex: 'blockIndex',
+        title: i18n('Position'),
+        className: 'one wide aligned plain_th',
+        render: (text) => 1 + text,
+      },
+      {
+        key: 2,
+        dataIndex: 'hash',
+        title: i18n('Hash'),
+        className: 'two wide aligned',
+        render: (text, row) => (
+          <div>
+            <PCell>
+              <EllipsisLine linkTo={`/blocksdetail/${text}`} isPivot={row.pivotHash === row.hash} isLong text={text} />
+            </PCell>
+          </div>
+        ),
+      },
+      {
+        key: 3,
+        dataIndex: 'difficulty',
+        title: i18n('Difficulty'),
+        className: 'one wide aligned plain_th',
+        render: (text) => (
+          <div>
+            <PCell>{text}</PCell>
+          </div>
+        ),
+      },
+      {
+        key: 4,
+        dataIndex: 'miner',
+        title: i18n('Miner'),
+        className: 'one wide aligned',
+        render: (text) => (
+          <div>
+            <PCell>
+              <EllipsisLine linkTo={`/address/${text}`} text={text} />
+            </PCell>
+          </div>
+        ),
+      },
+      {
+        key: 5,
+        dataIndex: 'gasLimit',
+        title: i18n('Gas Limit'),
+        className: 'one wide aligned plain_th',
+        render: (text) => text,
+      },
+      {
+        key: 6,
+        dataIndex: 'timestamp',
+        title: i18n('Age'),
+        className: 'three wide aligned plain_th',
+        render: (text, row) => (
+          <PCell>
+            <Countdown baseTime={blockServerTimestamp * 1000} timestamp={row.syncTimestamp * 1000} />
+          </PCell>
+        ),
+      },
+      {
+        key: 7,
+        className: 'one wide left aligned plain_th',
+        dataIndex: 'transactionCount',
+        title: i18n('Tx Count'),
+        render: (text) => text,
+      },
+    ];
     return (
       <div className="page-epoch-detail">
         <Wrapper>

@@ -178,15 +178,17 @@ class BlockAndTxn extends Component {
       BlockList: [],
       TxList: [],
       showLoading: true,
-      plusTimeCount: 0,
+      blockServerTimestamp: 0, // unix time
+      txServerTimestamp: 0,
     };
 
     this.timerId = null;
     this.beginCountDown = () => {
       this.timerId = setInterval(() => {
-        const { plusTimeCount } = this.state;
+        const { blockServerTimestamp, txServerTimestamp } = this.state;
         this.setState({
-          plusTimeCount: plusTimeCount + 1,
+          blockServerTimestamp: blockServerTimestamp + 1,
+          txServerTimestamp: txServerTimestamp + 1,
         });
       }, 1000);
     };
@@ -231,6 +233,7 @@ class BlockAndTxn extends Component {
         this.setState({
           showLoading: false,
           BlockList: body.result.list.filter((v) => !!v),
+          blockServerTimestamp: body.result.serverTimestamp,
         });
       }
     });
@@ -246,7 +249,7 @@ class BlockAndTxn extends Component {
         const txList = body.result.list.filter((v) => !!v);
         this.setState({
           TxList: txList,
-          plusTimeCount: 0,
+          txServerTimestamp: body.result.serverTimestamp,
         });
 
         reqContractListInfo(getContractList(txList));
@@ -257,7 +260,7 @@ class BlockAndTxn extends Component {
   }
 
   render() {
-    const { BlockList, TxList, showLoading, plusTimeCount } = this.state;
+    const { BlockList, TxList, showLoading, blockServerTimestamp, txServerTimestamp } = this.state;
     const MBlockColumns = [
       {
         key: 2,
@@ -274,7 +277,7 @@ class BlockAndTxn extends Component {
             <div>
               <EllipsisLine isLong linkTo={`/blocksdetail/${row.hash}`} isPivot={row.pivotHash === row.hash} text={row.hash} />
               <PCell>
-                <Countdown timestamp={row.timestamp * 1000} />
+                <Countdown baseTime={blockServerTimestamp * 1000} timestamp={row.syncTimestamp * 1000} />
               </PCell>
               <EllipsisLine prefix={i18n('Miner')} linkTo={`/address/${row.miner}`} text={row.miner} />
               <FloatGas>
@@ -293,19 +296,21 @@ class BlockAndTxn extends Component {
         dataIndex: 'hash',
         className: 'five wide left aligned',
         title: 'Blocks',
-        render: (text, row) => (
-          <div>
-            <IconFace>
-              <svg className="icon" aria-hidden="true">
-                <use xlinkHref="#iconqukuaigaoduxuanzhong" />
-              </svg>
-            </IconFace>
-            <EllipsisLine position="top left" isLong linkTo={`/blocksdetail/${text}`} isPivot={row.pivotHash === row.hash} text={text} />
-            <PCell>
-              <Countdown timestamp={row.timestamp * 1000} />
-            </PCell>
-          </div>
-        ),
+        render: (text, row) => {
+          return (
+            <div>
+              <IconFace>
+                <svg className="icon" aria-hidden="true">
+                  <use xlinkHref="#iconqukuaigaoduxuanzhong" />
+                </svg>
+              </IconFace>
+              <EllipsisLine position="top left" isLong linkTo={`/blocksdetail/${text}`} isPivot={row.pivotHash === row.hash} text={text} />
+              <PCell>
+                <Countdown baseTime={blockServerTimestamp * 1000} timestamp={row.syncTimestamp * 1000} />
+              </PCell>
+            </div>
+          );
+        },
       },
       {
         key: 3,
@@ -352,7 +357,7 @@ class BlockAndTxn extends Component {
             <div>
               <EllipsisLine linkTo={`/transactionsdetail/${row.hash}`} isPivot={row.pivotHash === row.hash} text={row.hash} />
               <PCell>
-                <Countdown timestamp={row.timestamp * 1000 + plusTimeCount * 1000} />
+                <Countdown baseTime={txServerTimestamp * 1000} timestamp={row.syncTimestamp * 1000} />
               </PCell>
               <EllipsisLinewrap>
                 <i className="prefix-tag">{i18n('From')}</i>
@@ -389,7 +394,7 @@ class BlockAndTxn extends Component {
             </IconFace>
             <EllipsisLine linkTo={`/transactionsdetail/${text}`} isPivot={row.pivotHash === row.hash} text={text} />
             <PCell>
-              <Countdown timestamp={row.timestamp * 1000} />
+              <Countdown baseTime={txServerTimestamp * 1000} timestamp={row.syncTimestamp * 1000} />
             </PCell>
           </div>
         ),
