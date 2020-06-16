@@ -12,11 +12,11 @@ import DataList from '../../components/DataList';
 import EllipsisLine from '../../components/EllipsisLine';
 import Countdown from '../../components/Countdown';
 // import iconFcLogo from '../../assets/images/icons/fc-logo.svg';
-import { i18n, renderAny, valToTokenVal, getContractList } from '../../utils';
+import { i18n, renderAny, valToTokenVal, getContractList, getTotalPage } from '../../utils';
 import { StyledTabel, TabPanel, PCell, TabWrapper, IconFace, CtrlPanel } from './styles';
 import Pagination from '../../components/Pagination';
 import { reqTokenTxnList, reqContractListInfo } from '../../utils/api';
-import { TotalDesc, getTotalPage } from '../../components/TotalDesc';
+import TotalDesc from '../../components/TotalDesc';
 import { defaultTokenIcon, fansCoinAddress } from '../../constants';
 
 const NumCell = styled.div`
@@ -74,7 +74,6 @@ class TokenTxns extends Component {
         txType: 'all',
       },
       activated: false,
-      listLimit: undefined,
       startTime: null,
       endTime: null,
       txServerTimestamp: 0,
@@ -131,7 +130,6 @@ class TokenTxns extends Component {
         this.setState({
           TxList: body.result.list,
           TxTotalCount: body.result.total,
-          listLimit: body.result.listLimit,
           txServerTimestamp: body.result.serverTimestamp,
           queries,
         });
@@ -153,7 +151,7 @@ class TokenTxns extends Component {
 
   render() {
     const { accountid, isActive, intl, contractManagerCache = {} } = this.props;
-    const { TxList, TxTotalCount, queries, listLimit, activated } = this.state;
+    const { TxList, TxTotalCount, queries, activated } = this.state;
     const { startTime, endTime, txServerTimestamp } = this.state;
 
     if (!activated) {
@@ -412,7 +410,7 @@ class TokenTxns extends Component {
             return (
               <TabWrapper>
                 <div className="page-pc">
-                  <TotalDesc total={TxTotalCount} listLimit={listLimit} />
+                  <TotalDesc total={TxTotalCount} />
                   <Pagination
                     prevItem={{
                       'aria-label': 'Previous item',
@@ -427,12 +425,12 @@ class TokenTxns extends Component {
                       this.changePage(accountid, { ...queries, page: data.activePage });
                     }}
                     activePage={queries.page}
-                    totalPages={getTotalPage(TxTotalCount, 10, listLimit)}
+                    totalPages={getTotalPage(TxTotalCount, 10)}
                     ellipsisItem={null}
                   />
                 </div>
                 <div className="page-h5">
-                  <TotalDesc total={TxTotalCount} listLimit={listLimit} />
+                  <TotalDesc total={TxTotalCount} />
                   <Pagination
                     prevItem={{
                       'aria-label': 'Previous item',
@@ -452,7 +450,7 @@ class TokenTxns extends Component {
                     firstItem={null}
                     lastItem={null}
                     siblingRange={1}
-                    totalPages={getTotalPage(TxTotalCount, 10, listLimit)}
+                    totalPages={getTotalPage(TxTotalCount, 10)}
                   />
                 </div>
               </TabWrapper>

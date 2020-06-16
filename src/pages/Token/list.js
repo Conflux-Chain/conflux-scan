@@ -12,7 +12,7 @@ import { defaultTokenIcon } from '../../constants';
 import media from '../../globalStyles/media';
 import * as commonCss from '../../globalStyles/common';
 import { reqContractMangerList, reqTokenQuery } from '../../utils/api';
-import { TotalDesc } from '../../components/TotalDesc';
+import TotalDesc from '../../components/TotalDesc';
 import tokenIcon from '../../assets/images/icons/tokenIcon.png';
 
 const Wrapper = styled.div`

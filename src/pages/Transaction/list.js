@@ -11,7 +11,7 @@ import { convertToValueorFee, converToGasPrice, i18n, getContractList } from '..
 import media from '../../globalStyles/media';
 import * as commonCss from '../../globalStyles/common';
 import { reqTransactionList, reqContractListInfo } from '../../utils/api';
-import { TotalDesc } from '../../components/TotalDesc';
+import TotalDesc from '../../components/TotalDesc';
 import iconStatusErr from '../../assets/images/icons/status-err.svg';
 import iconStatusSkip from '../../assets/images/icons/status-skip.svg';
 import AddressEllipseLine from '../../components/AddressEllipseLine';

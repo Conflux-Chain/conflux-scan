@@ -197,7 +197,6 @@ export default {
   'network-short.mainnet': 'Pontus',
   'network-short.testnet': '测试网',
 
-  'pagination.limited': '共计找到<%=total%>条记录（仅显示最后<%=listLimit%>条记录）',
   'pagination.total': '共计找到<%=total%>条记录',
 
   Token: '代币',

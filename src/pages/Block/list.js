@@ -10,7 +10,7 @@ import { i18n, sendRequest } from '../../utils/index';
 import Dag from '../../components/Dag';
 import * as commonCss from '../../globalStyles/common';
 import { reqBlockList } from '../../utils/api';
-import { TotalDesc } from '../../components/TotalDesc';
+import TotalDesc from '../../components/TotalDesc';
 
 const DagWrapper = styled.div`
   #dag-viewer {

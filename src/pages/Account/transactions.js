@@ -9,14 +9,14 @@ import PropTypes from 'prop-types';
 import DataList from '../../components/DataList';
 import EllipsisLine from '../../components/EllipsisLine';
 import Countdown from '../../components/Countdown';
-import { convertToValueorFee, converToGasPrice, i18n, renderAny, getContractList } from '../../utils';
+import { convertToValueorFee, converToGasPrice, i18n, renderAny, getContractList, getTotalPage } from '../../utils';
 import { StyledTabel, TabPanel, PCell, TabWrapper, IconFace, CtrlPanel } from './styles';
 import Pagination from '../../components/Pagination';
 import iconStatusErr from '../../assets/images/icons/status-err.svg';
 import iconStatusSkip from '../../assets/images/icons/status-skip.svg';
 import { reqAccountTransactionList, reqContractListInfo } from '../../utils/api';
 import media from '../../globalStyles/media';
-import { TotalDesc, getTotalPage } from '../../components/TotalDesc';
+import TotalDesc from '../../components/TotalDesc';
 import AddressEllipseLine from '../../components/AddressEllipseLine';
 
 const ContractCell = styled.div`
@@ -40,7 +40,6 @@ class Transactions extends Component {
         txType: 'all',
       },
       activated: false,
-      listLimit: undefined,
       startTime: null,
       endTime: null,
       txServerTimestamp: 0,
@@ -96,7 +95,6 @@ class Transactions extends Component {
         this.setState({
           TxList: body.result.list,
           TxTotalCount: body.result.total,
-          listLimit: body.result.listLimit,
           queries,
           txServerTimestamp: body.result.serverTimestamp,
         });
@@ -108,7 +106,7 @@ class Transactions extends Component {
 
   render() {
     const { accountid, isActive, intl } = this.props;
-    const { TxList, TxTotalCount, queries, listLimit } = this.state;
+    const { TxList, TxTotalCount, queries } = this.state;
     const { startTime, endTime, txServerTimestamp } = this.state;
 
     const columns = [
@@ -344,7 +342,7 @@ class Transactions extends Component {
             return (
               <TabWrapper>
                 <div className="page-pc">
-                  <TotalDesc total={TxTotalCount} listLimit={listLimit} />
+                  <TotalDesc total={TxTotalCount} />
                   <Pagination
                     prevItem={{
                       'aria-label': 'Previous item',
@@ -359,12 +357,12 @@ class Transactions extends Component {
                       this.changePage(accountid, { ...queries, page: data.activePage });
                     }}
                     activePage={queries.page}
-                    totalPages={getTotalPage(TxTotalCount, 10, listLimit)}
+                    totalPages={getTotalPage(TxTotalCount, 10)}
                     ellipsisItem={null}
                   />
                 </div>
                 <div className="page-h5">
-                  <TotalDesc total={TxTotalCount} listLimit={listLimit} />
+                  <TotalDesc total={TxTotalCount} />
                   <Pagination
                     prevItem={{
                       'aria-label': 'Previous item',
@@ -384,7 +382,7 @@ class Transactions extends Component {
                     firstItem={null}
                     lastItem={null}
                     siblingRange={1}
-                    totalPages={getTotalPage(TxTotalCount, 10, listLimit)}
+                    totalPages={getTotalPage(TxTotalCount, 10)}
                   />
                 </div>
               </TabWrapper>
