@@ -483,7 +483,7 @@ class Detail extends Component {
                 <tr className="">
                   <td className="collapsing">{i18n('app.pages.txns.time')}</td>
                   <td className="">
-                    <Countdown baseTime={Date.now()} timestamp={result.timestamp * 1000} />
+                    <Countdown baseTime={Date.now()} timestamp={result.syncTimestamp * 1000} />
                     &nbsp; ({moment(result.timestamp * 1000).format('YYYY-MM-DD HH:mm:ss Z')})
                   </td>
                 </tr>
