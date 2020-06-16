@@ -16,7 +16,7 @@ import iconStatusErr from '../../assets/images/icons/status-err.svg';
 import iconStatusSkip from '../../assets/images/icons/status-skip.svg';
 import { reqAccountTransactionList, reqContractListInfo } from '../../utils/api';
 import media from '../../globalStyles/media';
-import { TotalDesc } from '../../components/TotalDesc';
+import TotalDesc from '../../components/TotalDesc';
 import AddressEllipseLine from '../../components/AddressEllipseLine';
 
 const ContractCell = styled.div`

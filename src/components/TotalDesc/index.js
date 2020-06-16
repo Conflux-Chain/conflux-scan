@@ -7,25 +7,7 @@ import { i18n } from '../../utils';
 // eslint-disable-next-line react/prefer-stateless-function
 class TotalDesc extends Component {
   render() {
-    const { listLimit, total } = this.props;
-
-    let showLimit = false;
-    if (listLimit && total > listLimit) {
-      showLimit = true;
-    }
-
-    if (showLimit) {
-      return (
-        <div className="total">
-          {i18n('pagination.limited', {
-            param: {
-              total,
-              listLimit,
-            },
-          })}
-        </div>
-      );
-    }
+    const { total } = this.props;
 
     return (
       <div className="total">
@@ -41,16 +23,8 @@ class TotalDesc extends Component {
 
 TotalDesc.propTypes = {
   total: PropTypes.number.isRequired,
-  listLimit: PropTypes.number,
 };
 
-TotalDesc.defaultProps = {
-  listLimit: undefined,
-};
+TotalDesc.defaultProps = {};
 
-const getTotalPage = (count, limit, listLimit) => {
-  const countShow = Math.min(count, listLimit);
-  return Math.ceil(countShow / limit);
-};
-
-export { TotalDesc, getTotalPage };
+export default TotalDesc;

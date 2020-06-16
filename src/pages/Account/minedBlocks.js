@@ -9,7 +9,7 @@ import { i18n, renderAny, getTotalPage } from '../../utils';
 import { StyledTabel, TabPanel } from './styles';
 import Pagination from '../../components/Pagination';
 import { reqMinedBlockList } from '../../utils/api';
-import { TotalDesc } from '../../components/TotalDesc';
+import TotalDesc from '../../components/TotalDesc';
 
 const PCell = styled.div`
   margin: 0 !important;

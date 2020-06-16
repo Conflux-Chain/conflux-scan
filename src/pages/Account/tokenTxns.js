@@ -16,7 +16,7 @@ import { i18n, renderAny, valToTokenVal, getContractList, getTotalPage } from '.
 import { StyledTabel, TabPanel, PCell, TabWrapper, IconFace, CtrlPanel } from './styles';
 import Pagination from '../../components/Pagination';
 import { reqTokenTxnList, reqContractListInfo } from '../../utils/api';
-import { TotalDesc } from '../../components/TotalDesc';
+import TotalDesc from '../../components/TotalDesc';
 import { defaultTokenIcon, fansCoinAddress } from '../../constants';
 
 const NumCell = styled.div`

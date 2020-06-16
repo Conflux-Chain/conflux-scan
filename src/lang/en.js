@@ -130,7 +130,6 @@ export default {
   'network-short.mainnet': 'Pontus',
   'network-short.testnet': 'Testnet',
 
-  'pagination.limited': 'A total of <%=total%> records found (Showing the last <%=listLimit%> records)',
   'pagination.total': 'A total of <%=total%> records found',
 
   'num.Tokens': 'Tokens',
