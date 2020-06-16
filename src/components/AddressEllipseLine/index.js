@@ -24,6 +24,7 @@ const ContractName = styled.div`
 
 const ContractNameNormal = styled(ContractName)`
   font-weight: normal;
+  white-space: nowrap;
 `;
 const ContractCell = styled.div`
   color: rgba(0, 0, 0, 0.87);
