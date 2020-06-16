@@ -15,8 +15,8 @@ function Countdown(props) {
     intl: { locale },
     baseTime,
   } = props;
-  let nowTime = moment(timestamp);
-  const beforeTime = moment(baseTime);
+  let nowTime = moment.unix(timestamp);
+  const beforeTime = baseTime ? moment.unix(baseTime) : moment();
 
   const yearUnit = beforeTime.diff(nowTime, 'years');
   const monthUnit = beforeTime.diff(nowTime, 'months');
@@ -41,7 +41,7 @@ function Countdown(props) {
   return <Text>{labelStr}</Text>;
 }
 Countdown.propTypes = {
-  timestamp: PropTypes.number,
+  timestamp: PropTypes.number.isRequired,
   intl: PropTypes.shape({
     lang: PropTypes.string,
     locale: PropTypes.string,
@@ -49,7 +49,6 @@ Countdown.propTypes = {
   baseTime: PropTypes.number.isRequired,
 };
 Countdown.defaultProps = {
-  timestamp: new Date().getTime(),
   intl: { lang: 'zh' },
 };
 

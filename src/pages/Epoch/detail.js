@@ -133,7 +133,7 @@ class Detail extends Component {
           totalCount: body.result.total,
           isLoading: false,
           curPage,
-          blockServerTimestamp: body.result.serverTimestamp,
+          blockServerTimestamp: body.serverTimestamp,
         });
       } else if (body.code === errorCodes.ParameterError) {
         history.push(`/search-notfound?searchId=${epochid}`);
@@ -206,7 +206,7 @@ class Detail extends Component {
         className: 'three wide aligned plain_th',
         render: (text, row) => (
           <PCell>
-            <Countdown baseTime={blockServerTimestamp * 1000} timestamp={row.syncTimestamp * 1000} />
+            <Countdown baseTime={blockServerTimestamp} timestamp={row.syncTimestamp} />
           </PCell>
         ),
       },

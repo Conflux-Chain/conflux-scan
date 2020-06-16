@@ -268,6 +268,7 @@ class Detail extends Component {
       contractType: contractTypeCodeGeneral, //
       decodedData: {},
       transferList: [],
+      serverTimeStamp: 0,
     });
     this.state = this.getInitState();
   }
@@ -346,7 +347,7 @@ class Detail extends Component {
             }, 3000);
           }
           const transactionDetails = body.result;
-          this.setState({ result: transactionDetails });
+          this.setState({ result: transactionDetails, serverTimeStamp: body.serverTimeStamp });
           let toAddress = transactionDetails.to;
           if (getAddressType(toAddress) === addressTypeContract) {
             this.setState({ isContract: true });
@@ -446,6 +447,7 @@ class Detail extends Component {
       isContract,
       transferList,
       riskLevel,
+      serverTimeStamp,
     } = this.state;
     const { contractManagerCache } = this.props;
 
@@ -483,7 +485,7 @@ class Detail extends Component {
                 <tr className="">
                   <td className="collapsing">{i18n('app.pages.txns.time')}</td>
                   <td className="">
-                    <Countdown baseTime={Date.now()} timestamp={result.syncTimestamp * 1000} />
+                    <Countdown baseTime={serverTimeStamp} timestamp={result.syncTimestamp} />
                     &nbsp; ({moment(result.syncTimestamp * 1000).format('YYYY-MM-DD HH:mm:ss Z')})
                   </td>
                 </tr>
