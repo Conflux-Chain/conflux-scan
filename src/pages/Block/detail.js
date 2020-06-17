@@ -11,11 +11,19 @@ import Countdown from '../../components/Countdown';
 import TableLoading from '../../components/TableLoading';
 import DataList from '../../components/DataList';
 import EllipsisLine from '../../components/EllipsisLine';
-import { convertToValueorFee, converToGasPrice, i18n, sendRequest, tranferToLowerCase } from '../../utils';
+import { convertToValueorFee, converToGasPrice, i18n, getContractList, tranferToLowerCase, wait } from '../../utils';
 import media from '../../globalStyles/media';
 import * as commonCss from '../../globalStyles/common';
-import { reqBlock, reqBlockTransactionList, reqBlockRefereeBlockList } from '../../utils/api';
+import {
+  reqBlock,
+  reqBlockTransactionList,
+  reqBlockRefereeBlockList,
+  reqContractListInfo,
+  reqConfirmationRiskByHash,
+} from '../../utils/api';
 import { errorCodes } from '../../constants';
+import AddressEllipseLine from '../../components/AddressEllipseLine';
+import SecurityLevel from '../../components/SecurityLevel';
 
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -99,6 +107,7 @@ const HeadBar = styled.div`
   font-size: 16px;
   margin-top: 16px;
   margin-bottom: 10px;
+  flex-wrap: wrap;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -153,142 +162,6 @@ const ContractCell = styled.div`
   font-weight: normal;
 `;
 
-const TxColumns = [
-  {
-    key: 1,
-    className: 'two wide',
-    dataIndex: 'hash',
-    title: i18n('Hash'),
-    render: (text) => <EllipsisLine linkTo={`/transactionsdetail/${text}`} text={text} />,
-  },
-  {
-    key: 2,
-    className: 'two wide aligned',
-    dataIndex: 'from',
-    title: i18n('From'),
-    render: (text) => <EllipsisLine linkTo={`/address/${text}`} text={text} />,
-  },
-  {
-    key: 3,
-    className: 'two wide aligned',
-    dataIndex: 'to',
-    title: i18n('To'),
-    render: (text, row) => {
-      if (row.contractCreated) {
-        return (
-          <div>
-            <Popup
-              trigger={<ContractCell>{i18n('Contract Creation')}</ContractCell>}
-              content={row.contractCreated}
-              position="top left"
-              hoverable
-            />
-          </div>
-        );
-      }
-      return <EllipsisLine linkTo={`/address/${text}`} text={text} />;
-    },
-  },
-  {
-    key: 4,
-    className: 'two wide aligned',
-    dataIndex: 'value',
-    title: i18n('Value'),
-    render: (text) => <EllipsisLine unit="CFX" text={convertToValueorFee(text)} />,
-  },
-  {
-    key: 5,
-    className: 'two wide aligned',
-    dataIndex: 'gasPrice',
-    title: i18n('Fee'),
-    render: (text, row) => {
-      const result = new BigNumber(row.gas).multipliedBy(row.gasPrice);
-      return <EllipsisLine unit="CFX" text={convertToValueorFee(result.toFixed())} />;
-    },
-  },
-  {
-    key: 6,
-    className: 'two wide aligned',
-    dataIndex: 'gasPrice',
-    title: i18n('Gas Price'),
-    render: (text) => <EllipsisLine unit="Gdrip" text={converToGasPrice(text)} />,
-  },
-  // {
-  //   key: 7,
-  //   className: 'three wide aligned',
-  //   dataIndex: 'timestamp',
-  //   title: i18n('Age'),
-  //   render: (text) => <Countdown timestamp={text * 1000} />,
-  // },
-];
-
-const RefColumns = [
-  {
-    key: 1,
-    dataIndex: 'epochNumber',
-    title: i18n('Epoch'),
-    className: 'one wide aligned',
-    render: (text) => <EllipsisLine linkTo={`/epochsdetail/${text}`} text={text} />,
-  },
-  {
-    key: 2,
-    title: i18n('Position'),
-    dataIndex: 'blockIndex',
-    className: 'one wide aligned plain_th',
-    render: (text, row) => (
-      <div>
-        <PCell>{1 + text}</PCell>
-      </div>
-    ),
-  },
-  {
-    key: 3,
-    dataIndex: 'hash',
-    title: i18n('Hash'),
-    className: 'one wide aligned',
-    render: (text, row) => (
-      <div>
-        <EllipsisLine isLong linkTo={`/blocksdetail/${text}`} isPivot={row.pivotHash === row.hash} text={text} />
-      </div>
-    ),
-  },
-  {
-    key: 4,
-    dataIndex: 'difficulty',
-    className: 'one wide aligned plain_th',
-    title: i18n('Difficulty'),
-    render: (text) => <PCell>{text}</PCell>,
-  },
-  {
-    key: 5,
-    className: 'one wide aligned',
-    dataIndex: 'miner',
-    title: i18n('Miner'),
-    render: (text) => <EllipsisLine linkTo={`/address/${text}`} text={text} />,
-  },
-  {
-    key: 6,
-    className: 'one wide aligned plain_th',
-    dataIndex: 'gasLimit',
-    title: i18n('Gas Limit'),
-    render: (text) => <PCell>{text}</PCell>,
-  },
-  {
-    key: 7,
-    className: 'three wide aligned',
-    dataIndex: 'timestamp',
-    title: i18n('Age'),
-    render: (text) => <Countdown timestamp={text * 1000} />,
-  },
-  {
-    key: 8,
-    className: 'two wide left aligned plain_th',
-    dataIndex: 'transactionCount',
-    title: i18n('Tx Count'),
-    render: (text) => <PCell>{text}</PCell>,
-  },
-];
-
 const pageSize = 10;
 
 class Detail extends Component {
@@ -304,6 +177,8 @@ class Detail extends Component {
       curPage: 1,
       refBlockCurPage: 1,
       refTotal: 0,
+      blockServerTimestamp: 0,
+      txServerTimestamp: 0,
     });
     this.state = this.getInitstate();
     this.getBlockHash = this.getBlockHash.bind(this);
@@ -326,6 +201,27 @@ class Detail extends Component {
     }
   }
 
+  async getConfirmRisk(blockHash) {
+    let looping = true;
+    let riskLevel;
+    while (looping) {
+      // eslint-disable-next-line no-await-in-loop
+      riskLevel = await reqConfirmationRiskByHash(blockHash);
+      this.setState({
+        riskLevel,
+      });
+      if (riskLevel === '') {
+        // eslint-disable-next-line no-await-in-loop
+        await wait(1000);
+      } else if (riskLevel === 'lv0') {
+        looping = false;
+      } else {
+        // eslint-disable-next-line no-await-in-loop
+        await wait(10 * 1000);
+      }
+    }
+  }
+
   getBlockHash() {
     const {
       match: { params },
@@ -344,6 +240,7 @@ class Detail extends Component {
           blockDetail: body.result,
           isLoading: false,
         });
+        this.getConfirmRisk(blockHash);
       } else if (body.code === errorCodes.BlockNotFoundError) {
         history.push(`/search-notfound?searchId=${blockHash}`);
       }
@@ -358,11 +255,14 @@ class Detail extends Component {
       { showError: false }
     ).then((body) => {
       if (body.code === 0) {
+        const txList = body.result.list.filter((v) => !!v);
         this.setState({
-          TxList: body.result.list.filter((v) => !!v),
+          TxList: txList,
           TxTotalCount: body.result.total,
           curPage: activePage,
+          txServerTimestamp: body.serverTimestamp,
         });
+        reqContractListInfo(getContractList(txList));
       }
     });
   }
@@ -384,13 +284,151 @@ class Detail extends Component {
           refereeBlockList: body.result.list.filter((v) => !!v),
           isLoading: false,
           refBlockCurPage,
+          blockServerTimestamp: body.serverTimestamp,
         });
       }
     });
   }
 
   render() {
-    const { blockDetail, TxList, TxTotalCount, isLoading, currentTab, refereeBlockList, curPage, refBlockCurPage, refTotal } = this.state;
+    const {
+      blockDetail,
+      TxList,
+      TxTotalCount,
+      isLoading,
+      currentTab,
+      refereeBlockList,
+      curPage,
+      refBlockCurPage,
+      refTotal,
+      riskLevel,
+      blockServerTimestamp,
+      txServerTimestamp,
+    } = this.state;
+
+    const TxColumns = [
+      {
+        key: 1,
+        className: 'two wide',
+        dataIndex: 'hash',
+        title: i18n('Hash'),
+        render: (text) => <EllipsisLine popUpCfg={{ position: 'top left' }} linkTo={`/transactionsdetail/${text}`} text={text} />,
+      },
+      {
+        key: 2,
+        className: 'two wide aligned',
+        dataIndex: 'from',
+        title: i18n('From'),
+        render: (text) => <AddressEllipseLine address={text} />,
+      },
+      {
+        key: 3,
+        className: 'two wide aligned',
+        dataIndex: 'to',
+        title: i18n('To'),
+        render: (text, row) => {
+          return <AddressEllipseLine contractCreated={row.contractCreated} type="to" address={row.to} />;
+        },
+      },
+      {
+        key: 4,
+        className: 'two wide aligned',
+        dataIndex: 'value',
+        title: i18n('Value'),
+        render: (text) => <EllipsisLine unit="CFX" text={convertToValueorFee(text)} />,
+      },
+      {
+        key: 5,
+        className: 'two wide aligned',
+        dataIndex: 'gasPrice',
+        title: i18n('Fee'),
+        render: (text, row) => {
+          const result = new BigNumber(row.gas).multipliedBy(row.gasPrice);
+          return <EllipsisLine unit="CFX" text={convertToValueorFee(result.toFixed())} />;
+        },
+      },
+      {
+        key: 6,
+        className: 'two wide aligned',
+        dataIndex: 'gasPrice',
+        title: i18n('Gas Price'),
+        render: (text) => <EllipsisLine unit="Gdrip" text={converToGasPrice(text)} />,
+      },
+      {
+        key: 7,
+        className: 'three wide aligned',
+        dataIndex: 'timestamp',
+        title: i18n('Age'),
+        render: (text, row) => <Countdown baseTime={txServerTimestamp} timestamp={row.syncTimestamp} />,
+      },
+    ];
+
+    const RefColumns = [
+      {
+        key: 1,
+        dataIndex: 'epochNumber',
+        title: i18n('Epoch'),
+        className: 'one wide aligned',
+        render: (text) => <EllipsisLine linkTo={`/epochsdetail/${text}`} text={text} />,
+      },
+      {
+        key: 2,
+        title: i18n('Position'),
+        dataIndex: 'blockIndex',
+        className: 'one wide aligned plain_th',
+        render: (text, row) => (
+          <div>
+            <PCell>{1 + text}</PCell>
+          </div>
+        ),
+      },
+      {
+        key: 3,
+        dataIndex: 'hash',
+        title: i18n('Hash'),
+        className: 'one wide aligned',
+        render: (text, row) => (
+          <div>
+            <EllipsisLine isLong linkTo={`/blocksdetail/${text}`} isPivot={row.pivotHash === row.hash} text={text} />
+          </div>
+        ),
+      },
+      {
+        key: 4,
+        dataIndex: 'difficulty',
+        className: 'one wide aligned plain_th',
+        title: i18n('Difficulty'),
+        render: (text) => <PCell>{text}</PCell>,
+      },
+      {
+        key: 5,
+        className: 'one wide aligned',
+        dataIndex: 'miner',
+        title: i18n('Miner'),
+        render: (text) => <EllipsisLine linkTo={`/address/${text}`} text={text} />,
+      },
+      {
+        key: 6,
+        className: 'one wide aligned plain_th',
+        dataIndex: 'gasLimit',
+        title: i18n('Gas Limit'),
+        render: (text) => <PCell>{text}</PCell>,
+      },
+      {
+        key: 7,
+        className: 'three wide aligned',
+        dataIndex: 'timestamp',
+        title: i18n('Age'),
+        render: (text, row) => <Countdown baseTime={blockServerTimestamp} timestamp={row.syncTimestamp} />,
+      },
+      {
+        key: 8,
+        className: 'two wide left aligned plain_th',
+        dataIndex: 'transactionCount',
+        title: i18n('Tx Count'),
+        render: (text) => <PCell>{text}</PCell>,
+      },
+    ];
 
     return (
       <div className="page-block-detail">
@@ -426,6 +464,12 @@ class Detail extends Component {
                     </td>
                   </tr>
                   <tr className="">
+                    <td className="collapsing">{i18n('Security')}</td>
+                    <td className="">
+                      <SecurityLevel riskLevel={riskLevel} />
+                    </td>
+                  </tr>
+                  <tr className="">
                     <td className="collapsing">{i18n('Block Hash')}</td>
                     <td className="">{blockDetail.hash}</td>
                   </tr>
@@ -445,7 +489,7 @@ class Detail extends Component {
                   </tr>
                   <tr className="">
                     <td className="collapsing">{i18n('app.pages.blocks.packTime')}</td>
-                    <td className="">{moment(blockDetail.timestamp * 1000).format('YYYY-MM-DD HH:mm:ss')}</td>
+                    <td className="">{moment(blockDetail.syncTimestamp * 1000).format('YYYY-MM-DD HH:mm:ss')}</td>
                   </tr>
                   <tr className="">
                     <td className="collapsing bottom">{i18n('Size')}</td>

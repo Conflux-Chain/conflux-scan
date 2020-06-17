@@ -13,7 +13,7 @@ import QrcodeButton from '../../components/QrcodeButton';
 import TableLoading from '../../components/TableLoading';
 import EllipsisLine from '../../components/EllipsisLine';
 import { reqContract, reqAccount, reqTokenList } from '../../utils/api';
-import { errorCodes } from '../../constants';
+import { errorCodes, defaultTokenIcon } from '../../constants';
 import media from '../../globalStyles/media';
 import { convertToValueorFee, valToTokenVal, i18n, renderAny, isContract } from '../../utils';
 import TokenSelect from '../../components/TokenSelect';
@@ -142,6 +142,8 @@ const Statistic = styled.div`
   .token-select {
     width: 346px;
     margin-top: -10px;
+    position: relative;
+    z-index: 15;
     ${media.mobile`
       width: auto;
       margin-left: 20px;
@@ -268,6 +270,11 @@ const ContractInfoPanel = styled.div`
     align-items: center;
     display: flex;
     flex-wrap: wrap;
+    > a {
+      align-items: center;
+      display: flex;
+      font-weight: bold;
+    }
     > span {
       margin-right: 5px;
     }
@@ -314,11 +321,17 @@ class AccountHead extends Component {
     reqAccount({ address: accountid }).then((body) => {
       if (body.code === 0) {
         this.setState({
-          accountDetail: body.result,
-          creatorTransaction: body.result.creatorTransaction || {},
+          accountDetail: {
+            transactionCount: body.result.account.all,
+            balance: body.result.balance,
+          },
+          creatorTransaction: {
+            hash: body.result.contract.transactionHash,
+            from: body.result.contract.from,
+          },
           isLoading: false,
         });
-        updateBlockCount(body.result.blockCount);
+        updateBlockCount(body.result.account.mined);
       } else if (body.code === errorCodes.ParameterError) {
         history.push(`/search-notfound?searchId=${accountid}`);
       } else {
@@ -351,8 +364,10 @@ class AccountHead extends Component {
           <div className="contract-info-row">
             <div className="contract-left-info">{i18n('Token Tracker')}</div>
             <div className="contract-right-val">
-              {contractInfo.tokenIcon && <img src={contractInfo.tokenIcon} />}
-              {contractInfo.tokenName ? <a>{contractInfo.tokenName}</a> : i18n('app.pages.account.notfound.tokenTracker')}
+              <Link to={`/token/${accountid}`}>
+                {contractInfo.tokenIcon && <img src={contractInfo.tokenIcon} />}
+                {contractInfo.tokenName ? <a>{contractInfo.tokenName}</a> : i18n('app.pages.account.notfound.tokenTracker')}
+              </Link>
             </div>
           </div>
         </div>
@@ -365,7 +380,11 @@ class AccountHead extends Component {
                 <div className="contract-right-val">
                   <EllipsisLine linkTo={`/address/${creatorTransaction.from}`} text={creatorTransaction.from} />
                   {i18n('contract.at-txn1')}
-                  <EllipsisLine linkTo={`/transactionsdetail/${creatorTransaction.hash}`} text={creatorTransaction.hash} />
+                  <EllipsisLine
+                    popUpCfg={{ position: 'top right' }}
+                    linkTo={`/transactionsdetail/${creatorTransaction.hash}`}
+                    text={creatorTransaction.hash}
+                  />
                   {i18n('contract.at-txn2')}
                 </div>
               )}
@@ -382,12 +401,13 @@ class AccountHead extends Component {
 
     const isContractAddr = isContract(accountid);
     const tokenOpts = tokenList.map((v) => {
+      const token = v.token || {};
       return {
         key: v.address,
         value: v.address,
-        imgSrc: v.tokenIcon,
-        label1: `${v.tokenName} (${v.tokenSymbol})`,
-        label2: `${valToTokenVal(v.balance, v.tokenDecimal)} ${v.tokenSymbol}`,
+        imgSrc: v.tokenIcon || defaultTokenIcon,
+        label1: `${token.name} (${token.symbol})`,
+        label2: `${valToTokenVal(v.balance, token.decimals)} ${token.symbol}`,
       };
     });
 

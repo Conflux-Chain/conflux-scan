@@ -1,14 +1,18 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { Popup } from 'semantic-ui-react';
 import styled from 'styled-components';
+import uniq from 'lodash/uniq';
 import DataList from '../../components/DataList';
 import Countdown from '../../components/Countdown';
 import EllipsisLine from '../../components/EllipsisLine';
 import TableLoading from '../../components/TableLoading';
 import media from '../../globalStyles/media';
 import Dag from '../../components/Dag';
-import { converToGasPrice3Fixed, initSse, closeSource, sendRequest, i18n } from '../../utils';
-import { reqTransactionList, reqBlockList } from '../../utils/api';
+import { converToGasPrice3Fixed, i18n, getContractList } from '../../utils';
+import { reqTransactionList, reqBlockList, reqContractListInfo } from '../../utils/api';
+import AddressEllipseLine from '../../components/AddressEllipseLine';
 
 const RowWrapper = styled.div`
   display: flex;
@@ -18,7 +22,6 @@ const RowWrapper = styled.div`
 `;
 const ColumnWrapper = styled.div`
   display: flex;
-  justify-content: flex-start;
   ${media.mobile`
     flex-wrap: wrap;
     justify-content: center;
@@ -84,6 +87,10 @@ const StyledTabel = styled.div`
     margin: 0 auto;
     display: block;
     margin-bottom: 16px;
+
+    .content table {
+      margin-left: -1em;
+    }
   `}
 `;
 const IconFace = styled.div`
@@ -143,6 +150,27 @@ const FloatGas = styled.div`
   bottom: 0;
 `;
 
+const EllipsisLinewrap = styled.div`
+  display: flex;
+  align-items: center;
+  > span {
+    max-width: 114px;
+    min-width: 100px;
+    flex: 1;
+  }
+
+  .prefix-tag {
+    font-style: normal;
+    margin-right: 5px;
+    min-width: 32px;
+    font-size: 14px !important;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.87);
+    margin-right: 8px;
+    flex-shrink: 0;
+  }
+`;
+
 class BlockAndTxn extends Component {
   constructor() {
     super();
@@ -150,15 +178,17 @@ class BlockAndTxn extends Component {
       BlockList: [],
       TxList: [],
       showLoading: true,
-      plusTimeCount: 0,
+      blockServerTimestamp: 0, // unix time
+      txServerTimestamp: 0,
     };
 
     this.timerId = null;
     this.beginCountDown = () => {
       this.timerId = setInterval(() => {
-        const { plusTimeCount } = this.state;
+        const { blockServerTimestamp, txServerTimestamp } = this.state;
         this.setState({
-          plusTimeCount: plusTimeCount + 1,
+          blockServerTimestamp: blockServerTimestamp + 1,
+          txServerTimestamp: txServerTimestamp + 1,
         });
       }, 1000);
     };
@@ -203,6 +233,7 @@ class BlockAndTxn extends Component {
         this.setState({
           showLoading: false,
           BlockList: body.result.list.filter((v) => !!v),
+          blockServerTimestamp: body.serverTimestamp,
         });
       }
     });
@@ -215,10 +246,13 @@ class BlockAndTxn extends Component {
       extra
     ).then((body) => {
       if (body.code === 0) {
+        const txList = body.result.list.filter((v) => !!v);
         this.setState({
-          TxList: body.result.list.filter((v) => !!v),
-          plusTimeCount: 0,
+          TxList: txList,
+          txServerTimestamp: body.serverTimestamp,
         });
+
+        reqContractListInfo(getContractList(txList));
       }
     });
 
@@ -226,7 +260,7 @@ class BlockAndTxn extends Component {
   }
 
   render() {
-    const { BlockList, TxList, showLoading, plusTimeCount } = this.state;
+    const { BlockList, TxList, showLoading, blockServerTimestamp, txServerTimestamp } = this.state;
     const MBlockColumns = [
       {
         key: 2,
@@ -243,7 +277,7 @@ class BlockAndTxn extends Component {
             <div>
               <EllipsisLine isLong linkTo={`/blocksdetail/${row.hash}`} isPivot={row.pivotHash === row.hash} text={row.hash} />
               <PCell>
-                <Countdown timestamp={row.timestamp * 1000} />
+                <Countdown baseTime={blockServerTimestamp} timestamp={row.syncTimestamp} />
               </PCell>
               <EllipsisLine prefix={i18n('Miner')} linkTo={`/address/${row.miner}`} text={row.miner} />
               <FloatGas>
@@ -262,19 +296,21 @@ class BlockAndTxn extends Component {
         dataIndex: 'hash',
         className: 'five wide left aligned',
         title: 'Blocks',
-        render: (text, row) => (
-          <div>
-            <IconFace>
-              <svg className="icon" aria-hidden="true">
-                <use xlinkHref="#iconqukuaigaoduxuanzhong" />
-              </svg>
-            </IconFace>
-            <EllipsisLine isLong linkTo={`/blocksdetail/${text}`} isPivot={row.pivotHash === row.hash} text={text} />
-            <PCell>
-              <Countdown timestamp={row.timestamp * 1000} />
-            </PCell>
-          </div>
-        ),
+        render: (text, row) => {
+          return (
+            <div>
+              <IconFace>
+                <svg className="icon" aria-hidden="true">
+                  <use xlinkHref="#iconqukuaigaoduxuanzhong" />
+                </svg>
+              </IconFace>
+              <EllipsisLine position="top left" isLong linkTo={`/blocksdetail/${text}`} isPivot={row.pivotHash === row.hash} text={text} />
+              <PCell>
+                <Countdown baseTime={blockServerTimestamp} timestamp={row.syncTimestamp} />
+              </PCell>
+            </div>
+          );
+        },
       },
       {
         key: 3,
@@ -321,10 +357,20 @@ class BlockAndTxn extends Component {
             <div>
               <EllipsisLine linkTo={`/transactionsdetail/${row.hash}`} isPivot={row.pivotHash === row.hash} text={row.hash} />
               <PCell>
-                <Countdown timestamp={row.timestamp * 1000 + plusTimeCount * 1000} />
+                <Countdown baseTime={txServerTimestamp} timestamp={row.syncTimestamp} />
               </PCell>
-              <EllipsisLine prefix={i18n('From')} linkTo={`/address/${row.from}`} text={row.from} />
-              <EllipsisLine is2ndLine prefix={i18n('To')} linkTo={`/address/${row.to}`} text={row.to} />
+              <EllipsisLinewrap>
+                <i className="prefix-tag">{i18n('From')}</i>
+                <span>
+                  <AddressEllipseLine address={row.from} />
+                </span>
+              </EllipsisLinewrap>
+              <EllipsisLinewrap>
+                <i className="prefix-tag">{i18n('To')}</i>
+                <span>
+                  <AddressEllipseLine contractCreated={row.contractCreated} type="to" address={row.to} />
+                </span>
+              </EllipsisLinewrap>
               <FloatGas>
                 <StyledLabel>{converToGasPrice3Fixed(row.value) + ' CFX'}</StyledLabel>
               </FloatGas>
@@ -348,7 +394,7 @@ class BlockAndTxn extends Component {
             </IconFace>
             <EllipsisLine linkTo={`/transactionsdetail/${text}`} isPivot={row.pivotHash === row.hash} text={text} />
             <PCell>
-              <Countdown timestamp={row.timestamp * 1000} />
+              <Countdown baseTime={txServerTimestamp} timestamp={row.syncTimestamp} />
             </PCell>
           </div>
         ),
@@ -359,16 +405,20 @@ class BlockAndTxn extends Component {
         className: 'one wide left aligned',
         title: 'Blocks',
         render: (text, row) => {
-          let line2;
-          if (row.contractCreated) {
-            line2 = <EllipsisLine is2ndLine prefix={i18n('To')} linkTo={`/address/${row.contractCreated}`} text={row.contractCreated} />;
-          } else {
-            line2 = <EllipsisLine is2ndLine prefix={i18n('To')} linkTo={`/address/${row.to}`} text={row.to} />;
-          }
           return (
-            <div>
-              <EllipsisLine prefix={i18n('From')} linkTo={`/address/${text}`} text={text} />
-              {line2}
+            <div style={{ height: 36 }}>
+              <EllipsisLinewrap>
+                <i className="prefix-tag">{i18n('From')}</i>
+                <span>
+                  <AddressEllipseLine address={row.from} />
+                </span>
+              </EllipsisLinewrap>
+              <EllipsisLinewrap>
+                <i className="prefix-tag">{i18n('To')}</i>
+                <span>
+                  <AddressEllipseLine contractCreated={row.contractCreated} type="to" address={row.to} />
+                </span>
+              </EllipsisLinewrap>
             </div>
           );
         },
@@ -440,4 +490,10 @@ class BlockAndTxn extends Component {
   }
 }
 
-export default BlockAndTxn;
+function mapStateToProps(state) {
+  return {
+    contractManagerCache: state.common.contractManagerCache,
+  };
+}
+
+export default connect(mapStateToProps)(BlockAndTxn);

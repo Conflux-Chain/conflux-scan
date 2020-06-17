@@ -1,23 +1,25 @@
 /* eslint-disable no-case-declarations */
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import compose from 'lodash/fp/compose';
-import lodash from 'lodash';
+import { connect } from 'react-redux';
+import uniq from 'lodash/uniq';
 import moment from 'moment';
 import TableLoading from '../../components/TableLoading';
 import EllipsisLine from '../../components/EllipsisLine';
 import media from '../../globalStyles/media';
-import { i18n, renderAny, dripTocfx, dripToGdrip, getAddressType, devidedByDecimals, tranferToLowerCase } from '../../utils';
+import { i18n, renderAny, dripTocfx, dripToGdrip, getAddressType, devidedByDecimals, tranferToLowerCase, wait } from '../../utils';
 import NotFoundTx from '../NotFoundTx';
 import Countdown from '../../components/Countdown';
 import iconStatusErr from '../../assets/images/icons/status-err.svg';
 import iconStatusSuccess from '../../assets/images/icons/status-success.svg';
 import iconStatusSkip from '../../assets/images/icons/status-skip.svg';
+import iconUnexecuted from '../../assets/images/icons/icon-unexecuted.svg';
 import CopyButton from '../../components/CopyButton';
-import { reqTransactionDetail, reqContract, reqTransferList } from '../../utils/api';
+import { reqTransactionDetail, reqContract, reqTransferList, reqConfirmationRiskByHash, reqContractListInfo } from '../../utils/api';
 import { decodeContract } from '../../utils/transaction';
 import {
   errorCodes,
@@ -25,9 +27,10 @@ import {
   contractTypeCodeFc,
   contractTypeCodeGeneral,
   defaultTokenIcon,
-  fansCoinAddress,
+  defaultContractIcon,
 } from '../../constants';
 import InputData from '../../components/InputData';
+import SecurityLevel from '../../components/SecurityLevel';
 
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -107,6 +110,7 @@ const StyledTabel = styled.table`
     padding-bottom: 2em !important;
   }
   .nameItem {
+    white-space: nowrap;
     margin-left: 5px;
   }
   td.to {
@@ -154,6 +158,7 @@ const HeadBar = styled.div`
   font-size: 16px;
   margin-bottom: 10px;
   display: flex;
+  flex-wrap: wrap;
   justify-content: flex-start;
   align-items: center;
 
@@ -263,6 +268,7 @@ class Detail extends Component {
       contractType: contractTypeCodeGeneral, //
       decodedData: {},
       transferList: [],
+      serverTimestamp: 0,
     });
     this.state = this.getInitState();
   }
@@ -281,6 +287,12 @@ class Detail extends Component {
     }
   }
 
+  componentWillUnmount() {
+    if (this.fetchDetailTimer) {
+      clearTimeout(this.fetchDetailTimer);
+    }
+  }
+
   getTxnHash() {
     const {
       match: { params },
@@ -289,19 +301,53 @@ class Detail extends Component {
     return tranferToLowerCase(txnhash);
   }
 
-  fetchTxDetail(txnhash) {
+  async getConfirmRisk(blockHash) {
+    let looping = true;
+    let riskLevel;
+    while (looping) {
+      // eslint-disable-next-line no-await-in-loop
+      riskLevel = await reqConfirmationRiskByHash(blockHash);
+      this.setState({
+        riskLevel,
+      });
+      if (riskLevel === '') {
+        // eslint-disable-next-line no-await-in-loop
+        await wait(1000);
+      } else if (riskLevel === 'lv0') {
+        looping = false;
+      } else {
+        // eslint-disable-next-line no-await-in-loop
+        await wait(10 * 1000);
+      }
+    }
+  }
+
+  fetchTxDetail(txnhash, params = { showLoading: true }) {
     const { history } = this.props;
-    this.setState({ isLoading: true });
+    if (params.showLoading) {
+      this.setState({ isLoading: true });
+    }
     return reqTransactionDetail(
       {
         hash: txnhash,
       },
       { showError: false }
     ).then((body) => {
+      if (txnhash !== this.getTxnHash()) {
+        return;
+      }
+
       switch (body.code) {
         case 0:
+          if (body.result.blockHash) {
+            this.getConfirmRisk(body.result.blockHash);
+          } else {
+            this.fetchDetailTimer = setTimeout(() => {
+              this.fetchTxDetail(this.getTxnHash(), { showLoading: false });
+            }, 3000);
+          }
           const transactionDetails = body.result;
-          this.setState({ result: transactionDetails });
+          this.setState({ result: transactionDetails, serverTimestamp: body.serverTimestamp });
           let toAddress = transactionDetails.to;
           if (getAddressType(toAddress) === addressTypeContract) {
             this.setState({ isContract: true });
@@ -322,7 +368,7 @@ class Detail extends Component {
             ].join(',');
             const proArr = [];
             proArr.push(reqContract({ address: toAddress, fields: fields }, { showError: false }));
-            proArr.push(reqTransferList({ page: 1, pageSize: 5000, txHash: txnhash }, { showError: false }));
+            proArr.push(reqTransferList({ transactionHash: txnhash, fields: 'token' }, { showError: false }));
             Promise.all(proArr).then((proRes) => {
               this.setState({
                 isLoading: false,
@@ -360,22 +406,8 @@ class Detail extends Component {
                   this.setState({
                     transferList: list,
                   });
-                  for (let i = 0; i < list.length; i++) {
-                    reqContract({ address: list[i].address, fields: 'tokenIcon' }, { showError: false }).then((contractRes) => {
-                      switch (contractRes.code) {
-                        case 0:
-                          if (list[i].token) {
-                            list[i].token.tokenIcon = contractRes.result.tokenIcon;
-                          }
-                          this.setState({
-                            transferList: list,
-                          });
-                          break;
-                        default:
-                          break;
-                      }
-                    });
-                  }
+                  const addressList = list.map((v) => v.address);
+                  reqContractListInfo(uniq(addressList));
                   break;
                 default:
                   break;
@@ -414,7 +446,10 @@ class Detail extends Component {
       decodedData,
       isContract,
       transferList,
+      riskLevel,
+      serverTimestamp,
     } = this.state;
+    const { contractManagerCache } = this.props;
 
     if (isPacking) {
       return <NotFoundTx searchId={this.getTxnHash()} />;
@@ -450,8 +485,8 @@ class Detail extends Component {
                 <tr className="">
                   <td className="collapsing">{i18n('app.pages.txns.time')}</td>
                   <td className="">
-                    <Countdown timestamp={result.timestamp * 1000} />
-                    &nbsp; ({moment(result.timestamp * 1000).format('YYYY-MM-DD HH:mm:ss Z')})
+                    <Countdown baseTime={serverTimestamp} timestamp={result.syncTimestamp} />
+                    &nbsp; ({moment(result.syncTimestamp * 1000).format('YYYY-MM-DD HH:mm:ss Z')})
                   </td>
                 </tr>
 
@@ -477,7 +512,7 @@ class Detail extends Component {
                           </div>
                         );
                       }
-                      if (result.status === 2 || result.status === null) {
+                      if (result.status === 2) {
                         return (
                           <div className="status-line status-skip">
                             <img src={iconStatusSkip} />
@@ -487,8 +522,23 @@ class Detail extends Component {
                           </div>
                         );
                       }
+                      if (result.status === null) {
+                        return (
+                          <div className="status-line status-Unexecuted">
+                            <img src={iconUnexecuted} />
+                            <span>{i18n('app.pages.txns.Unexecuted')}</span>
+                          </div>
+                        );
+                      }
                       return null;
                     })}
+                  </td>
+                </tr>
+
+                <tr className="">
+                  <td className="collapsing">{i18n('Security')}</td>
+                  <td className="">
+                    <SecurityLevel riskLevel={riskLevel} />
                   </td>
                 </tr>
 
@@ -509,15 +559,21 @@ class Detail extends Component {
                           let imgIcon = null;
                           if (contractInfo.icon) {
                             imgIcon = <img className="logo" src={`${contractInfo.icon}`} />;
+                          } else {
+                            imgIcon = <img className="logo" src={defaultContractIcon} />;
                           }
                           toDiv = (
                             <span>
                               {i18n('Contract')} &nbsp;
                               <Link to={`/address/${result.to}`}>{result.to}</Link>
-                              {imgIcon}
-                              <Link to={`/address/${result.to}`} className="nameItem">
-                                {contractInfo.name}
-                              </Link>
+                              {contractInfo.name && (
+                                <Fragment>
+                                  {imgIcon}
+                                  <Link to={`/address/${result.to}`} className="nameItem">
+                                    {contractInfo.name}
+                                  </Link>
+                                </Fragment>
+                              )}
                               <CopyButton style={copyBtnStyle} txtToCopy={result.to} btnType="three" toolTipId="Copy to clipboard" />
                             </span>
                           );
@@ -537,6 +593,8 @@ class Detail extends Component {
                             &nbsp; {i18n('Created')}
                           </span>
                         );
+                      } else {
+                        toDiv = <span>{i18n('Contract Creation')}</span>;
                       }
                       return <div>{toDiv}</div>;
                     })}
@@ -558,20 +616,21 @@ class Detail extends Component {
                     let tokenSymbol = '';
                     let tokenDecimals = 0;
                     if (transferItem.token) {
-                      imgSrc = transferItem.token.tokenIcon;
                       tokenName = transferItem.token.name;
                       tokenSymbol = transferItem.token.symbol;
                       tokenDecimals = transferItem.token.decimals;
                     }
-                    const imgIcon = <img className="fc-logo" src={`${imgSrc || defaultTokenIcon}`} />;
-                    let nameContainer = <span className="nameItem">{`${tokenName} (${tokenSymbol})`}</span>;
-                    if (tokenName === 'FansCoin' && transferItem.address === fansCoinAddress) {
-                      nameContainer = (
-                        <Link to="/fansCoin" className="nameItem">
-                          {`${tokenName} (${tokenSymbol})`}
-                        </Link>
-                      );
+                    const curContractInfo = contractManagerCache[transferItem.address];
+                    if (curContractInfo && curContractInfo.tokenIcon) {
+                      imgSrc = curContractInfo.tokenIcon;
                     }
+                    const imgIcon = <img className="fc-logo" src={`${imgSrc || defaultTokenIcon}`} />;
+                    const nameContainer = (
+                      <Link to={`/token/${transferItem.address}`} className="nameItem">
+                        {`${tokenName} (${tokenSymbol})`}
+                      </Link>
+                    );
+
                     transferListContainer.push(
                       <TokensDiv>
                         <em>{i18n('From')}</em>
@@ -584,7 +643,9 @@ class Detail extends Component {
                         <em>{i18n('To')}</em>
                         <EllipsisLine ellipsisStyle={{ maxWidth: 152 }} linkTo={`/address/${transferItem.to}`} text={transferItem.to} />
                         <em>For</em>
-                        <span>{devidedByDecimals(transferItem.value, tokenDecimals)}</span>
+                        <span>
+                          {typeof tokenDecimals !== 'undefined' ? devidedByDecimals(transferItem.value, tokenDecimals) : transferItem.value}
+                        </span>
                         {imgIcon}
                         {nameContainer}
                       </TokensDiv>
@@ -692,13 +753,25 @@ Detail.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func,
   }).isRequired,
+  contractManagerCache: PropTypes.objectOf(
+    PropTypes.shape({
+      address: PropTypes.string,
+    })
+  ).isRequired,
 };
 Detail.defaultProps = {
   match: {},
 };
 
+function mapStateToProps(state) {
+  return {
+    contractManagerCache: state.common.contractManagerCache,
+  };
+}
+
 const hoc = compose(
   injectIntl,
-  withRouter
+  withRouter,
+  connect(mapStateToProps)
 );
 export default hoc(Detail);

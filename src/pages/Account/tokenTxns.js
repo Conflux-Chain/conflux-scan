@@ -1,8 +1,10 @@
 import React, { Component, Fragment } from 'react';
+import { Popup, Dropdown } from 'semantic-ui-react';
 import moment from 'moment';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { Dropdown } from 'semantic-ui-react';
+
 import { DatePicker } from 'antd';
 import { injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
@@ -10,17 +12,26 @@ import DataList from '../../components/DataList';
 import EllipsisLine from '../../components/EllipsisLine';
 import Countdown from '../../components/Countdown';
 // import iconFcLogo from '../../assets/images/icons/fc-logo.svg';
-import { i18n, renderAny, valToTokenVal } from '../../utils';
+import { i18n, renderAny, valToTokenVal, getContractList, getTotalPage } from '../../utils';
 import { StyledTabel, TabPanel, PCell, TabWrapper, IconFace, CtrlPanel } from './styles';
 import Pagination from '../../components/Pagination';
-import { reqTokenTxnList } from '../../utils/api';
-import { TotalDesc, getTotalPage } from '../../components/TotalDesc';
+import { reqTokenTxnList, reqContractListInfo } from '../../utils/api';
+import TotalDesc from '../../components/TotalDesc';
 import { defaultTokenIcon, fansCoinAddress } from '../../constants';
 
 const NumCell = styled.div`
   color: rgba(0, 0, 0, 0.87);
   font-size: 16px;
   font-weight: normal;
+  .ellipse-11 {
+    display: inline-block;
+    vertical-align: middle;
+    max-width: 94px;
+    text-overflow: hidden;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 `;
 
 const TokenLineDiv = styled.div`
@@ -28,8 +39,8 @@ const TokenLineDiv = styled.div`
   align-items: center;
 
   img {
-    width: 21px;
-    height: 21px;
+    max-width: 24px;
+    max-height: 24px;
   }
   a {
     margin-left: 8px;
@@ -63,9 +74,9 @@ class TokenTxns extends Component {
         txType: 'all',
       },
       activated: false,
-      listLimit: undefined,
       startTime: null,
       endTime: null,
+      txServerTimestamp: 0,
     });
     this.state = this.getInitState();
   }
@@ -111,25 +122,37 @@ class TokenTxns extends Component {
       delete queries.endTime;
     }
     reqTokenTxnList({
-      address: accountid,
+      accountAddress: accountid,
+      fields: 'token',
       ...queries,
     }).then((body) => {
       if (body.code === 0) {
         this.setState({
           TxList: body.result.list,
           TxTotalCount: body.result.total,
-          listLimit: body.result.listLimit,
+          txServerTimestamp: body.serverTimestamp,
           queries,
         });
+        reqContractListInfo(body.result.list.map((v) => v.address));
         document.dispatchEvent(new Event('scroll-to-top'));
       }
     });
   }
 
+  renderEllipse(text) {
+    let txt = text || '';
+    txt = txt.toString();
+
+    if (txt.replace('.', '').length > 11) {
+      return <Popup trigger={<div className="ellipse-11">{text}</div>} content={text} />;
+    }
+    return <span style={{ verticalAlign: 'middle' }}>{txt}</span>;
+  }
+
   render() {
-    const { accountid, isActive, intl, tokenMap = {} } = this.props;
-    const { TxList, TxTotalCount, queries, listLimit, activated } = this.state;
-    const { startTime, endTime } = this.state;
+    const { accountid, isActive, intl, contractManagerCache = {} } = this.props;
+    const { TxList, TxTotalCount, queries, activated } = this.state;
+    const { startTime, endTime, txServerTimestamp } = this.state;
 
     if (!activated) {
       return null;
@@ -188,10 +211,22 @@ class TokenTxns extends Component {
         title: i18n('Value'),
         render: (text, row) => {
           if (row.token) {
+            const { symbol } = row.token;
             if (row.token.decimals) {
-              return <NumCell>{valToTokenVal(text, row.token.decimals)}</NumCell>;
+              return (
+                <NumCell>
+                  {this.renderEllipse(valToTokenVal(text, row.token.decimals))}
+                  &nbsp;{symbol}
+                </NumCell>
+              );
             }
-            return <NumCell>{text}</NumCell>;
+            return (
+              <NumCell>
+                {this.renderEllipse(text)}
+                &nbsp;
+                {symbol}
+              </NumCell>
+            );
           }
           return null;
         },
@@ -205,22 +240,19 @@ class TokenTxns extends Component {
           if (!row.token) {
             return null;
           }
+          if (!row.token.name) {
+            return null;
+          }
           const { name, symbol } = row.token;
           let tokenImg;
-          if (tokenMap[row.address] && tokenMap[row.address].tokenIcon) {
-            tokenImg = <img src={tokenMap[row.address].tokenIcon} />;
+          if (contractManagerCache[row.address] && contractManagerCache[row.address].tokenIcon) {
+            tokenImg = <img src={contractManagerCache[row.address].tokenIcon} />;
           } else {
             tokenImg = <img src={defaultTokenIcon} />;
           }
 
-          let tokenLink;
           const txt = `${name} (${symbol})`;
-          if (fansCoinAddress === row.address) {
-            tokenLink = <Link to="/fansCoin">{txt}</Link>;
-            // tokenImg = <img src={iconFcLogo} />;
-          } else {
-            tokenLink = <a>{txt}</a>;
-          }
+          const tokenLink = <Link to={`/token/${row.address}`}>{txt}</Link>;
           return (
             <TokenLineDiv>
               {tokenImg}
@@ -241,7 +273,7 @@ class TokenTxns extends Component {
         className: 'three wide aligned',
         dataIndex: 'timestamp',
         title: i18n('Age'),
-        render: (text) => <Countdown timestamp={text * 1000} />,
+        render: (text, row) => <Countdown baseTime={txServerTimestamp} timestamp={row.syncTimestamp} />,
       },
     ];
 
@@ -252,7 +284,7 @@ class TokenTxns extends Component {
             display: isActive ? 'flex' : 'none',
           }}
         >
-          <RangePicker
+          {/* <RangePicker
             className="date-picker"
             showTime={{ format: 'HH:mm:ss', defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss')] }}
             format="YYYY-MM-DD HH:mm:ss"
@@ -359,7 +391,7 @@ class TokenTxns extends Component {
                 }}
               />
             </Dropdown.Menu>
-          </Dropdown>
+          </Dropdown> */}
         </CtrlPanel>
 
         <TabPanel className={isActive ? 'ui bottom attached segment active tab' : 'ui bottom attached segment tab'}>
@@ -378,7 +410,7 @@ class TokenTxns extends Component {
             return (
               <TabWrapper>
                 <div className="page-pc">
-                  <TotalDesc total={TxTotalCount} listLimit={listLimit} />
+                  <TotalDesc total={TxTotalCount} />
                   <Pagination
                     prevItem={{
                       'aria-label': 'Previous item',
@@ -393,12 +425,12 @@ class TokenTxns extends Component {
                       this.changePage(accountid, { ...queries, page: data.activePage });
                     }}
                     activePage={queries.page}
-                    totalPages={getTotalPage(TxTotalCount, 10, listLimit)}
+                    totalPages={getTotalPage(TxTotalCount, 10)}
                     ellipsisItem={null}
                   />
                 </div>
                 <div className="page-h5">
-                  <TotalDesc total={TxTotalCount} listLimit={listLimit} />
+                  <TotalDesc total={TxTotalCount} />
                   <Pagination
                     prevItem={{
                       'aria-label': 'Previous item',
@@ -418,7 +450,7 @@ class TokenTxns extends Component {
                     firstItem={null}
                     lastItem={null}
                     siblingRange={1}
-                    totalPages={getTotalPage(TxTotalCount, 10, listLimit)}
+                    totalPages={getTotalPage(TxTotalCount, 10)}
                   />
                 </div>
               </TabWrapper>
@@ -436,7 +468,7 @@ TokenTxns.propTypes = {
   intl: PropTypes.shape({
     formatMessage: PropTypes.func,
   }).isRequired,
-  tokenMap: PropTypes.objectOf(
+  contractManagerCache: PropTypes.objectOf(
     PropTypes.shape({
       tokenIcon: PropTypes.string,
     })
@@ -445,4 +477,10 @@ TokenTxns.propTypes = {
 
 TokenTxns.defaultProps = {};
 
-export default injectIntl(TokenTxns);
+function mapStateToProps(state) {
+  return {
+    contractManagerCache: state.common.contractManagerCache,
+  };
+}
+
+export default injectIntl(connect(mapStateToProps)(TokenTxns));

@@ -7,6 +7,7 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { Dimmer, Loader, Image, Segment } from 'semantic-ui-react';
 
 import compose from 'lodash/fp/compose';
+import trim from 'lodash/trim';
 import media from '../../globalStyles/media';
 import { reqUtilType } from '../../utils/api';
 import { tranferToLowerCase } from '../../utils';
@@ -231,9 +232,11 @@ class SearchBox extends Component {
             }
           }}
           onChange={(e) => {
-            this.setState({ searchKey: e.target.value });
+            const val = trim(e.target.value) || '';
+            this.setState({ searchKey: val });
           }}
           type="text"
+          value={searchKey}
           placeholder={intl.formatMessage({ id: 'app.comp.searchbox.placeholder' })}
         />
         <SearchButton onClick={(e) => this.handleSearch(searchKey)}>

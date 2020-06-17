@@ -1,38 +1,22 @@
-import { sendRequest } from './index';
-import { apiPrefix, futurePrefix, contractMangerPrefix } from '../constants';
-
-export const reqFcStat = (param) => {
-  return sendRequest({
-    // url: 'http://yapi.conflux-chain.org/mock/4/dashboard/fc/statistics',
-    url: '/api/dashboard/fc/statistics',
-    query: param,
-  }).then((res) => res.body);
-};
-
-export const reqFcList = (param, options = {}) => {
-  return sendRequest({
-    // url: 'http://yapi.conflux-chain.org/mock/4/transaction/fc/list',
-    url: '/api/transaction/fc/list',
-    query: param,
-    showError: options.showError,
-  }).then((res) => res.body);
-};
-
-export const reqFcByAddress = (param) => {
-  return sendRequest({
-    url: `/api/account/${param.address}/fc`,
-    // url: 'http://yapi.conflux-chain.org/mock/4/account/:address/fc',
-    query: param,
-  }).then((res) => res.body);
-};
+import { sendRequest, getStore, fmtConfirmationRisk, wait } from './index';
+import {
+  apiPrefix,
+  contractMangerPrefix,
+  UPDATE_CONTRACT_MANAGER_CACHE,
+  errorCodes,
+  CLEAR_CONTRACT_MANAGER_CACHE,
+  fullNodeErrCodes,
+} from '../constants';
+import { cfx, cfxUtil } from './transaction';
+import { toast } from '../components/Toast';
 
 export const reqRecentDagBlock = () => {
-  return sendRequest({ url: `${futurePrefix}/dashboard/dag` }).then((res) => res.body);
+  return sendRequest({ url: `${apiPrefix}/dashboard/dag` }).then((res) => res.body);
 };
 
 export const reqAccount = (param, extra) => {
   return sendRequest({
-    url: `${futurePrefix}/account/query`,
+    url: `${apiPrefix}/address/query`,
     query: param,
     ...extra,
   }).then((res) => res.body);
@@ -40,14 +24,14 @@ export const reqAccount = (param, extra) => {
 
 export const reqAccountTransactionList = (param) => {
   return sendRequest({
-    url: `${futurePrefix}/transaction/list`,
+    url: `${apiPrefix}/transaction/list`,
     query: param,
   }).then((res) => res.body);
 };
 
 export const reqMinedBlockList = (param, extra) => {
   return sendRequest({
-    url: `${futurePrefix}/block/list`,
+    url: `${apiPrefix}/block/list`,
     query: param,
     ...extra,
   }).then((res) => res.body);
@@ -55,7 +39,7 @@ export const reqMinedBlockList = (param, extra) => {
 
 export const reqBlock = (param, extra) => {
   return sendRequest({
-    url: `${futurePrefix}/block/query`,
+    url: `${apiPrefix}/block/query`,
     query: param,
     ...extra,
   }).then((res) => res.body);
@@ -63,8 +47,7 @@ export const reqBlock = (param, extra) => {
 
 export const reqBlockTransactionList = (param, extra) => {
   return sendRequest({
-    url: `${futurePrefix}/transaction/list`,
-    // url: `${apiPrefix}/block/${param.blockHash}/transactionList`,
+    url: `${apiPrefix}/transaction/list`,
     query: param,
     ...extra,
   }).then((res) => res.body);
@@ -72,7 +55,7 @@ export const reqBlockTransactionList = (param, extra) => {
 
 export const reqBlockRefereeBlockList = (param, extra) => {
   return sendRequest({
-    url: `${futurePrefix}/block/list`,
+    url: `${apiPrefix}/block/list`,
     query: param,
     ...extra,
   }).then((res) => res.body);
@@ -80,7 +63,7 @@ export const reqBlockRefereeBlockList = (param, extra) => {
 
 export const reqBlockList = (param, extra) => {
   return sendRequest({
-    url: `${futurePrefix}/block/list`,
+    url: `${apiPrefix}/block/list`,
     query: param,
     ...extra,
   }).then((res) => res.body);
@@ -88,7 +71,7 @@ export const reqBlockList = (param, extra) => {
 
 export const reqTransactionList = (param, extra) => {
   return sendRequest({
-    url: `${futurePrefix}/transaction/list`,
+    url: `${apiPrefix}/transaction/list`,
     query: param,
     ...extra,
   }).then((res) => res.body);
@@ -96,21 +79,21 @@ export const reqTransactionList = (param, extra) => {
 
 export const reqStatistics = (param) => {
   return sendRequest({
-    url: `${futurePrefix}/dashboard/trend`,
+    url: `${apiPrefix}/dashboard/trend`,
     query: param,
   }).then((res) => res.body);
 };
 
 export const reqStatisticsItem = (param) => {
   return sendRequest({
-    url: `${futurePrefix}/dashboard/plot`,
+    url: `${apiPrefix}/dashboard/plot`,
     query: param,
   }).then((res) => res.body);
 };
 
 export const reqTransactionDetail = (param, extra) => {
   return sendRequest({
-    url: `${futurePrefix}/transaction/query`,
+    url: `${apiPrefix}/transaction/query`,
     query: param,
     ...extra,
   }).then((res) => res.body);
@@ -118,7 +101,7 @@ export const reqTransactionDetail = (param, extra) => {
 
 export const reqUtilType = (param, extra) => {
   return sendRequest({
-    url: `${futurePrefix}/util/type`,
+    url: `${apiPrefix}/util/type`,
     query: param,
     ...extra,
   }).then((res) => res.body);
@@ -132,7 +115,15 @@ export const reqContract = (param, extra) => {
   }).then((res) => res.body);
 };
 
-export const reqTokenList = (param, extra) => {
+export const reqContractManagerContractList = (param, extra) => {
+  return sendRequest({
+    url: `${contractMangerPrefix}/api/contract/list`,
+    query: param,
+    ...extra,
+  }).then((res) => res.body);
+};
+
+export const reqAccountTokenList = (param, extra) => {
   return sendRequest({
     url: `${contractMangerPrefix}/api/account/token/list`,
     // url: 'http://yapi.conflux-chain.org/mock/20/account/token/list',
@@ -143,7 +134,7 @@ export const reqTokenList = (param, extra) => {
 
 export const reqTokenTxnList = (param, extra) => {
   return sendRequest({
-    url: `${futurePrefix}/transfer/list`,
+    url: `${apiPrefix}/transfer/list`,
     query: param,
     ...extra,
   }).then((res) => res.body);
@@ -155,7 +146,16 @@ export const reqContractUpdate = (param, extra) => {
     url: `${contractMangerPrefix}/api/contract/update`,
     body: param,
     ...extra,
-  }).then((res) => res.body);
+  }).then((res) => {
+    const store = getStore();
+    store.dispatch({
+      type: CLEAR_CONTRACT_MANAGER_CACHE,
+      payload: {
+        address: param.address,
+      },
+    });
+    return res.body;
+  });
 };
 
 export const reqContractCreate = (param, extra) => {
@@ -169,8 +169,151 @@ export const reqContractCreate = (param, extra) => {
 
 export const reqTransferList = (param, extra) => {
   return sendRequest({
-    url: `${futurePrefix}/transfer/list`,
+    url: `${apiPrefix}/transfer/list`,
     query: param,
     ...extra,
   }).then((res) => res.body);
+};
+
+export const reqTokenList = (param, extra) => {
+  return sendRequest({
+    url: `${apiPrefix}/token/list`,
+    query: param,
+    ...extra,
+  }).then((res) => res.body);
+};
+
+export const reqContractMangerList = (param, extra) => {
+  return sendRequest({
+    url: `${contractMangerPrefix}/api/contract/list`,
+    query: param,
+    ...extra,
+  }).then((res) => res.body);
+};
+
+export const reqTokenQuery = (param, extra) => {
+  return sendRequest({
+    url: `${apiPrefix}/token/query`,
+    query: param,
+    ...extra,
+  }).then((res) => res.body);
+};
+
+export const reqContractListInfo = (addrList) => {
+  const store = getStore();
+  const { contractManagerCache } = store.getState().common;
+  const addressList = [];
+  addrList.forEach((addr) => {
+    if (!contractManagerCache[addr]) {
+      addressList.push(addr);
+    }
+  });
+
+  if (addressList.length === 0) {
+    return;
+  }
+
+  const fields = ['address', 'name', 'tokenIcon', 'icon', 'website'].join(',');
+
+  reqContractManagerContractList(
+    {
+      fields,
+      address: addressList.join(','),
+    },
+    { showError: false, showNetWorkError: false }
+  ).then((body) => {
+    if (body.code === 0) {
+      body.result.list.forEach((v) => {
+        if (v.name) {
+          store.dispatch({
+            type: UPDATE_CONTRACT_MANAGER_CACHE,
+            payload: {
+              ...v,
+              address: v.address,
+            },
+          });
+        } else {
+          store.dispatch({
+            type: UPDATE_CONTRACT_MANAGER_CACHE,
+            payload: {
+              address: v.address,
+              notfound: true,
+            },
+          });
+        }
+      });
+    }
+  });
+};
+
+const callWithRetry = async (callFn) => {
+  try {
+    return await callFn();
+  } catch (e) {
+    await wait(1000);
+    try {
+      return await callFn();
+    } catch (e1) {
+      if (e1 && e1.code === fullNodeErrCodes.notReady) {
+        await wait(2000);
+      } else {
+        await wait(1000);
+      }
+      try {
+        return await callFn();
+      } catch (e2) {
+        return callFn();
+      }
+    }
+  }
+};
+
+export const reqBalanceOf = async (opts) => {
+  const contract = cfx.Contract({
+    address: opts.address,
+    abi: [
+      {
+        type: 'function',
+        name: 'balanceOf',
+        inputs: [{ type: 'address' }],
+        outputs: [{ type: 'uint256' }],
+      },
+    ],
+  });
+
+  try {
+    const result = await callWithRetry(() => contract.balanceOf(opts.params[0]));
+    if (typeof result === 'undefined' || result === null) {
+      return Promise.reject(new Error('balanceOf=null'));
+    }
+    return result.toString();
+  } catch (e) {
+    if (opts.showError !== false) {
+      toast.error({
+        content: e.message,
+        title: 'app.comp.toast.error.other',
+      });
+    }
+    return Promise.reject(e);
+  }
+};
+
+export const reqConfirmationRiskByHash = async (blockHash) => {
+  try {
+    const callProvider = () => {
+      return cfx.provider.call('cfx_getConfirmationRiskByHash', cfxUtil.format.blockHash(blockHash));
+    };
+    let result = await callProvider();
+    if (!result) {
+      // retry when result is null or empty
+      await wait(3000);
+      result = await callProvider();
+    }
+    if (result) {
+      return fmtConfirmationRisk(result.toString());
+    }
+    return '';
+  } catch (e) {
+    return '';
+  }
 };

@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import media from '../../globalStyles/media';
+import tokenMenu from '../../assets/images/icons/token-menu.svg';
 
 const Wrapper = styled.div`
   position: fixed;
@@ -78,6 +79,10 @@ const Menu = styled.ul`
       font-size: 12px;
       color: #ffffff;
       transition: all 0.2s ease-in-out;
+      > img {
+        margin-bottom: 12px;
+        margin-top: 6px;
+      }
 
       &.hover,
       &.actived {
@@ -116,8 +121,18 @@ function cleanState() {
 
 function Navbar(props) {
   const { location, showNavbar } = props;
-  const blocktxnPaths = ['blocktxn', 'blocks', 'blocksdetail', 'transactions', 'transactionsdetail', 'accountdetail', 'epochsdetail'];
+  const blocktxnPaths = [
+    'blocktxn',
+    'blocks',
+    'blocksdetail',
+    'transactions',
+    'transactionsdetail',
+    'accountdetail',
+    'epochsdetail',
+    'address',
+  ];
   const directoryPaths = ['directory', 'topholders'];
+  const tokenPaths = ['token'];
   const { common } = props;
 
   return (
@@ -147,6 +162,17 @@ function Navbar(props) {
               <use xlinkHref="#iconqukuaigaoduxuanzhong" />
             </svg>
             <FormattedMessage id="app.navbar.blocksAndTxs" />
+          </NavLink>
+        </li>
+        <li>
+          <NavLink
+            to="/token"
+            activeClassName="actived"
+            onClick={cleanState}
+            isActive={() => !!tokenPaths.find((v) => location.pathname.indexOf('/' + v) === 0)}
+          >
+            <img src={tokenMenu} />
+            <FormattedMessage id="app.navbar.token" />
           </NavLink>
         </li>
         <li>

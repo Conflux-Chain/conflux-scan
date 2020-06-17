@@ -49,10 +49,21 @@ const DropDownDiv = styled.div`
     .token-content-right {
       flex-shrink: 0;
     }
-    img {
+    .img-wrap {
+      width: 19px;
+      height: 19px;
       margin-right: 5px;
-      width: 16px;
-      height: 16px;
+      position: relative;
+    }
+    img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      margin: auto;
+      max-width: 19px;
+      max-height: 19px;
     }
   }
 
@@ -67,7 +78,7 @@ const DropDownDiv = styled.div`
     background: #1783ff;
     top: 9px;
     margin-left: 16px;
-    z-index: 90;
+    z-index: 110;
     pointer-events: none;
     font-style: normal;
     font-size: 12px;
@@ -135,7 +146,9 @@ class TokenSelect extends PureComponent {
         text: v.text,
         content: (
           <div className="token-content">
-            <img src={v.imgSrc} />
+            <i className="img-wrap">
+              <img src={v.imgSrc} />
+            </i>
             <span className="token-content-left">{v.label1}</span>
             <span className="token-content-right">{v.label2}</span>
           </div>

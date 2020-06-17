@@ -142,7 +142,7 @@ function Footer() {
         <Copyright className="copyright-in">Copyright © 2020 Conflux. All Rights Reserved</Copyright>
       </Content>
       <Links>
-        <a href="https://twitter.com/ConfluxChain" target="_blank" title="Twitter">
+        <a href="https://twitter.com/Conflux_Network" target="_blank" title="Twitter">
           <svg className="icon" aria-hidden="true">
             <use xlinkHref="#icontuite" />
           </svg>
@@ -152,7 +152,7 @@ function Footer() {
             <use xlinkHref="#icongithub" />
           </svg>
         </a>
-        <a href="https://medium.com/@Confluxchain" target="_blank" title="Blog">
+        <a href="https://medium.com/@Confluxnetwork" target="_blank" title="Blog">
           <svg className="icon" aria-hidden="true">
             <use xlinkHref="#iconmedium" />
           </svg>

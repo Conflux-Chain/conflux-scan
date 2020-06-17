@@ -46,6 +46,12 @@ export default {
   Created: '已创建',
   'Contract Creation': '合约创建',
   WeSign: '画押',
+  Transfer: '转移',
+  addresses: '地址',
+  Decimals: '小数精度',
+  Security: '安全等级',
+  'Not Available': '暂无',
+  'Filtered by Token Holder': '按代币持有者筛选',
 
   'app.head.menu.home': '首页',
   'app.head.menu.dashboard': 'Dashboard',
@@ -73,6 +79,8 @@ export default {
   'app.pages.account.detail.viewOutGoing': '查看发送交易',
   'app.pages.account.detail.viewIncoming': '查看接收交易',
   'app.pages.account.detail.tokentxns': '代币交易',
+  'app.pages.account.transaction.age': '时间戳',
+
   // blocks
   'app.pages.blocks.position': '位置',
   'app.pages.blocks.hash': '哈希',
@@ -102,6 +110,7 @@ export default {
   'app.pages.txns.chainId': '区块链编号',
   'app.pages.txns.tokenTransferred': '代币转移',
   'app.pages.txns.transaction': '交易',
+  'app.pages.txns.Unexecuted': '尚未执行',
   'app.pages.err-reason.1': '智能合约执行错误，或gas fee不足',
   'app.pages.err-reason.2': 'Nonce错误，签名验证失败，或余额不足',
 
@@ -143,10 +152,11 @@ export default {
   'app.navbar.blocksAndTxs': '区块 & 交易',
   'app.navbar.directory': '目录',
   'app.navbar.more': '更多',
+  'app.navbar.token': '代币',
 
   // Directory Page
   'app.directory.exchange.title': '交易所',
-  'app.directory.exchange.desc': '区块链资产交易平台',
+  'app.directory.exchange.desc': '加密货币交易所',
   'app.directory.wallet.title': '钱包',
   'app.directory.wallet.desc': '区块链资产管理与安全储存',
   'app.directory.website.title': '官网',
@@ -161,6 +171,8 @@ export default {
   'app.directory.fc.desc': '社区代币',
   'app.directory.contract.title': '合约',
   'app.directory.contract.desc': '提交合约信息',
+  'app.directory.ConfluxPortal.title': 'ConfluxPortal',
+  'app.directory.ConfluxPortal.desc': 'Conflux DApp 入口与资产管理',
   'system maintaining, please visit later': '系统维护中，请稍后访问',
 
   'No Record': '无记录',
@@ -174,7 +186,7 @@ export default {
   Quantity: '数量',
   'Txn Hash/Holder Address': '交易哈希值/持有人地址',
   'Profile Summary': '资料概要',
-  'Search paremeter incorrect': '查询参数有误',
+  'Invalid format': '输入格式错误',
   'Token Transfered': '代币转移',
   'Token Minted': '代币铸造',
   'Token Burned': '代币承兑',
@@ -185,8 +197,8 @@ export default {
   'network-short.mainnet': 'Pontus',
   'network-short.testnet': '测试网',
 
-  'pagination.limited': '共计找到<%=total%>条记录（仅显示最后<%=listLimit%>条记录）',
   'pagination.total': '共计找到<%=total%>条记录',
+  'pagination.totalLimit': '仅显示最后<%=total%>条数据',
 
   Token: '代币',
   Tokens: '代币',
@@ -200,6 +212,7 @@ export default {
   'Click to edit contract': '点击编辑合约',
   'Click to create contract': '点击创建合约',
   'Click to enter the official site': '点击进入官方网站',
+  'Enter the official site': '进入官方网站',
   'app.pages.account.notfound': '暂无',
   'app.pages.account.notfound.tokenTracker': '暂无信息或尚未注册',
 
@@ -237,4 +250,10 @@ export default {
     '1. 当前网络为 Conflux Testnet，Conflux-Rust 版本号：v0.5.2-alpha-2，所有数据均为 Conflux 测试网数据。',
   'app.pages.index.testnet.notice2': '2. Conflux 主网第一阶段 Conflux Pontus 已于 2020.4.27 上线，欢迎体验。',
   'app.pages.index.mainnet.notice1': '当前网络为 Conflux 主网第一阶段 Conflux Pontus，Conflux-Rust 版本号：v0.5.0.5',
+
+  'security.High': '高',
+  'security.Medium': '中',
+  'security.Low': '偏低',
+  'security.Very low': '低',
+  'No Info': '暂无信息',
 };

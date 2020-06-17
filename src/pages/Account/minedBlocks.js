@@ -5,11 +5,11 @@ import DataList from '../../components/DataList';
 import EllipsisLine from '../../components/EllipsisLine';
 import Countdown from '../../components/Countdown';
 import * as commonCss from '../../globalStyles/common';
-import { i18n, renderAny } from '../../utils';
+import { i18n, renderAny, getTotalPage } from '../../utils';
 import { StyledTabel, TabPanel } from './styles';
 import Pagination from '../../components/Pagination';
 import { reqMinedBlockList } from '../../utils/api';
-import { TotalDesc, getTotalPage } from '../../components/TotalDesc';
+import TotalDesc from '../../components/TotalDesc';
 
 const PCell = styled.div`
   margin: 0 !important;
@@ -22,73 +22,6 @@ const MinedWrap = styled.div`
   ${commonCss.paginatorMixin}
 `;
 
-const minedColumns = [
-  {
-    key: 1,
-    dataIndex: 'epochNumber',
-    className: 'one wide aligned',
-    title: i18n('Epoch'),
-    render: (text) => <EllipsisLine linkTo={`/epochsdetail/${text}`} text={text} />,
-  },
-  {
-    key: 2,
-    dataIndex: 'blockIndex',
-    className: 'one wide aligned plain_th',
-    title: i18n('Position'),
-    render: (text, row) => (
-      <div>
-        <PCell>{1 + text}</PCell>
-      </div>
-    ),
-  },
-  {
-    key: 3,
-    dataIndex: 'hash',
-    className: 'two wide aligned',
-    title: i18n('Hash'),
-    render: (text, row) => (
-      <div>
-        <EllipsisLine isLong linkTo={`/blocksdetail/${text}`} isPivot={row.pivotHash === row.hash} text={text} />
-      </div>
-    ),
-  },
-  {
-    key: 4,
-    dataIndex: 'difficulty',
-    className: 'one wide aligned plain_th',
-    title: i18n('Difficulty'),
-    render: (text) => <PCell>{text}</PCell>,
-  },
-  {
-    key: 5,
-    className: 'one wide aligned',
-    dataIndex: 'miner',
-    title: i18n('Miner'),
-    render: (text) => <EllipsisLine linkTo={`/address/${text}#minedBlocks`} text={text} />,
-  },
-  {
-    key: 6,
-    className: 'one wide aligned plain_th',
-    dataIndex: 'gasLimit',
-    title: i18n('Gas Limit'),
-    render: (text) => <PCell>{text}</PCell>,
-  },
-  {
-    key: 7,
-    className: 'three wide aligned',
-    dataIndex: 'timestamp',
-    title: i18n('Age'),
-    render: (text) => <Countdown timestamp={text * 1000} />,
-  },
-  {
-    key: 8,
-    className: 'two wide aligned plain_th',
-    dataIndex: 'transactionCount',
-    title: i18n('Tx Count'),
-    render: (text) => <PCell>{text}</PCell>,
-  },
-];
-
 class MinedBlocks extends Component {
   constructor(...args) {
     super(...args);
@@ -97,6 +30,7 @@ class MinedBlocks extends Component {
       curMinedPage: 1,
       minedBlockList: [],
       minedTotalCount: 0,
+      blockServerTimestamp: 0,
     };
   }
 
@@ -116,12 +50,12 @@ class MinedBlocks extends Component {
       pageSize: 10,
     }).then((body) => {
       if (body.code === 0) {
-        const { total, listLimit } = body.result;
+        const { total } = body.result;
         this.setState({
           minedBlockList: body.result.list.filter((v) => !!v),
           curMinedPage,
           minedTotalCount: total,
-          listLimit,
+          blockServerTimestamp: body.serverTimestamp,
         });
       }
     });
@@ -130,7 +64,74 @@ class MinedBlocks extends Component {
   render() {
     const { accountid } = this.props;
     const { minedBlockList, minedTotalCount, curMinedPage } = this.state;
-    const { listLimit } = this.state;
+    const { blockServerTimestamp } = this.state;
+
+    const minedColumns = [
+      {
+        key: 1,
+        dataIndex: 'epochNumber',
+        className: 'one wide aligned',
+        title: i18n('Epoch'),
+        render: (text) => <EllipsisLine linkTo={`/epochsdetail/${text}`} text={text} />,
+      },
+      {
+        key: 2,
+        dataIndex: 'blockIndex',
+        className: 'one wide aligned plain_th',
+        title: i18n('Position'),
+        render: (text, row) => (
+          <div>
+            <PCell>{1 + text}</PCell>
+          </div>
+        ),
+      },
+      {
+        key: 3,
+        dataIndex: 'hash',
+        className: 'two wide aligned',
+        title: i18n('Hash'),
+        render: (text, row) => (
+          <div>
+            <EllipsisLine isLong linkTo={`/blocksdetail/${text}`} isPivot={row.pivotHash === row.hash} text={text} />
+          </div>
+        ),
+      },
+      {
+        key: 4,
+        dataIndex: 'difficulty',
+        className: 'one wide aligned plain_th',
+        title: i18n('Difficulty'),
+        render: (text) => <PCell>{text}</PCell>,
+      },
+      {
+        key: 5,
+        className: 'one wide aligned',
+        dataIndex: 'miner',
+        title: i18n('Miner'),
+        render: (text) => <EllipsisLine linkTo={`/address/${text}#minedBlocks`} text={text} />,
+      },
+      {
+        key: 6,
+        className: 'one wide aligned plain_th',
+        dataIndex: 'gasLimit',
+        title: i18n('Gas Limit'),
+        render: (text) => <PCell>{text}</PCell>,
+      },
+      {
+        key: 7,
+        className: 'three wide aligned',
+        dataIndex: 'timestamp',
+        title: i18n('Age'),
+        render: (text, row) => <Countdown baseTime={blockServerTimestamp} timestamp={row.syncTimestamp} />,
+      },
+      {
+        key: 8,
+        className: 'two wide aligned plain_th',
+        dataIndex: 'transactionCount',
+        title: i18n('Tx Count'),
+        render: (text) => <PCell>{text}</PCell>,
+      },
+    ];
 
     return (
       <TabPanel className="ui bottom attached segment active tab">
@@ -149,7 +150,7 @@ class MinedBlocks extends Component {
           return (
             <MinedWrap>
               <div className="page-pc">
-                <TotalDesc total={minedTotalCount} listLimit={listLimit} />
+                <TotalDesc total={minedTotalCount} />
                 <Pagination
                   prevItem={{
                     'aria-label': 'Previous item',
@@ -164,12 +165,12 @@ class MinedBlocks extends Component {
                     this.fetchMinedBlockList(accountid, data.activePage);
                   }}
                   activePage={curMinedPage}
-                  totalPages={getTotalPage(minedTotalCount, 10, listLimit)}
+                  totalPages={getTotalPage(minedTotalCount, 10)}
                   ellipsisItem={null}
                 />
               </div>
               <div className="page-h5">
-                <TotalDesc total={minedTotalCount} listLimit={listLimit} />
+                <TotalDesc total={minedTotalCount} />
                 <Pagination
                   prevItem={{
                     'aria-label': 'Previous item',
@@ -189,7 +190,7 @@ class MinedBlocks extends Component {
                   firstItem={null}
                   lastItem={null}
                   siblingRange={1}
-                  totalPages={getTotalPage(minedTotalCount, 10, listLimit)}
+                  totalPages={getTotalPage(minedTotalCount, 10)}
                 />
               </div>
             </MinedWrap>

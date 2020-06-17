@@ -10,7 +10,7 @@ import { i18n, sendRequest } from '../../utils/index';
 import Dag from '../../components/Dag';
 import * as commonCss from '../../globalStyles/common';
 import { reqBlockList } from '../../utils/api';
-import { TotalDesc } from '../../components/TotalDesc';
+import TotalDesc from '../../components/TotalDesc';
 
 const DagWrapper = styled.div`
   #dag-viewer {
@@ -109,73 +109,6 @@ const IconFace = styled.div`
   }
 `;
 
-const columns = [
-  {
-    key: 1,
-    dataIndex: 'epochNumber',
-    title: i18n('Epoch'),
-    className: 'one wide aligned',
-    render: (text) => <EllipsisLine linkTo={`/epochsdetail/${text}`} text={text} />,
-  },
-  {
-    key: 2,
-    dataIndex: 'blockIndex',
-    title: i18n('Position'),
-    className: 'one wide aligned plain_th',
-    render: (text /* , row */) => (
-      <div>
-        <PCell>{1 + text}</PCell>
-      </div>
-    ),
-  },
-  {
-    key: 3,
-    dataIndex: 'hash',
-    title: i18n('Hash'),
-    className: 'two wide aligned',
-    render: (text, row) => (
-      <div>
-        <EllipsisLine isLong linkTo={`/blocksdetail/${text}`} isPivot={row.pivotHash === row.hash} text={text} />
-      </div>
-    ),
-  },
-  {
-    key: 4,
-    dataIndex: 'difficulty',
-    className: 'one wide aligned plain_th',
-    title: i18n('Difficulty'),
-    render: (text) => <PCell>{text}</PCell>,
-  },
-  {
-    key: 5,
-    className: 'one wide aligned',
-    dataIndex: 'miner',
-    title: i18n('Miner'),
-    render: (text) => <EllipsisLine linkTo={`/address/${text}`} text={text} />,
-  },
-  {
-    key: 6,
-    className: 'one wide aligned plain_th',
-    dataIndex: 'gasLimit',
-    title: i18n('Gas Limit'),
-    render: (text) => <PCell>{text}</PCell>,
-  },
-  {
-    key: 7,
-    className: 'three wide aligned',
-    dataIndex: 'timestamp',
-    title: i18n('Age'),
-    render: (text) => <Countdown timestamp={text * 1000} />,
-  },
-  {
-    key: 8,
-    className: 'one wide aligned plain_th',
-    dataIndex: 'transactionCount',
-    title: i18n('Tx Count'),
-    render: (text) => <PCell>{text}</PCell>,
-  },
-];
-
 /* eslint react/destructuring-assignment: 0 */
 let curPageBase = 1;
 document.addEventListener('clean_state', (/* event */) => {
@@ -189,6 +122,7 @@ class List extends Component {
       isLoading: true,
       BlockList: [],
       TotalCount: 0,
+      blockServerTimestamp: 0,
       curPage: curPageBase,
     };
   }
@@ -214,13 +148,81 @@ class List extends Component {
           curPage: activePage,
           BlockList: list.filter((v) => !!v),
           TotalCount: body.result.total,
+          blockServerTimestamp: body.serverTimestamp,
         });
       }
     });
   }
 
   render() {
-    const { BlockList, TotalCount, isLoading, confirmOpen, curPage } = this.state;
+    const { BlockList, TotalCount, isLoading, confirmOpen, curPage, blockServerTimestamp } = this.state;
+    const columns = [
+      {
+        key: 1,
+        dataIndex: 'epochNumber',
+        title: i18n('Epoch'),
+        className: 'one wide aligned',
+        render: (text) => <EllipsisLine linkTo={`/epochsdetail/${text}`} text={text} />,
+      },
+      {
+        key: 2,
+        dataIndex: 'blockIndex',
+        title: i18n('Position'),
+        className: 'one wide aligned plain_th',
+        render: (text /* , row */) => (
+          <div>
+            <PCell>{1 + text}</PCell>
+          </div>
+        ),
+      },
+      {
+        key: 3,
+        dataIndex: 'hash',
+        title: i18n('Hash'),
+        className: 'two wide aligned',
+        render: (text, row) => (
+          <div>
+            <EllipsisLine isLong linkTo={`/blocksdetail/${text}`} isPivot={row.pivotHash === row.hash} text={text} />
+          </div>
+        ),
+      },
+      {
+        key: 4,
+        dataIndex: 'difficulty',
+        className: 'one wide aligned plain_th',
+        title: i18n('Difficulty'),
+        render: (text) => <PCell>{text}</PCell>,
+      },
+      {
+        key: 5,
+        className: 'one wide aligned',
+        dataIndex: 'miner',
+        title: i18n('Miner'),
+        render: (text) => <EllipsisLine linkTo={`/address/${text}`} text={text} />,
+      },
+      {
+        key: 6,
+        className: 'one wide aligned plain_th',
+        dataIndex: 'gasLimit',
+        title: i18n('Gas Limit'),
+        render: (text) => <PCell>{text}</PCell>,
+      },
+      {
+        key: 7,
+        className: 'three wide aligned',
+        dataIndex: 'timestamp',
+        title: i18n('Age'),
+        render: (text, row) => <Countdown baseTime={blockServerTimestamp} timestamp={row.syncTimestamp} />,
+      },
+      {
+        key: 8,
+        className: 'one wide aligned plain_th',
+        dataIndex: 'transactionCount',
+        title: i18n('Tx Count'),
+        render: (text) => <PCell>{text}</PCell>,
+      },
+    ];
+
     return (
       <div className="page-block-list">
         <Wrapper>

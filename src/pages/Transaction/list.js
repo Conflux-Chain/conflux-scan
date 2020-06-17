@@ -7,13 +7,14 @@ import DataList from '../../components/DataList';
 import Countdown from '../../components/Countdown';
 import TableLoading from '../../components/TableLoading';
 import EllipsisLine from '../../components/EllipsisLine';
-import { convertToValueorFee, converToGasPrice, i18n, sendRequest } from '../../utils';
+import { convertToValueorFee, converToGasPrice, i18n, getContractList } from '../../utils';
 import media from '../../globalStyles/media';
 import * as commonCss from '../../globalStyles/common';
-import { reqTransactionList } from '../../utils/api';
-import { TotalDesc } from '../../components/TotalDesc';
+import { reqTransactionList, reqContractListInfo } from '../../utils/api';
+import TotalDesc from '../../components/TotalDesc';
 import iconStatusErr from '../../assets/images/icons/status-err.svg';
 import iconStatusSkip from '../../assets/images/icons/status-skip.svg';
+import AddressEllipseLine from '../../components/AddressEllipseLine';
 
 const Wrapper = styled.div`
   max-width: 1200px;
@@ -116,83 +117,6 @@ const ContractCell = styled.div`
   font-weight: normal;
 `;
 
-const columns = [
-  {
-    key: 1,
-    className: 'two wide aligned',
-    dataIndex: 'hash',
-    title: i18n('Hash'),
-    render: (text, row) => {
-      const line = <EllipsisLine popUpCfg={{ position: 'top left', pinned: true }} linkTo={`/transactionsdetail/${text}`} text={text} />;
-      if (row.status === 0) {
-        return line;
-      }
-      let errIcon;
-      if (row.status === 1) {
-        errIcon = <Popup trigger={<img src={iconStatusErr} />} content={i18n('app.pages.err-reason.1')} position="top left" hoverable />;
-      } else if (row.status === 2 || row.status === null) {
-        errIcon = <Popup trigger={<img src={iconStatusSkip} />} content={i18n('app.pages.err-reason.2')} position="top left" hoverable />;
-      }
-
-      return (
-        <div className="txnhash-err">
-          {errIcon}
-          <div className="txnhash-err-line1">{line}</div>
-        </div>
-      );
-    },
-  },
-  {
-    key: 2,
-    className: 'two wide aligned',
-    dataIndex: 'from',
-    title: i18n('From'),
-    render: (text) => <EllipsisLine linkTo={`/address/${text}`} text={text} />,
-  },
-  {
-    key: 3,
-    className: 'two wide aligned',
-    dataIndex: 'to',
-    title: i18n('To'),
-    render: (text, row) => {
-      if (row.contractCreated) {
-        return (
-          <div>
-            <Popup
-              trigger={<ContractCell>{i18n('Contract Creation')}</ContractCell>}
-              content={row.contractCreated}
-              position="top left"
-              hoverable
-            />
-          </div>
-        );
-      }
-      return <EllipsisLine linkTo={`/address/${text}`} text={text} />;
-    },
-  },
-  {
-    key: 4,
-    className: 'two wide aligned',
-    dataIndex: 'value',
-    title: i18n('Value'),
-    render: (text) => <EllipsisLine unit="CFX" text={convertToValueorFee(text)} />,
-  },
-  {
-    key: 5,
-    className: 'two wide aligned',
-    dataIndex: 'gasPrice',
-    title: i18n('Gas Price'),
-    render: (text) => <EllipsisLine unit="Gdrip" text={converToGasPrice(text)} />,
-  },
-  {
-    key: 6,
-    className: 'three wide aligned',
-    dataIndex: 'timestamp',
-    title: i18n('app.pages.txns.age'),
-    render: (text) => <Countdown timestamp={text * 1000} />,
-  },
-];
-
 /* eslint react/destructuring-assignment: 0 */
 let curPageBase = 1;
 document.addEventListener('clean_state', () => {
@@ -208,6 +132,7 @@ class List extends Component {
       TxList: [],
       TotalCount: 0,
       curPage: curPageBase,
+      txServerTimestamp: 0,
     };
   }
 
@@ -232,7 +157,9 @@ class List extends Component {
           TxList: body.result.list,
           TotalCount: body.result.total,
           curPage: activePage,
+          txServerTimestamp: body.serverTimestamp,
         });
+        reqContractListInfo(getContractList(body.result.list));
         document.dispatchEvent(new Event('scroll-to-top'));
       }
       this.setState({ isLoading: false });
@@ -240,7 +167,79 @@ class List extends Component {
   }
 
   render() {
-    const { TxList, TotalCount, isLoading, curPage } = this.state;
+    const { TxList, TotalCount, isLoading, curPage, txServerTimestamp } = this.state;
+
+    const columns = [
+      {
+        key: 1,
+        className: 'two wide aligned',
+        dataIndex: 'hash',
+        title: i18n('Hash'),
+        render: (text, row) => {
+          const line = (
+            <EllipsisLine popUpCfg={{ position: 'top left', pinned: true }} linkTo={`/transactionsdetail/${text}`} text={text} />
+          );
+          if (row.status === 0) {
+            return line;
+          }
+          let errIcon;
+          if (row.status === 1) {
+            errIcon = (
+              <Popup trigger={<img src={iconStatusErr} />} content={i18n('app.pages.err-reason.1')} position="top left" hoverable />
+            );
+          } else if (row.status === 2) {
+            errIcon = (
+              <Popup trigger={<img src={iconStatusSkip} />} content={i18n('app.pages.err-reason.2')} position="top left" hoverable />
+            );
+          }
+
+          return (
+            <div className="txnhash-err">
+              {errIcon}
+              <div className="txnhash-err-line1">{line}</div>
+            </div>
+          );
+        },
+      },
+      {
+        key: 2,
+        className: 'two wide aligned',
+        dataIndex: 'from',
+        title: i18n('From'),
+        render: (text) => <AddressEllipseLine address={text} />,
+      },
+      {
+        key: 3,
+        className: 'two wide aligned',
+        dataIndex: 'to',
+        title: i18n('To'),
+        render: (text, row) => {
+          return <AddressEllipseLine contractCreated={row.contractCreated} type="to" address={row.to} />;
+        },
+      },
+      {
+        key: 4,
+        className: 'two wide aligned',
+        dataIndex: 'value',
+        title: i18n('Value'),
+        render: (text) => <EllipsisLine unit="CFX" text={convertToValueorFee(text)} />,
+      },
+      {
+        key: 5,
+        className: 'two wide aligned',
+        dataIndex: 'gasPrice',
+        title: i18n('Gas Price'),
+        render: (text) => <EllipsisLine unit="Gdrip" text={converToGasPrice(text)} />,
+      },
+      {
+        key: 6,
+        className: 'three wide aligned',
+        dataIndex: 'timestamp',
+        title: i18n('app.pages.txns.age'),
+        render: (text, row) => <Countdown baseTime={txServerTimestamp} timestamp={row.syncTimestamp} />,
+      },
+    ];
+
     return (
       <div className="page-transaction-list">
         <Wrapper>
