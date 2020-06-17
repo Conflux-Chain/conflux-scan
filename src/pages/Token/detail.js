@@ -140,7 +140,7 @@ class TokenDetail extends Component {
             pageNum,
             transferList: res.result.list,
             transferTotal: res.result.total,
-            txServerTimestamp: res.result.serverTimestamp,
+            txServerTimestamp: res.serverTimestamp,
           });
         } else {
           notice.show({
