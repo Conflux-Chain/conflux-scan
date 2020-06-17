@@ -131,6 +131,7 @@ export default {
   'network-short.testnet': 'Testnet',
 
   'pagination.total': 'A total of <%=total%> records found',
+  'pagination.totalLimit': 'Showing the last <%=total%> records',
 
   'num.Tokens': 'Tokens',
   'contract.at-txn1': 'at txn',

@@ -198,6 +198,7 @@ export default {
   'network-short.testnet': '测试网',
 
   'pagination.total': '共计找到<%=total%>条记录',
+  'pagination.totalLimit': '仅显示最后<%=total%>条数据',
 
   Token: '代币',
   Tokens: '代币',
