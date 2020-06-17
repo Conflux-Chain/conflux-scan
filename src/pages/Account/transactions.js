@@ -342,7 +342,7 @@ class Transactions extends Component {
             return (
               <TabWrapper>
                 <div className="page-pc">
-                  <TotalDesc total={TxTotalCount} />
+                  <TotalDesc searchTimeLimit={!!startTime} total={TxTotalCount} />
                   <Pagination
                     prevItem={{
                       'aria-label': 'Previous item',
