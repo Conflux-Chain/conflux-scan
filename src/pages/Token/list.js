@@ -133,7 +133,6 @@ class List extends Component {
       TotalCount: 0,
       curPage: curPageBase,
       tokenMaps: {},
-      totalSupplyMaps: {},
     };
   }
 
@@ -155,49 +154,46 @@ class List extends Component {
       fields: ['token', 'tokenIcon', 'tokenName', 'tokenSymbol', 'icon'].join(','),
     }).then(async (body) => {
       if (body.code === 0) {
+        const tokenList = body.result.list.filter((v) => {
+          if (v.token && v.token.name) {
+            // token found
+            return true;
+          }
+          return false;
+        });
         this.setState({
-          tokenList: body.result.list,
+          tokenList,
           TotalCount: body.result.total,
           curPage: activePage,
         });
         document.dispatchEvent(new Event('scroll-to-top'));
-      }
 
-      const mapPromise = body.result.list.map(async (v) => {
-        const tokenResult = await reqTokenQuery({ address: v.address }, { showError: false });
-        if (tokenResult.code === 0) {
-          this.setState({
-            tokenMaps: {
-              ...this.state.tokenMaps,
-              [v.address]: tokenResult.result,
-            },
-          });
-        }
-      });
-
-      Promise.all(mapPromise)
-        .catch(() => {})
-        .then(() => {
-          this.setState({ isLoading: false });
+        const mapPromise = tokenList.map(async (v) => {
+          const tokenResult = await reqTokenQuery({ address: v.address }, { showError: false });
+          if (tokenResult.code === 0) {
+            this.setState({
+              tokenMaps: {
+                ...this.state.tokenMaps,
+                [v.address]: tokenResult.result,
+              },
+            });
+          }
         });
-      await Promise.all(mapPromise);
 
-      const { tokenList } = this.state;
-      const tokenListSort = tokenList.sort((a, b) => {
-        const totalSupplya = this.state.totalSupplyMaps[a.address];
-        const totalSupplyb = this.state.totalSupplyMaps[b.address];
-        if (!totalSupplya && !totalSupplyb) {
-          return 0;
-        }
-        if (!totalSupplya) {
-          return 1;
-        }
-        if (!totalSupplyb) {
-          return -1;
-        }
-        return this.state.totalSupplyMaps[b.address] - this.state.totalSupplyMaps[a.address];
-      });
-      this.setState({ tokenList: tokenListSort });
+        Promise.all(mapPromise)
+          .catch(() => {})
+          .then(() => {
+            this.setState({ isLoading: false });
+          });
+        await Promise.all(mapPromise);
+
+        const tokenListSort = tokenList.sort((a, b) => {
+          const totalSupplya = devidedByDecimals(a.token.totalSupply, a.token.decimals);
+          const totalSupplyb = devidedByDecimals(b.token.totalSupply, b.token.decimals);
+          return totalSupplyb - totalSupplya;
+        });
+        this.setState({ tokenList: tokenListSort });
+      }
     });
   }
 
@@ -211,14 +207,7 @@ class List extends Component {
   }
 
   render() {
-    const { tokenList, TotalCount, isLoading, curPage, totalSupplyMaps, tokenMaps } = this.state;
-    const tokenListShow = tokenList.filter((v) => {
-      if (v.token) {
-        // token/query found
-        return true;
-      }
-      return false;
-    });
+    const { tokenList, TotalCount, isLoading, curPage, tokenMaps } = this.state;
 
     const columns = [
       {
@@ -293,7 +282,7 @@ class List extends Component {
         dataIndex: 'accountTotal',
         title: i18n('Holders'),
         render: (text, row) => {
-          if (tokenMaps[row.address]) {
+          if (tokenMaps[row.address] && typeof tokenMaps[row.address].accountTotal !== 'undefined') {
             return <CellTxt>{this.renderEllipse(tokenMaps[row.address].accountTotal, 11)}</CellTxt>;
           }
           return null;
@@ -328,7 +317,7 @@ class List extends Component {
             <div className="ui fluid card">
               <div className="content">
                 {isLoading && <TableLoading />}
-                <DataList isMobile showHeader columns={columns} dataSource={tokenListShow} />
+                <DataList isMobile showHeader columns={columns} dataSource={tokenList} />
               </div>
             </div>
             <div className="page-pc" />
