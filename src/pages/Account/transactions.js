@@ -96,7 +96,7 @@ class Transactions extends Component {
           TxList: body.result.list,
           TxTotalCount: body.result.total,
           queries,
-          txServerTimestamp: body.result.serverTimestamp,
+          txServerTimestamp: body.serverTimestamp,
         });
         reqContractListInfo(getContractList(body.result.list));
         document.dispatchEvent(new Event('scroll-to-top'));
@@ -205,7 +205,7 @@ class Transactions extends Component {
         className: 'three wide aligned',
         dataIndex: 'timestamp',
         title: i18n('Age'),
-        render: (text, row) => <Countdown baseTime={txServerTimestamp * 1000} timestamp={row.syncTimestamp * 1000} />,
+        render: (text, row) => <Countdown baseTime={txServerTimestamp} timestamp={row.syncTimestamp} />,
       },
     ];
 

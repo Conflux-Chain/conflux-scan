@@ -233,7 +233,7 @@ class BlockAndTxn extends Component {
         this.setState({
           showLoading: false,
           BlockList: body.result.list.filter((v) => !!v),
-          blockServerTimestamp: body.result.serverTimestamp,
+          blockServerTimestamp: body.serverTimestamp,
         });
       }
     });
@@ -249,7 +249,7 @@ class BlockAndTxn extends Component {
         const txList = body.result.list.filter((v) => !!v);
         this.setState({
           TxList: txList,
-          txServerTimestamp: body.result.serverTimestamp,
+          txServerTimestamp: body.serverTimestamp,
         });
 
         reqContractListInfo(getContractList(txList));
@@ -277,7 +277,7 @@ class BlockAndTxn extends Component {
             <div>
               <EllipsisLine isLong linkTo={`/blocksdetail/${row.hash}`} isPivot={row.pivotHash === row.hash} text={row.hash} />
               <PCell>
-                <Countdown baseTime={blockServerTimestamp * 1000} timestamp={row.syncTimestamp * 1000} />
+                <Countdown baseTime={blockServerTimestamp} timestamp={row.syncTimestamp} />
               </PCell>
               <EllipsisLine prefix={i18n('Miner')} linkTo={`/address/${row.miner}`} text={row.miner} />
               <FloatGas>
@@ -306,7 +306,7 @@ class BlockAndTxn extends Component {
               </IconFace>
               <EllipsisLine position="top left" isLong linkTo={`/blocksdetail/${text}`} isPivot={row.pivotHash === row.hash} text={text} />
               <PCell>
-                <Countdown baseTime={blockServerTimestamp * 1000} timestamp={row.syncTimestamp * 1000} />
+                <Countdown baseTime={blockServerTimestamp} timestamp={row.syncTimestamp} />
               </PCell>
             </div>
           );
@@ -357,7 +357,7 @@ class BlockAndTxn extends Component {
             <div>
               <EllipsisLine linkTo={`/transactionsdetail/${row.hash}`} isPivot={row.pivotHash === row.hash} text={row.hash} />
               <PCell>
-                <Countdown baseTime={txServerTimestamp * 1000} timestamp={row.syncTimestamp * 1000} />
+                <Countdown baseTime={txServerTimestamp} timestamp={row.syncTimestamp} />
               </PCell>
               <EllipsisLinewrap>
                 <i className="prefix-tag">{i18n('From')}</i>
@@ -394,7 +394,7 @@ class BlockAndTxn extends Component {
             </IconFace>
             <EllipsisLine linkTo={`/transactionsdetail/${text}`} isPivot={row.pivotHash === row.hash} text={text} />
             <PCell>
-              <Countdown baseTime={txServerTimestamp * 1000} timestamp={row.syncTimestamp * 1000} />
+              <Countdown baseTime={txServerTimestamp} timestamp={row.syncTimestamp} />
             </PCell>
           </div>
         ),

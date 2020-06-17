@@ -130,7 +130,7 @@ class TokenTxns extends Component {
         this.setState({
           TxList: body.result.list,
           TxTotalCount: body.result.total,
-          txServerTimestamp: body.result.serverTimestamp,
+          txServerTimestamp: body.serverTimestamp,
           queries,
         });
         reqContractListInfo(body.result.list.map((v) => v.address));
@@ -273,7 +273,7 @@ class TokenTxns extends Component {
         className: 'three wide aligned',
         dataIndex: 'timestamp',
         title: i18n('Age'),
-        render: (text, row) => <Countdown baseTime={txServerTimestamp * 1000} timestamp={row.syncTimestamp * 1000} />,
+        render: (text, row) => <Countdown baseTime={txServerTimestamp} timestamp={row.syncTimestamp} />,
       },
     ];
 

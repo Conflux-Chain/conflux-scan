@@ -140,7 +140,7 @@ class TokenDetail extends Component {
             pageNum,
             transferList: res.result.list,
             transferTotal: res.result.total,
-            txServerTimestamp: res.result.serverTimestamp,
+            txServerTimestamp: res.serverTimestamp,
           });
         } else {
           notice.show({
@@ -249,12 +249,14 @@ class TokenDetail extends Component {
                     {totalSupply} {tokenDetail.symbol}
                   </div>
                 </div>
-                <div className="summary-line">
-                  <h6>{i18n('Holders')}:</h6>
-                  <div className="summary-line-content">
-                    {humanizeNum(tokenDetail.accountTotal || 0)} &nbsp; {i18n('addresses')}
+                {typeof tokenDetail.accountTotal === 'undefined' ? null : (
+                  <div className="summary-line">
+                    <h6>{i18n('Holders')}:</h6>
+                    <div className="summary-line-content">
+                      {humanizeNum(tokenDetail.accountTotal || 0)} &nbsp; {i18n('addresses')}
+                    </div>
                   </div>
-                </div>
+                )}
                 <div className="summary-line">
                   <h6>{i18n('Transfers')}:</h6>
                   <div className="summary-line-content">{humanizeNum(tokenDetail.transferCount || 0)}</div>
@@ -452,7 +454,7 @@ class TokenDetail extends Component {
                     className: 'two wide aligned',
                     dataIndex: 'timestamp',
                     title: i18n('Age'),
-                    render: (text, row) => <Countdown baseTime={txServerTimestamp * 1000} timestamp={row.syncTimestamp * 1000} />,
+                    render: (text, row) => <Countdown baseTime={txServerTimestamp} timestamp={row.syncTimestamp} />,
                   },
                   {
                     key: 3,

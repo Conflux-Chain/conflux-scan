@@ -260,7 +260,7 @@ class Detail extends Component {
           TxList: txList,
           TxTotalCount: body.result.total,
           curPage: activePage,
-          txServerTimestamp: body.result.serverTimestamp,
+          txServerTimestamp: body.serverTimestamp,
         });
         reqContractListInfo(getContractList(txList));
       }
@@ -284,7 +284,7 @@ class Detail extends Component {
           refereeBlockList: body.result.list.filter((v) => !!v),
           isLoading: false,
           refBlockCurPage,
-          blockServerTimestamp: body.result.serverTimestamp,
+          blockServerTimestamp: body.serverTimestamp,
         });
       }
     });
@@ -359,7 +359,7 @@ class Detail extends Component {
         className: 'three wide aligned',
         dataIndex: 'timestamp',
         title: i18n('Age'),
-        render: (text, row) => <Countdown baseTime={txServerTimestamp * 1000} timestamp={row.syncTimestamp * 1000} />,
+        render: (text, row) => <Countdown baseTime={txServerTimestamp} timestamp={row.syncTimestamp} />,
       },
     ];
 
@@ -419,7 +419,7 @@ class Detail extends Component {
         className: 'three wide aligned',
         dataIndex: 'timestamp',
         title: i18n('Age'),
-        render: (text) => <Countdown baseTime={blockServerTimestamp * 1000} timestamp={text * 1000} />,
+        render: (text, row) => <Countdown baseTime={blockServerTimestamp} timestamp={row.syncTimestamp} />,
       },
       {
         key: 8,
@@ -489,7 +489,7 @@ class Detail extends Component {
                   </tr>
                   <tr className="">
                     <td className="collapsing">{i18n('app.pages.blocks.packTime')}</td>
-                    <td className="">{moment(blockDetail.timestamp * 1000).format('YYYY-MM-DD HH:mm:ss')}</td>
+                    <td className="">{moment(blockDetail.syncTimestamp * 1000).format('YYYY-MM-DD HH:mm:ss')}</td>
                   </tr>
                   <tr className="">
                     <td className="collapsing bottom">{i18n('Size')}</td>
