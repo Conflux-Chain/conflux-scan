@@ -489,7 +489,7 @@ class Detail extends Component {
                   </tr>
                   <tr className="">
                     <td className="collapsing">{i18n('app.pages.blocks.packTime')}</td>
-                    <td className="">{moment(blockDetail.syncTimestamp * 1000).format('YYYY-MM-DD HH:mm:ss')}</td>
+                    <td className="">{moment(blockDetail.timestamp * 1000).format('YYYY-MM-DD HH:mm:ss')}</td>
                   </tr>
                   <tr className="">
                     <td className="collapsing bottom">{i18n('Size')}</td>
