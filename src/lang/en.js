@@ -125,9 +125,9 @@ export default {
   'app.directory.ConfluxPortal.title': 'ConfluxPortal',
   'app.directory.ConfluxPortal.desc': 'Conflux DApp Portal & Crypto Asset Management',
 
-  'network.mainnet': 'Conflux Pontus',
+  'network.mainnet': 'Conflux Oceanus',
   'network.testnet': 'Conflux Testnet',
-  'network-short.mainnet': 'Pontus',
+  'network-short.mainnet': 'Oceanus',
   'network-short.testnet': 'Testnet',
 
   'pagination.total': 'A total of <%=total%> records found',
@@ -169,8 +169,8 @@ export default {
   'app.common.contract': 'Contract',
   'app.pages.index.testnet.notice1':
     '1. ConfluxScan is currently on the testnet network, Conflux-Rust version: v0.6.0-rc-1, all data shown are from the testnet.',
-  'app.pages.index.testnet.notice2': '2. Conflux Pontus is now live.',
-  'app.pages.index.mainnet.notice1': 'ConfluxScan is currently on the Mainnet Phase I - Pontus, Conflux-Rust version: v0.5.2',
+  'app.pages.index.testnet.notice2': '2. Conflux Oceanus is now live.',
+  'app.pages.index.mainnet.notice1': 'ConfluxScan is currently on the Mainnet Phase I - Oceanus, Conflux-Rust version: v0.5.2',
 
   'security.High': 'Great',
   'security.Medium': 'Good',
