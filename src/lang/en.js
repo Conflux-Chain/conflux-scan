@@ -170,7 +170,7 @@ export default {
   'app.pages.index.testnet.notice1':
     '1. ConfluxScan is currently on the testnet network, Conflux-Rust version: v0.6.0-rc-1, all data shown are from the testnet.',
   'app.pages.index.testnet.notice2': '2. Conflux Oceanus is now live.',
-  'app.pages.index.mainnet.notice1': 'ConfluxScan is currently on the Mainnet Phase I - Oceanus, Conflux-Rust version: v0.5.2',
+  'app.pages.index.mainnet.notice1': 'ConfluxScan is currently on the Mainnet Phase II - Oceanus, Conflux-Rust version: v0.6.0',
 
   'security.High': 'Great',
   'security.Medium': 'Good',
