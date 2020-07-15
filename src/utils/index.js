@@ -18,6 +18,7 @@ let source = null;
 
 export const convertToValueorFee = (bigNumber) => {
   const result = new BigNumber(bigNumber).dividedBy(10 ** 18);
+  if (result.toNumber() === 0) return '0';
   if (result.toNumber() < 0.00001) return `< 0.00001`;
   return `${result.toString(10)}`;
 };

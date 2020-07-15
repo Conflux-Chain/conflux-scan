@@ -21,7 +21,7 @@ module.exports = merge(commom, {
     proxy: {
       // '/proxy': 'http://127.0.0.1:3000',
       '/api': {
-        target: 'http://13.75.69.106:8885',
+        target: 'http://47.95.128.92:8885',
         // target: 'http://13.75.69.106',
         // pathRewrite: { '^/api': '' },
       },
@@ -32,7 +32,7 @@ module.exports = merge(commom, {
         target: 'http://wallet-mainnet-jsonrpc.conflux-chain.org:12537',
       },
       '/contract-manager': {
-        target: 'http://13.75.69.106:8886',
+        target: 'http://182.92.71.168:8886',
         pathRewrite: { '^/contract-manager': '' },
       },
       // for developing dag locally
