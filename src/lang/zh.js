@@ -192,9 +192,9 @@ export default {
   'Token Burned': '代币承兑',
   'Copy to clipboard': '复制到剪切板',
 
-  'network.mainnet': 'Conflux Pontus',
+  'network.mainnet': 'Conflux Oceanus',
   'network.testnet': 'Conflux 测试网',
-  'network-short.mainnet': 'Pontus',
+  'network-short.mainnet': 'Oceanus',
   'network-short.testnet': '测试网',
 
   'pagination.total': '共计找到<%=total%>条记录',
@@ -247,10 +247,8 @@ export default {
   'app.common.officialSite': '官方网站',
   'app.common.contract': '合约',
   'app.pages.index.testnet.notice1': '1. 当前网络为 Conflux Testnet，Conflux-Rust 版本号：v0.6.0-rc-3，所有数据均为 Conflux 测试网数据。',
-  'app.pages.index.testnet.notice2': '2. Conflux 主网第一阶段 Conflux Pontus 已于 2020.4.27 上线，欢迎体验。',
-  'app.pages.index.mainnet.notice1':
-    '1. Conflux 主网第二阶段 Conflux Oceanus 将于 7 月 17 日至 7 月 18 日上线，请 DApp 开发者提前备份好相关数据。',
-  'app.pages.index.mainnet.notice2': '2. Conflux Oceanus 上线期间，FC 转账功能会有影响，在此期间请不要进行 FC 的转账操作。',
+  'app.pages.index.testnet.notice2': '2. Conflux 主网第二阶段 Conflux Oceanus 已上线，欢迎体验。',
+  'app.pages.index.mainnet.notice1': '当前网络为 Conflux 主网第二阶段 Conflux Oceanus，Conflux-Rust 版本号：v0.6.0',
 
   'security.High': '高',
   'security.Medium': '中',
