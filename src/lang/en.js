@@ -125,9 +125,9 @@ export default {
   'app.directory.ConfluxPortal.title': 'ConfluxPortal',
   'app.directory.ConfluxPortal.desc': 'Conflux DApp Portal & Crypto Asset Management',
 
-  'network.mainnet': 'Conflux Pontus',
+  'network.mainnet': 'Conflux Oceanus',
   'network.testnet': 'Conflux Testnet',
-  'network-short.mainnet': 'Pontus',
+  'network-short.mainnet': 'Oceanus',
   'network-short.testnet': 'Testnet',
 
   'pagination.total': 'A total of <%=total%> records found',
@@ -168,12 +168,10 @@ export default {
   'app.common.officialSite': 'Official Site',
   'app.common.contract': 'Contract',
   'app.pages.index.testnet.notice1':
-    '1. ConfluxScan is currently on the testnet network, Conflux-Rust version: v0.6.0-rc-3, all data shown are from the testnet.',
-  'app.pages.index.testnet.notice2': '2. Conflux Pontus is now live.',
-  'app.pages.index.mainnet.notice1':
-    '1. Conflux Mainnet Phase II - Oceanus - will officially launch between the 17th and 18th of July. If you are a DApp developer, please make sure to back up your relevant data.',
-  'app.pages.index.mainnet.notice2':
-    "2. During the launch of Conflux Oceanus, FC transfers might be affected. Please don't transfer any FC during the launch.",
+    '1. ConfluxScan is currently on the testnet network, Conflux-Rust version: v0.6.0-rc-1, all data shown are from the testnet.',
+  'app.pages.index.testnet.notice2': '2. Conflux Oceanus is now live.',
+  'app.pages.index.mainnet.notice1': 'ConfluxScan is currently on the Mainnet Phase II - Oceanus, Conflux-Rust version: v0.6.0',
+
   'security.High': 'Great',
   'security.Medium': 'Good',
   'security.Low': 'Weak',

@@ -352,7 +352,6 @@ class Home extends Component {
             <i />
             <div className="notice-content">
               <div>{i18n('app.pages.index.mainnet.notice1')}</div>
-              <div>{i18n('app.pages.index.mainnet.notice2')}</div>
             </div>
           </NoticeDiv>
         )}
