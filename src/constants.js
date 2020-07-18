@@ -58,7 +58,7 @@ export const contractTypeCodeFc = contractTypeCodeFcNum;
 export const contractTypeERC721 = contractTypeERC721Str;
 export const contractTypeDEX = contractTypeDEXStr;
 export const testnetFansCoinAddress = '0x88a8f9b1835ae66b6f1da3c930b7d11220bebf78';
-export const mainetFansCoinAddress = '0x88a8f9b1835ae66b6f1da3c930b7d11220bebf78';
+export const mainetFansCoinAddress = '0x87010faf5964d67ed070bc4b8dcafa1e1adc0997';
 export const isMainnet = window.location.href.indexOf('testnet') === -1;
 export const isProdEnv = window.location.href.indexOf('scantest') === -1;
 export const fansCoinAddress = isMainnet ? mainetFansCoinAddress : testnetFansCoinAddress;
