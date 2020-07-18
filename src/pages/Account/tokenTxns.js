@@ -17,7 +17,7 @@ import { StyledTabel, TabPanel, PCell, TabWrapper, IconFace, CtrlPanel } from '.
 import Pagination from '../../components/Pagination';
 import { reqTokenTxnList, reqContractListInfo } from '../../utils/api';
 import TotalDesc from '../../components/TotalDesc';
-import { defaultTokenIcon, fansCoinAddress } from '../../constants';
+import { defaultTokenIcon } from '../../constants';
 
 const NumCell = styled.div`
   color: rgba(0, 0, 0, 0.87);
