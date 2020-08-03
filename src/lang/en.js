@@ -168,9 +168,9 @@ export default {
   'app.common.officialSite': 'Official Site',
   'app.common.contract': 'Contract',
   'app.pages.index.testnet.notice1':
-    '1. ConfluxScan is currently on the testnet network, Conflux-Rust version: v0.6.0-rc-3, all data shown are from the testnet.',
+    '1. ConfluxScan is currently on the testnet network, Conflux-Rust version: v0.6.1-alpha-1, all data shown are from the testnet.',
   'app.pages.index.testnet.notice2': '2. Conflux Oceanus is now live.',
-  'app.pages.index.mainnet.notice1': 'ConfluxScan is currently on the Mainnet Phase II - Oceanus, Conflux-Rust version: v0.6.0',
+  'app.pages.index.mainnet.notice1': 'ConfluxScan is currently on the Mainnet Phase II - Oceanus, Conflux-Rust version: v0.6.1',
 
   'security.High': 'Great',
   'security.Medium': 'Good',

@@ -246,9 +246,10 @@ export default {
   'app.common.abi': 'ABI',
   'app.common.officialSite': '官方网站',
   'app.common.contract': '合约',
-  'app.pages.index.testnet.notice1': '1. 当前网络为 Conflux Testnet，Conflux-Rust 版本号：v0.6.0-rc-3，所有数据均为 Conflux 测试网数据。',
+  'app.pages.index.testnet.notice1':
+    '1. 当前网络为 Conflux Testnet，Conflux-Rust 版本号：v0.6.1-alpha-1，所有数据均为 Conflux 测试网数据。',
   'app.pages.index.testnet.notice2': '2. Conflux 主网第二阶段 Conflux Oceanus 已上线，欢迎体验。',
-  'app.pages.index.mainnet.notice1': '当前网络为 Conflux 主网第二阶段 Conflux Oceanus，Conflux-Rust 版本号：v0.6.0',
+  'app.pages.index.mainnet.notice1': '当前网络为 Conflux 主网第二阶段 Conflux Oceanus，Conflux-Rust 版本号：v0.6.1',
 
   'security.High': '高',
   'security.Medium': '中',
