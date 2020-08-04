@@ -35,7 +35,6 @@ sudo docker build -t conflux-scan .
             beforeAgent true
             anyOf {
               branch 'dev'
-              branch 'jenkins-pipeline'
             }
           }
           agent {label 'bounty-backend-test-machine'}
@@ -78,6 +77,33 @@ sudo docker run --rm --mount type=bind,src=`pwd`/dist,dst=/conflux-scan/dist con
             script {
               build 'Conflux-dev/conflux-dag/master'
               copyArtifacts(projectName: 'Conflux-dev/conflux-dag/master')
+              sh (label: 'move to nginx www', script: """
+sudo rm -rf /www/explorer-v2/conflux-scan || true
+sudo mkdir -p /www/explorer-v2/conflux-scan
+sudo cp -r . /www/explorer-v2/conflux-scan
+""")
+            }
+          }
+        }
+
+        stage('prod cn env') {
+          when {
+            beforeAgent true
+            allOf {
+              branch 'master'
+            }
+          }
+          agent {label 'cn-website-prod-machine'}
+          steps {
+            script {
+              sh (label: 'build front', script: """
+sudo docker build -t conflux-scan .
+mkdir -p `pwd`/dist
+sudo docker run --rm --mount type=bind,src=`pwd`/dist,dst=/conflux-scan/dist conflux-scan build
+""")
+            }
+            script {
+              copyArtifacts projectName: '/Conflux-dev/conflux-dag/master', selector: lastSuccessful()
               sh (label: 'move to nginx www', script: """
 sudo rm -rf /www/explorer-v2/conflux-scan || true
 sudo mkdir -p /www/explorer-v2/conflux-scan
