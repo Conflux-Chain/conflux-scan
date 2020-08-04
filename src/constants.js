@@ -61,4 +61,5 @@ export const contractTypeDEX = contractTypeDEXStr;
 // export const mainetFansCoinAddress = '0x87010faf5964d67ed070bc4b8dcafa1e1adc0997';
 export const isMainnet = window.location.href.indexOf('testnet') === -1;
 export const isProdEnv = window.location.href.indexOf('scantest') === -1;
+export const isGlobal = window.location.href.indexOf('org.cn') === -1;
 // export const fansCoinAddress = isMainnet ? mainetFansCoinAddress : testnetFansCoinAddress;
