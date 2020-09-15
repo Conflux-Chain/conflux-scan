@@ -71,7 +71,7 @@ class LineChart extends Component {
 
   formatTime(data) {
     return data.map((item) => {
-      return moment(item.time * 1000).format('YYYY/M/D') + '\n' + moment(item.time * 1000).format('kk:mm');
+      return moment(item.time * 1000).format('YYYY/M/D') + '\n' + moment(item.time * 1000).format('HH:mm');
     });
   }
 
@@ -98,7 +98,7 @@ class LineChart extends Component {
         },
         formatter: (params) => {
           return (
-            moment(params[0].data.time * 1000).format('YYYY/M/D kk:mm') +
+            moment(params[0].data.time * 1000).format('YYYY/M/D HH:mm') +
             '<br />' +
             toFixed(params[0].data.value, params[0].data.value > 1 ? 3 : 6)
           );
