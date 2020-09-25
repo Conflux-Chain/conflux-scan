@@ -7,6 +7,8 @@ import set from 'lodash/set';
 import { toFixed } from '../../utils';
 import media from '../../globalStyles/media';
 
+const numeral = require('numeral');
+
 const Duration = styled.div`
   width: 56px;
   height: 24px;
@@ -141,6 +143,9 @@ class LineChart extends Component {
         boundaryGap: false,
         axisLabel: {
           color: 'rgba(0, 0, 0, 0.87)',
+          formatter: (value, index) => {
+            return numeral(value).format('0.0a');
+          },
         },
         axisLine: {
           lineStyle: {
