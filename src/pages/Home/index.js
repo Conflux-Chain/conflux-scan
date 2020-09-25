@@ -6,7 +6,7 @@ import { injectIntl, FormattedMessage, intlShape } from 'react-intl';
 import moreBlue from '../../assets/images/icons/more_blue.svg';
 import moreRed from '../../assets/images/icons/more_red.svg';
 import LineChart from '../../components/LineChart';
-import { toFixed, toThousands, i18n } from '../../utils';
+import { changeUnit, toFixed, toThousands, i18n } from '../../utils';
 import dashboard1 from '../../assets/images/dashboard1.png';
 import dashboard2 from '../../assets/images/dashboard2.png';
 import dashboard3 from '../../assets/images/dashboard3.png';
@@ -15,6 +15,8 @@ import media from '../../globalStyles/media';
 import { reqStatistics, reqStatisticsItem } from '../../utils/api';
 import noticeIcon from '../../assets/images/icons/notice-icon.svg';
 import { isMainnet } from '../../constants';
+
+const numeral = require('numeral');
 
 const Container = styled.div`
   width: 100%;
@@ -331,7 +333,7 @@ class Home extends Component {
               <FormattedMessage id="app.pages.dashboard.hashRate" />
             </span>
             <div className="block-content">
-              <span className="block-value">{toFixed(summary.getIn(['hashRate', 'val']), 2)}</span>
+              <span className="block-value">{changeUnit(numeral(toFixed(summary.getIn(['hashRate', 'val']), 2)).format('0.00a'))}</span>
               <span className={summary.getIn(['hashRate', 'trend']) >= 0 ? 'block-diff-up' : 'block-diff-down'}>
                 {this.formatTrend(toFixed(summary.getIn(['hashRate', 'trend']), 2))}
                 <span className={summary.getIn(['hashRate', 'trend']) >= 0 ? 'icon-arrow-up' : 'icon-arrow-down'} />
