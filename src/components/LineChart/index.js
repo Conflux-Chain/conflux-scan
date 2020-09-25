@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import moment from 'moment';
 import echarts from 'echarts';
 import set from 'lodash/set';
-import { toFixed } from '../../utils';
+import { toFixed, changeUnit } from '../../utils';
 import media from '../../globalStyles/media';
 
 const numeral = require('numeral');
@@ -144,7 +144,7 @@ class LineChart extends Component {
         axisLabel: {
           color: 'rgba(0, 0, 0, 0.87)',
           formatter: (value, index) => {
-            return numeral(value).format('0.0a');
+            return changeUnit(numeral(value).format('0.0a'));
           },
         },
         axisLine: {

@@ -169,6 +169,21 @@ export const toThousands = (num) => {
   return str;
 };
 
+export const changeUnit = (str) => {
+  const length = str.length;
+  const unit = str.charAt(length - 1);
+  let newUnit = unit;
+  const head = str.slice(0, length - 1);
+  if (unit === 'k') {
+    newUnit = 'K';
+  } else if (unit === 'm') {
+    newUnit = 'M';
+  } else if (unit === 'b') {
+    newUnit = 'G';
+  }
+  return head + newUnit;
+};
+
 /*
   {
     url: '/xxx',
