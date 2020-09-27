@@ -102,7 +102,7 @@ class LineChart extends Component {
           return (
             moment(params[0].data.time * 1000).format('YYYY/M/D HH:mm') +
             '<br />' +
-            toFixed(params[0].data.value, params[0].data.value > 1 ? 3 : 6)
+            changeUnit(numeral(toFixed(params[0].data.value, params[0].data.value > 1 ? 3 : 6)).format('0.00a'))
           );
         },
       },
