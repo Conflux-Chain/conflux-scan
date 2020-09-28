@@ -304,7 +304,7 @@ class Home extends Component {
               <FormattedMessage id="app.pages.dashboard.difficulty" />
             </span>
             <div className="block-content">
-              <span className="block-value">{toThousands(toFixed(summary.getIn(['difficulty', 'val']), 0))}</span>
+              <span className="block-value">{changeUnit(numeral(toFixed(summary.getIn(['difficulty', 'val']), 0)).format('0.00a'))}</span>
               <span className={summary.getIn(['difficulty', 'trend']) >= 0 ? 'block-diff-up' : 'block-diff-down'}>
                 {this.formatTrend(toFixed(summary.getIn(['difficulty', 'trend']), 2))}
                 <span className={summary.getIn(['difficulty', 'trend']) >= 0 ? 'icon-arrow-up' : 'icon-arrow-down'} />
