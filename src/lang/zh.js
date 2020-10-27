@@ -246,11 +246,13 @@ export default {
   'app.common.abi': 'ABI',
   'app.common.officialSite': '官方网站',
   'app.common.contract': '合约',
-  'app.pages.index.testnet.notice1':
-    '1. 当前网络为 Conflux Testnet，Conflux-Rust 版本号：v0.6.3-alpha-1，所有数据均为 Conflux 测试网数据。',
-  'app.pages.index.testnet.notice2': '2. Conflux 主网第二阶段 Conflux Oceanus 已上线，欢迎体验。',
-  'app.pages.index.mainnet.notice1': '当前网络为 Conflux 主网第二阶段 Conflux Oceanus，Conflux-Rust 版本号：v0.6.3',
-
+  'app.pages.index.testnet.notice1': '1. 当前网络为 Conflux Testnet，Conflux-Rust 版本号：v1.0.0-rc-1，所有数据均为 Conflux 测试网数据。',
+  'app.pages.index.testnet.notice2': '2. Conflux 主网第三阶段 Conflux Tethys 将于10月29日上线，请DApp开发者提前备份好相关数据。',
+  'app.pages.index.mainnet.notice1': '1. ConfluxScan 将于10月28日22:00(GMT+8)下线。',
+  'app.pages.index.mainnet.notice2': '2. Conflux 主网第三阶段 Conflux Tethys 将于10月29日上线，请DApp开发者提前备份好相关数据。',
+  'app.pages.index.mainnet.notice3':
+    '3. 10月28日18:00(GMT+8)至10月29日18:00(GMT+8)，升级期间所有链上资产处于冻结状态，升级完成后用户不需要做任何操作，所有资产将自动恢复。',
+  'app.pages.index.mainnet.notice4': '4. Conflux Tethys 上线期间，FC转账功能会有影响，在此期间请不要进行FC的转账操作。',
   'security.High': '高',
   'security.Medium': '中',
   'security.Low': '偏低',
