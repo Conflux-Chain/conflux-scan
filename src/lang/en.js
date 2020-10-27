@@ -168,9 +168,16 @@ export default {
   'app.common.officialSite': 'Official Site',
   'app.common.contract': 'Contract',
   'app.pages.index.testnet.notice1':
-    '1. ConfluxScan is currently on the testnet network, Conflux-Rust version: v0.6.3-alpha-1, all data shown are from the testnet.',
-  'app.pages.index.testnet.notice2': '2. Conflux Oceanus is now live.',
-  'app.pages.index.mainnet.notice1': 'ConfluxScan is currently on the Mainnet Phase II - Oceanus, Conflux-Rust version: v0.6.3',
+    '1.ConfluxScan is currently on the testnet network, Conflux-Rust version:v1.0.0-rc-1, all data shown are from the testnet.',
+  'app.pages.index.testnet.notice2':
+    '2.Conflux Mainnet Phase III - Conflux Tethys will go live on Oct. 29. DApp developers please back-up related data in advance.',
+  'app.pages.index.mainnet.notice1': '1. ConfluxScan will go offline starting: 2020.10.28 22:00 (GMT+8)',
+  'app.pages.index.mainnet.notice2':
+    '2. Conflux Mainnet Phase III - Conflux Tethys will go live on Oct. 29. DApp Developers please back-up related data in advance.',
+  'app.pages.index.mainnet.notice3':
+    '3. From Oct. 28 18:00 (GMT+8) to Oct. 29 18:00 (GMT+8), the system will be undergoing upgrades and all assets on chain will be frozen temporarily. The assets will be back to normal after the upgrade. Users do not need to take any action.',
+  'app.pages.index.mainnet.notice4':
+    '4. During the launch of Conflux Tethys, the transfer function of FC will be affected, so please do not transfer any FC during the launch.',
 
   'security.High': 'Great',
   'security.Medium': 'Good',
