@@ -109,7 +109,32 @@ document.addEventListener('hide-nav-bar', () => {
 
 function App({ dispatch, lang }) {
   const [showNavbar, setShowNavbar] = useState(false);
+  const [showMaintaining, setShowMaintaining] = useState(true);
   setShowNavbarGlobal = setShowNavbar;
+
+  if (showMaintaining)
+    return (
+      <div style={{ fontSize: '18px', padding: '32px', margin: '0 auto' }}>
+        <span>
+          <b>ConfluxScan 维护升级中</b> <br />
+          <br />
+          1. ConfluxScan 将于10月28日22:00(GMT+8)下线。 <br />
+          2. Conflux 主网第三阶段 Conflux Tethys 将于10月29日上线，请DApp开发者提前备份好相关数据。 <br />
+          3.
+          10月28日18:00(GMT+8)至10月29日18:00(GMT+8)，升级期间所有链上资产处于冻结状态，升级完成后用户不需要做任何操作，所有资产将自动恢复。
+          <br />
+          4. Conflux Tethys 上线期间，FC转账功能会有影响，在此期间请不要进行FC的转账操作。
+          <br />
+          <br /> 1. ConfluxScan will go offline starting: 2020.10.28 22:00 (GMT+8) <br />
+          2. Conflux Mainnet Phase III - Conflux Tethys will go live on Oct. 29. DApp Developers please back-up related data in advance.{' '}
+          <br />
+          3. From Oct. 28 18:00 (GMT+8) to Oct. 29 18:00 (GMT+8), the system will be undergoing upgrades and all assets on chain will be
+          frozen temporarily. The assets will be back to normal after the upgrade. Users do not need to take any action. <br />
+          4. During the launch of Conflux Tethys, the transfer function of FC will be affected, so please do not transfer any FC during the
+          launch.
+        </span>
+      </div>
+    );
 
   return (
     <IntlProvider locale={lang} messages={messages[lang]}>

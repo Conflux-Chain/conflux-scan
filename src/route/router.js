@@ -39,7 +39,7 @@ function Router() {
     <Suspense fallback={<div className="ui active loader" />}>
       <Switch>
         <Route path="/" exact component={Home} />
-        <Route path="/dashboard" component={Home} />
+        {/* <Route path="/dashboard" component={Home} />
         <Route path="/directory" component={Directory} />
         <Route path="/blocktxn" component={BlockAndTxn} />
         <Route path="/more" component={More} />
@@ -56,8 +56,8 @@ function Router() {
         <Route path="/contract/update/:address" component={ContractUpdate} />
         <Route path="/contract/create" component={ContractCreate} />
         <Route path="/token" component={TokenList} exact />
-        <Route path="/token/:address" component={TokenDetail} exact />
-        <Route component={NotFound} />
+        <Route path="/token/:address" component={TokenDetail} exact /> */}
+        <Route component={Home} />
       </Switch>
     </Suspense>
   );
